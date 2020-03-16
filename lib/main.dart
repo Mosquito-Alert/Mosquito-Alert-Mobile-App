@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
+import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Rubik',
         primarySwatch: Colors.orange,
       ),
-      home: LoginMainPage(),
+      home: MainVC(),
       localizationsDelegates: [
         const MyLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

@@ -72,6 +72,27 @@ class Style {
     );
   }
 
+  static Widget bodySmall(
+    text, {
+    color,
+    maxLines,
+    textAlign,
+    double fontSize,
+    height,
+  }) {
+    return Text(
+      text != null ? text : '',
+      maxLines: maxLines,
+      textAlign: textAlign != null ? textAlign : TextAlign.left,
+      overflow: maxLines != null ? TextOverflow.ellipsis : null,
+      style: TextStyle(
+        height: height,
+        color: color == null ? textColor : color,
+        fontSize: fontSize == null ? 12 : fontSize,
+      ),
+    );
+  }
+
   ///Buttons
 
   static Widget button(text, onPressed, {color, textColor, borderColor}) {
