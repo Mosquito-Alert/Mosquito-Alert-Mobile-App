@@ -19,12 +19,28 @@ class _LoginMainPageState extends State<LoginMainPage> {
         child: SingleChildScrollView(
             child: Container(
           child: Column(children: <Widget>[
-            Container(
-              width: double.infinity,
-              decoration: new BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Image.asset("assets/img/bg_login.png"),
+            Stack(
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  decoration: new BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Image.asset("assets/img/bg_login.png"),
+                ),
+                SafeArea(
+                                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.arrow_back),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 15),

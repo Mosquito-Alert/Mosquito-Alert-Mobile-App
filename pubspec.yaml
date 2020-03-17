@@ -13,6 +13,7 @@ dependencies:
   flutter_svg: ^0.17.1
   flutter_cupertino_localizations: ^1.0.1
   webview_flutter: ^0.3.19+9
+  google_maps_flutter: ^0.5.24+1
 
 
 dev_dependencies:

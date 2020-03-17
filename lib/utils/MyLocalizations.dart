@@ -82,6 +82,16 @@ class MyLocalizations {
 
       //Notifications page
       "notifications_title": "Notificaciones",
+
+      //Setings page
+      "settings_title": "Ajustes",
+      "login_with_your_account_txt": "Accede con tu cuenta de usuario",
+      "use_your_acount_details_txt":
+          "Si accedes a la app con tus credenciales, podrás guardar y sincronizar tus datos entre distintos dispositivos.",
+      "share_app_txt": "Comparte esta app",
+      "open_web_txt": "Abrir página web...",
+      "more_info_app_txt": "Más información acerca de Mosquito Alert",
+      "our_partners_txt": "Nuestros partners y colaboradores",
     },
   };
   String translate(key) {

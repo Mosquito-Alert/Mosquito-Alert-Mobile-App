@@ -21,7 +21,10 @@ class _SignupPageState extends State<SignupPage> {
           decoration: new BoxDecoration(
             color: Colors.white,
           ),
-          child: SvgPicture.asset('assets/img/bg_login_small.svg'),
+          child: SvgPicture.asset(
+            'assets/img/bg_login_small.svg',
+            fit: BoxFit.cover,
+          ),
         ),
         Scaffold(
           appBar: AppBar(
@@ -87,7 +90,6 @@ class _SignupPageState extends State<SignupPage> {
                             child: Style.button(
                                 MyLocalizations.of(context, "signup_btn"),
                                 () {})),
-                        
                       ],
                     ),
                   ),

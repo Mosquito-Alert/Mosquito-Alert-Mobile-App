@@ -24,7 +24,10 @@ class _LoginPasswordState extends State<LoginPassword> {
           decoration: new BoxDecoration(
             color: Colors.white,
           ),
-          child: SvgPicture.asset('assets/img/bg_login_small.svg'),
+          child: SvgPicture.asset(
+            'assets/img/bg_login_small.svg',
+            fit: BoxFit.cover,
+          ),
         ),
         Scaffold(
           appBar: AppBar(
@@ -62,14 +65,13 @@ class _LoginPasswordState extends State<LoginPassword> {
                         Container(
                             width: double.infinity,
                             child: Style.button(
-                                MyLocalizations.of(context, "access_txt"),
-                                () {
-                                   Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainVC()),
-                            );
-                                })),
+                                MyLocalizations.of(context, "access_txt"), () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainVC()),
+                              );
+                            })),
                         SizedBox(
                           height: 20,
                         ),

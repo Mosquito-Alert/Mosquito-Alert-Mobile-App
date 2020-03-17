@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/mosquito_type_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -12,6 +13,17 @@ class BitinLogationPage extends StatefulWidget {
 
 class _BitinLogationPageState extends State<BitinLogationPage> {
   int _selectedIndex;
+
+  GoogleMapController controller;
+
+  void _onMapCreated(GoogleMapController controller) {
+    this.controller = controller;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +93,18 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(15),
-                                          color: Colors.green,
+                                          // color: Colors.green,
                                         ),
                                         height: 300,
+                                        child: GoogleMap(
+                                          onMapCreated: _onMapCreated,
+                                          initialCameraPosition:
+                                              const CameraPosition(
+                                            target: LatLng(-33.852, 151.211),
+                                            zoom: 11.0,
+                                          ),
+                                          // markers: Set<Mark,
+                                        ),
                                       )
                                     : Container(),
                               ],

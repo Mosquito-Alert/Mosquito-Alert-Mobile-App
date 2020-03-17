@@ -22,7 +22,10 @@ class _LoginEmailState extends State<LoginEmail> {
           decoration: new BoxDecoration(
             color: Colors.white,
           ),
-          child: SvgPicture.asset('assets/img/bg_login_small.svg'),
+          child: SvgPicture.asset(
+            'assets/img/bg_login_small.svg',
+            fit: BoxFit.cover,
+          ),
         ),
         Scaffold(
           appBar: AppBar(
