@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/points_info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
+import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'dart:math';
@@ -21,13 +22,24 @@ class _MainVCState extends State<MainVC> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.settings),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BitingReportPage()),
+            );
+          },
         ),
         title: SvgPicture.asset('assets/img/logo_mosquito_alert.svg'),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
             icon: Icon(Icons.notifications),
+            onPressed: () {
+              // print('jeasld');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationsPage()),
+              );
+            },
           )
         ],
       ),
@@ -104,12 +116,12 @@ class _MainVCState extends State<MainVC> {
                     children: <Widget>[
                       Expanded(
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BitingReportPage()),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BitingReportPage()),
+                            );
                           },
                           child: CustomCard(
                             img: 'assets/img/mosquito_placeholder.PNG',
