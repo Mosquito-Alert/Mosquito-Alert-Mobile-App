@@ -129,16 +129,15 @@ class Style {
       highlightColor: colorPrimary.withOpacity(0.5),
       padding: EdgeInsets.symmetric(vertical: 14),
       color: Colors.transparent,
-      // disabledColor: color != null
-      //     ? color.withOpacity(0.3)
-      //     : colorPrimary.withOpacity(0.3),
+      disabledColor: Colors.white.withOpacity(0.3),
+      disabledTextColor: textColor != null ? textColor.withOpacity(0.3) : Colors.black.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: textColor != null ? textColor : Colors.black,
+          // color: textColor != null ? textColor : Colors.black,
           fontSize: 14,
         ),
       ),

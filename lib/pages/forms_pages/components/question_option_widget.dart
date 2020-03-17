@@ -1,30 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class QuestionOption extends StatefulWidget {
-  final bool selected;
-  QuestionOption(this.selected);
+class QuestionOption extends StatelessWidget {
+  final bool selected, disabled;
+  final String text;
+  final String img;
 
-  @override
-  _QuestionOptionState createState() => _QuestionOptionState();
-}
-
-class _QuestionOptionState extends State<QuestionOption> {
+  QuestionOption(this.selected, this.text, this.img, {this.disabled = false});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: widget.selected ? Style.colorPrimary : Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
-      child: ListTile(
-        leading: Icon(
-          Icons.wb_sunny,
-          color: Colors.amber,
-        ),
-        title: Style.body(
-          'Por la mañana',
-          color: widget.selected ? Colors.white : Style.textColor,
+    return Opacity(
+      opacity: disabled ? 0.5 : 1,
+      child: Card(
+        color: selected ? Style.colorPrimary : Colors.white,
+        margin: EdgeInsets.symmetric(vertical: 5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 2,
+        child: Container(
+          padding: EdgeInsets.all(5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 10),
+                child: Image.asset(
+                  img,
+                  height: 40,
+                  width: 40,
+                  // color: Colors.amber,
+                ),
+              ),
+              Center(
+                child: Style.body(
+                  text,
+                  color: selected ? Colors.white : Style.textColor,
+                ),
+              ),
+              SizedBox(width: 40),
+              // Container(
+              // child: ListTile(
+              //   leading: Image.asset(
+              //     img,
+              //     height: 40,
+              //     width: 40,
+              //     // color: Colors.amber,
+              //   ),
+              //   title: Style.body(
+              //     text,
+              //     color: selected ? Colors.white : Style.textColor,
+              //     textAlign: TextAlign.center,
+              //   ),
+              //   trailing: SizedBox(width: 40),
+              // ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

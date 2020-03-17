@@ -10,6 +10,8 @@ class MyLocalizations {
   static Map<String, Map<String, String>> _localizedValues = {
     "es": {
       "app_name": "Mosquito Alert",
+      "next": "Siguiente",
+      "finish": "Finalizar",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -60,6 +62,23 @@ class MyLocalizations {
       "help_validating_other_photos_txt":
           "¿Nos ayudas a validar las fotografias de otros usuarios?",
       "we_need_help_txt": "¡Necesitamos tu ayuda! Colabora con Mosquito Alert",
+
+      //Biting report
+      "biting_report_txt": "Reportar una picadura",
+      "need_more_information_txt": 'Nesecitamos un poco más de información.',
+      "lets_go_txt": "¡Vamos a por ello!", 
+
+      //Location report 
+      "location_bited_txt": "¿En qué ubicación te ha picado?",
+      "chose_option_txt": "Escoge una opción.",
+
+      //Moquito type - report
+      "could_see_txt": "¿Has podido ver el mosquito?", 
+      "could_recognise_txt": "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
+      "recognize_it_txt": "¿Lo reconoces?",
+      "have_foto_txt": "¿Tienes una foto del mosquito?",
+      "click_to_add_txt": "Haz click aquí para añadirla",
+
     },
   };
   String translate(key) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/biting_logation_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/question_option_widget.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingReportPage extends StatefulWidget {
@@ -10,7 +12,8 @@ class BitingReportPage extends StatefulWidget {
 class _BitingReportPageState extends State<BitingReportPage> {
   final List<String> questions = [
     "¿Cuándo te ha picado el mosquito?",
-    "¿En que situación te ha picado?"
+    "¿En que situación te ha picado?",
+    "¿Dónde te ha picado?"
   ];
 
   @override
@@ -19,8 +22,21 @@ class _BitingReportPageState extends State<BitingReportPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Style.title("Reportar una picada", fontSize: 16),
-        actions: <Widget>[Style.noBgButton("Siguiente", () {})],
+        title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
+            fontSize: 16),
+        actions: <Widget>[
+          Style.noBgButton(
+              MyLocalizations.of(context, "next"),
+              true
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BitinLogationPage()),
+                      );
+                    }
+                  : null)
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -32,8 +48,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 SizedBox(
                   height: 35,
                 ),
-                Style.title('Nesecitamos un poco más de información.'),
-                Style.bodySmall("¡Vamos a por ello!"),
+                Style.title(
+                    MyLocalizations.of(context, "need_more_information_txt")),
+                Style.bodySmall(MyLocalizations.of(context, "lets_go_txt")),
                 Container(
                   child: ListView.builder(
                       shrinkWrap: true,
@@ -51,7 +68,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: 4,
                                   itemBuilder: (ctx, index) {
-                                    return QuestionOption(index == 1);
+                                    return QuestionOption(
+                                      index == 1,
+                                      "Por la tarde",
+                                      'assets/img/ic_image.PNG',
+                                    );
                                   })
                             ],
                           ),
