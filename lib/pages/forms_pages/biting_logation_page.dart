@@ -100,7 +100,7 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                           onMapCreated: _onMapCreated,
                                           initialCameraPosition:
                                               const CameraPosition(
-                                            target: LatLng(-33.852, 151.211),
+                                            target: LatLng(41.1613063, 0.4724329),
                                             zoom: 11.0,
                                           ),
                                           // markers: Set<Mark,
