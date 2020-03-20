@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/reports_list_widget.dart';
@@ -14,20 +16,22 @@ class MyReportsPage extends StatefulWidget {
 class _MyReportsPageState extends State<MyReportsPage> {
   int _currentIndex = 0;
 
-  Map<int, Widget> _children = {
-    0: Container(
-      child: Text('Mapa'),
-    ),
-    1: Container(
-      child: Text('Lista'),
-    ),
-  };
+  Map<int, Widget> _children;
 
   StreamController<int> selectedIndexStream =
       new StreamController<int>.broadcast();
 
   @override
   Widget build(BuildContext context) {
+    _children = {
+      0: Container(
+        child: Text(MyLocalizations.of(context, "map_txt")),
+      ),
+      1: Container(
+        child: Text(MyLocalizations.of(context, "list_txt")),
+      ),
+    };
+
     return Scaffold(
       body: SafeArea(
         child: StreamBuilder<int>(
@@ -36,15 +40,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
               return Stack(
                 children: <Widget>[
-                  snapshot.hasData
-                      ? snapshot.data == 0
-                          ? Container(
-                              color: Colors.green,
-                            )
-                          : Container(margin: EdgeInsets.only(top: 110),child: ReportsList())
-                      : Container(
-                          color: Colors.blue,
-                        ),
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: snapshot.hasData
+                        ? snapshot.data == 0 ? MyReportsMap() : ReportsList()
+                        : Container(
+                            color: Colors.blue,
+                          ),
+                  ),
                   Container(
                     child: Card(
                       margin: EdgeInsets.all(0),
@@ -65,7 +68,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                   },
                                   icon: Icon(Icons.arrow_back),
                                 ),
-                                Style.title("Tus reportes"),
+                                Style.title(MyLocalizations.of(
+                                    context, "your_reports_txt")),
                                 SizedBox(
                                   width: 40,
                                 )

@@ -15,9 +15,18 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
   int _selectedIndex;
 
   GoogleMapController controller;
+  LatLng _lastTap;
+  Marker marker;
 
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
+  }
+
+  updateMarker(LatLng markerPosition) {
+    setState(() {
+      this.marker =
+          Marker(markerId: MarkerId('jdjaflds'), position: markerPosition);
+    });
   }
 
   @override
@@ -90,20 +99,23 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                     ? Container(
                                         margin:
                                             EdgeInsets.symmetric(vertical: 5),
-                                        decoration: BoxDecoration(
+                                        height: 300,
+                                        child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(15),
-                                          // color: Colors.green,
-                                        ),
-                                        height: 300,
-                                        child: GoogleMap(
-                                          onMapCreated: _onMapCreated,
-                                          initialCameraPosition:
-                                              const CameraPosition(
-                                            target: LatLng(41.1613063, 0.4724329),
-                                            zoom: 11.0,
+                                          child: GoogleMap(
+                                            onMapCreated: _onMapCreated,
+                                            onTap: (LatLng pos) {
+                                              updateMarker(pos);
+                                            },
+                                            initialCameraPosition:
+                                                const CameraPosition(
+                                              target:
+                                                  LatLng(41.1613063, 0.4724329),
+                                              zoom: 14.0,
+                                            ),
+                                            // markers: Set<Marker>.of(marker.values),
                                           ),
-                                          // markers: Set<Mark,
                                         ),
                                       )
                                     : Container(),

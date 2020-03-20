@@ -12,6 +12,7 @@ class MyLocalizations {
       "app_name": "Mosquito Alert",
       "next": "Siguiente",
       "finish": "Finalizar",
+      "unknoun": "Desconocido",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -92,6 +93,23 @@ class MyLocalizations {
       "open_web_txt": "Abrir página web...",
       "more_info_app_txt": "Más información acerca de Mosquito Alert",
       "our_partners_txt": "Nuestros partners y colaboradores",
+
+      //My reports page 
+      "your_reports_txt": "Tus reportes",
+      "map_txt": "Mapa",
+      "list_txt": "Lista",
+      "report_of_the_day_txt": "Reporte del día ",
+      "location_txt": "Ubicación aproximada: ",
+      "at_time_txt": "A las: ",
+      "report_of_the_day_txt": "Reporte del día ",
+      "registered_location_txt": "Ubicación registrada",
+      "exact_time_register_txt": "Hora exacta del regitro",
+      "reported_images_txt": "Imagenes reportadas",
+      "reported_species_txt": "Especie reportada",
+      "when_biting_txt": "¿Cuando te ha picado?",
+      "which_situation_txt": "¿En qué situación?"
+
+
     },
   };
   String translate(key) {

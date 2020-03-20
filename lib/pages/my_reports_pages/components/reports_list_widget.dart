@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class ReportsList extends StatelessWidget {
+class ReportsList extends StatefulWidget {
+  @override
+  _ReportsListState createState() => _ReportsListState();
+}
+
+class _ReportsListState extends State<ReportsList> {
+  GoogleMapController controller;
+
+  Marker marker;
+
+  void _onMapCreated(GoogleMapController controller) {
+    this.controller = controller;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -32,10 +47,17 @@ class ReportsList extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Style.titleMedium("Reporte del día 19/03/2020",
+                        Style.titleMedium(
+                            MyLocalizations.of(
+                                    context, "report_of_the_day_txt") +
+                                "19/03/2020",
                             fontSize: 14),
-                        Style.body("Ubicación aproximanda: Mi casa"),
-                        Style.body("A las 12:00h", color: Colors.grey),
+                        Style.body(MyLocalizations.of(context, "location_txt") +
+                            "Mi casa"),
+                        Style.body(
+                            MyLocalizations.of(context, "at_time_txt") +
+                                "12:00h",
+                            color: Colors.grey),
                       ],
                     ),
                   ),
@@ -80,21 +102,29 @@ class ReportsList extends StatelessWidget {
                     height: 15,
                   ),
                   Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.green,
+                    height: 120,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: GoogleMap(
+                        rotateGesturesEnabled: false,
+                        mapToolbarEnabled: false,
+                        scrollGesturesEnabled: false,
+                        onMapCreated: _onMapCreated,
+                        initialCameraPosition: const CameraPosition(
+                          target: LatLng(41.1613063, 0.4724329),
+                          zoom: 14.0,
+                        ),
+                        //
                       ),
-                      child: Image.asset(
-                        'assets/img/placeholder.jpg',
-                        height: 50,
-                        width: double.infinity,
-                      )),
+                    ),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
-                  Style.titleMedium('Reporte del dia 9/03/2020'),
+                  Style.titleMedium(
+                      MyLocalizations.of(context, "report_of_the_day_txt") +
+                          '9/03/2020'),
                   SizedBox(
                     height: 20,
                   ),
@@ -104,7 +134,9 @@ class ReportsList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Style.titleMedium("Ubicaión registrada",
+                            Style.titleMedium(
+                                MyLocalizations.of(
+                                    context, "registered_location_txt"),
                                 fontSize: 14),
                             Style.body('(numeros, numeros)', fontSize: 12),
                             Style.body('Cercad de Bellaterra (Barcelona)',
@@ -116,7 +148,9 @@ class ReportsList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
-                            Style.titleMedium("Hora exacta del registro",
+                            Style.titleMedium(
+                                MyLocalizations.of(
+                                    context, "exact_time_register_txt"),
                                 fontSize: 14),
                             Style.body('una fecha muyyy muyy larga',
                                 fontSize: 12),
@@ -130,7 +164,9 @@ class ReportsList extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(),
                   ),
-                  Style.titleMedium('Imagenes reportadas', fontSize: 14),
+                  Style.titleMedium(
+                      MyLocalizations.of(context, "reported_images_txt"),
+                      fontSize: 14),
                   SizedBox(
                     height: 10,
                   ),
@@ -159,8 +195,8 @@ class ReportsList extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Style.titleMedium("Especie reportada", fontSize: 14),
-                        Style.body("Desconocido"),
+                        Style.titleMedium(MyLocalizations.of(context, "reported_species_txt"), fontSize: 14),
+                        Style.body(MyLocalizations.of(context, "unknoun")),
                       ],
                     ),
                   ),
@@ -170,7 +206,7 @@ class ReportsList extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Style.titleMedium("¿Cuando te ha picado?",
+                        Style.titleMedium(MyLocalizations.of(context, "when_biting_txt"),
                             fontSize: 14),
                         Style.body("Por la tarde"),
                       ],
@@ -182,7 +218,7 @@ class ReportsList extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Style.titleMedium("¿En qué situación?", fontSize: 14),
+                        Style.titleMedium(MyLocalizations.of(context, "which_situation_txt"), fontSize: 14),
                         Style.body("Espacio interior"),
                       ],
                     ),
