@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -5,8 +6,9 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
-void main() {
-  Utils.setCameras();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Utils.cameras = await availableCameras();
   runApp(MyApp());
 }
 

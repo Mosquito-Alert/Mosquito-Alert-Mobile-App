@@ -80,6 +80,7 @@ class MyLocalizations {
       "recognize_it_txt": "¿Lo reconoces?",
       "have_foto_txt": "¿Tienes una foto del mosquito?",
       "click_to_add_txt": "Haz click aquí para añadirla",
+      "send_photo_title": "Mándanos una foto",
 
       //Notifications page
       "notifications_title": "Notificaciones",
