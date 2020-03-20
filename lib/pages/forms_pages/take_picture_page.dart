@@ -66,8 +66,15 @@ class _TakePicturePageState extends State<TakePicturePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Image.file(File(_path != null ? _path : '')),
-                 
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      File(_path != null ? _path : ''),
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   Expanded(
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,
@@ -91,6 +98,9 @@ class _TakePicturePageState extends State<TakePicturePage> {
                       },
                     ),
                   ),
+                  SizedBox(
+                    width: 50,
+                  )
                 ],
               ),
             ),

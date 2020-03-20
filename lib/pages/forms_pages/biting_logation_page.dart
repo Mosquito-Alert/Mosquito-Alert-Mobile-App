@@ -25,7 +25,7 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
   updateMarker(LatLng markerPosition) {
     setState(() {
       this.marker =
-          Marker(markerId: MarkerId('jdjaflds'), position: markerPosition);
+          Marker(markerId: MarkerId('Marker 1'), position: markerPosition);
     });
   }
 
@@ -105,6 +105,8 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                               BorderRadius.circular(15),
                                           child: GoogleMap(
                                             onMapCreated: _onMapCreated,
+                                            rotateGesturesEnabled: false,
+                                            mapToolbarEnabled: false,
                                             onTap: (LatLng pos) {
                                               updateMarker(pos);
                                             },
@@ -114,7 +116,9 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                                   LatLng(41.1613063, 0.4724329),
                                               zoom: 14.0,
                                             ),
-                                            // markers: Set<Marker>.of(marker.values),
+                                            markers: marker != null
+                                                ? <Marker>[marker].toSet()
+                                                : null,
                                           ),
                                         ),
                                       )
