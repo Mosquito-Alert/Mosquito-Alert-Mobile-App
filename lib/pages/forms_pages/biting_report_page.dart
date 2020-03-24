@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/biting_logation_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/question_option_widget.dart';
+import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/biting_questions_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
+import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:random_string/random_string.dart';
+import 'package:uuid/uuid.dart';
+import 'components/biting_logation_form.dart';
 
 class BitingReportPage extends StatefulWidget {
   @override
@@ -10,80 +17,129 @@ class BitingReportPage extends StatefulWidget {
 }
 
 class _BitingReportPageState extends State<BitingReportPage> {
-  final List<String> questions = [
-    "¿Cuándo te ha picado el mosquito?",
-    "¿En que situación te ha picado?",
-    "¿Dónde te ha picado?"
+  final List<Map<String, List<String>>> questions = [
+    {
+      "question": ["¿Cuándo te ha picado el mosquito?"],
+      "answers": [
+        "Por la mañana",
+        "Al mediodia",
+        "Por la tarde",
+        "Por la noche",
+        "no estoy seguro"
+      ]
+    },
+    {
+      "question": ["¿En que situación te ha picado?"],
+      "answers": ["espacio cerrado", "espacio abierto"]
+    },
+    {
+      "question": ["¿Dónde te ha picado?"],
+      "answers": ["d"]
+    },
   ];
+
+  final _pagesController = PageController();
+  List _formsRepot;
+
+  List<Questions> responses = [];
+
+  Report report = new Report();
 
   @override
   Widget build(BuildContext context) {
+    _formsRepot = [
+      BitingQuestionsForm(questions, addResponse, responses),
+      BitingLocationForm(setLocationType, setSelectedLocation),
+      MosquitoTypeForm()
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            double currentPage = _pagesController.page;
+            if (currentPage == 0.0) {
+              Navigator.pop(context);
+            } else {
+              _pagesController.previousPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease);
+            }
+          },
+        ),
         title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(
-              MyLocalizations.of(context, "next"),
+              MyLocalizations.of(
+                  context, "next"), //TODO: show finish in last page!
               true
                   ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BitinLogationPage()),
-                      );
+                      double currentPage = _pagesController.page;
+                      if (currentPage == 2.0) {
+                        createReport();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainVC()),
+                        );
+                      } else {
+                        _pagesController.nextPage(
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease);
+                      }
                     }
                   : null)
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 35,
-                ),
-                Style.title(
-                    MyLocalizations.of(context, "need_more_information_txt")),
-                Style.bodySmall(MyLocalizations.of(context, "lets_go_txt")),
-                Container(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: questions.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Style.titleMedium(questions[index], fontSize: 16),
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: 4,
-                                  itemBuilder: (ctx, index) {
-                                    return QuestionOption(
-                                      index == 1,
-                                      "Por la tarde",
-                                      'assets/img/ic_image.PNG',
-                                    );
-                                  })
-                            ],
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      body: PageView.builder(
+          controller: _pagesController,
+          itemCount: _formsRepot.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return _formsRepot[index];
+          }),
     );
+  }
+
+  void addResponse(String question, String answer) {
+    int currentIndex =
+        responses.indexWhere((question) => responses.contains(question));
+    if (currentIndex != -1) {
+      responses[currentIndex].answer = answer;
+    } else {
+      setState(() {
+        responses.add(new Questions(question: question, answer: answer));
+      });
+    }
+    report.responses = responses;
+  }
+
+  void setLocationType(int type) {
+    if (type == 0) {
+      report.location_choice = "current";
+      //todo: get current cordinates!
+    } else if (type == 1) {
+      report.location_choice = "selected";
+    }
+  }
+
+  void setSelectedLocation(double lat, lon) {
+    report.selected_location_lat = lat;
+    report.selected_location_lon = lon;
+  }
+
+  Future<void> createReport() async {
+    report.report_id = randomAlphaNumeric(4);
+    report.version_number = 0;
+    report.version_time = DateTime.now().toString();
+    report.creation_time = DateTime.now().toString();
+    report.phone_upload_time = DateTime.now().toString();
+    report.version_UUID = new Uuid().v4();
+
+    report.user = await UserManager.getUUID();
+
+    ApiSingleton().createReport(report);
   }
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/mosquito_type_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'components/question_option_widget.dart';
-
-class BitinLogationPage extends StatefulWidget {
+class BitingLocationForm extends StatefulWidget {
+  final Function setLocationType, setSelectedLocation;
+  BitingLocationForm(this.setLocationType, this.setSelectedLocation);
   @override
-  _BitinLogationPageState createState() => _BitinLogationPageState();
+  _BitingLocationFormState createState() => _BitingLocationFormState();
 }
 
-class _BitinLogationPageState extends State<BitinLogationPage> {
+class _BitingLocationFormState extends State<BitingLocationForm> {
   int _selectedIndex;
 
   GoogleMapController controller;
@@ -27,6 +27,7 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
       this.marker =
           Marker(markerId: MarkerId('Marker 1'), position: markerPosition);
     });
+    widget.setSelectedLocation(marker.position.latitude, marker.position.longitude);
   }
 
   @override
@@ -37,25 +38,6 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
-            fontSize: 16),
-        actions: <Widget>[
-          Style.noBgButton(
-              MyLocalizations.of(context, "next"),
-              _selectedIndex != null
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MosquitoTypePage()),
-                      );
-                    }
-                  : null)
-        ],
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -85,10 +67,11 @@ class _BitinLogationPageState extends State<BitinLogationPage> {
                                     setState(() {
                                       _selectedIndex = index;
                                     });
+                                    widget.setLocationType(index);
                                   },
                                   child: QuestionOption(
                                     index == _selectedIndex,
-                                    "Por la tarde",
+                                    "** En mi ubicación actual",
                                     'assets/img/ic_image.PNG',
                                     disabled: _selectedIndex != null
                                         ? index != _selectedIndex

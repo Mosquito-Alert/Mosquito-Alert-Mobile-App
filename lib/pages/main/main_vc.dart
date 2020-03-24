@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'dart:math';
 
@@ -16,6 +17,12 @@ class MainVC extends StatefulWidget {
 }
 
 class _MainVCState extends State<MainVC> {
+  @override
+  void initState() {
+    super.initState();
+    UserManager.startFirstTime(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,16 +142,25 @@ class _MainVCState extends State<MainVC> {
                         ),
                       ),
                       SizedBox(
-                        width: 10,
+                        width: 5,
                       ),
                       Expanded(
-                          child: CustomCard(
-                        img: 'assets/img/mosquito_placeholder.PNG',
-                        title: MyLocalizations.of(context, 'report_nest_txt'),
-                        subtitle: MyLocalizations.of(
-                            context, 'found_breeding_place_question_txt'),
+                          child: GestureDetector(
+                        onTap: () async {
+                          var uuid = await UserManager.getUUID();
+                          print(uuid);
+                        },
+                        child: CustomCard(
+                          img: 'assets/img/mosquito_placeholder.PNG',
+                          title: MyLocalizations.of(context, 'report_nest_txt'),
+                          subtitle: MyLocalizations.of(
+                              context, 'found_breeding_place_question_txt'),
+                        ),
                       )),
                     ],
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                   Row(
                     children: <Widget>[
@@ -158,7 +174,7 @@ class _MainVCState extends State<MainVC> {
                         ),
                       ),
                       SizedBox(
-                        width: 10,
+                        width: 5,
                       ),
                       Expanded(
                           child: GestureDetector(

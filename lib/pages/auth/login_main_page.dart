@@ -29,10 +29,10 @@ class _LoginMainPageState extends State<LoginMainPage> {
                   child: Image.asset("assets/img/bg_login.png"),
                 ),
                 SafeArea(
-                                  child: Row(
+                  child: Row(
                     children: <Widget>[
                       IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: Icon(Icons.arrow_back),

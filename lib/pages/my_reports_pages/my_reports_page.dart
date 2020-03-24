@@ -19,15 +19,15 @@ class MyReportsPage extends StatefulWidget {
 class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports = [
     Report(
-        id: 'report1',
-        lat: 41.1613063,
-        long: 0.4724329,
-        creationTime: DateTime.now()),
+        report_id: 'report1',
+        current_location_lat: 41.1613063,
+        current_location_lon: 0.4724329,
+        creation_time: DateTime.now().toString()),
     Report(
-        id: 'report2',
-        lat: 41.1613063,
-        long: 0.5744329,
-        creationTime: DateTime.now()),
+        report_id: 'report2',
+        current_location_lat: 41.1613063,
+        current_location_lon: 0.5744329,
+        creation_time: DateTime.now().toString()),
   ];
 
   int _currentIndex = 0;
@@ -204,9 +204,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 fontSize: 14),
                             Style.body(
                                 '(' +
-                                    report.lat.toString() +
+                                    report.current_location_lat.toString() +
                                     ', ' +
-                                    report.long.toString() +
+                                    report.current_location_lon.toString() +
                                     ')',
                                 fontSize: 12),
                             Style.body('Cercad de Bellaterra (Barcelona)',

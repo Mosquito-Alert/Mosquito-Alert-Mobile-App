@@ -1,40 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/take_picture_page.dart';
-import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class MosquitoTypePage extends StatefulWidget {
+class MosquitoTypeForm extends StatefulWidget {
   @override
-  _MosquitoTypePageState createState() => _MosquitoTypePageState();
+  _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
 
-class _MosquitoTypePageState extends State<MosquitoTypePage> {
+class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   int _selectedIndex;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
-            fontSize: 16),
-        actions: <Widget>[
-          Style.noBgButton(
-              MyLocalizations.of(context, "finish"),
-              _selectedIndex != null
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainVC()),
-                      );
-                    }
-                  : null)
-        ],
-      ),
-      body: SafeArea(
+    return  SafeArea(
         child: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 15),
@@ -130,7 +110,6 @@ class _MosquitoTypePageState extends State<MosquitoTypePage> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
