@@ -131,11 +131,12 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   Future<void> createReport() async {
-    report.report_id = randomAlphaNumeric(4);
+    report.type = 'adult';
+    report.report_id = randomAlphaNumeric(4).toString();
     report.version_number = 0;
-    report.version_time = DateTime.now().toString();
-    report.creation_time = DateTime.now().toString();
-    report.phone_upload_time = DateTime.now().toString();
+    report.version_time = DateTime.now().toUtc().toString();
+    report.creation_time = DateTime.now().toUtc().toString();
+    report.phone_upload_time = DateTime.now().toUtc().toString();
     report.version_UUID = new Uuid().v4();
 
     report.user = await UserManager.getUUID();

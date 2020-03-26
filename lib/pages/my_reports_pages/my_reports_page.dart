@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -17,21 +19,11 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  List<Report> _reports = [
-    Report(
-        report_id: 'report1',
-        current_location_lat: 41.1613063,
-        current_location_lon: 0.4724329,
-        creation_time: DateTime.now().toString()),
-    Report(
-        report_id: 'report2',
-        current_location_lat: 41.1613063,
-        current_location_lon: 0.5744329,
-        creation_time: DateTime.now().toString()),
-  ];
+  List<Report> _reports;
+
+  final _pagesController = PageController();
 
   int _currentIndex = 0;
-
   Map<int, Widget> _children;
 
   GoogleMapController mapController;
@@ -41,8 +33,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
     this.mapController = controller;
   }
 
-  StreamController<int> selectedIndexStream =
-      new StreamController<int>.broadcast();
+  @override
+  initState() {
+    super.initState();
+    if (_reports == null || _reports.isNotEmpty) {
+      _getData();
+    }
+  }
+
+  _getData() async {
+    List<Report> _currentReports =  await ApiSingleton().getMyReports();
+    for(Report rep in _currentReports) {
+      _reports.add(rep);
+    }
+
+    dataStream.add(_currentReports);
+  }
+
+  StreamController<List<Report>> dataStream =
+      new StreamController<List<Report>>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -55,89 +64,79 @@ class _MyReportsPageState extends State<MyReportsPage> {
       ),
     };
 
-    markers = [
-      Marker(
-          markerId: MarkerId('marker01'),
-          position: LatLng(41.1613063, 0.4724329),
-          onTap: () {
-            _reportBottomSheet(context, _reports[0]);
-          }),
-      Marker(
-          markerId: MarkerId('marker02'),
-          position: LatLng(41.1613063, 0.5224329),
-          onTap: () {
-            _reportBottomSheet(context, _reports[1]);
-          })
-    ];
+    markers = [];
 
     return Scaffold(
       body: SafeArea(
-        child: StreamBuilder<int>(
-            stream: selectedIndexStream.stream,
-            initialData: 0,
-            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-              return Stack(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 100),
-                    child: snapshot.hasData
-                        ? snapshot.data == 0
-                            ? MyReportsMap(markers)
-                            : ReportsList(_reports, _reportBottomSheet)
-                        : Container(
-                            color: Colors.blue,
+        child: Stack(
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.only(top: 100),
+                child: StreamBuilder<List<Report>>(
+                  stream: dataStream.stream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Report>> snapshot) {
+                    return PageView.builder(
+                        controller: _pagesController,
+                        itemCount: 2,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index == 0.0) return MyReportsMap(snapshot.data);
+                          if (index == 1.0)
+                            return ReportsList(
+                                snapshot.data, _reportBottomSheet);
+                        });
+                  },
+                )),
+            Container(
+              child: Card(
+                margin: EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                color: Colors.white,
+                elevation: 2,
+                child: SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back),
                           ),
-                  ),
-                  Container(
-                    child: Card(
-                      margin: EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)),
-                      color: Colors.white,
-                      elevation: 2,
-                      child: SafeArea(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(Icons.arrow_back),
-                                ),
-                                Style.title(MyLocalizations.of(
-                                    context, "your_reports_txt")),
-                                SizedBox(
-                                  width: 40,
-                                )
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              width: double.infinity,
-                              child: MaterialSegmentedControl(
-                                children: _children,
-                                selectionIndex: snapshot.data,
-                                borderColor: Style.colorPrimary,
-                                selectedColor: Style.colorPrimary,
-                                unselectedColor: Colors.white,
-                                borderRadius: 5.0,
-                                onSegmentChosen: (index) {
-                                  _onItemTapped(index);
-                                },
-                              ),
-                            ),
-                          ],
+                          Style.title(
+                              MyLocalizations.of(context, "your_reports_txt")),
+                          SizedBox(
+                            width: 40,
+                          )
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 15),
+                        width: double.infinity,
+                        child: MaterialSegmentedControl(
+                          children: _children,
+                          selectionIndex: _currentIndex,
+                          borderColor: Style.colorPrimary,
+                          selectedColor: Style.colorPrimary,
+                          unselectedColor: Colors.white,
+                          borderRadius: 5.0,
+                          onSegmentChosen: (index) {
+                            _onItemTapped(index);
+                          },
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              );
-            }),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -306,8 +305,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
         });
   }
 
-  void _onItemTapped(int index) {
-    _currentIndex = index;
-    selectedIndexStream.add(_currentIndex);
+  _onItemTapped(index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    _pagesController.animateToPage(index,
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }
