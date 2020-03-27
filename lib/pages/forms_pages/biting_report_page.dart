@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_questions_form.dart';
@@ -73,8 +74,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(
-              MyLocalizations.of(
-                  context, "next"), //TODO: show finish in last page!
+              false
+                  ? MyLocalizations.of(context, "finish")
+                  : MyLocalizations.of(
+                      context, "next"), //TODO: show finish in last page
               true
                   ? () {
                       double currentPage = _pagesController.page;
@@ -116,12 +119,16 @@ class _BitingReportPageState extends State<BitingReportPage> {
     report.responses = responses;
   }
 
-  void setLocationType(int type) {
-    if (type == 0) {
-      report.location_choice = "current";
-      //todo: get current cordinates!
-    } else if (type == 1) {
-      report.location_choice = "selected";
+  Future<void> setLocationType(String type) async {
+    report.location_choice = type;
+
+    if(type == "current"){
+      //get current coords
+      Position currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print(currentPosition);
+
+      report.current_location_lat = currentPosition.latitude; 
+      report.current_location_lon = currentPosition.longitude;
     }
   }
 

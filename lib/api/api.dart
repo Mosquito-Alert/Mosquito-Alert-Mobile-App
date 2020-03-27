@@ -131,22 +131,17 @@ class ApiSingleton {
         '$serverUrl$reports?user=$userUUID',
         headers: headers,
       );
-
-      // print(response);
-
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       } else {
         var list = json.decode(response.body) as List;
-        print(list);
         List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
 
-        return reportsList; //TODO: Fix
+        return reportsList; 
       }
 
-      return null;
     } catch (e) {
       return null;
     }

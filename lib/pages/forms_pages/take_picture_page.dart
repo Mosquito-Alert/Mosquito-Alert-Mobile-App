@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 

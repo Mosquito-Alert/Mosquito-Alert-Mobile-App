@@ -45,15 +45,31 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
-    //TODO: fix
-
     var list = await ApiSingleton().getMyReports();
-    print(list);
-
     setState(() {
       _reports = list;
     });
     dataStream.add(list);
+    _createMarkers();
+  }
+
+  _createMarkers() {
+    markers = List();
+    for (int i = 0; i < _reports.length; i++) {
+      var position;
+      if (_reports[i].location_choice == 'current') {
+        position = LatLng(
+            _reports[i].current_location_lat, _reports[i].current_location_lon);
+      } else {
+        position = LatLng(_reports[i].selected_location_lat,
+            _reports[i].selected_location_lon);
+      }
+      markers.add(Marker(
+        markerId: MarkerId(_reports[i].report_id),
+        position: position,
+        // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
+      ));
+    }
   }
 
   @override
@@ -66,8 +82,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
         child: Text(MyLocalizations.of(context, "list_txt")),
       ),
     };
-
-    markers = [];
 
     return Scaffold(
       body: SafeArea(
@@ -84,7 +98,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         itemCount: 2,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          if (index == 0.0) return MyReportsMap(snapshot.data);
+                          if (index == 0.0) return MyReportsMap(markers);
                           if (index == 1.0)
                             return ReportsList(
                                 snapshot.data, _reportBottomSheet);
@@ -355,7 +369,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
           markerId: MarkerId('selectedtMarker'),
           position: LatLng(
               report.selected_location_lat, report.selected_location_lon));
-      ;
     }
 
     return <Marker>[marker].toSet();

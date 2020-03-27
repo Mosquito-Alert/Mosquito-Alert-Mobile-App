@@ -15,7 +15,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   int _selectedIndex;
 
   GoogleMapController controller;
-  LatLng _lastTap;
   Marker marker;
 
   void _onMapCreated(GoogleMapController controller) {
@@ -27,7 +26,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       this.marker =
           Marker(markerId: MarkerId('Marker 1'), position: markerPosition);
     });
-    widget.setSelectedLocation(marker.position.latitude, marker.position.longitude);
+    widget.setSelectedLocation(
+        marker.position.latitude, marker.position.longitude);
   }
 
   @override
@@ -55,60 +55,85 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (ctx, index) {
-                            return Column(
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedIndex = index;
-                                    });
-                                    widget.setLocationType(index);
-                                  },
-                                  child: QuestionOption(
-                                    index == _selectedIndex,
-                                    "** En mi ubicación actual",
-                                    'assets/img/ic_image.PNG',
-                                    disabled: _selectedIndex != null
-                                        ? index != _selectedIndex
-                                        : false,
-                                  ),
-                                ),
-                                _selectedIndex == index && index == 1
-                                    ? Container(
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 5),
-                                        height: 300,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: GoogleMap(
-                                            onMapCreated: _onMapCreated,
-                                            rotateGesturesEnabled: false,
-                                            mapToolbarEnabled: false,
-                                            onTap: (LatLng pos) {
-                                              updateMarker(pos);
-                                            },
-                                            initialCameraPosition:
-                                                const CameraPosition(
-                                              target:
-                                                  LatLng(41.1613063, 0.4724329),
-                                              zoom: 14.0,
-                                            ),
-                                            markers: marker != null
-                                                ? <Marker>[marker].toSet()
-                                                : null,
-                                          ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 0;
+                          });
+                          widget.setLocationType('current');
+                        },
+                        child: QuestionOption(
+                          0 == _selectedIndex,
+                          "** En mi ubicación actual",
+                          'assets/img/ic_image.PNG',
+                          disabled: _selectedIndex != null
+                              ? 0 != _selectedIndex
+                              : false,
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedIndex = 1;
+                                });
+                                widget.setLocationType('selected');
+                              },
+                              child: QuestionOption(
+                                1 == _selectedIndex,
+                                "** Seleccionar en un mapa",
+                                'assets/img/ic_image.PNG',
+                                disabled: _selectedIndex != null
+                                    ? 1 != _selectedIndex
+                                    : false,
+                              ),
+                            ),
+                            _selectedIndex == 1
+                                ? Container(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
+                                    height: 300,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: GoogleMap(
+                                        onMapCreated: _onMapCreated,
+                                        rotateGesturesEnabled: false,
+                                        mapToolbarEnabled: false,
+                                        onTap: (LatLng pos) {
+                                          updateMarker(pos);
+                                        },
+                                        initialCameraPosition:
+                                            const CameraPosition(
+                                          target: LatLng(41.1613063, 0.4724329),
+                                          zoom: 14.0,
                                         ),
-                                      )
-                                    : Container(),
-                              ],
-                            );
-                          })
+                                        markers: marker != null
+                                            ? <Marker>[marker].toSet()
+                                            : null,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 2;
+                          });
+                          widget.setLocationType(null);
+                        },
+                        child: QuestionOption(
+                          2 == _selectedIndex,
+                          "** No me acuerdo",
+                          'assets/img/ic_image.PNG',
+                          disabled: _selectedIndex != null
+                              ? 2 != _selectedIndex
+                              : false,
+                        ),
+                      ),
                     ],
                   ),
                 ),
