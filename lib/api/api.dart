@@ -132,20 +132,23 @@ class ApiSingleton {
         headers: headers,
       );
 
-      print(response);
+      // print(response);
 
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
-      } else  {
+      } else {
         var list = json.decode(response.body) as List;
+        print(list);
         List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
 
-        return reportsList;  //TODO: Fix
+        return reportsList; //TODO: Fix
       }
 
-      return false;
-    } catch (e) {}
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 }

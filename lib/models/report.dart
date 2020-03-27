@@ -49,18 +49,18 @@ class Report {
     location_choice = json['location_choice'];
     current_location_lon = json['current_location_lon'];
     current_location_lat = json['current_location_lat'];
-    selected_location_lon = json['current_location_lon'];
-    selected_location_lat = json['current_location_lat'];
+    selected_location_lon = json['selected_location_lon'];
+    selected_location_lat = json['selected_location_lat'];
     note = json['note'];
     package_name = json['package_name'];
     package_version = json['package_version'];
 
-    if (json['responses'] != null) {
-      responses = new List<Questions>();
-      json['responses'].foreach((r) {
-        responses.add(new Questions.fromJson(r));
-      });
-    }
+    // if (json['responses'] != null) {
+    //   responses = new List<Questions>();
+    //   json['responses'].foreach((r) {
+    //     responses.add(new Questions.fromJson(r));
+    //   });
+    // }
   }
 
   Map<String, dynamic> toJson() {

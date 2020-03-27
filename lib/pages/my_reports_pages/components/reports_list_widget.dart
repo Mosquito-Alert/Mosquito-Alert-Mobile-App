@@ -4,6 +4,7 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:intl/intl.dart';
 
 class ReportsList extends StatelessWidget {
 
@@ -44,13 +45,13 @@ class ReportsList extends StatelessWidget {
                         Style.titleMedium(
                             MyLocalizations.of(
                                     context, "report_of_the_day_txt") +
-                                "19/03/2020",
+                                DateFormat('dd-MM-yyyy').format(DateTime.parse(reports[index].creation_time)).toString(),
                             fontSize: 14),
                         Style.body(MyLocalizations.of(context, "location_txt") +
-                            "Mi casa"),
+                            "**Mi casa"),
                         Style.body(
                             MyLocalizations.of(context, "at_time_txt") +
-                                "12:00h",
+                              DateFormat.Hm().format(DateTime.parse(reports[index].creation_time)).toString(),
                             color: Colors.grey),
                       ],
                     ),

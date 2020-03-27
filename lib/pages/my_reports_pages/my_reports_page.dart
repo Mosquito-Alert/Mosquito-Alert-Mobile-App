@@ -7,9 +7,9 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:intl/intl.dart';
 
 import 'components/reports_list_widget.dart';
 
@@ -22,6 +22,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports;
 
   final _pagesController = PageController();
+
+  StreamController<List<Report>> dataStream =
+      new StreamController<List<Report>>.broadcast();
 
   int _currentIndex = 0;
   Map<int, Widget> _children;
@@ -36,22 +39,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   initState() {
     super.initState();
-    if (_reports == null || _reports.isNotEmpty) {
+    if (_reports == null) {
       _getData();
     }
   }
 
   _getData() async {
-    List<Report> _currentReports =  await ApiSingleton().getMyReports();
-    for(Report rep in _currentReports) {
-      _reports.add(rep);
-    }
+    //TODO: fix
 
-    dataStream.add(_currentReports);
+    var list = await ApiSingleton().getMyReports();
+    print(list);
+
+    setState(() {
+      _reports = list;
+    });
+    dataStream.add(list);
   }
-
-  StreamController<List<Report>> dataStream =
-      new StreamController<List<Report>>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -174,11 +177,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         mapToolbarEnabled: false,
                         scrollGesturesEnabled: false,
                         onMapCreated: _onMapCreated,
-                        initialCameraPosition: const CameraPosition(
-                          target: LatLng(41.1613063, 0.4724329),
-                          zoom: 14.0,
-                        ),
-                        //
+                        initialCameraPosition: _getPosition(report),
+                        markers: _getMarker(report),
                       ),
                     ),
                   ),
@@ -187,7 +187,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   ),
                   Style.titleMedium(
                       MyLocalizations.of(context, "report_of_the_day_txt") +
-                          '9/03/2020'),
+                          DateFormat('dd-MM-yyyy')
+                              .format(DateTime.parse(report.creation_time))
+                              .toString()),
                   SizedBox(
                     height: 20,
                   ),
@@ -202,13 +204,21 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     context, "registered_location_txt"),
                                 fontSize: 14),
                             Style.body(
-                                '(' +
-                                    report.current_location_lat.toString() +
-                                    ', ' +
-                                    report.current_location_lon.toString() +
-                                    ')',
+                                report.location_choice == "current"
+                                    ? '(' +
+                                        report.current_location_lat.toString() +
+                                        ', ' +
+                                        report.current_location_lon.toString() +
+                                        ')'
+                                    : '(' +
+                                        report.selected_location_lat
+                                            .toString() +
+                                        ', ' +
+                                        report.selected_location_lon
+                                            .toString() +
+                                        ')',
                                 fontSize: 12),
-                            Style.body('Cercad de Bellaterra (Barcelona)',
+                            Style.body('Cercad de **Bellaterra (Barcelona)',
                                 fontSize: 12),
                           ],
                         ),
@@ -221,9 +231,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 MyLocalizations.of(
                                     context, "exact_time_register_txt"),
                                 fontSize: 14),
-                            Style.body('una fecha muyyy muyy larga',
+                            Style.body(
+                                DateFormat('dddd, dd MMMM yyyy')
+                                    .format(
+                                        DateTime.parse(report.creation_time))
+                                    .toString(),
                                 fontSize: 12),
-                            Style.body('A las 15:00:25 horas'),
+                            Style.body(
+                                'A las ' +
+                                    DateFormat.Hms()
+                                        .format(DateTime.parse(
+                                            report.creation_time))
+                                        .toString() +
+                                    ' horas',
+                                fontSize: 12),
                           ],
                         ),
                       ),
@@ -303,6 +324,41 @@ class _MyReportsPageState extends State<MyReportsPage> {
             ),
           ));
         });
+  }
+
+  _getPosition(Report report) {
+    var _target;
+
+    if (report.location_choice == "current") {
+      _target =
+          LatLng(report.current_location_lat, report.current_location_lon);
+    } else {
+      _target =
+          LatLng(report.selected_location_lat, report.selected_location_lon);
+    }
+
+    return CameraPosition(
+      target: _target,
+      zoom: 15.0,
+    );
+  }
+
+  _getMarker(Report report) {
+    var marker;
+    if (report.location_choice == "current") {
+      marker = Marker(
+          markerId: MarkerId('currentMarker'),
+          position:
+              LatLng(report.current_location_lat, report.current_location_lon));
+    } else {
+      marker = Marker(
+          markerId: MarkerId('selectedtMarker'),
+          position: LatLng(
+              report.selected_location_lat, report.selected_location_lon));
+      ;
+    }
+
+    return <Marker>[marker].toSet();
   }
 
   _onItemTapped(index) {
