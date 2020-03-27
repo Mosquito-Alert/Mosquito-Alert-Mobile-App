@@ -55,10 +55,10 @@ class Report {
     package_name = json['package_name'];
     package_version = json['package_version'];
 
-    // if (json['responses'] != null) {
+    // if (json['responses'] != null) {         //TODO: fix formJson Questions
     //   responses = new List<Questions>();
-    //   json['responses'].foreach((r) {
-    //     responses.add(new Questions.fromJson(r));
+    //   json['responses'].foreach((q) {
+    //     responses.add(new Questions.fromJson(q));
     //   });
     // }
   }
@@ -86,7 +86,7 @@ class Report {
     }
   }
 
- Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['version_UUID'] = version_UUID;
     data['version_number'] = version_number;
@@ -109,8 +109,6 @@ class Report {
     }
     return data;
   }
-
-  
 }
 
 class Questions {

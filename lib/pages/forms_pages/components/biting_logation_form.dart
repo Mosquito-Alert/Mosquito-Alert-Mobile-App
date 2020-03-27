@@ -123,7 +123,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                           setState(() {
                             _selectedIndex = 2;
                           });
-                          widget.setLocationType(null);
+                          widget.setLocationType('missing');
                         },
                         child: QuestionOption(
                           2 == _selectedIndex,
