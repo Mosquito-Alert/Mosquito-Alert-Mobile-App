@@ -19,7 +19,7 @@ class MyReportsMap extends StatelessWidget {
       mapToolbarEnabled: false,
       initialCameraPosition: const CameraPosition(
         target: LatLng(41.1613063, 0.4724329),
-        zoom: 12.0,
+        zoom: 16.0,
       ),
       markers: Set<Marker>.of(markers),
     );

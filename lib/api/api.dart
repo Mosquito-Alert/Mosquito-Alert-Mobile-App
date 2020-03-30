@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 
 class ApiSingleton {
   static String serverUrl = 'http://humboldt.ceab.csic.es/api';
@@ -14,6 +15,9 @@ class ApiSingleton {
 
   //Reports
   static const reports = '/reports/';
+
+  //Images
+  static const images = '/photos/';
 
   var headers = {
     "Content-Type": " application/json",
@@ -54,6 +58,7 @@ class ApiSingleton {
   Future<dynamic> createReport(Report report) async {
     try {
       var body = {};
+      String image = Utils.getImagePath();
 
       //TODO: fix this!
       if (report.version_UUID != null && report.version_UUID.isNotEmpty) {
@@ -119,6 +124,11 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       }
+
+      if (image != null) {
+        print(image);
+        saveImage(image, report.report_id);
+      }
     } catch (e) {
       return null;
     }
@@ -139,11 +149,27 @@ class ApiSingleton {
         var list = json.decode(response.body) as List;
         List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
 
-        return reportsList; 
+        return reportsList;
       }
-
+      return false;
     } catch (e) {
       return null;
     }
+  }
+
+  Future<dynamic> saveImage(String path, String reportId) async {
+    try {
+      final response = await http.post(
+        '$serverUrl$images',
+        headers: headers,
+        body: jsonEncode({'photo': path, 'report': reportId}),
+      );
+
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      }
+    } catch (e) {}
   }
 }

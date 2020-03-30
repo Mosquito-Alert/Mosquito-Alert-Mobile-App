@@ -74,10 +74,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(
-              false
+              false //TODO: show finish in last page
                   ? MyLocalizations.of(context, "finish")
                   : MyLocalizations.of(
-                      context, "next"), //TODO: show finish in last page
+                      context, "next"),
               true
                   ? () {
                       double currentPage = _pagesController.page;
@@ -121,12 +121,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   Future<void> setLocationType(String type) async {
     report.location_choice = type;
-
     if(type == "current"){
-      //get current coords
       Position currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(currentPosition);
-
       report.current_location_lat = currentPosition.latitude; 
       report.current_location_lon = currentPosition.longitude;
     }

@@ -38,7 +38,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(MyLocalizations.of(
-            context, "send_photo_title")), //TODO: fix widget!
+            context, "send_photo_title")),
         backgroundColor: Colors.white,
       ),
       body: Column(
@@ -88,6 +88,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
                           );
 
                           await _controller.takePicture(path);
+                          Utils.saveImgPath(path);
                           setState(() {
                             _path = path;
                           });

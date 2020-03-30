@@ -60,15 +60,21 @@ class _MyReportsPageState extends State<MyReportsPage> {
       if (_reports[i].location_choice == 'current') {
         position = LatLng(
             _reports[i].current_location_lat, _reports[i].current_location_lon);
-      } else {
-        position = LatLng(_reports[i].selected_location_lat,
-            _reports[i].selected_location_lon);
-      }
-      markers.add(Marker(
+            markers.add(Marker(
         markerId: MarkerId(_reports[i].report_id),
         position: position,
         // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
       ));
+      } else if (_reports[i].location_choice == 'selected') {
+        position = LatLng(_reports[i].selected_location_lat,
+            _reports[i].selected_location_lon);
+            markers.add(Marker(
+        markerId: MarkerId(_reports[i].report_id),
+        position: position,
+        // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
+      ));
+      }
+      
     }
   }
 
@@ -181,21 +187,23 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   SizedBox(
                     height: 15,
                   ),
-                  Container(
-                    height: 120,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: GoogleMap(
-                        rotateGesturesEnabled: false,
-                        mapToolbarEnabled: false,
-                        scrollGesturesEnabled: false,
-                        onMapCreated: _onMapCreated,
-                        initialCameraPosition: _getPosition(report),
-                        markers: _getMarker(report),
-                      ),
-                    ),
-                  ),
+                  report.location_choice != 'missing'
+                      ? Container(
+                          height: 120,
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: GoogleMap(
+                              rotateGesturesEnabled: false,
+                              mapToolbarEnabled: false,
+                              scrollGesturesEnabled: false,
+                              onMapCreated: _onMapCreated,
+                              initialCameraPosition: _getPosition(report),
+                              markers: _getMarker(report),
+                            ),
+                          ),
+                        )
+                      : Container(),
                   SizedBox(
                     height: 20,
                   ),
