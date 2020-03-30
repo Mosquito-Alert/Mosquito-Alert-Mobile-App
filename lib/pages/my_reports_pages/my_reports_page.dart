@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -20,6 +21,10 @@ class MyReportsPage extends StatefulWidget {
 
 class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports;
+
+  BitmapDescriptor iconAdultYours;
+  BitmapDescriptor iconBitesYours;
+  BitmapDescriptor iconBreedingYours;
 
   final _pagesController = PageController();
 
@@ -42,6 +47,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
     if (_reports == null) {
       _getData();
     }
+    if (iconAdultYours == null) {
+      setCustomMapPin();
+    }
   }
 
   _getData() async {
@@ -53,28 +61,50 @@ class _MyReportsPageState extends State<MyReportsPage> {
     _createMarkers();
   }
 
+  void setCustomMapPin() async {
+    iconAdultYours = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'assets/img/ic_adults_yours.png');
+    iconBitesYours = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'assets/img/ic_bites_yours.png');
+    iconBreedingYours = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'assets/img/ic_breeding_yours.png');
+  }
+
   _createMarkers() {
     markers = List();
     for (int i = 0; i < _reports.length; i++) {
       var position;
-      if (_reports[i].location_choice == 'current') {
-        position = LatLng(
-            _reports[i].current_location_lat, _reports[i].current_location_lon);
-            markers.add(Marker(
-        markerId: MarkerId(_reports[i].report_id),
-        position: position,
-        // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
-      ));
-      } else if (_reports[i].location_choice == 'selected') {
-        position = LatLng(_reports[i].selected_location_lat,
-            _reports[i].selected_location_lon);
-            markers.add(Marker(
-        markerId: MarkerId(_reports[i].report_id),
-        position: position,
-        // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
-      ));
+      if (_reports[i].location_choice != 'missing') {
+        if (_reports[i].location_choice == 'current') {
+          position = LatLng(_reports[i].current_location_lat,
+              _reports[i].current_location_lon);
+        } else if (_reports[i].location_choice == 'selected') {
+          position = LatLng(_reports[i].selected_location_lat,
+              _reports[i].selected_location_lon);
+        }
+        var icon;
+        switch (_reports[i].type) {
+          case "adult":
+            icon = iconAdultYours;
+            break;
+          case "bite":
+            icon = iconBitesYours;
+            break;
+          case "breeding":
+            icon = iconBreedingYours;
+            break;
+          default:
+            break;
+        }
+        markers.add(Marker(
+            markerId: MarkerId(_reports[i].report_id),
+            position: position,
+            // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
+            icon: icon));
       }
-      
     }
   }
 

@@ -37,7 +37,10 @@ class _MainVCState extends State<MainVC> {
             );
           },
         ),
-        title: SvgPicture.asset('assets/img/logo_mosquito_alert.svg'),
+        title: Image.asset(
+          'assets/img/ic_logo.png',
+          height: 45,
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.notifications),
@@ -237,10 +240,9 @@ class _MainVCState extends State<MainVC> {
             ),
             Container(
                 width: double.infinity,
-                child: Image.asset(
-                  'assets/img/bottom_main.PNG',
+                child: SvgPicture.asset(
+                  'assets/img/ic_bottom_waves.svg',
                   width: 500,
-                  fit: BoxFit.cover,
                 )),
           ],
         ),

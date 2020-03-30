@@ -19,7 +19,7 @@ class _PointsInfoState extends State<PointsInfo> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: SvgPicture.asset('assets/img/logo_mosquito_alert.svg'),
+        title: Image.asset('assets/img/ic_logo.png', height: 45,),
       ),
       body: Builder(builder: (BuildContext context) {
         return WebView(
