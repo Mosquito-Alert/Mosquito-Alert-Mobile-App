@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/points_info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
@@ -149,8 +150,11 @@ class _MainVCState extends State<MainVC> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () async {
-                          var uuid = await UserManager.getUUID();
-                          print(uuid);
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuestionsReportPage()),
+                            );
                         },
                         child: CustomCard(
                           img: 'assets/img/mosquito_placeholder.PNG',
