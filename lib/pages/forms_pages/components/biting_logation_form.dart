@@ -1,22 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/question_option_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingLocationForm extends StatefulWidget {
-  final Function setLocationType, setSelectedLocation;
-  BitingLocationForm(this.setLocationType, this.setSelectedLocation);
+  final Function seetCurrentLocation, setSelectedLocation;
+  BitingLocationForm(this.seetCurrentLocation, this.setSelectedLocation);
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
 }
 
-class _BitingLocationFormState extends State<BitingLocationForm> {
-  int _selectedIndex;
+enum LocationType { current, selected, missing }
 
+class _BitingLocationFormState extends State<BitingLocationForm> {
   GoogleMapController controller;
   Marker marker;
+
+  Set<Circle> circles;
+
+  StreamController<LocationType> streamType =
+      StreamController<LocationType>.broadcast();
 
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
@@ -29,6 +38,40 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     });
     widget.setSelectedLocation(
         marker.position.latitude, marker.position.longitude);
+  }
+
+  getPosition(type) async {
+    streamType.add(type);
+    if (type == LocationType.current) {
+      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+      bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
+      if (geolocationEnabled) {
+        Position currentPosition = await Geolocator()
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        circles = Set.from([
+          Circle(
+              circleId: CircleId('ddhahsb'),
+              center:
+                  LatLng(currentPosition.latitude, currentPosition.longitude),
+              radius: 50,
+              strokeColor: Colors.transparent,
+              fillColor: Colors.blue.withOpacity(0.1))
+        ]);
+        widget.setSelectedLocation(
+            currentPosition.latitude, currentPosition.longitude);
+      } else {
+        print('no puedes usarlo ');
+
+        //TODO: Show Alert
+
+        // Utils.showAlert("Localizacion desactivada",
+        //     "actova la localización para poder usar esta función", context,
+        //     onPressed: () {});
+      }
+    } else if (type == LocationType.selected) {
+      updateMarker(LatLng(41.16154, 0.47337));      
+      widget.setSelectedLocation(marker.position.latitude, marker.position.longitude);
+    } else if (type == LocationType.missing) {}
   }
 
   @override
@@ -53,131 +96,83 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                 Style.body(MyLocalizations.of(context, "chose_option_txt")),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  child: StreamBuilder(
+                    stream: streamType.stream,
+                    initialData: LocationType.selected,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<LocationType> snapshot) {
+                      return Column(
                         children: <Widget>[
-                          Expanded(child: SmallQuestionOption()),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        getPosition(LocationType.current);
+                                      },
+                                      child: SmallQuestionOption(
+                                        '*Ubicación actual',
+                                        selected: snapshot.data ==
+                                            LocationType.current,
+                                      ))),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  getPosition(LocationType.selected);
+                                },
+                                child: SmallQuestionOption(
+                                  '*Seleccionar...',
+                                  selected:
+                                      snapshot.data == LocationType.selected,
+                                ),
+                              )),
+                            ],
+                          ),
                           SizedBox(
-                            width: 10,
+                            height: 10,
                           ),
-                          Expanded(
-                              child: SmallQuestionOption(
-                            selected: true,
-                          )),
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     setState(() {
-                          //       _selectedIndex = 0;
-                          //     });
-                          //     widget.setLocationType('current');
-                          //   },
-                          //   child: QuestionOption(
-                          //     0 == _selectedIndex,
-                          //     "** En mi ubicación actual",
-                          //     'assets/img/ic_image.PNG',
-                          //     disabled: _selectedIndex != null
-                          //         ? 0 != _selectedIndex
-                          //         : false,
-                          //   ),
-                          // ),
-                          // Container(
-                          //   child: Column(
-                          //     children: <Widget>[
-                          //       GestureDetector(
-                          //         onTap: () {
-                          //           setState(() {
-                          //             _selectedIndex = 1;
-                          //           });
-                          //           widget.setLocationType('selected');
-                          //         },
-                          //         child: QuestionOption(
-                          //           1 == _selectedIndex,
-                          //           "** Seleccionar en un mapa",
-                          //           'assets/img/ic_image.PNG',
-                          //           disabled: _selectedIndex != null
-                          //               ? 1 != _selectedIndex
-                          //               : false,
-                          //         ),
-                          //       ),
-                          //       _selectedIndex == 1
-                          //           ? Container(
-                          //               margin: EdgeInsets.symmetric(vertical: 5),
-                          //               height: 300,
-                          //               child: ClipRRect(
-                          //                 borderRadius: BorderRadius.circular(15),
-                          //                 child: GoogleMap(
-                          //                   onMapCreated: _onMapCreated,
-                          //                   rotateGesturesEnabled: false,
-                          //                   mapToolbarEnabled: false,
-                          //                   onTap: (LatLng pos) {
-                          //                     updateMarker(pos);
-                          //                   },
-                          //                   initialCameraPosition:
-                          //                       const CameraPosition(
-                          //                     target: LatLng(41.1613063, 0.4724329),
-                          //                     zoom: 14.0,
-                          //                   ),
-                          //                   markers: marker != null
-                          //                       ? <Marker>[marker].toSet()
-                          //                       : null,
-                          //                 ),
-                          //               ),
-                          //             )
-                          //           : Container(),
-                          //     ],
-                          //   ),
-                          // ),
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     setState(() {
-                          //       _selectedIndex = 2;
-                          //     });
-                          //     widget.setLocationType('missing');
-                          //   },
-                          //   child: QuestionOption(
-                          //     2 == _selectedIndex,
-                          //     "** No me acuerdo",
-                          //     'assets/img/ic_image.PNG',
-                          //     disabled: _selectedIndex != null
-                          //         ? 2 != _selectedIndex
-                          //         : false,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        height: 300,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            rotateGesturesEnabled: false,
-                            mapToolbarEnabled: false,
-                            onTap: (LatLng pos) {
-                              updateMarker(pos);
-                            },
-                            initialCameraPosition: const CameraPosition(
-                              target: LatLng(41.1613063, 0.4724329),
-                              zoom: 14.0,
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            height: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                rotateGesturesEnabled: false,
+                                mapToolbarEnabled: false,
+                                onTap: (LatLng pos) {
+                                  snapshot.data == LocationType.selected
+                                      ? updateMarker(pos)
+                                      : null;
+                                },
+                                initialCameraPosition: const CameraPosition(
+                                  target: LatLng(41.1613063, 0.4724329),
+                                  zoom: 14.0,
+                                ),
+                                markers:
+                                    snapshot.data == LocationType.selected &&
+                                            marker != null
+                                        ? <Marker>[marker].toSet()
+                                        : null,
+                                circles: snapshot.data == LocationType.current
+                                    ? circles
+                                    : null,
+                              ),
                             ),
-                            markers: marker != null
-                                ? <Marker>[marker].toSet()
-                                : null,
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Style.noBgButton("No lo tengo claro", () {},
-                          textColor: Colors.grey)
-                    ],
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Style.noBgButton("No lo tengo claro", () {
+                            getPosition(LocationType.missing);
+                          }, textColor: Colors.grey)
+                        ],
+                      );
+                    },
                   ),
                 ),
               ],

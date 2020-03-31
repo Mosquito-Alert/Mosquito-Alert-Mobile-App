@@ -71,13 +71,15 @@ class _BitingFormState extends State<BitingForm> {
                   ),
                   Row(children: <Widget>[
                     Expanded(
-                      child: SmallQuestionOption(selected: true),
+                      child: SmallQuestionOption('', selected: true),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
-                      child: SmallQuestionOption(),
+                      child: SmallQuestionOption(
+                        '',
+                      ),
                     ),
                   ]),
                   SizedBox(
@@ -85,13 +87,15 @@ class _BitingFormState extends State<BitingForm> {
                   ),
                   Row(children: <Widget>[
                     Expanded(
-                      child: SmallQuestionOption(),
+                      child: SmallQuestionOption(
+                        '',
+                      ),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
-                      child: SmallQuestionOption(),
+                      child: SmallQuestionOption(''),
                     ),
                   ]),
                   SizedBox(
