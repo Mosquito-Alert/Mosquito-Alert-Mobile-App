@@ -26,7 +26,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       BitingForm(),
-      // BitingLocationForm(setLocationType, setSelectedLocation),
+      BitingLocationForm((){}, (){}),
       MosquitoTypeForm()
     ];
 
@@ -56,7 +56,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == 1.0) {
+                      if (currentPage == 2.0) {
                         // createReport();
                         Navigator.push(
                           context,

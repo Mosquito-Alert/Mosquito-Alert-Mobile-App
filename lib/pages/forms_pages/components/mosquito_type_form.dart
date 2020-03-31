@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/take_picture_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+
+import 'image_question_option_widget.dart';
 
 class MosquitoTypeForm extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   _selectedIndex = index;
                                 });
                               },
-                              child: SmallQuestionOption(
+                              child: ImageQuestionOption(
                                 false,
                                 "TITULO",
                                 MyLocalizations.of(context, "recognize_it_txt"),
