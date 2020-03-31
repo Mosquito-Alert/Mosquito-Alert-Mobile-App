@@ -50,7 +50,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
             .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         circles = Set.from([
           Circle(
-              circleId: CircleId('ddhahsb'),
+              circleId: CircleId('Circle 1'),
               center:
                   LatLng(currentPosition.latitude, currentPosition.longitude),
               radius: 50,

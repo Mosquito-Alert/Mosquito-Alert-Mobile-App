@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -27,7 +29,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       BitingForm(),
-      BitingLocationForm(setCurrentLocation, () {}),
+      BitingLocationForm(setCurrentLocation, setSelectedLocation),
       MosquitoTypeForm()
     ];
 
@@ -105,13 +107,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
     report.current_location_lon = longitude;
   }
 
-  // void setSelectedLocation(double lat, lon) {
-  //   report.selected_location_lat = lat;
-  //   report.selected_location_lon = lon;
-  // }
+  void setSelectedLocation(double lat, lon) {
+    report.selected_location_lat = lat;
+    report.selected_location_lon = lon;
+  }
 
   // Future<void> createReport() async {
-  //   report.type = 'adult';
+  //   report.type = 'bite';
   //   report.report_id = randomAlphaNumeric(4).toString();
   //   report.version_number = 0;
   //   report.version_time = DateTime.now().toUtc().toString();

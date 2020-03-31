@@ -41,23 +41,15 @@ class _BitingFormState extends State<BitingForm> {
                       '¿Cuántas picaduras quieres reportar y dónde?',
                       fontSize: 16),
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.topLeft,
                     child: Stack(
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            addData('head');
-                          },
-                          child: snapshot.hasData &&
-                                  snapshot.data.contains('head') == true
-                              ? Image.asset("assets/img/ic_head_on.png")
-                              : Image.asset("assets/img/ic_head_off.png"),
-                        ),
-                        Image.asset('assets/img/ic_left_hand_off.png'),
-                        Image.asset('assets/img/ic_right_hand_off.png'),
-                        Image.asset('assets/img/ic_left_leg_off.png'),
-                        Image.asset('assets/img/ic_right_leg_off.png'),
-                        Image.asset('assets/img/ic_chest_off.png'),
+                        Image.asset("assets/img/ic_left_leg.png"),
+                        Image.asset('assets/img/ic_right_leg.png'),
+                        Image.asset('assets/img/ic_body.png'),
+                        Image.asset('assets/img/ic_left_handf.png'),
+                        Image.asset('assets/img/ic_right_hand.png'),
+                        Image.asset('assets/img/ic_head.png'),
                       ],
                     ),
                   ),
