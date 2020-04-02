@@ -3,10 +3,11 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class SmallQuestionOption extends StatelessWidget {
   final bool selected;
-  final String text;
+  final String text, index;
   SmallQuestionOption(
     this.text, {
     this.selected,
+    this.index,
   });
 
   @override
@@ -28,7 +29,7 @@ class SmallQuestionOption extends StatelessWidget {
           )
         : Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(index != null ? 15 : 20),
             decoration: BoxDecoration(
               color: Style.colorPrimary,
               borderRadius: BorderRadius.circular(15),
@@ -36,14 +37,14 @@ class SmallQuestionOption extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                false
+                index != null
                     ? Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
                           color: Colors.white.withOpacity(0.4),
                         ),
                         padding: EdgeInsets.all(5),
-                        child: Style.body('2', color: Colors.white),
+                        child: Style.body(index, color: Colors.white),
                       )
                     : Container(),
                 Style.body(

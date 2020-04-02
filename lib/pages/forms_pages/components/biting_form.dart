@@ -11,8 +11,25 @@ class BitingForm extends StatefulWidget {
 }
 
 class _BitingFormState extends State<BitingForm> {
-  StreamController<List<String>> streamData =
+  StreamController<List<dynamic>> streamData =
       new StreamController<List<String>>.broadcast();
+
+  List questions = new List();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // streamData.add(questions);
+    questions = [
+      List.of({
+        "leftArm",
+        "leftArm",
+        "head",
+      }),
+      List.of({'1'}),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +37,14 @@ class _BitingFormState extends State<BitingForm> {
       child: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 15),
-          child: StreamBuilder<List<String>>(
+          child: StreamBuilder<List<dynamic>>(
             stream: streamData.stream,
-            // initialData: 'head',
+            initialData: questions,
             builder:
-                (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              // if(!snapshot.hasData){
+              //   return Container(color: Colors.grey,);
+              // }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -44,12 +64,30 @@ class _BitingFormState extends State<BitingForm> {
                     alignment: Alignment.topLeft,
                     child: Stack(
                       children: <Widget>[
-                        Image.asset("assets/img/ic_left_leg.png"),
-                        Image.asset('assets/img/ic_right_leg.png'),
-                        Image.asset('assets/img/ic_body.png'),
-                        Image.asset('assets/img/ic_left_handf.png'),
-                        Image.asset('assets/img/ic_right_hand.png'),
-                        Image.asset('assets/img/ic_head.png'),
+                        Container(),
+                        // Image.asset("assets/img/ic_left_leg_off.png"),
+                        // Image.asset('assets/img/ic_right_leg_off.png'),
+                        new GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            print('chest');
+                          },
+                          child: Image.asset('assets/img/ic_chest_off.png'),
+                        ),
+                        // Image.asset('assets/img/ic_left_hand_off.png'),
+                        // new GestureDetector(
+                        //     behavior: HitTestBehavior.translucent,
+                        //     onTap: () {
+                        //       print('no head');
+                        //     },
+                        //     child: Image.asset(
+                        //         'assets/img/ic_right_hand_off.png')),
+                        new GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              print('head');
+                            },
+                            child: Image.asset('assets/img/ic_head_off.png'))
                       ],
                     ),
                   ),
@@ -63,14 +101,31 @@ class _BitingFormState extends State<BitingForm> {
                   ),
                   Row(children: <Widget>[
                     Expanded(
-                      child: SmallQuestionOption('', selected: true),
+                      child: InkWell(
+                        onTap: () {
+                          addToList(1, '0');
+                        },
+                        child: SmallQuestionOption(
+                          'Amanecer',
+                          selected: snapshot.data[1].contains('0'),
+                          // selected: true,
+                          index: getIndexAnswer('0'),
+                        ),
+                      ),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
-                      child: SmallQuestionOption(
-                        '',
+                      child: InkWell(
+                        onTap: () {
+                          addToList(1, '1');
+                        },
+                        child: SmallQuestionOption(
+                          'Mediodía',
+                          selected: snapshot.data[1].contains('1'),
+                          index: getIndexAnswer('1'),
+                        ),
                       ),
                     ),
                   ]),
@@ -79,21 +134,38 @@ class _BitingFormState extends State<BitingForm> {
                   ),
                   Row(children: <Widget>[
                     Expanded(
-                      child: SmallQuestionOption(
-                        '',
+                      child: InkWell(
+                        onTap: () {
+                          addToList(1, '2');
+                        },
+                        child: SmallQuestionOption(
+                          'Atardecer',
+                          selected: snapshot.data[1].contains('2'),
+                          index: getIndexAnswer('2'),
+                        ),
                       ),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
-                      child: SmallQuestionOption(''),
+                      child: InkWell(
+                        onTap: () {
+                          addToList(1, '3');
+                        },
+                        child: SmallQuestionOption(
+                          'Noche',
+                          selected: snapshot.data[1].contains('3'),
+                          index: getIndexAnswer('3'),
+                        ),
+                      ),
                     ),
                   ]),
                   SizedBox(
                     height: 15,
                   ),
-                  false
+                  canContinue()
+                  // false
                       ? Container(
                           padding: EdgeInsets.symmetric(vertical: 20),
                           width: double.infinity,
@@ -128,9 +200,31 @@ class _BitingFormState extends State<BitingForm> {
     );
   }
 
-  addData(String data) {
-    List<String> list = List();
-    list.add(data);
-    streamData.add(list);
+
+  String getIndexAnswer(String answer) {
+    List answers = questions[1];
+    int index = 0;
+    for (int i = 0; i < answers.length; i++) {
+      if (answers[i] == answer) {
+        index++;
+      }
+    }
+
+    return index.toString();
+  }
+
+  addToList(int index, String data) {
+    // print(questions[index]);
+    setState(() {
+      questions[index].add(data);
+    });
+
+    streamData.add(questions);
+  }
+
+  bool canContinue(){
+    List parts = questions[0];
+    List time = questions[1]; 
+    return parts.length == time.length;
   }
 }
