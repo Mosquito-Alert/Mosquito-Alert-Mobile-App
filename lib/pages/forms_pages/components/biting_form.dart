@@ -96,42 +96,42 @@ class _BitingFormState extends State<BitingForm> {
                               top: mediaQuery.height * 0.05,
                               left: mediaQuery.width * 0.37,
                               child: snapshot.data[0].contains('head')
-                                  ? Style.body('1')
+                                  ? Style.body(getIndexAnswer(0, "head"))
                                   : Container(),
                             ),
                             Positioned(
                               top: mediaQuery.height * 0.18,
                               left: mediaQuery.width * 0.21,
                               child: snapshot.data[0].contains('rightHand')
-                                  ? Style.body('2')
+                                  ? Style.body(getIndexAnswer(0, "rightHand"))
                                   : Container(),
                             ),
                             Positioned(
                               top: mediaQuery.height * 0.18,
                               left: mediaQuery.width * 0.70,
                               child: snapshot.data[0].contains('leftHand')
-                                  ? Style.body('3')
+                                  ? Style.body(getIndexAnswer(0, "leftHand"))
                                   : Container(),
                             ),
                             Positioned(
                               top: mediaQuery.height * 0.23,
                               left: mediaQuery.width * 0.56,
                               child: snapshot.data[0].contains('chest')
-                                  ? Style.body('4')
+                                  ? Style.body(getIndexAnswer(0, "chest"))
                                   : Container(),
                             ),
                             Positioned(
                               top: mediaQuery.height * 0.37,
                               left: mediaQuery.width * 0.28,
                               child: snapshot.data[0].contains('rightLeg')
-                                  ? Style.body('5')
+                                  ? Style.body(getIndexAnswer(0, "rightLeg"))
                                   : Container(),
                             ),
                             Positioned(
                               top: mediaQuery.height * 0.37,
                               left: mediaQuery.width * 0.63,
                               child: snapshot.data[0].contains('leftLeg')
-                                  ? Style.body('6')
+                                  ? Style.body(getIndexAnswer(0, "leftLeg"))
                                   : Container(),
                             ),
                           ],
@@ -241,7 +241,7 @@ class _BitingFormState extends State<BitingForm> {
                           'Amanecer',
                           selected: snapshot.data[1].contains('0'),
                           // selected: true,
-                          index: getIndexAnswer('0'),
+                          index: getIndexAnswer(1, '0'),
                         ),
                       ),
                     ),
@@ -256,7 +256,7 @@ class _BitingFormState extends State<BitingForm> {
                         child: SmallQuestionOption(
                           'Mediodía',
                           selected: snapshot.data[1].contains('1'),
-                          index: getIndexAnswer('1'),
+                          index: getIndexAnswer(1, '1'),
                         ),
                       ),
                     ),
@@ -273,7 +273,7 @@ class _BitingFormState extends State<BitingForm> {
                         child: SmallQuestionOption(
                           'Atardecer',
                           selected: snapshot.data[1].contains('2'),
-                          index: getIndexAnswer('2'),
+                          index: getIndexAnswer(1, '2'),
                         ),
                       ),
                     ),
@@ -288,7 +288,7 @@ class _BitingFormState extends State<BitingForm> {
                         child: SmallQuestionOption(
                           'Noche',
                           selected: snapshot.data[1].contains('3'),
-                          index: getIndexAnswer('3'),
+                          index: getIndexAnswer(1, '3'),
                         ),
                       ),
                     ),
@@ -338,8 +338,8 @@ class _BitingFormState extends State<BitingForm> {
     );
   }
 
-  String getIndexAnswer(String answer) {
-    List answers = questions[1];
+  String getIndexAnswer(int i, String answer) {
+    List answers = questions[i];
     int index = 0;
     for (int i = 0; i < answers.length; i++) {
       if (answers[i] == answer) {
