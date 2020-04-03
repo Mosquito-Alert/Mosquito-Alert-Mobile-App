@@ -10,8 +10,6 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingLocationForm extends StatefulWidget {
-  final Function seetCurrentLocation, setSelectedLocation;
-  BitingLocationForm(this.seetCurrentLocation, this.setSelectedLocation);
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
 }
@@ -36,7 +34,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       this.marker =
           Marker(markerId: MarkerId('Marker 1'), position: markerPosition);
     });
-    widget.setSelectedLocation(
+    Utils.setSelectedLocation(
         marker.position.latitude, marker.position.longitude);
   }
 
@@ -57,20 +55,20 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
               strokeColor: Colors.transparent,
               fillColor: Colors.blue.withOpacity(0.1))
         ]);
-        widget.setSelectedLocation(
+        Utils.setCurrentLocation(
             currentPosition.latitude, currentPosition.longitude);
       } else {
         print('no puedes usarlo ');
-
         //TODO: Show Alert
 
         // Utils.showAlert("Localizacion desactivada",
         //     "actova la localización para poder usar esta función", context,
         //     onPressed: () {});
+
       }
     } else if (type == LocationType.selected) {
       updateMarker(LatLng(41.16154, 0.47337));      
-      widget.setSelectedLocation(marker.position.latitude, marker.position.longitude);
+      Utils.setSelectedLocation(marker.position.latitude, marker.position.longitude);
     } else if (type == LocationType.missing) {}
   }
 

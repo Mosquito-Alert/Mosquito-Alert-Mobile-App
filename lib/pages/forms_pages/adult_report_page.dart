@@ -50,7 +50,7 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       BitingQuestionsForm(questions, addResponse, responses),
-      BitingLocationForm(setLocationType, setSelectedLocation),
+      // BitingLocationForm(setLocationType, setSelectedLocation),
       MosquitoTypeForm()
     ];
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingForm extends StatefulWidget {
@@ -23,16 +24,19 @@ class _BitingFormState extends State<BitingForm> {
     // streamData.add(questions);
     questions = [
       List.of({
-        "leftArm",
-        "leftArm",
-        "head",
+        // "leftHand",
+        // "leftHand",
+        // "chest",
       }),
-      List.of({'1'}),
+      List.of({
+        // '1'
+      }),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context).size;
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -64,30 +68,158 @@ class _BitingFormState extends State<BitingForm> {
                     alignment: Alignment.topLeft,
                     child: Stack(
                       children: <Widget>[
-                        Container(),
-                        // Image.asset("assets/img/ic_left_leg_off.png"),
-                        // Image.asset('assets/img/ic_right_leg_off.png'),
-                        new GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            print('chest');
-                          },
-                          child: Image.asset('assets/img/ic_chest_off.png'),
+                        Stack(
+                          children: <Widget>[
+                            Image.asset('assets/img/ic_full_body_off.png'),
+                            snapshot.data[0].contains('leftLeg')
+                                ? Image.asset('assets/img/ic_left_leg_on.png')
+                                : Image.asset("assets/img/ic_left_leg_off.png"),
+                            snapshot.data[0].contains('rightLeg')
+                                ? Image.asset('assets/img/ic_right_leg_on.png')
+                                : Image.asset(
+                                    'assets/img/ic_right_leg_off.png'),
+                            snapshot.data[0].contains('leftHand')
+                                ? Image.asset('assets/img/ic_left_hand_on.png')
+                                : Image.asset(
+                                    'assets/img/ic_left_hand_off.png'),
+                            snapshot.data[0].contains('rightHand')
+                                ? Image.asset('assets/img/ic_right_hand_on.png')
+                                : Image.asset(
+                                    'assets/img/ic_right_hand_off.png'),
+                            snapshot.data[0].contains('head')
+                                ? Image.asset('assets/img/ic_head_on.png')
+                                : Image.asset('assets/img/ic_head_off.png'),
+                            snapshot.data[0].contains('chest')
+                                ? Image.asset('assets/img/ic_chest_on.png')
+                                : Image.asset('assets/img/ic_chest_off.png'),
+                            Positioned(
+                              top: mediaQuery.height * 0.05,
+                              left: mediaQuery.width * 0.37,
+                              child: snapshot.data[0].contains('head')
+                                  ? Style.body('1')
+                                  : Container(),
+                            ),
+                            Positioned(
+                              top: mediaQuery.height * 0.18,
+                              left: mediaQuery.width * 0.21,
+                              child: snapshot.data[0].contains('rightHand')
+                                  ? Style.body('2')
+                                  : Container(),
+                            ),
+                            Positioned(
+                              top: mediaQuery.height * 0.18,
+                              left: mediaQuery.width * 0.70,
+                              child: snapshot.data[0].contains('leftHand')
+                                  ? Style.body('3')
+                                  : Container(),
+                            ),
+                            Positioned(
+                              top: mediaQuery.height * 0.23,
+                              left: mediaQuery.width * 0.56,
+                              child: snapshot.data[0].contains('chest')
+                                  ? Style.body('4')
+                                  : Container(),
+                            ),
+                            Positioned(
+                              top: mediaQuery.height * 0.37,
+                              left: mediaQuery.width * 0.28,
+                              child: snapshot.data[0].contains('rightLeg')
+                                  ? Style.body('5')
+                                  : Container(),
+                            ),
+                            Positioned(
+                              top: mediaQuery.height * 0.37,
+                              left: mediaQuery.width * 0.63,
+                              child: snapshot.data[0].contains('leftLeg')
+                                  ? Style.body('6')
+                                  : Container(),
+                            ),
+                          ],
                         ),
-                        // Image.asset('assets/img/ic_left_hand_off.png'),
-                        // new GestureDetector(
-                        //     behavior: HitTestBehavior.translucent,
-                        //     onTap: () {
-                        //       print('no head');
-                        //     },
-                        //     child: Image.asset(
-                        //         'assets/img/ic_right_hand_off.png')),
-                        new GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              print('head');
-                            },
-                            child: Image.asset('assets/img/ic_head_off.png'))
+                        Column(
+                          children: <Widget>[
+                            //HEAD
+                            GestureDetector(
+                              onTap: () {
+                                addToList(0, "head");
+                              },
+                              child: Center(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 40),
+                                  color: Colors.transparent,
+                                  height: mediaQuery.height * 0.08,
+                                  width: mediaQuery.width * 0.15,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                //ARM
+                                GestureDetector(
+                                  onTap: () {
+                                    addToList(0, "rightHand");
+                                  },
+                                  child: Container(
+                                    color: Colors.blue.withOpacity(0.0),
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.width * 0.18,
+                                  ),
+                                ),
+                                //CHEST
+                                GestureDetector(
+                                  onTap: () {
+                                    addToList(0, "chest");
+                                  },
+                                  child: Container(
+                                    // margin: EdgeInsets.only(top: 5),
+                                    color: Colors.transparent,
+                                    height: mediaQuery.height * 0.13,
+                                    width: mediaQuery.width * 0.15,
+                                  ),
+                                ),
+                                //ARM
+                                GestureDetector(
+                                  onTap: () {
+                                    addToList(0, "leftHand");
+                                  },
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.width * 0.18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                //LEG
+                                GestureDetector(
+                                  onTap: () {
+                                    addToList(0, "rightLeg");
+                                  },
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    height: mediaQuery.height * 0.15,
+                                    width: mediaQuery.width * 0.18,
+                                  ),
+                                ),
+                                //LEG
+                                GestureDetector(
+                                  onTap: () {
+                                    addToList(0, 'leftLeg');
+                                  },
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    height: mediaQuery.height * 0.15,
+                                    width: mediaQuery.width * 0.18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -165,16 +297,22 @@ class _BitingFormState extends State<BitingForm> {
                     height: 15,
                   ),
                   canContinue()
-                  // false
-                      ? Container(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Style.colorPrimary,
-                            borderRadius: BorderRadius.circular(15),
+                      // false
+                      ? GestureDetector(
+                          onTap: () {
+                            // Utils.getReportResponses(snapshot.data);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Style.colorPrimary,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Style.body('Continuar',
+                                textAlign: TextAlign.center,
+                                color: Colors.white),
                           ),
-                          child: Style.body('Continuar',
-                              textAlign: TextAlign.center, color: Colors.white),
                         )
                       : Container(
                           padding: EdgeInsets.symmetric(vertical: 20),
@@ -200,7 +338,6 @@ class _BitingFormState extends State<BitingForm> {
     );
   }
 
-
   String getIndexAnswer(String answer) {
     List answers = questions[1];
     int index = 0;
@@ -222,9 +359,13 @@ class _BitingFormState extends State<BitingForm> {
     streamData.add(questions);
   }
 
-  bool canContinue(){
+  bool canContinue() {
     List parts = questions[0];
-    List time = questions[1]; 
-    return parts.length == time.length;
+    List time = questions[1];
+    if (parts.length == time.length) {
+      Utils.setContinue();
+      return true;
+    }
+    return false;
   }
 }

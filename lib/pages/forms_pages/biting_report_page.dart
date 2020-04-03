@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/biting_form.dart';
@@ -23,15 +24,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   List<Questions> responses = [];
 
-  Report report = new Report();
-
   @override
   Widget build(BuildContext context) {
-    _formsRepot = [
-      BitingForm(),
-      BitingLocationForm(setCurrentLocation, setSelectedLocation),
-      MosquitoTypeForm()
-    ];
+    _formsRepot = [BitingForm(), BitingLocationForm(), MosquitoTypeForm()];
 
     return Scaffold(
       appBar: AppBar(
@@ -83,46 +78,4 @@ class _BitingReportPageState extends State<BitingReportPage> {
           }),
     );
   }
-
-  // void addResponse(String question, String answer) {
-  //   int currentIndex =
-  //       responses.indexWhere((question) => responses.contains(question));
-  //   if (currentIndex != -1) {
-  //     responses[currentIndex].answer = answer;
-  //   } else {
-  //     setState(() {
-  //       responses.add(new Questions(question: question, answer: answer));
-  //     });
-  //   }
-  //   report.responses = responses;
-  // }
-
-  Future<void> setCurrentLocation(
-    double latitude,
-    double longitude,
-  ) async {
-    report.location_choice = 'current';
-
-    report.current_location_lat = latitude;
-    report.current_location_lon = longitude;
-  }
-
-  void setSelectedLocation(double lat, lon) {
-    report.selected_location_lat = lat;
-    report.selected_location_lon = lon;
-  }
-
-  // Future<void> createReport() async {
-  //   report.type = 'bite';
-  //   report.report_id = randomAlphaNumeric(4).toString();
-  //   report.version_number = 0;
-  //   report.version_time = DateTime.now().toUtc().toString();
-  //   report.creation_time = DateTime.now().toUtc().toString();
-  //   report.phone_upload_time = DateTime.now().toUtc().toString();
-  //   report.version_UUID = new Uuid().v4();
-
-  //   report.user = await UserManager.getUUID();
-
-  //   ApiSingleton().createReport(report);
-  // }
 }

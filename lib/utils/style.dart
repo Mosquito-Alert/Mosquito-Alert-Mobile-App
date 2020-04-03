@@ -137,7 +137,7 @@ class Style {
       child: Text(
         text,
         style: TextStyle(
-          color: textColor != null ? textColor : Colors.black,
+          // color: textColor != null ? textColor : Colors.black,
           fontSize: 14,
         ),
       ),
