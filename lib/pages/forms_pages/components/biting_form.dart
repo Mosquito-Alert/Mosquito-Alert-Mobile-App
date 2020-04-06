@@ -19,6 +19,7 @@ class _BitingFormState extends State<BitingForm> {
 
   @override
   void initState() {
+    Utils.createNewReport('bite');
     // TODO: implement initState
     super.initState();
     // streamData.add(questions);
@@ -221,6 +222,13 @@ class _BitingFormState extends State<BitingForm> {
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                  Center(
+                    child: Style.body(
+                      MyLocalizations.of(context, 'tap_image_biting_txt'),
+                      color: Colors.grey,
+                      fontSize: 10,
                     ),
                   ),
                   SizedBox(

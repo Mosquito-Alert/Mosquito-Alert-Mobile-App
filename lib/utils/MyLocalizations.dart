@@ -68,6 +68,8 @@ class MyLocalizations {
       "biting_report_txt": "Reportar una picadura",
       "need_more_information_txt": 'Nesecitamos un poco más de información.',
       "lets_go_txt": "¡Vamos a por ello!",
+      "tap_image_biting_txt":
+          "Haz click encima de la imagen para reportar una nueva picada.",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",
@@ -95,7 +97,7 @@ class MyLocalizations {
       "more_info_app_txt": "Más información acerca de Mosquito Alert",
       "our_partners_txt": "Nuestros partners y colaboradores",
 
-      //My reports page 
+      //My reports page
       "your_reports_txt": "Tus reportes",
       "map_txt": "Mapa",
       "list_txt": "Lista",
@@ -109,8 +111,6 @@ class MyLocalizations {
       "reported_species_txt": "Especie reportada",
       "when_biting_txt": "¿Cuando te ha picado?",
       "which_situation_txt": "¿En qué situación?"
-
-
     },
   };
   String translate(key) {

@@ -15,6 +15,7 @@ class ApiSingleton {
 
   //Reports
   static const reports = '/reports/';
+  static const nearbyReports = '/nearby_reports_nod/';
 
   //Images
   static const images = '/photos/';
@@ -139,6 +140,31 @@ class ApiSingleton {
       var userUUID = await UserManager.getUUID();
       final response = await http.get(
         '$serverUrl$reports?user=$userUUID',
+        headers: headers,
+      );
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      } else {
+        var list = json.decode(response.body) as List;
+        List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
+
+        return reportsList;
+      }
+      return false;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> getPagedReports() async {
+    try {
+      var userUUID = await UserManager.getUUID();
+      double lat = 41.1613063; 
+      double lon = 0.4724329;
+      final response = await http.get(
+        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000',
         headers: headers,
       );
       if (response.statusCode != 200) {

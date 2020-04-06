@@ -53,11 +53,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
-    var list = await ApiSingleton().getMyReports();
+    List<Report> list = await ApiSingleton().getMyReports();
+
     setState(() {
       _reports = list;
     });
-    dataStream.add(list);
+    List<Report> data = [];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].location_choice == "current" ||
+         list[i].location_choice == 'selected') {
+        data.add(list[i]);
+      }
+    }
+
+    dataStream.add(data);
     _createMarkers();
   }
 

@@ -23,7 +23,11 @@ class Utils {
   //REPORTS form
   static bool continueForm = false;
 
-  static Report report = new Report();
+  static Report report;
+
+  static createNewReport(String type) {
+    report = new Report(type: type);
+  }
 
   static setContinue() {
     continueForm = !continueForm;
@@ -73,7 +77,6 @@ class Utils {
   //   ApiSingleton().createReport(report);
   // }
 
-  
   //Alerts
   static Future showAlert(String title, String text, BuildContext context,
       {onPressed, barrierDismissible}) {

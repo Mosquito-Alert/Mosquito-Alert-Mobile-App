@@ -95,7 +95,7 @@ class Style {
 
   ///Buttons
 
-  static Widget button(text, onPressed, {color, textColor, borderColor}) {
+  static Widget button(text, onPressed, {color, textColor, borderColor, elevation}) {
     return RaisedButton(
       onPressed: onPressed,
       elevation: 0,
