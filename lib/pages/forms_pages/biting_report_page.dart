@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -22,7 +23,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
 
-  List<Questions> responses = [];
+  List<Question> responses = [];
 
   @override
   Widget build(BuildContext context) {

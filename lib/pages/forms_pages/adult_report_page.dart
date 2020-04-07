@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_questions_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
@@ -42,7 +43,7 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
 
-  List<Questions> responses = [];
+  List<Question> responses = [];
 
   Report report = new Report();
 
@@ -113,7 +114,7 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
       responses[currentIndex].answer = answer;
     } else {
       setState(() {
-        responses.add(new Questions(question: question, answer: answer));
+        responses.add(new Question(question: question, answer: answer));
       });
     }
     report.responses = responses;

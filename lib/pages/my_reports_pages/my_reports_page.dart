@@ -59,11 +59,16 @@ class _MyReportsPageState extends State<MyReportsPage> {
     setState(() {
       _reports = list;
     });
+
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
-      if (list[i].location_choice == "current" ||
-          list[i].location_choice == 'selected') {
+      if (list[i].location_choice != "missing" &&
+          list[i].current_location_lat != null &&
+          list[i].current_location_lon != null ||
+          list[i].selected_location_lat != null &&
+          list[i].selected_location_lon != null) {
         data.add(list[i]);
+        print(list[i].report_id);
       }
     }
 
@@ -88,18 +93,16 @@ class _MyReportsPageState extends State<MyReportsPage> {
     for (int i = 0; i < _reports.length; i++) {
       var position;
       if (_reports[i].location_choice != 'missing') {
-        if (_reports[i].location_choice == 'current') {
-          if (_reports[i].current_location_lat != null &&
-              _reports[i].current_location_lon != null) {
-            position = LatLng(_reports[i].current_location_lat,
-                _reports[i].current_location_lon);
-          }
-        } else if (_reports[i].location_choice == 'selected') {
-          if (_reports[i].selected_location_lat != null &&
-              _reports[i].selected_location_lon != null) {
-            position = LatLng(_reports[i].selected_location_lat,
-                _reports[i].selected_location_lon);
-          }
+        if (_reports[i].location_choice == 'current' &&
+            _reports[i].current_location_lat != null &&
+            _reports[i].current_location_lon != null) {
+          position = LatLng(_reports[i].current_location_lat,
+              _reports[i].current_location_lon);
+        } else if (_reports[i].location_choice == 'selected' &&
+            _reports[i].selected_location_lat != null &&
+            _reports[i].selected_location_lon != null) {
+          position = LatLng(_reports[i].selected_location_lat,
+              _reports[i].selected_location_lon);
         }
         var icon;
         switch (_reports[i].type) {

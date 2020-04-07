@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/models/session.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 
 import 'MyLocalizations.dart';
 
@@ -25,7 +28,19 @@ class Utils {
 
   static Report report;
 
-  static createNewReport(String type) {
+  static createNewReport(String type) async {
+    // Session session = new Session();
+
+    // int id = int.parse(await UserManager.getSessionId());
+    // session.session_ID = id++;
+    // session.user = await UserManager.getUUID();
+    // session.session_start_time = DateTime.now().toUtc().toString();
+    // var openedSession = await ApiSingleton().createSession();
+    // print(openedSession);
+    // var s = await UserManager.getSessionId();
+
+    // print(s);
+
     report = new Report(type: type);
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
+import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
@@ -17,9 +18,13 @@ class ApiSingleton {
   static const reports = '/reports/';
   static const nearbyReports = '/nearby_reports_nod/';
 
+  //Session
+  static const session = '/sessions/';
+
   //Images
   static const images = '/photos/';
 
+  //Headders
   var headers = {
     "Content-Type": " application/json",
     "Authorization": "Token " + token
@@ -52,6 +57,36 @@ class ApiSingleton {
       }
       return true;
     } catch (c) {
+      return null;
+    }
+  }
+
+  Future<dynamic> createSession() async {
+    try {
+      var userUUID = await UserManager.getUUID();
+      // var session_ID = int.parse(await UserManager.getSessionId());
+
+      var session_ID = 4;
+
+      final response = await http.post('$serverUrl$session',
+          headers: headers,
+          body: json.encode({
+            'user': userUUID,
+            'session_ID': session_ID,
+            'session_start_time': DateTime.now().toUtc().toString(),
+          }));
+
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      }
+
+      await UserManager.setSessionId(session_ID.toString());
+      print(response);
+      return response;
+    } catch (e) {
+      print(e);
       return null;
     }
   }
@@ -158,7 +193,8 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> getReportsList(lat, lon, {page, List<Report> allReports}) async {
+  Future<dynamic> getReportsList(lat, lon,
+      {page, List<Report> allReports}) async {
     try {
       var userUUID = await UserManager.getUUID();
 
@@ -179,9 +215,9 @@ class ApiSingleton {
         if (allReports == null) {
           allReports = List();
         }
-         for (var item in jsonAnswer['results']) {
-        allReports.add(Report.fromJson(item));
-      }
+        for (var item in jsonAnswer['results']) {
+          allReports.add(Report.fromJson(item));
+        }
 
         return allReports;
       }
@@ -206,6 +242,4 @@ class ApiSingleton {
       }
     } catch (e) {}
   }
-
-  
 }

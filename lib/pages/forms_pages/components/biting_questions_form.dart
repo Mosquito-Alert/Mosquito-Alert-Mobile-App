@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingQuestionsForm extends StatelessWidget {
   final List<Map<String, List<String>>> questions;
-  final List<Questions> responses;
+  final List<Question> responses;
   final Function addResponses;
 
   BitingQuestionsForm(this.questions, this.addResponses, this.responses);

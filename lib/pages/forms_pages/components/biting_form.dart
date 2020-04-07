@@ -15,7 +15,7 @@ class _BitingFormState extends State<BitingForm> {
   StreamController<List<dynamic>> streamData =
       new StreamController<List<String>>.broadcast();
 
-  List questions = new List();
+  List questions = new List(); // TODO: list<Questions>
 
   @override
   void initState() {

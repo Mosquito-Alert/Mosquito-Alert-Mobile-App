@@ -1,3 +1,5 @@
+import 'package:mosquito_alert_app/models/question.dart';
+
 class Report {
   String version_UUID;
   int version_number;
@@ -15,7 +17,7 @@ class Report {
   String note;
   String package_name;
   String package_version;
-  List<Questions> responses;
+  List<Question> responses;
 
   Report({
     this.version_UUID,
@@ -107,25 +109,6 @@ class Report {
     if (responses != null) {
       data['responses'] = responses.map((r) => r.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class Questions {
-  String question;
-  String answer;
-
-  Questions({this.question, this.answer});
-
-  Questions.fromJson(Map<String, dynamic> json) {
-    question = json['question'];
-    answer = json['ansqer'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['question'] = this.question;
-    data['answer'] = this.answer;
     return data;
   }
 }
