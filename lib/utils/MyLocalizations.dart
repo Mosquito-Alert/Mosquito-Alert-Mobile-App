@@ -13,6 +13,7 @@ class MyLocalizations {
       "next": "Siguiente",
       "finish": "Finalizar",
       "unknoun": "Desconocido",
+      "ok": 'Aceptar',
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -46,7 +47,6 @@ class MyLocalizations {
       "password_txt": "Contraseña",
 
       //Main page
-
       "welcome_text": "Bienvenido de nuevo, ",
       "what_to_do_txt": "¿Que quieres hacer?",
       "more_info_points_txt":
@@ -70,10 +70,18 @@ class MyLocalizations {
       "lets_go_txt": "¡Vamos a por ello!",
       "tap_image_biting_txt":
           "Haz click encima de la imagen para reportar una nueva picada.",
+      "continue_txt": "Continuar",
+      "complete_all_txt": "Complete todos los campos para continuar",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",
       "chose_option_txt": "Escoge una opción.",
+      "location_not_active_title": "Localización desactivada",
+      "location_not_active_txt":
+          "Para utilizar esta función, activa la localización del dispositivo",
+      "current_location_txt": "Ubicación actual",
+      "select_location_txt": "Seleccionar...",
+      "not_sure_txt": "No lo tengo claro",
 
       //Moquito type - report
       "could_see_txt": "¿Has podido ver el mosquito?",

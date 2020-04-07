@@ -38,7 +38,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         marker.position.latitude, marker.position.longitude);
   }
 
-  getPosition(type) async {
+  getPosition(type, {context}) async {
     streamType.add(type);
     if (type == LocationType.current) {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
@@ -58,17 +58,17 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         Utils.setCurrentLocation(
             currentPosition.latitude, currentPosition.longitude);
       } else {
-        print('no puedes usarlo ');
-        //TODO: Show Alert
-
-        // Utils.showAlert("Localizacion desactivada",
-        //     "actova la localización para poder usar esta función", context,
-        //     onPressed: () {});
-
+        Utils.showAlert(
+            MyLocalizations.of(context, "location_not_active_title"),
+          MyLocalizations.of(context, "location_not_active_txt"),
+            context, onPressed: () {
+          Navigator.pop(context);
+        });
       }
     } else if (type == LocationType.selected) {
-      updateMarker(LatLng(41.16154, 0.47337));      
-      Utils.setSelectedLocation(marker.position.latitude, marker.position.longitude);
+      updateMarker(LatLng(41.16154, 0.47337));
+      Utils.setSelectedLocation(
+          marker.position.latitude, marker.position.longitude);
     } else if (type == LocationType.missing) {}
   }
 
@@ -107,10 +107,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               Expanded(
                                   child: GestureDetector(
                                       onTap: () {
-                                        getPosition(LocationType.current);
+                                        getPosition(LocationType.current,
+                                            context: context);
                                       },
                                       child: SmallQuestionOption(
-                                        '*Ubicación actual',
+                                        MyLocalizations.of(context, "current_location_txt"),
                                         selected: snapshot.data ==
                                             LocationType.current,
                                       ))),
@@ -123,7 +124,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                   getPosition(LocationType.selected);
                                 },
                                 child: SmallQuestionOption(
-                                  '*Seleccionar...',
+                                  MyLocalizations.of(context, "select_location_txt"),
                                   selected:
                                       snapshot.data == LocationType.selected,
                                 ),
@@ -165,7 +166,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                           SizedBox(
                             height: 10,
                           ),
-                          Style.noBgButton("No lo tengo claro", () {
+                          Style.noBgButton(MyLocalizations.of(context, "not_sure_txt"), () {
                             getPosition(LocationType.missing);
                           }, textColor: Colors.grey)
                         ],

@@ -317,7 +317,8 @@ class _BitingFormState extends State<BitingForm> {
                               color: Style.colorPrimary,
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            child: Style.body('Continuar',
+                            child: Style.body(
+                                MyLocalizations.of(context, "continue_txt"),
                                 textAlign: TextAlign.center,
                                 color: Colors.white),
                           ),
@@ -330,7 +331,7 @@ class _BitingFormState extends State<BitingForm> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Style.body(
-                              'Complete todos los campos para continuar',
+                              MyLocalizations.of(context, "complete_all_txt"),
                               textAlign: TextAlign.center,
                               color: Colors.white),
                         ),
