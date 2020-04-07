@@ -53,7 +53,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
-    List<Report> list = await ApiSingleton().getMyReports();
+    List<Report> list =
+        await ApiSingleton().getReportsList(41.1613063, 0.4724329);
 
     setState(() {
       _reports = list;
@@ -61,7 +62,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice == "current" ||
-         list[i].location_choice == 'selected') {
+          list[i].location_choice == 'selected') {
         data.add(list[i]);
       }
     }
@@ -88,11 +89,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
       var position;
       if (_reports[i].location_choice != 'missing') {
         if (_reports[i].location_choice == 'current') {
-          position = LatLng(_reports[i].current_location_lat,
-              _reports[i].current_location_lon);
+          if (_reports[i].current_location_lat != null &&
+              _reports[i].current_location_lon != null) {
+            position = LatLng(_reports[i].current_location_lat,
+                _reports[i].current_location_lon);
+          }
         } else if (_reports[i].location_choice == 'selected') {
-          position = LatLng(_reports[i].selected_location_lat,
-              _reports[i].selected_location_lon);
+          if (_reports[i].selected_location_lat != null &&
+              _reports[i].selected_location_lon != null) {
+            position = LatLng(_reports[i].selected_location_lat,
+                _reports[i].selected_location_lon);
+          }
         }
         var icon;
         switch (_reports[i].type) {
@@ -108,11 +115,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
           default:
             break;
         }
-        markers.add(Marker(
+        if (position != null) {
+          markers.add(Marker(
             markerId: MarkerId(_reports[i].report_id),
             position: position,
             // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
-            icon: icon));
+            icon: icon,
+          ));
+        }
       }
     }
   }
@@ -380,6 +390,21 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     ),
                   ),
                   Divider(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Style.noBgButton("*Editar", () {
+                        //TODO: api edit
+                      })),
+                      Expanded(
+                          child: Style.noBgButton("*Eliminar", () {
+                        //TODO: Api delete
+                      }))
+                    ],
+                  ),
                 ],
               ),
             ),

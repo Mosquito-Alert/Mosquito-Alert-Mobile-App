@@ -158,13 +158,12 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> getPagedReports() async {
+  Future<dynamic> getReportsList(lat, lon, {page, List<Report> allReports}) async {
     try {
       var userUUID = await UserManager.getUUID();
-      double lat = 41.1613063; 
-      double lon = 0.4724329;
+
       final response = await http.get(
-        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000',
+        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&user=$userUUID',
         headers: headers,
       );
       if (response.statusCode != 200) {
@@ -172,12 +171,21 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       } else {
-        var list = json.decode(response.body) as List;
-        List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
+        Map<String, dynamic> jsonAnswer = json.decode(response.body);
+        // print(body['results']);
+        // var list = json.decode(response.body) as List;
+        // List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
 
-        return reportsList;
+        if (allReports == null) {
+          allReports = List();
+        }
+         for (var item in jsonAnswer['results']) {
+        allReports.add(Report.fromJson(item));
       }
-      return false;
+
+        return allReports;
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -198,4 +206,6 @@ class ApiSingleton {
       }
     } catch (e) {}
   }
+
+  
 }
