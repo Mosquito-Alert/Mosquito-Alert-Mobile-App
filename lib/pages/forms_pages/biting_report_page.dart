@@ -23,8 +23,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
 
-  List<Question> responses = [];
-
   @override
   Widget build(BuildContext context) {
     _formsRepot = [BitingForm(), BitingLocationForm(), MosquitoTypeForm()];

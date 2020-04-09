@@ -61,35 +61,56 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> createSession() async {
-    try {
-      var userUUID = await UserManager.getUUID();
-      // var session_ID = int.parse(await UserManager.getSessionId());
+  // Future<dynamic> createSession() async {
+  //   try {
+  //     var userUUID = await UserManager.getUUID();
+  //     // var session_ID = int.parse(await UserManager.getSessionId());
 
-      var session_ID = 4;
+  //     var session_ID = 4;
 
-      final response = await http.post('$serverUrl$session',
-          headers: headers,
-          body: json.encode({
-            'user': userUUID,
-            'session_ID': session_ID,
-            'session_start_time': DateTime.now().toUtc().toString(),
-          }));
+  //     final response = await http.post('$serverUrl$session',
+  //         headers: headers,
+  //         body: json.encode({
+  //           'user': userUUID,
+  //           'session_ID': session_ID,
+  //           'session_start_time': DateTime.now().toUtc().toString(),
+  //         }));
 
-      if (response.statusCode != 200) {
-        print(
-            "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
-      }
+  //     if (response.statusCode != 200) {
+  //       print(
+  //           "Request: ${response.request.toString()} -> Response: ${response.body}");
+  //       return Response.fromJson(json.decode(response.body));
+  //     }
 
-      await UserManager.setSessionId(session_ID.toString());
-      print(response);
-      return response;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
+  //     await UserManager.setSessionId(session_ID.toString());
+  //     print(response);
+  //     return response;
+  //   } catch (e) {
+  //     print(e);
+  //     return null;
+  //   }
+  // }
+
+  // Future<dynamic> updateSession(String sessionId) async {
+  //   try {
+  //     final response = await http.post('$serverUrl$session$sessionId',
+  //         headers: headers,
+  //         body: json.encode({
+  //           'session_end_time': DateTime.now().toUtc().toString(),
+  //         }));
+          
+  //     if (response.statusCode != 200) {
+  //       print(
+  //           "Request: ${response.request.toString()} -> Response: ${response.body}");
+  //       return Response.fromJson(json.decode(response.body));
+  //     }
+
+  //     // await UserManager.setSessionId(session_ID.toString());
+  //     print(response);
+  //   } catch (e) {}
+  // }
+
+
 
   Future<dynamic> createReport(Report report) async {
     try {

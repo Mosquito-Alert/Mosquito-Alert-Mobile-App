@@ -27,20 +27,17 @@ class Utils {
   static bool continueForm = false;
 
   static Report report;
+  static Session session;
+
+  static createNewSession() async {
+    session = new Session();
+
+    //TODO: get last session id, create session, and save session id. 
+   
+    
+  }
 
   static createNewReport(String type) async {
-    // Session session = new Session();
-
-    // int id = int.parse(await UserManager.getSessionId());
-    // session.session_ID = id++;
-    // session.user = await UserManager.getUUID();
-    // session.session_start_time = DateTime.now().toUtc().toString();
-    // var openedSession = await ApiSingleton().createSession();
-    // print(openedSession);
-    // var s = await UserManager.getSessionId();
-
-    // print(s);
-
     report = new Report(type: type);
   }
 
