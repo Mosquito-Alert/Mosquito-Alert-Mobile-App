@@ -298,8 +298,8 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
-              // canContinue()
-              false
+              canContinue()
+                  // false
                   ? GestureDetector(
                       onTap: () {
                         // Utils.getReportResponses(snapshot.data);
@@ -352,7 +352,7 @@ class _BitingFormState extends State<BitingForm> {
     // TODO: fix question_id!
 
     List _questions = questions;
-    if (question_id != 1) {
+    if (question_id != '1') {
       int currentIndex = _questions.indexWhere((question) =>
           // question.question_id == question_id &&
           question.answer_id == answer_id.toString());
@@ -370,21 +370,21 @@ class _BitingFormState extends State<BitingForm> {
 
         _questions[currentIndex].answer_value = value.toString();
       }
-    }
-    if (question_id == 2) {
-      int bitesIndex =
-          _questions.indexWhere((question) => question.question_id == '1');
+      if (question_id == '2') {
+        int bitesIndex =
+            _questions.indexWhere((question) => question.question_id == '1');
 
-      if (bitesIndex == -1) {
-        _questions.add(Question(
-            question: 'Cuantas picads',
-            answer: '',
-            question_id: '1',
-            answer_value: '1'));
-      } else {
-        int value = int.parse(_questions[bitesIndex].answer_value);
-        value = value + 1;
-        _questions[bitesIndex].answer_value = value.toString();
+        if (bitesIndex == -1) {
+          _questions.add(Question(
+              question: 'Cuantas picads',
+              answer: '',
+              question_id: '1',
+              answer_value: '1'));
+        } else {
+          int value = int.parse(_questions[bitesIndex].answer_value);
+          value = value + 1;
+          _questions[bitesIndex].answer_value = value.toString();
+        }
       }
     }
 
@@ -394,6 +394,27 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   bool canContinue() {
+    if (questions.length > 1) {
+      int totalIndex = questions.indexWhere((q) => q.question_id == '1');
+      int totalValues = int.parse(questions[totalIndex].answer_value);
+      bool canContinue = false;
+      for (int j = 2; j <= 3; j++) {
+        int questionValue = 0;
+        for (int i = 0; i < questions.length; i++) {
+          // 2 = first questions on screen; 3 = only 3 questions in this screen (2 shown + 1 auto)
+          if (questions[i].question_id == j.toString()) {
+            questionValue =
+                questionValue + int.parse(questions[i].answer_value);
+          }
+        }
+        if (questionValue == totalValues) {
+          canContinue = true;
+        } else {
+          canContinue = false;
+        }
+      }
+      return canContinue;
+    }
     return true;
   }
 }
