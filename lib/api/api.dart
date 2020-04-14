@@ -198,7 +198,7 @@ class ApiSingleton {
       body.addAll({'version_number': -1});
       body.addAll({'version_time': DateTime.now().toIso8601String()});
 
-      //Todo: fix this! 
+      //Todo: fix this!
       if (report.user != null && report.user.isNotEmpty) {
         body.addAll({'user': report.user});
       }
@@ -284,12 +284,13 @@ class ApiSingleton {
   }
 
   Future<dynamic> getReportsList(lat, lon,
-      {page, List<Report> allReports}) async {
+      {page, List<Report> allReports, bool show_hidden}) async {
     try {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&user=$userUUID',
+        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&user=$userUUID' +
+            (show_hidden == true ? '&show_hidden=1' : ''),
         headers: headers,
       );
       if (response.statusCode != 200) {

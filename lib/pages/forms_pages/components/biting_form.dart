@@ -13,16 +13,12 @@ class BitingForm extends StatefulWidget {
 }
 
 class _BitingFormState extends State<BitingForm> {
-  StreamController<List<dynamic>> streamData =
-      new StreamController<List<String>>.broadcast();
-
-  List<Question> questions; //
+  List<Question> questions; 
 
   @override
   void initState() {
     Utils.createNewReport('bite');
     super.initState();
-    // streamData.add(questions);
     questions = new List();
   }
 
@@ -302,7 +298,7 @@ class _BitingFormState extends State<BitingForm> {
                   // false
                   ? GestureDetector(
                       onTap: () {
-                        // Utils.getReportResponses(snapshot.data);
+                        Utils.addResponse(questions);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -409,6 +405,7 @@ class _BitingFormState extends State<BitingForm> {
         }
         if (questionValue == totalValues) {
           canContinue = true;
+          Utils.addResponse(questions);
         } else {
           canContinue = false;
         }

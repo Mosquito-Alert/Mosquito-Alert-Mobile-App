@@ -14,13 +14,13 @@ class CustomCard extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Padding(
+            img!= null ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Image.asset(
                 img,
                 height: 70,
               ),
-            ),
+            ) : Container(),
             Style.titleMedium(title, fontSize: 16, textAlign: TextAlign.center),
             SizedBox(
               height: 5,

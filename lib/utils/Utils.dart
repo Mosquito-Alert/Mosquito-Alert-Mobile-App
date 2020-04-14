@@ -7,6 +7,8 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:random_string/random_string.dart';
+import 'package:uuid/uuid.dart';
 
 import 'MyLocalizations.dart';
 
@@ -28,26 +30,32 @@ class Utils {
 
   static Report report;
   static Session session;
+  static List<Report> reportsList;
 
   static createNewSession() async {
     session = new Session();
-
-    //TODO: get last session id, create session, and save session id. 
-   
-    
+    reportsList = new List();
+    //TODO: get last session id, create session, and save session id.
   }
 
   static createNewReport(String type) async {
-    report = new Report(type: type);
+    if (report != null) {
+      reportsList.add(report);
+    }
+    //  createNewSession();
+    var userUUID = await UserManager.getUUID();
+    report = new Report(
+      type: type,
+      report_id: randomAlphaNumeric(4).toString(),
+      version_number: 0,
+      version_UUID: new Uuid().v4(),
+      user: userUUID,
+    );
+    print(reportsList);
   }
 
   static setContinue() {
     continueForm = !continueForm;
-  }
-
-  static getReportResponses(data) {
-    //Todo: add data to report.responses
-    print(data);
   }
 
   static setCurrentLocation(double latitude, double longitude) {
@@ -62,32 +70,25 @@ class Utils {
     report.selected_location_lon = lon;
   }
 
-  // void addResponse(String question, String answer) {
-  //   int currentIndex =
-  //       responses.indexWhere((question) => responses.contains(question));
-  //   if (currentIndex != -1) {
-  //     responses[currentIndex].answer = answer;
-  //   } else {
-  //     setState(() {
-  //       responses.add(new Questions(question: question, answer: answer));
-  //     });
-  //   }
-  //   report.responses = responses;
-  // }
+  static void addResponse(questions) {
+    // int currentIndex =
+    //     responses.indexWhere((question) => responses.contains(question));
+    // if (currentIndex != -1) {
+    //   responses[currentIndex].answer = answer;
+    // } else {
+    //   setState(() {
+    //     responses.add(new Questions(question: question, answer: answer));
+    //   });
+    // }
+    report.responses = questions;
+  }
 
-  // Future<void> createReport() async {
-  //   report.type = 'bite';
-  //   report.report_id = randomAlphaNumeric(4).toString();
-  //   report.version_number = 0;
-  //   report.version_time = DateTime.now().toUtc().toString();
-  //   report.creation_time = DateTime.now().toUtc().toString();
-  //   report.phone_upload_time = DateTime.now().toUtc().toString();
-  //   report.version_UUID = new Uuid().v4();
-
-  //   report.user = await UserManager.getUUID();
-
-  //   ApiSingleton().createReport(report);
-  // }
+  static Future<void> createReport() async {
+    report.version_time = DateTime.now().toUtc().toString();
+    report.creation_time = DateTime.now().toUtc().toString();
+    report.phone_upload_time = DateTime.now().toUtc().toString();
+    ApiSingleton().createReport(report);
+  }
 
   //Alerts
   static Future showAlert(String title, String text, BuildContext context,

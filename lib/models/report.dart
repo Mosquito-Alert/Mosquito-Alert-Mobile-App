@@ -57,13 +57,10 @@ class Report {
     package_name = json['package_name'];
     package_version = json['package_version'];
 
-    if (json['responses'] != null) {      
-      print(json['responses']);            //TODO: fix formJson Questions
+    if (json['responses'] != null) {
       responses = new List<Question>();
-     
       json['responses'].forEach((q) {
-        Question newQuestion = new Question.fromJson(q);
-        responses.add(newQuestion);
+        responses.add(new Question.fromJson(q));
       });
     }
   }

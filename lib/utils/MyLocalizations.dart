@@ -16,6 +16,7 @@ class MyLocalizations {
       "ok": 'Aceptar',
       "delete": "Eliminar",
       "edit": "Editar",
+      "exit": "Salir",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",

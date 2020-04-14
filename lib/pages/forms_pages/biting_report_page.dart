@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/biting_form.dart';
@@ -23,6 +25,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       BitingForm(),
       BitingLocationForm(),
       MosquitoTypeForm(),
+      AddOtherReportPage()
     ];
 
     return Scaffold(
@@ -51,8 +54,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == 2.0) {
-                        // createReport();
+                      if (currentPage == _formsRepot.length-1) {
+                        Utils.createReport();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainVC()),
