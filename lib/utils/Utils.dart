@@ -33,16 +33,35 @@ class Utils {
   static List<Report> reportsList;
 
   static createNewSession() async {
-    session = new Session();
     reportsList = new List();
-    //TODO: get last session id, create session, and save session id.
+
+    String userUUID = await UserManager.getUUID();
+
+    int sessionId = await ApiSingleton().getLastSession(userUUID);
+    sessionId = sessionId + 1;
+
+    session = new Session(
+        session_ID: sessionId,
+        user: userUUID,
+        session_start_time: DateTime.now().toIso8601String());
+
+    ApiSingleton().createSession(session);
+  }
+
+  static closeSession() {
+    session.session_end_time = DateTime.now().toIso8601String();
+    ApiSingleton().updateSession(session);
   }
 
   static createNewReport(String type) async {
     if (report != null) {
       reportsList.add(report);
     }
-    //  createNewSession();
+
+    if (session == null) {
+      createNewSession();
+    }
+
     var userUUID = await UserManager.getUUID();
     report = new Report(
       type: type,
@@ -50,6 +69,7 @@ class Utils {
       version_number: 0,
       version_UUID: new Uuid().v4(),
       user: userUUID,
+      session: session.session_ID.toString(),      //Todo: What session id is the correct?
     );
     print(reportsList);
   }
@@ -71,15 +91,6 @@ class Utils {
   }
 
   static void addResponse(questions) {
-    // int currentIndex =
-    //     responses.indexWhere((question) => responses.contains(question));
-    // if (currentIndex != -1) {
-    //   responses[currentIndex].answer = answer;
-    // } else {
-    //   setState(() {
-    //     responses.add(new Questions(question: question, answer: answer));
-    //   });
-    // }
     report.responses = questions;
   }
 

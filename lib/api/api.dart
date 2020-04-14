@@ -20,7 +20,8 @@ class ApiSingleton {
   static const nearbyReports = '/nearby_reports_nod/';
 
   //Session
-  static const session = '/sessions/';
+  static const sessions = '/sessions/';
+  static const sessionUpdate = '/session_update/';
 
   //Images
   static const images = '/photos/';
@@ -62,55 +63,77 @@ class ApiSingleton {
     }
   }
 
-  // Future<dynamic> createSession() async {
-  //   try {
-  //     var userUUID = await UserManager.getUUID();
-  //     // var session_ID = int.parse(await UserManager.getSessionId());
+  //Sessions
+  Future<dynamic> getLastSession(String userUUID) async {
+    try {
+      final response = await http.get(
+        '$serverUrl$sessions?user=$userUUID',
+        headers: headers,
+      );
 
-  //     var session_ID = 4;
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      } else {
+        List<dynamic> jsonAnswer = json.decode(response.body);
+        List<Session> allSessions = List();
 
-  //     final response = await http.post('$serverUrl$session',
-  //         headers: headers,
-  //         body: json.encode({
-  //           'user': userUUID,
-  //           'session_ID': session_ID,
-  //           'session_start_time': DateTime.now().toUtc().toString(),
-  //         }));
+        for (var item in jsonAnswer) {
+          allSessions.add(Session.fromJson(item));
+        }
 
-  //     if (response.statusCode != 200) {
-  //       print(
-  //           "Request: ${response.request.toString()} -> Response: ${response.body}");
-  //       return Response.fromJson(json.decode(response.body));
-  //     }
+        return allSessions[0].session_ID;
+      }
+    } catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
 
-  //     await UserManager.setSessionId(session_ID.toString());
-  //     print(response);
-  //     return response;
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
+  Future<dynamic> createSession(Session session) async {
+    try {
+      final response = await http.post('$serverUrl$sessions',
+          headers: headers,
+          body: json.encode(
+            session.toJson(),
+          ));
 
-  // Future<dynamic> updateSession(String sessionId) async {
-  //   try {
-  //     final response = await http.post('$serverUrl$session$sessionId',
-  //         headers: headers,
-  //         body: json.encode({
-  //           'session_end_time': DateTime.now().toUtc().toString(),
-  //         }));
+      if (response.statusCode != 201) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      }
+      // Todo: Save id
 
-  //     if (response.statusCode != 200) {
-  //       print(
-  //           "Request: ${response.request.toString()} -> Response: ${response.body}");
-  //       return Response.fromJson(json.decode(response.body));
-  //     }
+      print(response);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
-  //     // await UserManager.setSessionId(session_ID.toString());
-  //     print(response);
-  //   } catch (e) {}
-  // }
+  Future<dynamic> updateSession(Session session) async {
+    try {
+      final response = await http.put(
+          '$serverUrl$sessionUpdate${session.session_ID}/',
+          headers: headers,
+          body: json.encode({'session_end_time': session.session_end_time}));
 
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //Reports
   Future<dynamic> createReport(Report report) async {
     try {
       var body = {};

@@ -13,7 +13,7 @@ class BitingForm extends StatefulWidget {
 }
 
 class _BitingFormState extends State<BitingForm> {
-  List<Question> questions; 
+  List<Question> questions;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.37,
                           child: questions
                                   .any((question) => question.answer_id == '1')
-                              ? Style.body(getIndexAnswer('1'))
+                              ? Style.body(getIndexBody('1'))
                               : Container(),
                         ),
                         Positioned(
@@ -81,7 +81,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.21,
                           child: questions
                                   .any((question) => question.answer_id == '3')
-                              ? Style.body(getIndexAnswer('3'))
+                              ? Style.body(getIndexBody('3'))
                               : Container(),
                         ),
                         Positioned(
@@ -89,7 +89,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.70,
                           child: questions
                                   .any((question) => question.answer_id == '4')
-                              ? Style.body(getIndexAnswer('4'))
+                              ? Style.body(getIndexBody('4'))
                               : Container(),
                         ),
                         Positioned(
@@ -97,7 +97,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.56,
                           child: questions
                                   .any((question) => question.answer_id == '2')
-                              ? Style.body(getIndexAnswer('2'))
+                              ? Style.body(getIndexBody('2'))
                               : Container(),
                         ),
                         Positioned(
@@ -105,7 +105,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.28,
                           child: questions
                                   .any((question) => question.answer_id == '5')
-                              ? Style.body(getIndexAnswer('5'))
+                              ? Style.body(getIndexBody('5'))
                               : Container(),
                         ),
                         Positioned(
@@ -113,7 +113,7 @@ class _BitingFormState extends State<BitingForm> {
                           left: mediaQuery.width * 0.63,
                           child: questions
                                   .any((question) => question.answer_id == '6')
-                              ? Style.body(getIndexAnswer('6'))
+                              ? Style.body(getIndexBody('6'))
                               : Container(),
                         ),
                       ],
@@ -294,8 +294,8 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
-              canContinue()
-                  // false
+              // canContinue()
+                  false
                   ? GestureDetector(
                       onTap: () {
                         Utils.addResponse(questions);
@@ -335,7 +335,7 @@ class _BitingFormState extends State<BitingForm> {
     );
   }
 
-  String getIndexAnswer(String answer_id) {
+  String getIndexBody(String answer_id) {
     int index =
         questions.indexWhere((question) => question.answer_id == answer_id);
 
@@ -344,11 +344,25 @@ class _BitingFormState extends State<BitingForm> {
     }
   }
 
-  addToList(String question, String answer, {question_id, answer_id}) {
-    // TODO: fix question_id!
+  String getIndexAnswer(String answer_id) {
+    int index = 0 ;
+      questions.map((q) {
+        if(q.answer_id == answer_id){
+          index = index +1; 
+        }
+      }).toList();
 
+    if (index > 0) {
+      return index.toString();
+    }
+  }
+
+  addToList(String question, String answer, {question_id, answer_id}) {
     List _questions = questions;
-    if (question_id != '1') {
+
+    // TODO: fix question_id!
+    //increase answer_value question 2
+    if (question_id == '2') {
       int currentIndex = _questions.indexWhere((question) =>
           // question.question_id == question_id &&
           question.answer_id == answer_id.toString());
@@ -363,25 +377,33 @@ class _BitingFormState extends State<BitingForm> {
       } else {
         int value = int.parse(_questions[currentIndex].answer_value);
         value = value + 1;
-
         _questions[currentIndex].answer_value = value.toString();
       }
-      if (question_id == '2') {
-        int bitesIndex =
-            _questions.indexWhere((question) => question.question_id == '1');
 
-        if (bitesIndex == -1) {
-          _questions.add(Question(
-              question: 'Cuantas picads',
-              answer: '',
-              question_id: '1',
-              answer_value: '1'));
-        } else {
-          int value = int.parse(_questions[bitesIndex].answer_value);
-          value = value + 1;
-          _questions[bitesIndex].answer_value = value.toString();
-        }
+      //increase total bites answer_value
+      int bitesIndex =
+          _questions.indexWhere((question) => question.question_id == '1');
+
+      if (bitesIndex == -1) {
+        _questions.add(Question(
+            question: 'Cuantas picads',
+            answer: ' ',
+            question_id: '1',
+            answer_value: '1'));
+      } else {
+        int value = int.parse(_questions[bitesIndex].answer_value);
+        value = value + 1;
+        _questions[bitesIndex].answer_value = value.toString();
       }
+    }
+    //add other questions without answer_value
+    if (question_id != '2' && question_id != '1') {
+      _questions.add(Question(
+        question: question.toString(),
+        answer: answer.toString(),
+        answer_id: answer_id.toString(),
+        question_id: question_id.toString(),
+      ));
     }
 
     setState(() {

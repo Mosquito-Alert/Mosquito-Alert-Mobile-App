@@ -20,15 +20,4 @@ class UserManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.get("uuid");
   }
-
-  static Future<String> getSessionId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get("sessionId");
-  }
-
-  //Set
-  static setSessionId(id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("sessionId", id);
-  }
 }

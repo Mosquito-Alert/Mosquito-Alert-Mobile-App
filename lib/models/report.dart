@@ -17,6 +17,7 @@ class Report {
   String note;
   String package_name;
   String package_version;
+  String session;
   List<Question> responses;
 
   Report({
@@ -36,6 +37,7 @@ class Report {
     this.note,
     this.package_name,
     this.package_version,
+    this.session,
     this.responses,
   });
 
@@ -56,6 +58,7 @@ class Report {
     note = json['note'];
     package_name = json['package_name'];
     package_version = json['package_version'];
+    session = json['session'];
 
     if (json['responses'] != null) {
       responses = new List<Question>();
@@ -83,6 +86,7 @@ class Report {
     data['note'] = this.note;
     data['package_name'] = this.package_name;
     data['package_version'] = this.package_version;
+    data['session'] = this.session;
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }

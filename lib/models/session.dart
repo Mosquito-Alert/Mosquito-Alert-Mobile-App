@@ -1,6 +1,6 @@
 class Session {
-  String id;
-  String session_ID;
+  int id;
+  int session_ID;
   String user;
   String session_start_time;
   String session_end_time;

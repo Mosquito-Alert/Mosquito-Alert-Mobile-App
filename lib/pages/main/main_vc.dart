@@ -9,6 +9,7 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
@@ -150,11 +151,14 @@ class _MainVCState extends State<MainVC> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () async {
-                         Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => QuestionsReportPage()),
-                            );
+                        //  Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => QuestionsReportPage()),
+                        //     );
+
+                        // Utils.createNewSession();
+                        Utils.closeSession();
                         },
                         child: CustomCard(
                           img: 'assets/img/mosquito_placeholder.PNG',
