@@ -151,14 +151,11 @@ class _MainVCState extends State<MainVC> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () async {
-                        //  Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => QuestionsReportPage()),
-                        //     );
-
-                        // Utils.createNewSession();
-                        Utils.closeSession();
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuestionsReportPage()),
+                            );
                         },
                         child: CustomCard(
                           img: 'assets/img/mosquito_placeholder.PNG',
