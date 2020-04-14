@@ -57,12 +57,15 @@ class Report {
     package_name = json['package_name'];
     package_version = json['package_version'];
 
-    // if (json['responses'] != null) {         //TODO: fix formJson Questions
-    //   responses = new List<Questions>();
-    //   json['responses'].foreach((q) {
-    //     responses.add(new Questions.fromJson(q));
-    //   });
-    // }
+    if (json['responses'] != null) {      
+      print(json['responses']);            //TODO: fix formJson Questions
+      responses = new List<Question>();
+     
+      json['responses'].forEach((q) {
+        Question newQuestion = new Question.fromJson(q);
+        responses.add(newQuestion);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {

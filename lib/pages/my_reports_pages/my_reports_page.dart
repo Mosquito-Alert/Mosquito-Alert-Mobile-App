@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -399,12 +398,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   Row(
                     children: <Widget>[
                       Expanded(
-                          child: Style.noBgButton("*Editar", () {
+                          child: Style.noBgButton(MyLocalizations.of(context, "edit"), () {
                         //TODO: api edit
                       })),
                       Expanded(
-                          child: Style.noBgButton("*Eliminar", () {
+                          child: Style.noBgButton(MyLocalizations.of(context, "delete"), () {
                         //TODO: Api delete
+                        ApiSingleton().deleteReport(report);
                       }))
                     ],
                   ),

@@ -6,6 +6,7 @@ import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:uuid/uuid.dart';
 
 class ApiSingleton {
   static String serverUrl = 'http://humboldt.ceab.csic.es/api';
@@ -98,7 +99,7 @@ class ApiSingleton {
   //         body: json.encode({
   //           'session_end_time': DateTime.now().toUtc().toString(),
   //         }));
-          
+
   //     if (response.statusCode != 200) {
   //       print(
   //           "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -109,8 +110,6 @@ class ApiSingleton {
   //     print(response);
   //   } catch (e) {}
   // }
-
-
 
   Future<dynamic> createReport(Report report) async {
     try {
@@ -188,6 +187,76 @@ class ApiSingleton {
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<dynamic> deleteReport(Report report) async {
+    try {
+      var body = {};
+
+      body.addAll({'version_UUID': Uuid().v4()});
+      body.addAll({'version_number': -1});
+      body.addAll({'version_time': DateTime.now().toIso8601String()});
+
+      //Todo: fix this! 
+      if (report.user != null && report.user.isNotEmpty) {
+        body.addAll({'user': report.user});
+      }
+      if (report.report_id != null && report.report_id.isNotEmpty) {
+        body.addAll({'report_id': report.report_id});
+      }
+      if (report.phone_upload_time != null &&
+          report.phone_upload_time.isNotEmpty) {
+        body.addAll({'phone_upload_time': report.phone_upload_time});
+      }
+      if (report.creation_time != null && report.creation_time.isNotEmpty) {
+        body.addAll({'creation_time': report.creation_time});
+      }
+
+      if (report.type != null && report.type.isNotEmpty) {
+        body.addAll({'type': report.type});
+      }
+      if (report.location_choice != null && report.location_choice.isNotEmpty) {
+        body.addAll({'location_choice': report.location_choice});
+      }
+      if (report.current_location_lat != null) {
+        body.addAll({'current_location_lat': report.current_location_lat});
+      }
+      if (report.current_location_lon != null) {
+        body.addAll({'current_location_lon': report.current_location_lon});
+      }
+      if (report.selected_location_lat != null) {
+        body.addAll({'selected_location_lat': report.selected_location_lat});
+      }
+      if (report.selected_location_lon != null) {
+        body.addAll({'selected_location_lon': report.selected_location_lon});
+      }
+      if (report.package_name != null) {
+        body.addAll({'package_name': report.package_name});
+      }
+      if (report.package_version != null) {
+        body.addAll({'package_version': report.package_version});
+      }
+      if (report.responses != null && report.responses.isNotEmpty) {
+        body.addAll(
+            {'responses': report.responses.map((r) => r.toJson()).toList()});
+      } else {
+        body.addAll({'responses': {}});
+      }
+      final response = await http.post('$serverUrl$reports',
+          headers: headers, body: json.encode(body));
+
+      print(response);
+
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return Response.fromJson(json.decode(response.body));
+      }
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

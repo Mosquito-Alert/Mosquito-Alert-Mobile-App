@@ -1,17 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:mosquito_alert_app/models/question.dart';
-import 'package:mosquito_alert_app/models/report.dart';
+
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/biting_form.dart';
 import 'components/biting_logation_form.dart';
-import 'components/biting_questions_form.dart';
 import 'components/mosquito_type_form.dart';
 
 class BitingReportPage extends StatefulWidget {
@@ -25,7 +19,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    _formsRepot = [BitingForm(), BitingLocationForm(), MosquitoTypeForm()];
+    _formsRepot = [
+      BitingForm(),
+      BitingLocationForm(),
+      MosquitoTypeForm(),
+    ];
 
     return Scaffold(
       appBar: AppBar(
