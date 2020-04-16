@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
@@ -58,9 +59,9 @@ class Utils {
       reportsList.add(report);
     }
 
-    if (session == null) {
-      createNewSession();
-    }
+    // if (session == null) {
+    //   createNewSession();
+    // }
 
     var userUUID = await UserManager.getUUID();
     report = new Report(
@@ -69,7 +70,7 @@ class Utils {
       version_number: 0,
       version_UUID: new Uuid().v4(),
       user: userUUID,
-      session: session.id.toString(),      
+      // session: session.id.toString(),
     );
     print(reportsList);
   }
@@ -90,8 +91,26 @@ class Utils {
     report.selected_location_lon = lon;
   }
 
-  static void addResponse(questions) {
-    report.responses = questions;
+  static void addResponses(questions) {
+    //TODO: adapt functions and fix double questions
+    var _responses = report.responses;
+    if (_responses == null) {
+      _responses = new List();
+    }
+    for (Question question in questions) {
+      _responses.add(question);
+    }
+    report.responses = _responses;
+    // print(report.responses);
+  }
+
+  static void addResponse(question) {
+    var _responses = report.responses;
+    if (_responses == null) {
+      _responses = new List();
+    }
+    _responses.add(question);
+    report.responses = _responses;
   }
 
   static Future<void> createReport() async {

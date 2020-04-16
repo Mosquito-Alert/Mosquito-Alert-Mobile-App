@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class CustomCard extends StatelessWidget {
@@ -14,18 +15,23 @@ class CustomCard extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            img!= null ? Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Image.asset(
-                img,
-                height: 70,
-              ),
-            ) : Container(),
+            img != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: SvgPicture.asset(
+                      img,
+                      height: 70,
+                    ),
+                  )
+                : SizedBox(
+                    height: 70,
+                  ),
             Style.titleMedium(title, fontSize: 16, textAlign: TextAlign.center),
             SizedBox(
               height: 5,
             ),
-            Style.bodySmall(subtitle, textAlign: TextAlign.center, fontSize: 10),
+            Style.bodySmall(subtitle,
+                textAlign: TextAlign.center, fontSize: 10),
           ],
         ),
       ),

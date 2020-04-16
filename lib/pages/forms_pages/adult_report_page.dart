@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/biting_questions_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/take_picture_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:random_string/random_string.dart';
-import 'package:uuid/uuid.dart';
 
 import 'components/biting_logation_form.dart';
 
-class QuestionsReportPage extends StatefulWidget {
+class AdultReportPage extends StatefulWidget {
   @override
-  _QuestionsReportPageState createState() => _QuestionsReportPageState();
+  _AdultReportPageState createState() => _AdultReportPageState();
 }
 
-class _QuestionsReportPageState extends State<QuestionsReportPage> {
+class _AdultReportPageState extends State<AdultReportPage> {
   final List<Map<String, List<String>>> questions = [
     {
       "question": ["¿Cuándo te ha picado el mosquito?"],
@@ -47,9 +40,6 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
 
-  List<Question> responses = [];
-
-  Report report = new Report();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +79,7 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == 2.0) {
+                      if (currentPage == _formsRepot.length-1) {
                         // createReport();
                         Navigator.push(
                           context,
@@ -112,47 +102,5 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
             return _formsRepot[index];
           }),
     );
-  }
-
-  void addResponse(String question, String answer) {
-    int currentIndex =
-        responses.indexWhere((question) => responses.contains(question));
-    if (currentIndex != -1) {
-      responses[currentIndex].answer = answer;
-    } else {
-      setState(() {
-        responses.add(new Question(question: question, answer: answer));
-      });
-    }
-    report.responses = responses;
-  }
-
-  Future<void> setLocationType(String type) async {
-    report.location_choice = type;
-    if (type == "current") {
-      Position currentPosition = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      report.current_location_lat = currentPosition.latitude;
-      report.current_location_lon = currentPosition.longitude;
-    }
-  }
-
-  void setSelectedLocation(double lat, lon) {
-    report.selected_location_lat = lat;
-    report.selected_location_lon = lon;
-  }
-
-  Future<void> createReport() async {
-    report.type = 'adult';
-    report.report_id = randomAlphaNumeric(4).toString();
-    report.version_number = 0;
-    report.version_time = DateTime.now().toUtc().toString();
-    report.creation_time = DateTime.now().toUtc().toString();
-    report.phone_upload_time = DateTime.now().toUtc().toString();
-    report.version_UUID = new Uuid().v4();
-
-    report.user = await UserManager.getUUID();
-
-    ApiSingleton().createReport(report);
   }
 }

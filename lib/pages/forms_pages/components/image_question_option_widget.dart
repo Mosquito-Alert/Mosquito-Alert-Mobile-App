@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class ImageQuestionOption extends StatelessWidget {
@@ -24,7 +25,7 @@ class ImageQuestionOption extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                // color: Colors.blue,
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
                   image: AssetImage(img),
@@ -33,6 +34,7 @@ class ImageQuestionOption extends StatelessWidget {
                 ),
               ),
               padding: EdgeInsets.all(5),
+              // child: SvgPicture.asset(img),
             ),
             Container(
               decoration: BoxDecoration(

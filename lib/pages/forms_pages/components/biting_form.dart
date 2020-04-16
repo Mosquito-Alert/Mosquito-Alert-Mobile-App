@@ -298,7 +298,7 @@ class _BitingFormState extends State<BitingForm> {
                   false
                   ? GestureDetector(
                       onTap: () {
-                        Utils.addResponse(questions);
+                        Utils.addResponses(questions);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -427,7 +427,7 @@ class _BitingFormState extends State<BitingForm> {
         }
         if (questionValue == totalValues) {
           canContinue = true;
-          Utils.addResponse(questions);
+          Utils.addResponses(questions);
         } else {
           canContinue = false;
         }

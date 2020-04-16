@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MosquitoPartsForm extends StatefulWidget {
@@ -8,6 +10,8 @@ class MosquitoPartsForm extends StatefulWidget {
 }
 
 class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
+  List<Question> questions = List();
+
   @override
   Widget build(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
@@ -32,14 +36,22 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Container(
-                      width: sizeWidth * 0.22,
-                      margin: EdgeInsets.only(right: 5),
-                      child: ImageQuestionOption(
-                        false,
-                        '',
-                        '',
-                        'assets/img/placeholder.jpg',
+                    return GestureDetector(
+                      onTap: () {
+                        onSelect('answer', (index + 711).toString());
+                      },
+                      child: Container(
+                        width: sizeWidth * 0.22,
+                        margin: EdgeInsets.only(right: 5),
+                        child: ImageQuestionOption(
+                          questions.any((q) => q.answer_id == (index + 711).toString()),
+                          '',
+                          '',
+                          'assets/img/placeholder.jpg',
+                          disabled: questions.length != null
+                                  ?  questions.any((q) => q.answer_id != (index + 711).toString())
+                                  : false,
+                        ),
                       ),
                     );
                   }),
@@ -116,4 +128,21 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
       ),
     );
   }
+
+  onSelect(answer, answerId) {
+    Question newQuestion = new Question(
+      question: '¿Como era el mosquito?',
+      answer: answer,
+      question_id: '7',
+      answer_id: answerId.toString(),
+    );
+
+    setState(() {
+      questions.add(newQuestion);
+    });
+
+    // Utils.addResponses(questions);
+  }
+
+
 }

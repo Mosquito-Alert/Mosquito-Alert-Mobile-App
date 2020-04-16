@@ -9,7 +9,6 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
@@ -137,7 +136,7 @@ class _MainVCState extends State<MainVC> {
                             );
                           },
                           child: CustomCard(
-                            img: 'assets/img/mosquito_placeholder.PNG',
+                            img: 'assets/img/Bite_Report.svg',
                             title: MyLocalizations.of(
                                 context, 'report_biting_txt'),
                             subtitle: MyLocalizations.of(
@@ -151,14 +150,14 @@ class _MainVCState extends State<MainVC> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () async {
-                         Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => QuestionsReportPage()),
-                            );
+                          //  Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => QuestionsReportPage()),
+                          //     );
                         },
                         child: CustomCard(
-                          img: 'assets/img/mosquito_placeholder.PNG',
+                          img: 'assets/img/Report_Breeding_site.svg',
                           title: MyLocalizations.of(context, 'report_nest_txt'),
                           subtitle: MyLocalizations.of(
                               context, 'found_breeding_place_question_txt'),
@@ -172,12 +171,21 @@ class _MainVCState extends State<MainVC> {
                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: CustomCard(
-                          img: 'assets/img/mosquito_placeholder.PNG',
-                          title:
-                              MyLocalizations.of(context, 'report_adults_txt'),
-                          subtitle: MyLocalizations.of(
-                              context, 'report_us_adult_mosquitos_txt'),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AdultReportPage()),
+                            );
+                          },
+                          child: CustomCard(
+                            img: 'assets/img/Report_Mosquito.svg',
+                            title: MyLocalizations.of(
+                                context, 'report_adults_txt'),
+                            subtitle: MyLocalizations.of(
+                                context, 'report_us_adult_mosquitos_txt'),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -193,7 +201,7 @@ class _MainVCState extends State<MainVC> {
                           );
                         },
                         child: CustomCard(
-                          img: 'assets/img/mosquito_placeholder.PNG',
+                          img: 'assets/img/My_Reports.svg',
                           title:
                               MyLocalizations.of(context, 'your_reports_txt'),
                           subtitle: MyLocalizations.of(
@@ -214,8 +222,8 @@ class _MainVCState extends State<MainVC> {
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.all(25),
-                            child: Image.asset(
-                              'assets/img/ic_image.PNG',
+                            child: SvgPicture.asset(
+                              'assets/img/Validate_Photos.svg',
                               height: 50,
                               width: 50,
                             ),

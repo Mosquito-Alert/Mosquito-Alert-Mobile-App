@@ -104,8 +104,10 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       }
-      // Todo: Save id
 
+
+      // Todo: Save id
+      // Utils.session.id = response.body['id']
       print(response);
       return true;
     } catch (e) {
@@ -300,7 +302,6 @@ class ApiSingleton {
 
         return reportsList;
       }
-      return false;
     } catch (e) {
       return null;
     }
@@ -335,7 +336,6 @@ class ApiSingleton {
 
         return allReports;
       }
-      return null;
     } catch (e) {
       return null;
     }
