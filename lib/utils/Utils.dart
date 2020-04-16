@@ -69,7 +69,7 @@ class Utils {
       version_number: 0,
       version_UUID: new Uuid().v4(),
       user: userUUID,
-      session: session.session_ID.toString(),      //Todo: What session id is the correct?
+      session: session.id.toString(),      
     );
     print(reportsList);
   }

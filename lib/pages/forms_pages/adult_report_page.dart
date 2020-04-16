@@ -3,14 +3,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_questions_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/take_picture_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:random_string/random_string.dart';
 import 'package:uuid/uuid.dart';
+
 import 'components/biting_logation_form.dart';
 
 class QuestionsReportPage extends StatefulWidget {
@@ -50,9 +54,13 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingQuestionsForm(questions, addResponse, responses),
-      // BitingLocationForm(setLocationType, setSelectedLocation),
-      MosquitoTypeForm()
+      MosquitoTypeForm(),
+      // TakePicturePage(),
+      MosquitoPartsForm(),
+      // BitingQuestionsForm(questions, addResponse, responses),
+      BitingLocationForm(),
+      // Te pico form()
+      AddOtherReportPage(),
     ];
 
     return Scaffold(
@@ -77,13 +85,12 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
           Style.noBgButton(
               false //TODO: show finish in last page
                   ? MyLocalizations.of(context, "finish")
-                  : MyLocalizations.of(
-                      context, "next"),
+                  : MyLocalizations.of(context, "next"),
               true
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == 2.0) {
-                        createReport();
+                        // createReport();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainVC()),
@@ -122,9 +129,10 @@ class _QuestionsReportPageState extends State<QuestionsReportPage> {
 
   Future<void> setLocationType(String type) async {
     report.location_choice = type;
-    if(type == "current"){
-      Position currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      report.current_location_lat = currentPosition.latitude; 
+    if (type == "current") {
+      Position currentPosition = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      report.current_location_lat = currentPosition.latitude;
       report.current_location_lon = currentPosition.longitude;
     }
   }
