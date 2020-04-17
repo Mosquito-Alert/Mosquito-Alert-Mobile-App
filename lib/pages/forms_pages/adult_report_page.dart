@@ -17,38 +17,23 @@ class AdultReportPage extends StatefulWidget {
 }
 
 class _AdultReportPageState extends State<AdultReportPage> {
-  final List<Map<String, List<String>>> questions = [
-    {
-      "question": ["¿Cuándo te ha picado el mosquito?"],
-      "answers": [
-        "Por la mañana",
-        "Al mediodia",
-        "Por la tarde",
-        "Por la noche",
-        "no estoy seguro"
-      ]
-    },
-    {
-      "question": ["¿En que situación te ha picado?"],
-      "answers": ["espacio cerrado", "espacio abierto"]
-    },
-    {
-      "question": ["¿Dónde te ha picado?"],
-      "answers": ["d"]
-    },
-  ];
-
   final _pagesController = PageController();
   List _formsRepot;
 
+  bool skip3 = false;
+
+  setSkip3() {
+    setState(() {
+      skip3 = !skip3;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      MosquitoTypeForm(),
+      MosquitoTypeForm(setSkip3),
       // TakePicturePage(),
       MosquitoPartsForm(),
-      // BitingQuestionsForm(questions, addResponse, responses),
       BitingLocationForm(),
       // Te pico form()
       AddOtherReportPage(),
@@ -80,16 +65,22 @@ class _AdultReportPageState extends State<AdultReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length-1) {
+                      if (currentPage == _formsRepot.length - 1) {
                         Utils.createReport();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainVC()),
                         );
                       } else {
-                        _pagesController.nextPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease);
+                        if (currentPage == 0.0 && skip3) {
+                          _pagesController.animateToPage(2,
+                              duration: Duration(microseconds: 300),
+                              curve: Curves.ease);
+                        } else {
+                          _pagesController.nextPage(
+                              duration: Duration(microseconds: 300),
+                              curve: Curves.ease);
+                        }
                       }
                     }
                   : null)

@@ -8,13 +8,14 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'image_question_option_widget.dart';
 
 class MosquitoTypeForm extends StatefulWidget {
+  final Function setSkip3;
+
+  MosquitoTypeForm(this.setSkip3);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
 
 class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
-  int _selectedIndex;
-
   Question question;
 
   @override
@@ -53,10 +54,8 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                         itemBuilder: (ctx, index) {
                           return GestureDetector(
                             onTap: () {
-                              setState(() {
-                                _selectedIndex = index;
-                              });
                               onSelect("answer text", (index + 61).toString());
+                              index == 1 ? widget.setSkip3() : null;  // skip when type = comon mosquito
                             },
                             child: ImageQuestionOption(
                               question.answer_id == (index + 61).toString()

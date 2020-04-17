@@ -160,7 +160,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
       questions.add(newQuestion);
     });
 
-    Utils.addResponses(questions);
+    Utils.addResponse(newQuestion);
   }
 
   bool isDisabled(int index, int aswerId) {

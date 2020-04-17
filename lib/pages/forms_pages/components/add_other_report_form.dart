@@ -88,7 +88,7 @@ class AddOtherReportPage extends StatelessWidget {
                       // );
                     },
                     child: CustomCard(
-                      img: '',
+                      // img: '',
                       title: MyLocalizations.of(context, 'exit'),
                       subtitle: 'No quiero añadir otro reporte',
                     ),

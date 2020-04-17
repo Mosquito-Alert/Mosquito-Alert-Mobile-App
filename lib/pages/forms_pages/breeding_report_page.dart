@@ -1,30 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
-
+import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/public_breeding_site_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'components/biting_form.dart';
-import 'components/biting_logation_form.dart';
-import 'components/mosquito_type_form.dart';
-
-class BitingReportPage extends StatefulWidget {
+class BreedingReportPage extends StatefulWidget {
   @override
-  _BitingReportPageState createState() => _BitingReportPageState();
+  _BreedingReportPageState createState() => _BreedingReportPageState();
 }
 
-class _BitingReportPageState extends State<BitingReportPage> {
+class _BreedingReportPageState extends State<BreedingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
+
+  bool skipReport = false;
+
+  setSkipReport() {
+    setState(() {
+      skipReport = !skipReport;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm(),
+      PublicBreedingForm(setSkipReport),
+      // TakePicturePage(),
+      QuestionsBreedingForm(),
       BitingLocationForm(),
-      AddOtherReportPage()
+      // viste mosquitos ?
+      AddOtherReportPage(),
     ];
 
     return Scaffold(
@@ -53,16 +62,23 @@ class _BitingReportPageState extends State<BitingReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length-1) {
-                        Utils.createReport();
+                      if (skipReport) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainVC()),
                         );
                       } else {
-                        _pagesController.nextPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease);
+                        if (currentPage == _formsRepot.length - 1) {
+                          // Utils.createReport();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainVC()),
+                          );
+                        } else {
+                          _pagesController.nextPage(
+                              duration: Duration(microseconds: 300),
+                              curve: Curves.ease);
+                        }
                       }
                     }
                   : null)
