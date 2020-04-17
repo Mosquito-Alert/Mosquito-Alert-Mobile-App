@@ -101,7 +101,7 @@ class Utils {
       _responses.add(question);
     }
     report.responses = _responses;
-    // print(report.responses);
+    print(report.responses);
   }
 
   static void addResponse(question) {
@@ -111,6 +111,7 @@ class Utils {
     }
     _responses.add(question);
     report.responses = _responses;
+    // print(report);
   }
 
   static Future<void> createReport() async {

@@ -6,6 +6,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_f
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/biting_logation_form.dart';
@@ -80,7 +81,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length-1) {
-                        // createReport();
+                        Utils.createReport();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainVC()),

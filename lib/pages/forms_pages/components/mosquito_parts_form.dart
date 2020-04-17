@@ -44,13 +44,14 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                         width: sizeWidth * 0.22,
                         margin: EdgeInsets.only(right: 5),
                         child: ImageQuestionOption(
-                          questions.any((q) => q.answer_id == (index + 711).toString()),
+                          questions.any(
+                              (q) => q.answer_id == (index + 711).toString()),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
                           disabled: questions.length != null
-                                  ?  questions.any((q) => q.answer_id != (index + 711).toString())
-                                  : false,
+                              ? isDisabled(710, index + 711)
+                              : false,
                         ),
                       ),
                     );
@@ -64,15 +65,24 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Container(
-                      width: sizeWidth * 0.22,
-                      margin: EdgeInsets.only(right: 5),
-                      // color: Colors.green,
-                      child: ImageQuestionOption(
-                        false,
-                        '',
-                        '',
-                        'assets/img/placeholder.jpg',
+                    return GestureDetector(
+                      onTap: () {
+                        onSelect('answer', (index + 721).toString());
+                      },
+                      child: Container(
+                        width: sizeWidth * 0.22,
+                        margin: EdgeInsets.only(right: 5),
+                        // color: Colors.green,
+                        child: ImageQuestionOption(
+                          questions.any(
+                              (q) => q.answer_id == (index + 721).toString()),
+                          '',
+                          '',
+                          'assets/img/placeholder.jpg',
+                          disabled: questions.length != null
+                              ? isDisabled(720, (index + 721))
+                              : false,
+                        ),
                       ),
                     );
                   }),
@@ -85,40 +95,49 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Container(
-                      width: sizeWidth * 0.22,
-                      margin: EdgeInsets.only(right: 5),
-                      // color: Colors.green,
-                      child: ImageQuestionOption(
-                        false,
-                        '',
-                        '',
-                        'assets/img/placeholder.jpg',
+                    return GestureDetector(
+                      onTap: () {
+                        onSelect('answer', (index + 731).toString());
+                      },
+                      child: Container(
+                        width: sizeWidth * 0.22,
+                        margin: EdgeInsets.only(right: 5),
+                        // color: Colors.green,
+                        child: ImageQuestionOption(
+                          questions.any(
+                              (q) => q.answer_id == (index + 731).toString()),
+                          '',
+                          '',
+                          'assets/img/placeholder.jpg',
+                          disabled: questions.length != null
+                              ? isDisabled(730, (index + 731))
+                              : false,
+                        ),
                       ),
                     );
                   }),
             ),
-            Container(
-              height: 100,
-              child: ListView.builder(
-                  itemCount: 4,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: sizeWidth * 0.22,
-                      margin: EdgeInsets.only(right: 5),
-                      // color: Colors.green,
-                      child: ImageQuestionOption(
-                        false,
-                        '',
-                        '',
-                        'assets/img/placeholder.jpg',
-                      ),
-                    );
-                  }),
-            ),
+            // Container(
+            //   height: 100,
+            //   child: ListView.builder(
+            //       itemCount: 4,
+            //       shrinkWrap: true,
+            //       physics: NeverScrollableScrollPhysics(),
+            //       scrollDirection: Axis.horizontal,
+            //       itemBuilder: (context, index) {
+            //         return Container(
+            //           width: sizeWidth * 0.22,
+            //           margin: EdgeInsets.only(right: 5),
+            //           // color: Colors.green,
+            //           child: ImageQuestionOption(
+            //             false,
+            //             '',
+            //             '',
+            //             'assets/img/placeholder.jpg',
+            //           ),
+            //         );
+            //       }),
+            // ),
             SizedBox(
               height: 15,
             ),
@@ -141,8 +160,17 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
       questions.add(newQuestion);
     });
 
-    // Utils.addResponses(questions);
+    Utils.addResponses(questions);
   }
 
+  bool isDisabled(int index, int aswerId) {
+    var group = questions
+        .where((q) =>
+            int.parse(q.answer_id) >= index &&
+            int.parse(q.answer_id) < index + 10)
+        .toList();
 
+    print(group.any((q) => q.answer_id != aswerId.toString()));
+    return group.any((q) => q.answer_id != aswerId.toString());
+  }
 }
