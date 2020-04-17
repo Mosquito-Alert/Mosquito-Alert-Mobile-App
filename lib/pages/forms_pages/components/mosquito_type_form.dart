@@ -21,10 +21,17 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   @override
   void initState() {
     super.initState();
-    question =
-        new Question(question: 'Puediste reconocerlo?', question_id: '6');
+    question = new Question(
+        question: '¿Pudiste reconocer el mosquito?', question_id: '6');
     Utils.createNewReport('adult');
   }
+
+  List<String> answers = [
+    'Invasive Aedes',
+    'Mosquito Común',
+    'Otro',
+    'No lo sé'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +57,20 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                             crossAxisCount: 2, crossAxisSpacing: 10),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: 4,
+                        itemCount: answers.length,
                         itemBuilder: (ctx, index) {
                           return GestureDetector(
                             onTap: () {
-                              onSelect("answer text", (index + 61).toString());
-                              index == 1 ? widget.setSkip3() : null;  // skip when type = comon mosquito
+                              onSelect(answers[index], (index + 61).toString());
+                              index == 1
+                                  ? widget.setSkip3()
+                                  : null; // skip when type = comon mosquito
                             },
                             child: ImageQuestionOption(
                               question.answer_id == (index + 61).toString()
                                   ? true
                                   : false,
-                              "TITULO",
+                              answers[index],
                               MyLocalizations.of(context, "recognize_it_txt"),
                               'assets/img/ic_other_mosquito.png',
                               disabled: question.answer_id != null

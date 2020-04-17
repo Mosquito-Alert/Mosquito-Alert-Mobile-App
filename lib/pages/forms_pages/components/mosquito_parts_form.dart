@@ -38,7 +38,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('answer', (index + 711).toString());
+                        onSelect('Torax${index+1}', (index + 711).toString());
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -67,7 +67,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('answer', (index + 721).toString());
+                        onSelect('Abdomen${index+1}', (index + 721).toString());
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -97,7 +97,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('answer', (index + 731).toString());
+                        onSelect('Leg${index+1}', (index + 731).toString());
                       },
                       child: Container(
                         width: sizeWidth * 0.22,

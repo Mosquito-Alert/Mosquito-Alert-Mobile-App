@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -43,11 +45,11 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => BitingReportPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BreedingReportPage()),
+                      );
                     },
                     child: CustomCard(
                       img: 'assets/img/mosquito_placeholder.PNG',
@@ -64,11 +66,11 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => BitingReportPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdultReportPage()),
+                      );
                     },
                     child: CustomCard(
                       img: 'assets/img/mosquito_placeholder.PNG',
