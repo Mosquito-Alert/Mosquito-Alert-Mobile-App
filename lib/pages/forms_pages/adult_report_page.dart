@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -21,10 +23,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
   List _formsRepot;
 
   bool skip3 = false;
+  bool addBiting = false;
 
   setSkip3() {
     setState(() {
       skip3 = !skip3;
+    });
+  }
+
+  adBitingdReport() {
+    setState(() {
+      addBiting = !addBiting;
     });
   }
 
@@ -35,7 +44,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       // TakePicturePage(),
       MosquitoPartsForm(),
       BitingLocationForm(),
-      // Te pico form()
+      CouldSeeForm(adBitingdReport),
       AddOtherReportPage(),
     ];
 
@@ -66,11 +75,20 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length - 1) {
-                        Utils.createReport();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainVC()),
-                        );
+                        if (addBiting) {
+                          // Utils.addReportList()
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BitingReportPage()),
+                          );
+                        } else {
+                          Utils.createReport();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainVC()),
+                          );
+                        }
                       } else {
                         if (currentPage == 0.0 && skip3) {
                           _pagesController.animateToPage(2,

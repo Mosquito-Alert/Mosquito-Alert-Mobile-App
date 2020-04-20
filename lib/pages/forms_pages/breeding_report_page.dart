@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/public_breeding_site_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -18,10 +19,17 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   List _formsRepot;
 
   bool skipReport = false;
+  bool addMosquito = false;
 
   setSkipReport() {
     setState(() {
       skipReport = !skipReport;
+    });
+  }
+
+  addAdultReport() {
+    setState(() {
+      addMosquito = !addMosquito;
     });
   }
 
@@ -32,7 +40,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       // TakePicturePage(),
       QuestionsBreedingForm(),
       BitingLocationForm(),
-      // viste mosquitos ?
+      CouldSeeForm(addAdultReport),
       AddOtherReportPage(),
     ];
 
