@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
@@ -77,10 +78,17 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                         );
                       } else {
                         if (currentPage == _formsRepot.length - 1) {
-                          // Utils.createReport();
+                          Utils.createReport();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => MainVC()),
+                          );
+                        } else if (currentPage == 3.0 && addMosquito) {
+                          Utils.addOtherReport('adult');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdultReportPage()),
                           );
                         } else {
                           _pagesController.nextPage(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/models/question.dart';
-import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
@@ -74,21 +72,19 @@ class _AdultReportPageState extends State<AdultReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length - 1) {
-                        if (addBiting) {
-                          // Utils.addReportList()
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BitingReportPage()),
-                          );
-                        } else {
-                          Utils.createReport();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MainVC()),
-                          );
-                        }
+                      if (currentPage == _formsRepot.length - 1 && !addBiting) {
+                        Utils.createReport();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainVC()),
+                        );
+                      } else if (currentPage == 3.0 && addBiting) {
+                        Utils.addOtherReport('bite');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BitingReportPage()),
+                        );
                       } else {
                         if (currentPage == 0.0 && skip3) {
                           _pagesController.animateToPage(2,

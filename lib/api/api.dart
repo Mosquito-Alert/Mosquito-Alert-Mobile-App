@@ -20,7 +20,7 @@ class ApiSingleton {
   static const nearbyReports = '/nearby_reports_nod/';
 
   //Session
-  static const sessions = '/sessions/';
+  static const sessions = '/sessions';
   static const sessionUpdate = '/session_update/';
 
   //Images
@@ -83,6 +83,10 @@ class ApiSingleton {
           allSessions.add(Session.fromJson(item));
         }
 
+        if (allSessions.length == 0) {
+          return 0;
+        }
+
         return allSessions[0].session_ID;
       }
     } catch (e) {
@@ -93,7 +97,7 @@ class ApiSingleton {
 
   Future<dynamic> createSession(Session session) async {
     try {
-      final response = await http.post('$serverUrl$sessions',
+      final response = await http.post('$serverUrl$sessions/',
           headers: headers,
           body: json.encode(
             session.toJson(),
@@ -105,18 +109,18 @@ class ApiSingleton {
         return Response.fromJson(json.decode(response.body));
       }
 
-
       // Todo: Save id
       // Utils.session.id = response.body['id']
-      print(response);
-      return true;
+      var body = json.decode(response.body);
+      print(body);
+      return body['id'];
     } catch (e) {
       print(e);
       return false;
     }
   }
 
-  Future<dynamic> updateSession(Session session) async {
+  Future<dynamic> closeSession(Session session) async {
     try {
       final response = await http.put(
           '$serverUrl$sessionUpdate${session.session_ID}/',

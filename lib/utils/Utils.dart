@@ -34,6 +34,28 @@ class Utils {
   static List<Report> reportsList;
 
   static createNewSession() async {
+    // reportsList = new List();
+
+    // String userUUID = await UserManager.getUUID();
+
+    // int sessionId = await ApiSingleton().getLastSession(userUUID);
+    // sessionId = sessionId + 1;
+
+    // session = new Session(
+    //     session_ID: sessionId,
+    //     user: userUUID,
+    //     session_start_time: DateTime.now().toIso8601String());
+
+    // session.id = await ApiSingleton().createSession(session);
+  }
+
+  static closeSession() {
+    session.session_end_time = DateTime.now().toIso8601String();
+    ApiSingleton().closeSession(session);
+  }
+
+  static createNewReport(String type) async {
+    if (session == null) {
     reportsList = new List();
 
     String userUUID = await UserManager.getUUID();
@@ -46,22 +68,8 @@ class Utils {
         user: userUUID,
         session_start_time: DateTime.now().toIso8601String());
 
-    ApiSingleton().createSession(session);
-  }
-
-  static closeSession() {
-    session.session_end_time = DateTime.now().toIso8601String();
-    ApiSingleton().updateSession(session);
-  }
-
-  static createNewReport(String type) async {
-    if (report != null) {
-      reportsList.add(report);
+    session.id = await ApiSingleton().createSession(session);
     }
-
-    // if (session == null) {
-    //   createNewSession();
-    // }
 
     var userUUID = await UserManager.getUUID();
     report = new Report(
@@ -70,9 +78,13 @@ class Utils {
       version_number: 0,
       version_UUID: new Uuid().v4(),
       user: userUUID,
-      // session: session.id.toString(),
+      session: session.id.toString(),
     );
-    print(reportsList);
+  }
+
+  static addOtherReport(String type) {
+    reportsList.add(report);
+    createNewReport(type);
   }
 
   static setContinue() {

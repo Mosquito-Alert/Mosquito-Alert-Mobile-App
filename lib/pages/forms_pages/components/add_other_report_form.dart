@@ -3,6 +3,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import '../biting_report_page.dart';
@@ -28,6 +29,7 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      Utils.addOtherReport('bite');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -45,6 +47,7 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      Utils.addOtherReport('site');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -66,6 +69,7 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      Utils.addOtherReport('adult');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

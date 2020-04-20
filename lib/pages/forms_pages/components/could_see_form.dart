@@ -12,12 +12,6 @@ class CouldSeeForm extends StatefulWidget {
 }
 
 class _CouldSeeFormState extends State<CouldSeeForm> {
-  @override
-  void initState() {
-    super.initState();
-    // Utils.createNewReport('site');
-  }
-
   String selected;
 
   @override
