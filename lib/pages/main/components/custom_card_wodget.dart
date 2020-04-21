@@ -18,13 +18,14 @@ class CustomCard extends StatelessWidget {
             img != null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: SvgPicture.asset(
+                    child: Image.asset(
                       img,
-                      height: 70,
+                      height: 100,
+                      // fit: BoxFit.contain,
                     ),
                   )
                 : SizedBox(
-                    height: 70,
+                    height: 100,
                   ),
             Style.titleMedium(title, fontSize: 16, textAlign: TextAlign.center),
             SizedBox(

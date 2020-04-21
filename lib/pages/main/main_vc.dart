@@ -137,7 +137,7 @@ class _MainVCState extends State<MainVC> {
                             );
                           },
                           child: CustomCard(
-                            img: 'assets/img/Bite_Report.svg',
+                            img: 'assets/img/ic_bite_report.png',
                             title: MyLocalizations.of(
                                 context, 'report_biting_txt'),
                             subtitle: MyLocalizations.of(
@@ -158,7 +158,7 @@ class _MainVCState extends State<MainVC> {
                               );
                         },
                         child: CustomCard(
-                          img: 'assets/img/Report_Breeding_site.svg',
+                          img: 'assets/img/ic_breeding_report.png',
                           title: MyLocalizations.of(context, 'report_nest_txt'),
                           subtitle: MyLocalizations.of(
                               context, 'found_breeding_place_question_txt'),
@@ -181,7 +181,7 @@ class _MainVCState extends State<MainVC> {
                             );
                           },
                           child: CustomCard(
-                            img: 'assets/img/Report_Mosquito.svg',
+                            img: 'assets/img/ic_mosquito_report.png',
                             title: MyLocalizations.of(
                                 context, 'report_adults_txt'),
                             subtitle: MyLocalizations.of(
@@ -202,7 +202,7 @@ class _MainVCState extends State<MainVC> {
                           );
                         },
                         child: CustomCard(
-                          img: 'assets/img/My_Reports.svg',
+                          img: 'assets/img/ic_my_reports.png',
                           title:
                               MyLocalizations.of(context, 'your_reports_txt'),
                           subtitle: MyLocalizations.of(
@@ -222,11 +222,11 @@ class _MainVCState extends State<MainVC> {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.all(25),
-                            child: SvgPicture.asset(
-                              'assets/img/Validate_Photos.svg',
-                              height: 50,
-                              width: 50,
+                            padding: EdgeInsets.all(15),
+                            child: Image.asset(
+                              'assets/img/ic_validate_photos.png',
+                              height: 70,
+                              width: 70,
                             ),
                           ),
                           Expanded(
