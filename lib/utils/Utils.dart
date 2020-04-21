@@ -33,22 +33,6 @@ class Utils {
   static Session session;
   static List<Report> reportsList;
 
-  static createNewSession() async {
-    // reportsList = new List();
-
-    // String userUUID = await UserManager.getUUID();
-
-    // int sessionId = await ApiSingleton().getLastSession(userUUID);
-    // sessionId = sessionId + 1;
-
-    // session = new Session(
-    //     session_ID: sessionId,
-    //     user: userUUID,
-    //     session_start_time: DateTime.now().toIso8601String());
-
-    // session.id = await ApiSingleton().createSession(session);
-  }
-
   static closeSession() {
     session.session_end_time = DateTime.now().toIso8601String();
     ApiSingleton().closeSession(session);
@@ -56,19 +40,19 @@ class Utils {
 
   static createNewReport(String type) async {
     if (session == null) {
-    reportsList = new List();
+      reportsList = new List();
 
-    String userUUID = await UserManager.getUUID();
+      String userUUID = await UserManager.getUUID();
 
-    int sessionId = await ApiSingleton().getLastSession(userUUID);
-    sessionId = sessionId + 1;
+      int sessionId = await ApiSingleton().getLastSession(userUUID);
+      sessionId = sessionId + 1;
 
-    session = new Session(
-        session_ID: sessionId,
-        user: userUUID,
-        session_start_time: DateTime.now().toIso8601String());
+      session = new Session(
+          session_ID: sessionId,
+          user: userUUID,
+          session_start_time: DateTime.now().toIso8601String());
 
-    session.id = await ApiSingleton().createSession(session);
+      session.id = await ApiSingleton().createSession(session);
     }
 
     var userUUID = await UserManager.getUUID();
@@ -83,6 +67,9 @@ class Utils {
   }
 
   static addOtherReport(String type) {
+    report.version_time = DateTime.now().toUtc().toString();
+    report.creation_time = DateTime.now().toUtc().toString();
+    report.phone_upload_time = DateTime.now().toUtc().toString();
     reportsList.add(report);
     createNewReport(type);
   }
@@ -130,7 +117,10 @@ class Utils {
     report.version_time = DateTime.now().toUtc().toString();
     report.creation_time = DateTime.now().toUtc().toString();
     report.phone_upload_time = DateTime.now().toUtc().toString();
-    ApiSingleton().createReport(report);
+    reportsList.add(report);
+    for (Report r in reportsList) {
+      ApiSingleton().createReport(r);
+    }
   }
 
   //Alerts
