@@ -34,7 +34,7 @@ class ReportsList extends StatelessWidget {
                   SvgPicture.asset(
                     reports[index].type == 'adult'
                         ? 'assets/img/ic_adults_yours.svg'
-                        : reports[index].type == 'breeding'
+                        : reports[index].type == 'site'
                             ? 'assets/img/ic_breeding_yours.svg'
                             : 'assets/img/ic_bites_yours.svg',
                     width: 40,

@@ -37,7 +37,7 @@ class AddOtherReportPage extends StatelessWidget {
                       );
                     },
                     child: CustomCard(
-                      img: 'assets/img/mosquito_placeholder.PNG',
+                      img: 'assets/img/ic_bite_report.png',
                       title: MyLocalizations.of(context, 'report_biting_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'bitten_by_mosquito_question_txt'),
@@ -55,7 +55,7 @@ class AddOtherReportPage extends StatelessWidget {
                       );
                     },
                     child: CustomCard(
-                      img: 'assets/img/mosquito_placeholder.PNG',
+                      img: 'assets/img/ic_breeding_report.png',
                       title: MyLocalizations.of(context, 'report_nest_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'found_breeding_place_question_txt'),
@@ -77,7 +77,7 @@ class AddOtherReportPage extends StatelessWidget {
                       );
                     },
                     child: CustomCard(
-                      img: 'assets/img/mosquito_placeholder.PNG',
+                      img: 'assets/img/ic_mosquito_report.png',
                       title: MyLocalizations.of(context, 'report_adults_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'report_us_adult_mosquitos_txt'),

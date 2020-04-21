@@ -169,14 +169,15 @@ class Utils {
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
       report.version_UUID = Uuid().v4();
+      ApiSingleton().createReport(report);
     } else {
       report.version_time = DateTime.now().toIso8601String();
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
-    }
-    reportsList.add(report);
-    for (Report r in reportsList) {
-      ApiSingleton().createReport(r);
+      reportsList.add(report);
+      for (Report r in reportsList) {
+        ApiSingleton().createReport(r);
+      }
     }
   }
 

@@ -93,10 +93,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                       } else {
                         if (currentPage == _formsRepot.length - 1) {
                           Utils.createReport();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MainVC()),
-                          );
+                          Navigator.pop(context);
                         } else if (currentPage == 3.0 && addMosquito) {
                           Utils.addOtherReport('adult');
                           Navigator.push(
