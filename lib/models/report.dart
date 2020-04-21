@@ -17,7 +17,7 @@ class Report {
   String note;
   String package_name;
   String package_version;
-  String session;
+  int session;
   List<Question> responses;
 
   Report({
@@ -86,7 +86,7 @@ class Report {
     data['note'] = this.note;
     data['package_name'] = this.package_name;
     data['package_version'] = this.package_version;
-    data['session'] = this.session;
+    // data['session'] = this.session;
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }

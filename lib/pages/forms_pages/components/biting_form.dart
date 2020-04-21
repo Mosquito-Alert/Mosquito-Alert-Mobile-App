@@ -50,70 +50,70 @@ class _BitingFormState extends State<BitingForm> {
                     Stack(
                       children: <Widget>[
                         Image.asset('assets/img/ic_full_body_off.png'),
-                        questions.any((question) => question.answer_id == '6')
+                        questions.any((question) => question.answer_id == 6)
                             ? Image.asset('assets/img/ic_left_leg_on.png')
                             : Image.asset("assets/img/ic_left_leg_off.png"),
-                        questions.any((question) => question.answer_id == '5')
+                        questions.any((question) => question.answer_id == 5)
                             ? Image.asset('assets/img/ic_right_leg_on.png')
                             : Image.asset('assets/img/ic_right_leg_off.png'),
-                        questions.any((question) => question.answer_id == '4')
+                        questions.any((question) => question.answer_id == 4)
                             ? Image.asset('assets/img/ic_left_hand_on.png')
                             : Image.asset('assets/img/ic_left_hand_off.png'),
-                        questions.any((question) => question.answer_id == '3')
+                        questions.any((question) => question.answer_id ==  3)
                             ? Image.asset('assets/img/ic_right_hand_on.png')
                             : Image.asset('assets/img/ic_right_hand_off.png'),
-                        questions.any((question) => question.answer_id == '1')
+                        questions.any((question) => question.answer_id == 1)
                             ? Image.asset('assets/img/ic_head_on.png')
                             : Image.asset('assets/img/ic_head_off.png'),
-                        questions.any((question) => question.answer_id == '2')
+                        questions.any((question) => question.answer_id ==  2)
                             ? Image.asset('assets/img/ic_chest_on.png')
                             : Image.asset('assets/img/ic_chest_off.png'),
                         Positioned(
                           top: mediaQuery.height * 0.05,
                           left: mediaQuery.width * 0.37,
                           child: questions
-                                  .any((question) => question.answer_id == '1')
-                              ? Style.body(getIndexBody('1'))
+                                  .any((question) => question.answer_id == 1)
+                              ? Style.body(getIndexBody(1))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.21,
                           child: questions
-                                  .any((question) => question.answer_id == '3')
-                              ? Style.body(getIndexBody('3'))
+                                  .any((question) => question.answer_id == 3)
+                              ? Style.body(getIndexBody(3))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.70,
                           child: questions
-                                  .any((question) => question.answer_id == '4')
-                              ? Style.body(getIndexBody('4'))
+                                  .any((question) => question.answer_id == 4)
+                              ? Style.body(getIndexBody(4))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.23,
                           left: mediaQuery.width * 0.56,
                           child: questions
-                                  .any((question) => question.answer_id == '2')
-                              ? Style.body(getIndexBody('2'))
+                                  .any((question) => question.answer_id == 2)
+                              ? Style.body(getIndexBody(2))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.28,
                           child: questions
-                                  .any((question) => question.answer_id == '5')
-                              ? Style.body(getIndexBody('5'))
+                                  .any((question) => question.answer_id == 5)
+                              ? Style.body(getIndexBody(5))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.63,
                           child: questions
-                                  .any((question) => question.answer_id == '6')
-                              ? Style.body(getIndexBody('6'))
+                                  .any((question) => question.answer_id == 6)
+                              ? Style.body(getIndexBody(6))
                               : Container(),
                         ),
                       ],
@@ -124,7 +124,7 @@ class _BitingFormState extends State<BitingForm> {
                         GestureDetector(
                           onTap: () {
                             addToList('donde pico', "head",
-                                question_id: '2', answer_id: '1');
+                                question_id: 2, answer_id: 1);
                           },
                           child: Center(
                             child: Container(
@@ -142,7 +142,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "right arm",
-                                    question_id: '2', answer_id: '3');
+                                    question_id: 2, answer_id:  3);
                               },
                               child: Container(
                                 color: Colors.blue.withOpacity(0.0),
@@ -154,7 +154,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "chest",
-                                    question_id: '2', answer_id: '2');
+                                    question_id: 2, answer_id: 2);
                               },
                               child: Container(
                                 // margin: EdgeInsets.only(top: 5),
@@ -167,7 +167,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "left arm",
-                                    question_id: '2', answer_id: '4');
+                                    question_id: 2, answer_id: 4);
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -184,7 +184,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "right leg",
-                                    question_id: '2', answer_id: '5');
+                                    question_id: 2, answer_id: 5 );
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -196,7 +196,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "left leg",
-                                    question_id: '2', answer_id: '6');
+                                    question_id: 2, answer_id: 6);
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -231,12 +231,12 @@ class _BitingFormState extends State<BitingForm> {
                   child: InkWell(
                     onTap: () {
                       addToList('cuando pico', "amanecer",
-                          question_id: '3', answer_id: '7');
+                          question_id: 3, answer_id: 7);
                     },
                     child: SmallQuestionOption(
                       'Amanecer',
-                      selected: questions.any((q) => q.answer_id == '7'),
-                      index: getIndexAnswer('7'),
+                      selected: questions.any((q) => q.answer_id == 7),
+                      index: getIndexAnswer(7),
                     ),
                   ),
                 ),
@@ -247,12 +247,12 @@ class _BitingFormState extends State<BitingForm> {
                   child: InkWell(
                     onTap: () {
                       addToList('cuando pico', "Mediodia",
-                          question_id: '3', answer_id: '8');
+                          question_id: 3, answer_id: 8);
                     },
                     child: SmallQuestionOption(
                       'Mediodía',
-                      selected: questions.any((q) => q.answer_id == '8'),
-                      index: getIndexAnswer('8'),
+                      selected: questions.any((q) => q.answer_id == 8),
+                      index: getIndexAnswer(8),
                     ),
                   ),
                 ),
@@ -265,12 +265,12 @@ class _BitingFormState extends State<BitingForm> {
                   child: InkWell(
                     onTap: () {
                       addToList('cuando pico', "atardeser",
-                          question_id: '3', answer_id: '9');
+                          question_id: 3, answer_id: 9);
                     },
                     child: SmallQuestionOption(
                       'Atardecer',
-                      selected: questions.any((q) => q.answer_id == '9'),
-                      index: getIndexAnswer('9'),
+                      selected: questions.any((q) => q.answer_id == 9),
+                      index: getIndexAnswer(9),
                     ),
                   ),
                 ),
@@ -281,12 +281,12 @@ class _BitingFormState extends State<BitingForm> {
                   child: InkWell(
                     onTap: () {
                       addToList('cuando pico', 'noshe',
-                          question_id: '3', answer_id: '10');
+                          question_id: 3, answer_id: 10);
                     },
                     child: SmallQuestionOption(
                       'Noche',
-                      selected: questions.any((q) => q.answer_id == '10'),
-                      index: getIndexAnswer('10'),
+                      selected: questions.any((q) => q.answer_id == 10),
+                      index: getIndexAnswer(10),
                     ),
                   ),
                 ),
@@ -294,8 +294,8 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
-              // canContinue()
-                  false
+              canContinue()
+                  // false
                   ? GestureDetector(
                       onTap: () {
                         Utils.addResponses(questions);
@@ -335,7 +335,7 @@ class _BitingFormState extends State<BitingForm> {
     );
   }
 
-  String getIndexBody(String answer_id) {
+  String getIndexBody(int answer_id) {
     int index =
         questions.indexWhere((question) => question.answer_id == answer_id);
 
@@ -344,7 +344,7 @@ class _BitingFormState extends State<BitingForm> {
     }
   }
 
-  String getIndexAnswer(String answer_id) {
+  String getIndexAnswer(int answer_id) {
     int index = 0 ;
       questions.map((q) {
         if(q.answer_id == answer_id){
@@ -362,7 +362,7 @@ class _BitingFormState extends State<BitingForm> {
 
     // TODO: fix question_id!
     //increase answer_value question 2
-    if (question_id == '2') {
+    if (question_id == 2) {
       int currentIndex = _questions.indexWhere((question) =>
           // question.question_id == question_id &&
           question.answer_id == answer_id.toString());
@@ -370,8 +370,8 @@ class _BitingFormState extends State<BitingForm> {
         _questions.add(Question(
           question: question.toString(),
           answer: answer.toString(),
-          answer_id: answer_id.toString(),
-          question_id: question_id.toString(),
+          answer_id: answer_id,
+          question_id: question_id,
           answer_value: '1',
         ));
       } else {
@@ -388,7 +388,7 @@ class _BitingFormState extends State<BitingForm> {
         _questions.add(Question(
             question: 'Cuantas picads',
             answer: ' ',
-            question_id: '1',
+            question_id: 1,
             answer_value: '1'));
       } else {
         int value = int.parse(_questions[bitesIndex].answer_value);
@@ -397,12 +397,12 @@ class _BitingFormState extends State<BitingForm> {
       }
     }
     //add other questions without answer_value
-    if (question_id != '2' && question_id != '1') {
+    if (question_id != 2  && question_id != 1) {
       _questions.add(Question(
         question: question.toString(),
         answer: answer.toString(),
-        answer_id: answer_id.toString(),
-        question_id: question_id.toString(),
+        answer_id: answer_id,
+        question_id: question_id,
       ));
     }
 
@@ -412,20 +412,23 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   bool canContinue() {
-    if (questions.length > 1) {
-      int totalIndex = questions.indexWhere((q) => q.question_id == '1');
+    if (questions.length > 1 && questions != null && questions.isNotEmpty) {
+      int totalIndex = questions.indexWhere((q) => q.question_id == 1);
       int totalValues = int.parse(questions[totalIndex].answer_value);
       bool canContinue = false;
       for (int j = 2; j <= 3; j++) {
         int questionValue = 0;
+        int total3 = 0;
         for (int i = 0; i < questions.length; i++) {
           // 2 = first questions on screen; 3 = only 3 questions in this screen (2 shown + 1 auto)
-          if (questions[i].question_id == j.toString()) {
+          if (questions[i].question_id == 2) {
             questionValue =
                 questionValue + int.parse(questions[i].answer_value);
+          } else if(questions[i].question_id == 3){
+            total3 ++; 
           }
         }
-        if (questionValue == totalValues) {
+        if (questionValue == totalValues || total3 == totalValues) {
           canContinue = true;
           Utils.addResponses(questions);
         } else {

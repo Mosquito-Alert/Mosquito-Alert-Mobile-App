@@ -1,8 +1,8 @@
 
 class Question {
-  String question_id;
+  int question_id;
   String question;
-  String answer_id;
+  int answer_id;
   String answer;
   String answer_value;
 

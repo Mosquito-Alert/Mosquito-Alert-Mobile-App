@@ -19,6 +19,7 @@ class ReportsList extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
+            print(reports[index].type);
             onTap(context, reports[index]);
           },
           child: Card(

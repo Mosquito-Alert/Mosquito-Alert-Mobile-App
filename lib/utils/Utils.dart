@@ -62,7 +62,7 @@ class Utils {
       version_number: 0,
       version_UUID: new Uuid().v4(),
       user: userUUID,
-      session: session.id.toString(),
+      session: session.id,
     );
   }
 
@@ -91,16 +91,17 @@ class Utils {
   }
 
   static void addResponses(questions) {
-    //TODO: adapt functions and fix double questions
-    var _responses = report.responses;
-    if (_responses == null) {
-      _responses = new List();
-    }
-    for (Question question in questions) {
-      _responses.add(question);
-    }
-    report.responses = _responses;
-    print(report.responses);
+    report.responses = questions;
+    // //TODO: adapt functions and fix double questions
+    // var _responses = report.responses;
+    // if (_responses == null) {
+    //   _responses = new List();
+    // }
+    // for (Question question in questions) {
+    //   _responses.add(question);
+    // }
+    // report.responses = _responses;
+    // print(report.responses);
   }
 
   static void addResponse(question) {

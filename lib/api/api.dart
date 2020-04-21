@@ -44,6 +44,7 @@ class ApiSingleton {
     return new ApiSingleton();
   }
 
+  //User
   Future<dynamic> createUser(String uuid) async {
     try {
       final response = await http.post('$serverUrl$users',
@@ -335,12 +336,14 @@ class ApiSingleton {
           allReports = List();
         }
         for (var item in jsonAnswer['results']) {
+          // var r = new Report.fromJson(item);
           allReports.add(Report.fromJson(item));
         }
 
         return allReports;
       }
     } catch (e) {
+      print(e.message);
       return null;
     }
   }

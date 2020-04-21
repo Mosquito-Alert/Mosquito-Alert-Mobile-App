@@ -12,7 +12,7 @@ class QuestionsBreedingForm extends StatefulWidget {
 class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
   Question question = new Question(
     question: '¿El nido tiene agua?',
-    question_id: '8',
+    question_id: 8,
   );
 
   @override
@@ -34,11 +34,11 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
               Expanded(
                   child: GestureDetector(
                       onTap: () {
-                        addQuestion('Tiene agua', '81');
+                        addQuestion('Tiene agua', 81);
                       },
                       child: SmallQuestionOption(
                         'Tiene agua',
-                        selected: question.answer_id == '81',
+                        selected: question.answer_id == 81,
                       ))),
               SizedBox(
                 width: 10,
@@ -50,7 +50,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                       },
                       child: SmallQuestionOption(
                         'No tiene agua',
-                        selected: question.answer_id == '82',
+                        selected: question.answer_id == 82,
                       ))),
             ]),
           ],
@@ -65,6 +65,6 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
       question.answer_id = answerId;
     });
 
-   // Utils.addResponse(question);
+    // Utils.addResponse(question);
   }
 }

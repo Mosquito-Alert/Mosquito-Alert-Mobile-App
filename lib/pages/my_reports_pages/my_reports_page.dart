@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
@@ -62,10 +66,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice != "missing" &&
-          list[i].current_location_lat != null &&
-          list[i].current_location_lon != null ||
+              list[i].current_location_lat != null &&
+              list[i].current_location_lon != null ||
           list[i].selected_location_lat != null &&
-          list[i].selected_location_lon != null) {
+              list[i].selected_location_lon != null) {
         data.add(list[i]);
         print(list[i].report_id);
       }
@@ -103,20 +107,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
           position = LatLng(_reports[i].selected_location_lat,
               _reports[i].selected_location_lon);
         }
-        var icon;
-        switch (_reports[i].type) {
-          case "adult":
-            icon = iconAdultYours;
-            break;
-          case "bite":
-            icon = iconBitesYours;
-            break;
-          case "breeding":
-            icon = iconBreedingYours;
-            break;
-          default:
-            break;
-        }
+        var icon = setIconMarcker(_reports[i].type);
+
         if (position != null) {
           markers.add(Marker(
             markerId: MarkerId(_reports[i].report_id),
@@ -126,6 +118,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
           ));
         }
       }
+    }
+  }
+
+  BitmapDescriptor setIconMarcker(type) {
+    switch (type) {
+      case "adult":
+        return iconAdultYours;
+        break;
+      case "bite":
+        return iconBitesYours;
+        break;
+      case "site":
+        return iconBreedingYours;
+        break;
+      default:
+        break;
     }
   }
 
@@ -279,16 +287,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             Style.body(
                                 report.location_choice == "current"
                                     ? '(' +
-                                        report.current_location_lat.toString() +
+                                        report.current_location_lat
+                                            .toStringAsFixed(5) +
                                         ', ' +
-                                        report.current_location_lon.toString() +
+                                        report.current_location_lon
+                                            .toStringAsFixed(5) +
                                         ')'
                                     : '(' +
                                         report.selected_location_lat
-                                            .toString() +
+                                            .toStringAsFixed(5) +
                                         ', ' +
                                         report.selected_location_lon
-                                            .toString() +
+                                            .toStringAsFixed(5) +
                                         ')',
                                 fontSize: 12),
                             Style.body('Cercad de **Bellaterra (Barcelona)',
@@ -305,7 +315,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     context, "exact_time_register_txt"),
                                 fontSize: 14),
                             Style.body(
-                                DateFormat('dddd, dd MMMM yyyy')
+                                DateFormat('EEEE, dd MMMM yyyy')
                                     .format(
                                         DateTime.parse(report.creation_time))
                                     .toString(),
@@ -353,57 +363,41 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Style.titleMedium(
-                            MyLocalizations.of(context, "reported_species_txt"),
-                            fontSize: 14),
-                        Style.body(MyLocalizations.of(context, "unknoun")),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Style.titleMedium(
-                            MyLocalizations.of(context, "when_biting_txt"),
-                            fontSize: 14),
-                        Style.body("Por la tarde"),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Style.titleMedium(
-                            MyLocalizations.of(context, "which_situation_txt"),
-                            fontSize: 14),
-                        Style.body("Espacio interior"),
-                      ],
-                    ),
-                  ),
-                  Divider(),
+                  Expanded(child: _showResponses(report.responses)),
                   SizedBox(
                     height: 15,
                   ),
                   Row(
                     children: <Widget>[
                       Expanded(
-                          child: Style.noBgButton(MyLocalizations.of(context, "edit"), () {
+                          child: Style.noBgButton(
+                              MyLocalizations.of(context, "edit"), () {
+                        if (report.type == "bite") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BitingReportPage()),
+                          );
+                        } else if (report.type == "adult") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdultReportPage()),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BreedingReportPage()),
+                          );
+                        }
+
                         //TODO: api edit
                       })),
                       Expanded(
-                          child: Style.noBgButton(MyLocalizations.of(context, "delete"), () {
-                        //TODO: Api delete
+                          child: Style.noBgButton(
+                              MyLocalizations.of(context, "delete"), () {
+                        //TODO: show Alert!
                         ApiSingleton().deleteReport(report);
                       }))
                     ],
@@ -413,6 +407,29 @@ class _MyReportsPageState extends State<MyReportsPage> {
             ),
           ));
         });
+  }
+
+  Widget _showResponses(responses) {
+    for (Question q in responses) {
+      print(q.question);
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                q.question != null
+                    ? Style.titleMedium(q.question, fontSize: 14)
+                    : Container(),
+                // Style.body(q.answer != null ? q.answer : q.answer_value),
+              ],
+            ),
+          ),
+          Divider(),
+        ],
+      );
+    }
   }
 
   _getPosition(Report report) {
@@ -437,13 +454,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
     if (report.location_choice == "current") {
       marker = Marker(
           markerId: MarkerId('currentMarker'),
-          position:
-              LatLng(report.current_location_lat, report.current_location_lon));
+          position: LatLng(
+            report.current_location_lat,
+            report.current_location_lon,
+          ),
+          icon: setIconMarcker(report.type));
     } else {
       marker = Marker(
           markerId: MarkerId('selectedtMarker'),
           position: LatLng(
-              report.selected_location_lat, report.selected_location_lon));
+            report.selected_location_lat,
+            report.selected_location_lon,
+          ),
+          icon: setIconMarcker(report.type));
     }
 
     return <Marker>[marker].toSet();

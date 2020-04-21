@@ -38,14 +38,14 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Torax${index+1}', (index + 711).toString());
+                        onSelect('Torax${index+1}', (index + 711));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
                         margin: EdgeInsets.only(right: 5),
                         child: ImageQuestionOption(
                           questions.any(
-                              (q) => q.answer_id == (index + 711).toString()),
+                              (q) => q.answer_id == (index + 711)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -67,7 +67,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Abdomen${index+1}', (index + 721).toString());
+                        onSelect('Abdomen${index+1}', (index + 721));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -75,7 +75,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                         // color: Colors.green,
                         child: ImageQuestionOption(
                           questions.any(
-                              (q) => q.answer_id == (index + 721).toString()),
+                              (q) => q.answer_id == (index + 721)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -97,7 +97,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Leg${index+1}', (index + 731).toString());
+                        onSelect('Leg ${index+1}', (index + 731));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -105,7 +105,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                         // color: Colors.green,
                         child: ImageQuestionOption(
                           questions.any(
-                              (q) => q.answer_id == (index + 731).toString()),
+                              (q) => q.answer_id == (index + 731)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -117,27 +117,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                     );
                   }),
             ),
-            // Container(
-            //   height: 100,
-            //   child: ListView.builder(
-            //       itemCount: 4,
-            //       shrinkWrap: true,
-            //       physics: NeverScrollableScrollPhysics(),
-            //       scrollDirection: Axis.horizontal,
-            //       itemBuilder: (context, index) {
-            //         return Container(
-            //           width: sizeWidth * 0.22,
-            //           margin: EdgeInsets.only(right: 5),
-            //           // color: Colors.green,
-            //           child: ImageQuestionOption(
-            //             false,
-            //             '',
-            //             '',
-            //             'assets/img/placeholder.jpg',
-            //           ),
-            //         );
-            //       }),
-            // ),
             SizedBox(
               height: 15,
             ),
@@ -152,8 +131,8 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
     Question newQuestion = new Question(
       question: '¿Como era el mosquito?',
       answer: answer,
-      question_id: '7',
-      answer_id: answerId.toString(),
+      question_id: 7,
+      answer_id: answerId,
     );
 
     setState(() {
@@ -166,11 +145,11 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   bool isDisabled(int index, int aswerId) {
     var group = questions
         .where((q) =>
-            int.parse(q.answer_id) >= index &&
-            int.parse(q.answer_id) < index + 10)
+            q.answer_id >= index &&
+           q.answer_id < index + 10)
         .toList();
 
-    print(group.any((q) => q.answer_id != aswerId.toString()));
-    return group.any((q) => q.answer_id != aswerId.toString());
+    print(group.any((q) => q.answer_id != aswerId));
+    return group.any((q) => q.answer_id != aswerId);
   }
 }
