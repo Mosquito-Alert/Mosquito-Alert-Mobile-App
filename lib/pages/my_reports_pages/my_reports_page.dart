@@ -376,19 +376,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BitingReportPage()),
+                                builder: (context) =>
+                                    BitingReportPage(editReport: report)),
                           );
                         } else if (report.type == "adult") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AdultReportPage()),
+                                builder: (context) =>
+                                    AdultReportPage(editReport: report)),
                           );
                         } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BreedingReportPage()),
+                                builder: (context) =>
+                                    BreedingReportPage(editReport: report)),
                           );
                         }
 

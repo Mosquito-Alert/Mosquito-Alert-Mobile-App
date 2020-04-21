@@ -13,6 +13,19 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   List<Question> questions = List();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Utils.report != null) {
+      for (Question q in Utils.report.responses) {
+        if (q.question_id == 7) {
+          questions.add(q);
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -38,14 +51,13 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Torax${index+1}', (index + 711));
+                        onSelect('Torax${index + 1}', (index + 711));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
                         margin: EdgeInsets.only(right: 5),
                         child: ImageQuestionOption(
-                          questions.any(
-                              (q) => q.answer_id == (index + 711)),
+                          questions.any((q) => q.answer_id == (index + 711)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -67,15 +79,14 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Abdomen${index+1}', (index + 721));
+                        onSelect('Abdomen${index + 1}', (index + 721));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
                         margin: EdgeInsets.only(right: 5),
                         // color: Colors.green,
                         child: ImageQuestionOption(
-                          questions.any(
-                              (q) => q.answer_id == (index + 721)),
+                          questions.any((q) => q.answer_id == (index + 721)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -97,15 +108,14 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Leg ${index+1}', (index + 731));
+                        onSelect('Leg ${index + 1}', (index + 731));
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
                         margin: EdgeInsets.only(right: 5),
                         // color: Colors.green,
                         child: ImageQuestionOption(
-                          questions.any(
-                              (q) => q.answer_id == (index + 731)),
+                          questions.any((q) => q.answer_id == (index + 731)),
                           '',
                           '',
                           'assets/img/placeholder.jpg',
@@ -144,12 +154,9 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
 
   bool isDisabled(int index, int aswerId) {
     var group = questions
-        .where((q) =>
-            q.answer_id >= index &&
-           q.answer_id < index + 10)
+        .where((q) => q.answer_id >= index && q.answer_id < index + 10)
         .toList();
 
-    print(group.any((q) => q.answer_id != aswerId));
     return group.any((q) => q.answer_id != aswerId);
   }
 }

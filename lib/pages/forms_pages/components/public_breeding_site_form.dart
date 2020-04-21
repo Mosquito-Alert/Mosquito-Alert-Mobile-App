@@ -13,12 +13,6 @@ class PublicBreedingForm extends StatefulWidget {
 }
 
 class _PublicBreedingFormState extends State<PublicBreedingForm> {
-  @override
-  void initState() {
-    super.initState();
-    Utils.createNewReport('site');
-  }
-
   String selected;
 
   @override

@@ -23,7 +23,13 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
     super.initState();
     question = new Question(
         question: '¿Pudiste reconocer el mosquito?', question_id: 6);
-    Utils.createNewReport('adult');
+    if (Utils.report != null) {
+      int index = Utils.report.responses.indexWhere((q) => q.question_id == 6);
+      question.answer = Utils.report.responses[index].answer;
+      question.answer_id = Utils.report.responses[index].answer_id;
+    } else {
+      Utils.createNewReport('adult');
+    }
   }
 
   List<String> answers = [
@@ -67,15 +73,12 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   : null; // skip when type = comon mosquito
                             },
                             child: ImageQuestionOption(
-                              question.answer_id == (index + 61)
-                                  ? true
-                                  : false,
+                              question.answer_id == (index + 61) ? true : false,
                               answers[index],
                               MyLocalizations.of(context, "recognize_it_txt"),
                               'assets/img/ic_other_mosquito.png',
                               disabled: question.answer_id != null
-                                  ? (index + 61)!=
-                                      question.answer_id
+                                  ? (index + 61) != question.answer_id
                                   : false,
                             ),
                           );

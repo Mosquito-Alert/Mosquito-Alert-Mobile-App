@@ -17,9 +17,18 @@ class _BitingFormState extends State<BitingForm> {
 
   @override
   void initState() {
-    Utils.createNewReport('bite');
-    super.initState();
     questions = new List();
+    if (Utils.report != null) {
+      for (Question q in Utils.report.responses) {
+        if (q.question_id <= 3) {
+          questions.add(q);
+        }
+      }
+    } else {
+      Utils.createNewReport('bite');
+    }
+
+    super.initState();
   }
 
   @override
@@ -59,13 +68,13 @@ class _BitingFormState extends State<BitingForm> {
                         questions.any((question) => question.answer_id == 4)
                             ? Image.asset('assets/img/ic_left_hand_on.png')
                             : Image.asset('assets/img/ic_left_hand_off.png'),
-                        questions.any((question) => question.answer_id ==  3)
+                        questions.any((question) => question.answer_id == 3)
                             ? Image.asset('assets/img/ic_right_hand_on.png')
                             : Image.asset('assets/img/ic_right_hand_off.png'),
                         questions.any((question) => question.answer_id == 1)
                             ? Image.asset('assets/img/ic_head_on.png')
                             : Image.asset('assets/img/ic_head_off.png'),
-                        questions.any((question) => question.answer_id ==  2)
+                        questions.any((question) => question.answer_id == 2)
                             ? Image.asset('assets/img/ic_chest_on.png')
                             : Image.asset('assets/img/ic_chest_off.png'),
                         Positioned(
@@ -142,7 +151,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "right arm",
-                                    question_id: 2, answer_id:  3);
+                                    question_id: 2, answer_id: 3);
                               },
                               child: Container(
                                 color: Colors.blue.withOpacity(0.0),
@@ -184,7 +193,7 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: () {
                                 addToList('donde pico', "right leg",
-                                    question_id: 2, answer_id: 5 );
+                                    question_id: 2, answer_id: 5);
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -297,9 +306,7 @@ class _BitingFormState extends State<BitingForm> {
               canContinue()
                   // false
                   ? GestureDetector(
-                      onTap: () {
-                        Utils.addResponses(questions);
-                      },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         width: double.infinity,
@@ -336,21 +343,22 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   String getIndexBody(int answer_id) {
-    int index =
-        questions.indexWhere((question) => question.answer_id == answer_id);
+    int index = Utils.report.responses
+        .indexWhere((question) => question.answer_id == answer_id);
 
     if (index != -1) {
-      return questions[index].answer_value;
+      return Utils.report.responses[index].answer_value;
     }
   }
 
   String getIndexAnswer(int answer_id) {
-    int index = 0 ;
-      questions.map((q) {
-        if(q.answer_id == answer_id){
-          index = index +1; 
-        }
-      }).toList();
+    int index = 0;
+
+    questions.map((q) {
+      if (q.answer_id == answer_id) {
+        index = index + 1;
+      }
+    }).toList();
 
     if (index > 0) {
       return index.toString();
@@ -358,56 +366,11 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   addToList(String question, String answer, {question_id, answer_id}) {
-    List _questions = questions;
-
-    // TODO: fix question_id!
-    //increase answer_value question 2
-    if (question_id == 2) {
-      int currentIndex = _questions.indexWhere((question) =>
-          // question.question_id == question_id &&
-          question.answer_id == answer_id.toString());
-      if (currentIndex == -1) {
-        _questions.add(Question(
-          question: question.toString(),
-          answer: answer.toString(),
-          answer_id: answer_id,
-          question_id: question_id,
-          answer_value: '1',
-        ));
-      } else {
-        int value = int.parse(_questions[currentIndex].answer_value);
-        value = value + 1;
-        _questions[currentIndex].answer_value = value.toString();
-      }
-
-      //increase total bites answer_value
-      int bitesIndex =
-          _questions.indexWhere((question) => question.question_id == '1');
-
-      if (bitesIndex == -1) {
-        _questions.add(Question(
-            question: 'Cuantas picads',
-            answer: ' ',
-            question_id: 1,
-            answer_value: '1'));
-      } else {
-        int value = int.parse(_questions[bitesIndex].answer_value);
-        value = value + 1;
-        _questions[bitesIndex].answer_value = value.toString();
-      }
-    }
-    //add other questions without answer_value
-    if (question_id != 2  && question_id != 1) {
-      _questions.add(Question(
-        question: question.toString(),
-        answer: answer.toString(),
-        answer_id: answer_id,
-        question_id: question_id,
-      ));
-    }
+    Utils.addBiteResponse(question, answer,
+        question_id: question_id, answer_id: answer_id);
 
     setState(() {
-      questions = _questions;
+      questions = Utils.report.responses;
     });
   }
 
@@ -424,13 +387,12 @@ class _BitingFormState extends State<BitingForm> {
           if (questions[i].question_id == 2) {
             questionValue =
                 questionValue + int.parse(questions[i].answer_value);
-          } else if(questions[i].question_id == 3){
-            total3 ++; 
+          } else if (questions[i].question_id == 3) {
+            total3++;
           }
         }
         if (questionValue == totalValues || total3 == totalValues) {
           canContinue = true;
-          Utils.addResponses(questions);
         } else {
           canContinue = false;
         }

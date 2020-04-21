@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
@@ -12,6 +13,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'components/biting_logation_form.dart';
 
 class AdultReportPage extends StatefulWidget {
+  final Report editReport;
+
+  AdultReportPage({this.editReport});
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
 }
@@ -22,6 +26,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   bool skip3 = false;
   bool addBiting = false;
+
+  @override
+  void initState() {
+    if (widget.editReport != null) {
+      Utils.setEditReport(widget.editReport);
+    }
+    super.initState();
+  }
 
   setSkip3() {
     setState(() {

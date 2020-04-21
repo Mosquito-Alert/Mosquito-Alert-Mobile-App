@@ -16,6 +16,7 @@ import 'MyLocalizations.dart';
 class Utils {
   static List<CameraDescription> cameras;
 
+  //images
   static String imagePath;
 
   static void saveImgPath(String path) {
@@ -27,8 +28,6 @@ class Utils {
   }
 
   //REPORTS form
-  static bool continueForm = false;
-
   static Report report;
   static Session session;
   static List<Report> reportsList;
@@ -57,13 +56,18 @@ class Utils {
 
     var userUUID = await UserManager.getUUID();
     report = new Report(
-      type: type,
-      report_id: randomAlphaNumeric(4).toString(),
-      version_number: 0,
-      version_UUID: new Uuid().v4(),
-      user: userUUID,
-      session: session.id,
-    );
+        type: type,
+        report_id: randomAlphaNumeric(4).toString(),
+        version_number: 0,
+        version_UUID: new Uuid().v4(),
+        user: userUUID,
+        session: session.id,
+        responses: new List());
+  }
+
+  static setEditReport(Report editReport) {
+    report = editReport;
+    report.version_number = report.version_number + 1;
   }
 
   static addOtherReport(String type) {
@@ -72,10 +76,6 @@ class Utils {
     report.phone_upload_time = DateTime.now().toUtc().toString();
     reportsList.add(report);
     createNewReport(type);
-  }
-
-  static setContinue() {
-    continueForm = !continueForm;
   }
 
   static setCurrentLocation(double latitude, double longitude) {
@@ -104,6 +104,57 @@ class Utils {
     // print(report.responses);
   }
 
+  static void addBiteResponse(String question, String answer,
+      {question_id, answer_id}) {
+    List<Question> _questions = report.responses;
+
+    // TODO: fix question_id!
+    //increase answer_value question 2
+    if (question_id == 2) {
+      int currentIndex = _questions.indexWhere((question) =>
+          // question.question_id == question_id &&
+          question.answer_id == answer_id.toString());
+      if (currentIndex == -1) {
+        _questions.add(Question(
+          question: question.toString(),
+          answer: answer.toString(),
+          answer_id: answer_id,
+          question_id: question_id,
+          answer_value: '1',
+        ));
+      } else {
+        int value = int.parse(_questions[currentIndex].answer_value);
+        value = value + 1;
+        _questions[currentIndex].answer_value = value.toString();
+      }
+
+      //increase total bites answer_value
+      int bitesIndex =
+          _questions.indexWhere((question) => question.question_id == '1');
+
+      if (bitesIndex == -1) {
+        _questions.add(Question(
+            question: 'Cuantas picads',
+            answer: ' ',
+            question_id: 1,
+            answer_value: '1'));
+      } else {
+        int value = int.parse(_questions[bitesIndex].answer_value);
+        value = value + 1;
+        _questions[bitesIndex].answer_value = value.toString();
+      }
+    }
+    //add other questions without answer_value
+    if (question_id != 2 && question_id != 1) {
+      _questions.add(Question(
+        question: question.toString(),
+        answer: answer.toString(),
+        answer_id: answer_id,
+        question_id: question_id,
+      ));
+    }
+  }
+
   static void addResponse(question) {
     var _responses = report.responses;
     if (_responses == null) {
@@ -115,9 +166,14 @@ class Utils {
   }
 
   static Future<void> createReport() async {
-    report.version_time = DateTime.now().toUtc().toString();
-    report.creation_time = DateTime.now().toUtc().toString();
-    report.phone_upload_time = DateTime.now().toUtc().toString();
+    if (report.version_number > 0) {
+      report.version_time = DateTime.now().toIso8601String();
+      report.version_UUID = Uuid().v4();
+    } else {
+      report.version_time = DateTime.now().toIso8601String();
+      report.creation_time = DateTime.now().toIso8601String();
+      report.phone_upload_time = DateTime.now().toIso8601String();
+    }
     reportsList.add(report);
     for (Report r in reportsList) {
       ApiSingleton().createReport(r);

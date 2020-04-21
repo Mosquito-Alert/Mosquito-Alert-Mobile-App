@@ -10,10 +10,23 @@ class QuestionsBreedingForm extends StatefulWidget {
 }
 
 class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
-  Question question = new Question(
-    question: '¿El nido tiene agua?',
-    question_id: 8,
-  );
+  Question question;
+
+  @override
+  void initState() {
+    super.initState();
+    question = new Question(
+      question: '¿El nido tiene agua?',
+      question_id: 8,
+    );
+    if (Utils.report != null) {
+      int index = Utils.report.responses.indexWhere((q) => q.question_id == 8);
+      if (index != -1) {
+        question.answer = Utils.report.responses[index].answer;
+        question.answer_id = Utils.report.responses[index].answer_id;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +59,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
               Expanded(
                   child: GestureDetector(
                       onTap: () {
-                        addQuestion('No tiene agua', '82');
+                        addQuestion('No tiene agua', 82);
                       },
                       child: SmallQuestionOption(
                         'No tiene agua',
@@ -65,6 +78,6 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
       question.answer_id = answerId;
     });
 
-    // Utils.addResponse(question);
+    Utils.addResponse(question);
   }
 }

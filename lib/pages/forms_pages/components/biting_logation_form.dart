@@ -24,6 +24,25 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   StreamController<LocationType> streamType =
       StreamController<LocationType>.broadcast();
 
+  @override
+  void initState() {
+    if (Utils.report != null) {
+      switch (Utils.report.location_choice) {
+        case "selected": 
+        streamType.add(LocationType.selected);
+        updateMarker(LatLng(Utils.report.selected_location_lat, Utils.report.selected_location_lon));
+        break; 
+        case "current": 
+        streamType.add(LocationType.current);
+        updateMarker(LatLng(Utils.report.current_location_lat, Utils.report.current_location_lon));
+        break; 
+        default: 
+        streamType.add(LocationType.missing);
+      }
+    }
+    super.initState();
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
   }
@@ -59,7 +78,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       } else {
         Utils.showAlert(
             MyLocalizations.of(context, "location_not_active_title"),
-          MyLocalizations.of(context, "location_not_active_txt"),
+            MyLocalizations.of(context, "location_not_active_txt"),
             context, onPressed: () {
           Navigator.pop(context);
         });
@@ -110,7 +129,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                             context: context);
                                       },
                                       child: SmallQuestionOption(
-                                        MyLocalizations.of(context, "current_location_txt"),
+                                        MyLocalizations.of(
+                                            context, "current_location_txt"),
                                         selected: snapshot.data ==
                                             LocationType.current,
                                       ))),
@@ -123,7 +143,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                   getPosition(LocationType.selected);
                                 },
                                 child: SmallQuestionOption(
-                                  MyLocalizations.of(context, "select_location_txt"),
+                                  MyLocalizations.of(
+                                      context, "select_location_txt"),
                                   selected:
                                       snapshot.data == LocationType.selected,
                                 ),
@@ -165,7 +186,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                           SizedBox(
                             height: 10,
                           ),
-                          Style.noBgButton(MyLocalizations.of(context, "not_sure_txt"), () {
+                          Style.noBgButton(
+                              MyLocalizations.of(context, "not_sure_txt"), () {
                             getPosition(LocationType.missing);
                           }, textColor: Colors.grey)
                         ],

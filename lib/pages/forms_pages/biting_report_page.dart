@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -8,9 +9,11 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'components/biting_form.dart';
 import 'components/biting_logation_form.dart';
-import 'components/mosquito_type_form.dart';
 
 class BitingReportPage extends StatefulWidget {
+  final Report editReport;
+
+  BitingReportPage({this.editReport});
   @override
   _BitingReportPageState createState() => _BitingReportPageState();
 }
@@ -20,11 +23,19 @@ class _BitingReportPageState extends State<BitingReportPage> {
   List _formsRepot;
 
   @override
+  void initState() {
+    if (widget.editReport != null) {
+      Utils.setEditReport(widget.editReport);
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _formsRepot = [
       BitingForm(),
       BitingLocationForm(),
-      AddOtherReportPage()
+      AddOtherReportPage(),
     ];
 
     return Scaffold(
@@ -53,7 +64,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
               true
                   ? () {
                       double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length-1) {
+                      if (currentPage == _formsRepot.length - 1) {
                         Utils.createReport();
                         Navigator.push(
                           context,
