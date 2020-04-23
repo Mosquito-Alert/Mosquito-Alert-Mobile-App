@@ -17,14 +17,13 @@ class Utils {
   static List<CameraDescription> cameras;
 
   //images
-  static String imagePath;
+  static List<String> imagePath;
 
   static void saveImgPath(String path) {
-    imagePath = path;
-  }
-
-  static String getImagePath() {
-    return imagePath;
+    if(imagePath == null){
+      imagePath = new List();
+    }
+    imagePath.add(path);
   }
 
   //REPORTS form
@@ -88,20 +87,6 @@ class Utils {
     report.location_choice = "selected";
     report.selected_location_lat = lat;
     report.selected_location_lon = lon;
-  }
-
-  static void addResponses(questions) {
-    report.responses = questions;
-    // //TODO: adapt functions and fix double questions
-    // var _responses = report.responses;
-    // if (_responses == null) {
-    //   _responses = new List();
-    // }
-    // for (Question question in questions) {
-    //   _responses.add(question);
-    // }
-    // report.responses = _responses;
-    // print(report.responses);
   }
 
   static void addBiteResponse(String question, String answer,
@@ -178,7 +163,17 @@ class Utils {
       for (Report r in reportsList) {
         ApiSingleton().createReport(r);
       }
+      closeSession();
     }
+  }
+
+  static Future<void> deleteReport(r) async {
+    Report deleteReport = r;
+    deleteReport.version_time = DateTime.now().toIso8601String();
+    deleteReport.version_number = -1;
+    deleteReport.version_UUID = Uuid().v4();
+
+    ApiSingleton().createReport(deleteReport);
   }
 
   //Alerts

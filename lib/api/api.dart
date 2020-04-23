@@ -144,7 +144,6 @@ class ApiSingleton {
   Future<dynamic> createReport(Report report) async {
     try {
       var body = {};
-      String image = Utils.getImagePath();
 
       //TODO: fix this!
       if (report.version_UUID != null && report.version_UUID.isNotEmpty) {
@@ -211,101 +210,11 @@ class ApiSingleton {
         return Response.fromJson(json.decode(response.body));
       }
 
-      if (image != null) {
-        print(image);
-        saveImage(image, report.report_id);
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<dynamic> deleteReport(Report report) async {
-    try {
-      var body = {};
-
-      body.addAll({'version_UUID': Uuid().v4()});
-      body.addAll({'version_number': -1});
-      body.addAll({'version_time': DateTime.now().toIso8601String()});
-
-      //Todo: fix this!
-      if (report.user != null && report.user.isNotEmpty) {
-        body.addAll({'user': report.user});
-      }
-      if (report.report_id != null && report.report_id.isNotEmpty) {
-        body.addAll({'report_id': report.report_id});
-      }
-      if (report.phone_upload_time != null &&
-          report.phone_upload_time.isNotEmpty) {
-        body.addAll({'phone_upload_time': report.phone_upload_time});
-      }
-      if (report.creation_time != null && report.creation_time.isNotEmpty) {
-        body.addAll({'creation_time': report.creation_time});
-      }
-
-      if (report.type != null && report.type.isNotEmpty) {
-        body.addAll({'type': report.type});
-      }
-      if (report.location_choice != null && report.location_choice.isNotEmpty) {
-        body.addAll({'location_choice': report.location_choice});
-      }
-      if (report.current_location_lat != null) {
-        body.addAll({'current_location_lat': report.current_location_lat});
-      }
-      if (report.current_location_lon != null) {
-        body.addAll({'current_location_lon': report.current_location_lon});
-      }
-      if (report.selected_location_lat != null) {
-        body.addAll({'selected_location_lat': report.selected_location_lat});
-      }
-      if (report.selected_location_lon != null) {
-        body.addAll({'selected_location_lon': report.selected_location_lon});
-      }
-      if (report.package_name != null) {
-        body.addAll({'package_name': report.package_name});
-      }
-      if (report.package_version != null) {
-        body.addAll({'package_version': report.package_version});
-      }
-      if (report.responses != null && report.responses.isNotEmpty) {
-        body.addAll(
-            {'responses': report.responses.map((r) => r.toJson()).toList()});
-      } else {
-        body.addAll({'responses': {}});
-      }
-      final response = await http.post('$serverUrl$reports',
-          headers: headers, body: json.encode(body));
-
-      print(response);
-
-      if (response.statusCode != 200) {
-        print(
-            "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
-      }
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<dynamic> getMyReports() async {
-    try {
-      var userUUID = await UserManager.getUUID();
-      final response = await http.get(
-        '$serverUrl$reports?user=$userUUID',
-        headers: headers,
-      );
-      if (response.statusCode != 200) {
-        print(
-            "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
-      } else {
-        var list = json.decode(response.body) as List;
-        List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
-
-        return reportsList;
+      if (Utils.imagePath != null) {
+        for (String image in Utils.imagePath) {
+          print(image);
+          saveImage(image, report.version_UUID);
+        }
       }
     } catch (e) {
       return null;
@@ -313,12 +222,12 @@ class ApiSingleton {
   }
 
   Future<dynamic> getReportsList(lat, lon,
-      {page, List<Report> allReports, bool show_hidden}) async {
+      {int page, List<Report> allReports, bool show_hidden, int radius}) async {
     try {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&user=$userUUID' +
+        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
             (show_hidden == true ? '&show_hidden=1' : ''),
         headers: headers,
       );
@@ -327,33 +236,35 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       } else {
+        print(response);
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
-        // print(body['results']);
-        // var list = json.decode(response.body) as List;
-        // List<Report> reportsList = list.map((i) => Report.fromJson(i)).toList();
+        page = jsonAnswer['next'];
 
         if (allReports == null) {
           allReports = List();
         }
         for (var item in jsonAnswer['results']) {
-          // var r = new Report.fromJson(item);
           allReports.add(Report.fromJson(item));
         }
 
-        return allReports;
+        if (jsonAnswer['next'] == null && jsonAnswer['previous'] != null) {
+          return allReports;
+        }
       }
+
+      return getReportsList(lat, lon, allReports: allReports, page: page);
     } catch (e) {
       print(e.message);
       return null;
     }
   }
 
-  Future<dynamic> saveImage(String path, String reportId) async {
+  Future<dynamic> saveImage(String path, String versionUUID) async {
     try {
       final response = await http.post(
         '$serverUrl$images',
         headers: headers,
-        body: jsonEncode({'photo': path, 'report': reportId}),
+        body: jsonEncode({'photo': path, 'report': versionUUID}),
       );
 
       if (response.statusCode != 200) {

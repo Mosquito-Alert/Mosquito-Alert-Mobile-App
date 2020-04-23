@@ -28,7 +28,7 @@ class MyReportsMap extends StatelessWidget {
             target: LatLng(41.1613063, 0.4724329),
             zoom: 16.0,
           ),
-          markers: Set<Marker>.of(markers),
+          markers: markers != null ? Set<Marker>.of(markers) : null,
         ),
         Style.button("Leyenda", () {
           _reportBottomSheet(context);

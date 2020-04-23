@@ -18,6 +18,7 @@ class Report {
   String package_name;
   String package_version;
   int session;
+  List<String> photos;
   List<Question> responses;
 
   Report({
@@ -38,6 +39,7 @@ class Report {
     this.package_name,
     this.package_version,
     this.session,
+    this.photos,
     this.responses,
   });
 
@@ -59,6 +61,13 @@ class Report {
     package_name = json['package_name'];
     package_version = json['package_version'];
     session = json['session'];
+
+    if (json['photos'] != null) {
+      photos = new List<String>();
+      json['photos'].forEach((p) {
+        photos.add(p);
+      });
+    }
 
     if (json['responses'] != null) {
       responses = new List<Question>();
@@ -86,33 +95,10 @@ class Report {
     data['note'] = this.note;
     data['package_name'] = this.package_name;
     data['package_version'] = this.package_version;
-    // data['session'] = this.session;
+    data['session'] = this.session;
+    // data['photos'] = t
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }
-  }
-
-  Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['version_UUID'] = version_UUID;
-    data['version_number'] = version_number;
-    data['user'] = user;
-    data['report_id'] = report_id;
-    data['phone_upload_time'] = phone_upload_time;
-    data['creation_time'] = creation_time;
-    data['version_time'] = version_time;
-    data['type'] = type;
-    data['location_choice'] = location_choice;
-    data['current_location_lon'] = current_location_lon;
-    data['current_location_lat'] = current_location_lat;
-    data['selected_location_lon'] = selected_location_lon;
-    data['selected_location_lat'] = selected_location_lat;
-    data['note'] = note;
-    data['package_name'] = package_name;
-    data['package_version'] = package_version;
-    if (responses != null) {
-      data['responses'] = responses.map((r) => r.toJson()).toList();
-    }
-    return data;
   }
 }

@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +58,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _getData() async {
     List<Report> list =
-        await ApiSingleton().getReportsList(41.1613063, 0.4724329);
+        await ApiSingleton().getReportsList(41.1613063, 0.4724329, page: 1);
 
     setState(() {
       _reports = list;
@@ -337,33 +338,71 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(),
                   ),
-                  Style.titleMedium(
-                      MyLocalizations.of(context, "reported_images_txt"),
-                      fontSize: 14),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 60,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.only(right: 5),
-                            child: Image.asset(
-                              'assets/img/placeholder.jpg',
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
+                  report.photos.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Style.titleMedium(
+                                MyLocalizations.of(
+                                    context, "reported_images_txt"),
+                                fontSize: 14),
+                            SizedBox(
+                              height: 10,
                             ),
+                            Container(
+                              height: 60,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: report.photos.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: EdgeInsets.only(right: 5),
+                                      child: Image.asset(
+                                        report.photos[index],
+                                        height: 60,
+                                        width: 60,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  }),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: report.responses.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    report.responses[index].question != null
+                                        ? Style.titleMedium(
+                                            report.responses[index].question,
+                                            fontSize: 14)
+                                        : Container(),
+                                    Style.body(report.responses[index].answer !=
+                                            null
+                                        ? report.responses[index].answer
+                                        : report.responses[index].answer_value),
+                                  ],
+                                ),
+                              ),
+                              Divider(),
+                            ],
                           );
                         }),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Expanded(child: _showResponses(report.responses)),
+                  // Expanded(child: _showResponses(report.responses)),
                   SizedBox(
                     height: 15,
                   ),
@@ -401,7 +440,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           child: Style.noBgButton(
                               MyLocalizations.of(context, "delete"), () {
                         //TODO: show Alert!
-                        ApiSingleton().deleteReport(report);
+                        Utils.deleteReport(report);
                       }))
                     ],
                   ),
@@ -410,29 +449,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
             ),
           ));
         });
-  }
-
-  Widget _showResponses(responses) {
-    for (Question q in responses) {
-      print(q.question);
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                q.question != null
-                    ? Style.titleMedium(q.question, fontSize: 14)
-                    : Container(),
-                // Style.body(q.answer != null ? q.answer : q.answer_value),
-              ],
-            ),
-          ),
-          Divider(),
-        ],
-      );
-    }
   }
 
   _getPosition(Report report) {
