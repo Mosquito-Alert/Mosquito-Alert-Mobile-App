@@ -211,10 +211,10 @@ class ApiSingleton {
       }
 
       if (Utils.imagePath != null) {
-        // for (String image in Utils.imagePath) {
-        //   print(image);
-        //   saveImage(image, report.version_UUID);
-        // }
+        for (String image in Utils.imagePath) {
+          print(image);
+          saveImage(image, report.version_UUID);
+        }
       }
     } catch (e) {
       return null;
@@ -267,7 +267,7 @@ class ApiSingleton {
       final response = await http.post(
         '$serverUrl$photos',
         headers: {
-          "Content-Type": " application/x-www-form-urlencoded",
+          // "Content-Type": " application/x-www-form-urlencoded",
           "Authorization": "Token " + token
         },
         body: jsonEncode({'photo': path, 'report': versionUUID}),

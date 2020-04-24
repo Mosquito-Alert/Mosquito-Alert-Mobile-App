@@ -28,16 +28,18 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   void initState() {
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
-        case "selected": 
-        streamType.add(LocationType.selected);
-        updateMarker(LatLng(Utils.report.selected_location_lat, Utils.report.selected_location_lon));
-        break; 
-        case "current": 
-        streamType.add(LocationType.current);
-        updateMarker(LatLng(Utils.report.current_location_lat, Utils.report.current_location_lon));
-        break; 
-        default: 
-        streamType.add(LocationType.missing);
+        case "selected":
+          streamType.add(LocationType.selected);
+          updateMarker(LatLng(Utils.report.selected_location_lat,
+              Utils.report.selected_location_lon));
+          break;
+        case "current":
+          streamType.add(LocationType.current);
+          updateMarker(LatLng(Utils.report.current_location_lat,
+              Utils.report.current_location_lon));
+          break;
+        default:
+          streamType.add(LocationType.missing);
       }
     }
     super.initState();
@@ -62,14 +64,13 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
       bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
       if (geolocationEnabled) {
-        Position currentPosition = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        Position currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         circles = Set.from([
           Circle(
               circleId: CircleId('Circle 1'),
               center:
                   LatLng(currentPosition.latitude, currentPosition.longitude),
-              radius: 50,
+              radius: 100,
               strokeColor: Colors.transparent,
               fillColor: Colors.blue.withOpacity(0.1))
         ]);
@@ -82,6 +83,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
             context, onPressed: () {
           Navigator.pop(context);
         });
+        streamType.add(LocationType.selected);
       }
     } else if (type == LocationType.selected) {
       updateMarker(LatLng(41.16154, 0.47337));
@@ -162,6 +164,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               child: GoogleMap(
                                 onMapCreated: _onMapCreated,
                                 rotateGesturesEnabled: false,
+                                myLocationEnabled: snapshot.data == LocationType.current ? true : false ,
                                 mapToolbarEnabled: false,
                                 onTap: (LatLng pos) {
                                   snapshot.data == LocationType.selected
@@ -170,7 +173,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                 },
                                 initialCameraPosition: const CameraPosition(
                                   target: LatLng(41.1613063, 0.4724329),
-                                  zoom: 14.0,
+                                  zoom: 15.0,
                                 ),
                                 markers:
                                     snapshot.data == LocationType.selected &&

@@ -84,7 +84,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
                           await _initializeControllerFuture;
                           final path = join(
                             (await getTemporaryDirectory()).path,
-                            '${DateTime.now()}.png',
+                            '${DateTime.now()}.jpg',
                           );
 
                           await _controller.takePicture(path);
