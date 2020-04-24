@@ -17,6 +17,10 @@ class MyLocalizations {
       "delete": "Eliminar",
       "edit": "Editar",
       "exit": "Salir",
+      "yes": "Si",
+      "no": "No",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -121,7 +125,9 @@ class MyLocalizations {
       "reported_images_txt": "Imagenes reportadas",
       "reported_species_txt": "Especie reportada",
       "when_biting_txt": "¿Cuando te ha picado?",
-      "which_situation_txt": "¿En qué situación?"
+      "which_situation_txt": "¿En qué situación?",
+      "delete_report_title": "¿Seguro que quieres eliminar el reporte?",
+      "delete_report_txt": "Esta acción no se puede deshacer."
     },
   };
   String translate(key) {

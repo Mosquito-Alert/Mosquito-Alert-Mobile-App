@@ -68,6 +68,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
             double currentPage = _pagesController.page;
             if (currentPage == 0.0) {
               Navigator.pop(context);
+              Utils.resetReport();
             } else {
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);

@@ -72,7 +72,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
           list[i].selected_location_lat != null &&
               list[i].selected_location_lon != null) {
         data.add(list[i]);
-        print(list[i].report_id);
       }
     }
 
@@ -433,14 +432,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     BreedingReportPage(editReport: report)),
                           );
                         }
-
-                        //TODO: api edit
                       })),
                       Expanded(
                           child: Style.noBgButton(
                               MyLocalizations.of(context, "delete"), () {
-                        //TODO: show Alert!
-                        Utils.deleteReport(report);
+                        Utils.showAlertYesNo(
+                            MyLocalizations.of(context, "delete_report_title"),
+                            MyLocalizations.of(context, "delete_report_txt"),
+                            () {
+                          Utils.deleteReport(report);
+                          Navigator.pop(context); 
+                          //Todo: Reload list? 
+                        }, context);
+                        //
                       }))
                     ],
                   ),

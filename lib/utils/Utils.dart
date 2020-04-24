@@ -8,6 +8,7 @@ import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:random_string/random_string.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,7 +21,7 @@ class Utils {
   static List<String> imagePath;
 
   static void saveImgPath(String path) {
-    if(imagePath == null){
+    if (imagePath == null) {
       imagePath = new List();
     }
     imagePath.add(path);
@@ -62,6 +63,12 @@ class Utils {
         user: userUUID,
         session: session.id,
         responses: new List());
+  }
+
+  static resetReport() {
+    report = null;
+    session = null;
+    reportsList = null;
   }
 
   static setEditReport(Report editReport) {
@@ -140,14 +147,20 @@ class Utils {
     }
   }
 
-  static void addResponse(question) {
+  static void addResponse(Question question) {
+    int index = report.responses
+        .indexWhere((q) => q.question_id == question.question_id);
     var _responses = report.responses;
     if (_responses == null) {
       _responses = new List();
     }
-    _responses.add(question);
-    report.responses = _responses;
-    // print(report);
+    if (index != -1) {
+      _responses[index] = question;
+    } else {
+      _responses.add(question);
+      report.responses = _responses;
+    }
+    print(report.responses);
   }
 
   static Future<void> createReport() async {
@@ -164,6 +177,7 @@ class Utils {
         ApiSingleton().createReport(r);
       }
       closeSession();
+      resetReport();
     }
   }
 
@@ -240,6 +254,73 @@ class Utils {
                   } else {
                     Navigator.of(context).pop();
                   }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  static Future showAlertYesNo(
+    String title,
+    String text,
+    onYesPressed,
+    BuildContext context,
+  ) {
+    if (Platform.isAndroid) {
+      return showDialog(
+        context: context, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Style.title(title),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Style.body(text),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Style.body(MyLocalizations.of(context, 'ok'),
+                    color: Colors.red),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onYesPressed();
+                },
+              ),
+              FlatButton(
+                child: Style.body(MyLocalizations.of(context, 'cancel')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      return showDialog(
+        context: context, //
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Style.title(title),
+            content: Style.body(text),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Style.body(MyLocalizations.of(context, 'ok')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onYesPressed();
+                },
+              ),
+              CupertinoDialogAction(
+                child: Style.body(MyLocalizations.of(context, 'cancel')),
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
               ),
             ],

@@ -24,7 +24,7 @@ class ApiSingleton {
   static const sessionUpdate = '/session_update/';
 
   //Images
-  static const images = '/photos/';
+  static const photos = '/photos/';
 
   //Headders
   var headers = {
@@ -204,17 +204,17 @@ class ApiSingleton {
       );
 
       print(response);
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       }
 
       if (Utils.imagePath != null) {
-        for (String image in Utils.imagePath) {
-          print(image);
-          saveImage(image, report.version_UUID);
-        }
+        // for (String image in Utils.imagePath) {
+        //   print(image);
+        //   saveImage(image, report.version_UUID);
+        // }
       }
     } catch (e) {
       return null;
@@ -222,13 +222,17 @@ class ApiSingleton {
   }
 
   Future<dynamic> getReportsList(lat, lon,
-      {int page, List<Report> allReports, bool show_hidden, int radius}) async {
+      {int page,
+      List<Report> allReports,
+      bool show_hidden,
+      int radius,
+      bool show_verions}) async {
     try {
       var userUUID = await UserManager.getUUID();
-
       final response = await http.get(
-        '$serverUrl/nearby_reports_nod/?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
-            (show_hidden == true ? '&show_hidden=1' : ''),
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
+            (show_hidden == true ? '&show_hidden=1' : '') +
+            (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
       if (response.statusCode != 200) {
@@ -236,7 +240,6 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       } else {
-        print(response);
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
         page = jsonAnswer['next'];
 
@@ -262,16 +265,21 @@ class ApiSingleton {
   Future<dynamic> saveImage(String path, String versionUUID) async {
     try {
       final response = await http.post(
-        '$serverUrl$images',
-        headers: headers,
+        '$serverUrl$photos',
+        headers: {
+          "Content-Type": " application/x-www-form-urlencoded",
+          "Authorization": "Token " + token
+        },
         body: jsonEncode({'photo': path, 'report': versionUUID}),
       );
-
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return Response.fromJson(json.decode(response.body));
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.message);
+    }
   }
 }

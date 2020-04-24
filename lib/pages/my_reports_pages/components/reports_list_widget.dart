@@ -64,14 +64,16 @@ class ReportsList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        'assets/img/placeholder.jpg',
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      )),
+                  reports[index].photos.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            'assets/img/placeholder.jpg',
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ))
+                      : Container(child: Style.title(reports[index].version_number.toString()),),
                 ],
               ),
             ),
