@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
@@ -56,7 +59,7 @@ class ApiSingleton {
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       }
       return true;
     } catch (c) {
@@ -75,7 +78,7 @@ class ApiSingleton {
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       } else {
         List<dynamic> jsonAnswer = json.decode(response.body);
         List<Session> allSessions = List();
@@ -107,7 +110,7 @@ class ApiSingleton {
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       }
 
       // Todo: Save id
@@ -131,7 +134,7 @@ class ApiSingleton {
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       }
 
       return true;
@@ -207,13 +210,13 @@ class ApiSingleton {
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       }
 
       if (Utils.imagePath != null) {
         for (String image in Utils.imagePath) {
           print(image);
-          saveImage(image, report.version_UUID);
+          // saveImage(image, report.version_UUID);
         }
       }
     } catch (e) {
@@ -229,16 +232,19 @@ class ApiSingleton {
       bool show_verions}) async {
     try {
       var userUUID = await UserManager.getUUID();
+      print(
+          '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID');
       final response = await http.get(
         '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
+        return ApiResponse.fromJson(json.decode(response.body));
       } else {
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
         page = jsonAnswer['next'];
@@ -262,24 +268,25 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> saveImage(String path, String versionUUID) async {
+  //Images
+  Future<dynamic> saveImage(String image, String versionUUID) async {
     try {
-      final response = await http.post(
-        '$serverUrl$photos',
-        headers: {
-          // "Content-Type": " application/x-www-form-urlencoded",
-          "Authorization": "Token " + token
-        },
-        body: jsonEncode({'photo': path, 'report': versionUUID}),
-      );
-      print(response);
-      if (response.statusCode != 200) {
-        print(
-            "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return Response.fromJson(json.decode(response.body));
-      }
-    } catch (e) {
-      print(e.message);
+      String fileName = image != null ? image.split('/').last : null;
+      var dio = new Dio();
+
+      // var img = await http.MultipartFile.fromFile(image.path,
+      //         filename: fileName, contentType: MediaType('image', 'jpeg'));
+
+      var img = http.MultipartFile.fromPath(image, image, filename: fileName);
+
+      var response = await dio.post('$serverUrl$photos',
+          data: FormData.fromMap({"image": img, "report": versionUUID}),
+          options:
+              Options(headers: headers, contentType: 'multipart/form-data'));
+
+      return response.statusCode == 200;
+    } catch (c) {
+      return false;
     }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart';
@@ -16,6 +17,16 @@ class _TakePicturePageState extends State<TakePicturePage> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   String _path;
+
+  File img; 
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      img = image;
+    });
+  }
 
   @override
   void initState() {
@@ -37,8 +48,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(MyLocalizations.of(
-            context, "send_photo_title")),
+        title: Text(MyLocalizations.of(context, "send_photo_title")),
         backgroundColor: Colors.white,
       ),
       body: Column(
@@ -95,6 +105,10 @@ class _TakePicturePageState extends State<TakePicturePage> {
                         } catch (e) {
                           print(e);
                         }
+
+                        // getImage();
+                        // Utils.saveImgPath(img);
+                        // await _controller.takePicture(img.path);
                       },
                     ),
                   ),

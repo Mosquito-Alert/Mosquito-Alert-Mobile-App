@@ -1,9 +1,9 @@
-class Response {
+class ApiResponse {
   String message;
 
-  Response({this.message});
+  ApiResponse({this.message});
 
-  Response.fromJson(Map<String, dynamic> json) {
+  ApiResponse.fromJson(Map<String, dynamic> json) {
     message = json['message'];
   }
 
