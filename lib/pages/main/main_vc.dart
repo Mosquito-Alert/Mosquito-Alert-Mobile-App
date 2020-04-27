@@ -151,11 +151,11 @@ class _MainVCState extends State<MainVC> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () async {
-                           Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BreedingReportPage()),
-                              );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BreedingReportPage()),
+                          );
                         },
                         child: CustomCard(
                           img: 'assets/img/ic_breeding_report.png',
@@ -257,6 +257,7 @@ class _MainVCState extends State<MainVC> {
                 child: SvgPicture.asset(
                   'assets/img/ic_bottom_waves.svg',
                   width: 500,
+                  fit: BoxFit.cover
                 )),
           ],
         ),

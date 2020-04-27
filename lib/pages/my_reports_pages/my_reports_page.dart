@@ -29,11 +29,16 @@ class _MyReportsPageState extends State<MyReportsPage> {
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
   BitmapDescriptor iconBreedingYours;
+  BitmapDescriptor iconAdultOthers;
+  BitmapDescriptor iconBitesOthers;
+  BitmapDescriptor iconBreedingOthers;
 
   final _pagesController = PageController();
 
   StreamController<List<Report>> dataStream =
       new StreamController<List<Report>>.broadcast();
+
+  StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
   int _currentIndex = 0;
   Map<int, Widget> _children;
@@ -48,6 +53,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   initState() {
     super.initState();
+    loadingStream.add(true);
     if (_reports == null) {
       _getData();
     }
@@ -76,6 +82,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
 
     dataStream.add(data);
+    loadingStream.add(false);
     _createMarkers();
   }
 
@@ -89,6 +96,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
     iconBreedingYours = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/img/ic_breeding_yours.png');
+    // iconAdultOthers = await BitmapDescriptor.fromAssetImage(
+    //     ImageConfiguration(devicePixelRatio: 2.5),
+    //     'assets/img/ic_adults_yours.png');
+    // iconBitesOthers = await BitmapDescriptor.fromAssetImage(
+    //     ImageConfiguration(devicePixelRatio: 2.5),
+    //     'assets/img/ic_bites_yours.png');
+    // iconBreedingOthers = await BitmapDescriptor.fromAssetImage(
+    //     ImageConfiguration(devicePixelRatio: 2.5),
+    //     'assets/img/ic_breeding_yours.png');
   }
 
   _createMarkers() {
@@ -217,6 +233,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 ),
               ),
             ),
+            StreamBuilder<bool>(
+                stream: loadingStream.stream,
+                initialData: true,
+                builder:
+                    (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                  if (snapLoading.data == true)
+                    return Container(
+                      child: Center(
+                        child: Utils.loading(true),
+                      ),
+                    );
+                  return Container();
+                }),
           ],
         ),
       ),
@@ -441,8 +470,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             MyLocalizations.of(context, "delete_report_txt"),
                             () {
                           Utils.deleteReport(report);
-                          Navigator.pop(context); 
-                          //Todo: Reload list? 
+                          Navigator.pop(context);
+                          //Todo: Reload list?
                         }, context);
                         //
                       }))

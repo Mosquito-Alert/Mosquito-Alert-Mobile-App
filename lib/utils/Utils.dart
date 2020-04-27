@@ -330,6 +330,22 @@ class Utils {
     }
   }
 
+  static Widget loading(_isLoading, [Color indicatorColor]) {
+    return _isLoading == true
+        ? new Container(
+            color: Colors.transparent,
+            child: Center(
+              child: new CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(
+                    indicatorColor == null
+                        ? Style.colorPrimary
+                        : indicatorColor),
+              ),
+            ),
+          )
+        : new Container();
+  }
+
   //Manage Data
   static String getLanguage() {
     return 'en';

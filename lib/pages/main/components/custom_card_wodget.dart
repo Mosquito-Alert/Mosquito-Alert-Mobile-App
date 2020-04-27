@@ -9,7 +9,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 2,
       child: Container(
         padding: EdgeInsets.all(10),
@@ -17,7 +17,7 @@ class CustomCard extends StatelessWidget {
           children: <Widget>[
             img != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Image.asset(
                       img,
                       height: 100,
@@ -25,14 +25,17 @@ class CustomCard extends StatelessWidget {
                     ),
                   )
                 : SizedBox(
-                    height: 100,
+                    height: 120,
                   ),
             Style.titleMedium(title, fontSize: 16, textAlign: TextAlign.center),
             SizedBox(
               height: 5,
             ),
-            Style.bodySmall(subtitle,
-                textAlign: TextAlign.center, fontSize: 10),
+            SizedBox(
+              height: 30,
+              child: Style.bodySmall(subtitle,
+                  textAlign: TextAlign.center, fontSize: 10),
+            ),
           ],
         ),
       ),
