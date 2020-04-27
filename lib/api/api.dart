@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:uuid/uuid.dart';
+
+import 'package:http_parser/http_parser.dart';
+import 'package:dio/dio.dart';
 
 class ApiSingleton {
   static String serverUrl = 'http://humboldt.ceab.csic.es/api';
@@ -214,10 +214,11 @@ class ApiSingleton {
       }
 
       if (Utils.imagePath != null) {
-        for (String image in Utils.imagePath) {
+        for (File image in Utils.imagePath) {
           print(image);
-          // saveImage(image, report.version_UUID);
+          saveImage(image, report.version_UUID);
         }
+        Utils.imagePath = new List();
       }
     } catch (e) {
       return null;
@@ -269,23 +270,27 @@ class ApiSingleton {
   }
 
   //Images
-  Future<dynamic> saveImage(String image, String versionUUID) async {
+  Future<dynamic> saveImage(File image, String versionUUID) async {
     try {
-      String fileName = image != null ? image.split('/').last : null;
+      String fileName = image != null ? image.path.split('/').last : null;
       var dio = new Dio();
 
-      // var img = await http.MultipartFile.fromFile(image.path,
-      //         filename: fileName, contentType: MediaType('image', 'jpeg'));
+      var img = await MultipartFile.fromFile(image.path,
+          filename: fileName, contentType: MediaType('image', 'jpeg'));
 
-      var img = http.MultipartFile.fromPath(image, image, filename: fileName);
+      FormData data = FormData.fromMap({"image": img, "report": versionUUID});
 
       var response = await dio.post('$serverUrl$photos',
-          data: FormData.fromMap({"image": img, "report": versionUUID}),
-          options:
-              Options(headers: headers, contentType: 'multipart/form-data'));
+          data: data,
+          options: Options(
+              headers: {"Authorization": "Token " + token},
+              contentType: 'multipart/form-data'));
+
+      print(response);
 
       return response.statusCode == 200;
     } catch (c) {
+      print(c.message);
       return false;
     }
   }

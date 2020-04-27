@@ -186,6 +186,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         });
                   },
                 )),
+                 StreamBuilder<bool>(
+                stream: loadingStream.stream,
+                initialData: true,
+                builder:
+                    (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                  if (snapLoading.data == true)
+                    return Container(
+                      child: Center(
+                        child: Utils.loading(true),
+                      ),
+                    );
+                  return Container();
+                }),
             Container(
               child: Card(
                 margin: EdgeInsets.all(0),
@@ -233,19 +246,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 ),
               ),
             ),
-            StreamBuilder<bool>(
-                stream: loadingStream.stream,
-                initialData: true,
-                builder:
-                    (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-                  if (snapLoading.data == true)
-                    return Container(
-                      child: Center(
-                        child: Utils.loading(true),
-                      ),
-                    );
-                  return Container();
-                }),
+           
           ],
         ),
       ),

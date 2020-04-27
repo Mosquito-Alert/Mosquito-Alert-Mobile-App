@@ -18,9 +18,9 @@ class Utils {
   static List<CameraDescription> cameras;
 
   //images
-  static List<String> imagePath;
+  static List<File> imagePath;
 
-  static void saveImgPath(String path) {
+  static void saveImgPath(File path) {
     if (imagePath == null) {
       imagePath = new List();
     }

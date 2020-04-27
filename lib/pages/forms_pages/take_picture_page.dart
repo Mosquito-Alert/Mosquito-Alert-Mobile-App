@@ -18,10 +18,11 @@ class _TakePicturePageState extends State<TakePicturePage> {
   Future<void> _initializeControllerFuture;
   String _path;
 
-  File img; 
+  File img;
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    Utils.saveImgPath(img);
 
     setState(() {
       img = image;
@@ -90,25 +91,25 @@ class _TakePicturePageState extends State<TakePicturePage> {
                       elevation: 0,
                       child: Icon(Icons.camera),
                       onPressed: () async {
-                        try {
-                          await _initializeControllerFuture;
-                          final path = join(
-                            (await getTemporaryDirectory()).path,
-                            '${DateTime.now()}.jpg',
-                          );
+                        // try {
+                        //   await _initializeControllerFuture;
+                        //   final path = join(
+                        //     (await getTemporaryDirectory()).path,
+                        //     '${DateTime.now()}.jpg',
+                        //   );
 
-                          await _controller.takePicture(path);
-                          Utils.saveImgPath(path);
-                          setState(() {
-                            _path = path;
-                          });
-                        } catch (e) {
-                          print(e);
-                        }
+                        //   await _controller.takePicture(path);
+                        //   Utils.saveImgPath(path);
+                        //   setState(() {
+                        //     _path = path;
+                        //   });
+                        // } catch (e) {
+                        //   print(e);
+                        // }
 
-                        // getImage();
-                        // Utils.saveImgPath(img);
-                        // await _controller.takePicture(img.path);
+                        getImage();
+
+                        await _controller.takePicture(img.path);
                       },
                     ),
                   ),
