@@ -76,7 +76,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
             }
           },
         ),
-        title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
+        title: Style.title(MyLocalizations.of(context, "breeding_report_title"),
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(

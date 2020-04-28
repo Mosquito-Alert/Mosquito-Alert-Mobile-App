@@ -61,6 +61,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
+  _updateData() {
+    loadingStream.add(true);
+    _getData();
+  }
+
   _getData() async {
     List<Report> list =
         await ApiSingleton().getReportsList(41.1613063, 0.4724329, page: 1);
@@ -185,7 +190,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         });
                   },
                 )),
-                 StreamBuilder<bool>(
+            StreamBuilder<bool>(
                 stream: loadingStream.stream,
                 initialData: true,
                 builder:
@@ -245,7 +250,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 ),
               ),
             ),
-           
           ],
         ),
       ),
@@ -385,11 +389,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                   itemBuilder: (context, index) {
                                     return Container(
                                       margin: EdgeInsets.only(right: 5),
-                                      child: Image.network(
-                                        report.photos[index].photo,
-                                        height: 60,
-                                        width: 60,
-                                        fit: BoxFit.cover,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          'http://humboldt.ceab.csic.es/media/' +
+                                              report.photos[index].photo,
+                                          height: 60,
+                                          width: 60,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     );
                                   }),
@@ -471,7 +479,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             () {
                           Utils.deleteReport(report);
                           Navigator.pop(context);
-                          //Todo: Reload list?
+                          _updateData();
                         }, context);
                         //
                       }))

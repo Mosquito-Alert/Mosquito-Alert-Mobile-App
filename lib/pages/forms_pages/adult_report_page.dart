@@ -67,15 +67,18 @@ class _AdultReportPageState extends State<AdultReportPage> {
           onPressed: () {
             double currentPage = _pagesController.page;
             if (currentPage == 0.0) {
-              Navigator.pop(context);
               Utils.resetReport();
+              Navigator.pop(context);
+            } else if (currentPage == 2.0 && skip3) {
+              _pagesController.animateToPage(0,
+                  duration: Duration(microseconds: 300), curve: Curves.ease);
             } else {
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);
             }
           },
         ),
-        title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
+        title: Style.title(MyLocalizations.of(context, "adult_report_title"),
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(
@@ -98,16 +101,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
                           MaterialPageRoute(
                               builder: (context) => BitingReportPage()),
                         );
+                      } else if (currentPage == 0.0 && skip3) {
+                        _pagesController.animateToPage(2,
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease);
                       } else {
-                        if (currentPage == 0.0 && skip3) {
-                          _pagesController.animateToPage(2,
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.ease);
-                        } else {
-                          _pagesController.nextPage(
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.ease);
-                        }
+                        _pagesController.nextPage(
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease);
                       }
                     }
                   : null)

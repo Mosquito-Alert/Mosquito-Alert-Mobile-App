@@ -14,7 +14,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
@@ -51,7 +50,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Torax${index + 1}', (index + 711));
+                        onSelect('Torax${index + 1}', (index + 711), 710);
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -79,7 +78,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Abdomen${index + 1}', (index + 721));
+                        onSelect('Abdomen${index + 1}', (index + 721), 720);
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -108,7 +107,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        onSelect('Leg ${index + 1}', (index + 731));
+                        onSelect('Leg ${index + 1}', (index + 731), 730);
                       },
                       child: Container(
                         width: sizeWidth * 0.22,
@@ -137,19 +136,12 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
     );
   }
 
-  onSelect(answer, answerId) {
-    Question newQuestion = new Question(
-      question: '¿Como era el mosquito?',
-      answer: answer,
-      question_id: 7,
-      answer_id: answerId,
-    );
+  onSelect(answer, answerId, int i) {
+    Utils.addAdultPartsResponse(answer, answerId, i);
 
     setState(() {
-      questions.add(newQuestion);
+      questions = Utils.report.responses;
     });
-
-    Utils.addResponse(newQuestion);
   }
 
   bool isDisabled(int index, int aswerId) {

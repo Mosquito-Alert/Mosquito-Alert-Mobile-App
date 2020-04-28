@@ -86,12 +86,16 @@ class Utils {
 
   static setCurrentLocation(double latitude, double longitude) {
     report.location_choice = 'current';
+    report.selected_location_lat = null;
+    report.selected_location_lon = null;
     report.current_location_lat = latitude;
     report.current_location_lon = longitude;
   }
 
   static setSelectedLocation(double lat, lon) {
     report.location_choice = "selected";
+    report.current_location_lat = null;
+    report.current_location_lon = null;
     report.selected_location_lat = lat;
     report.selected_location_lon = lon;
   }
@@ -100,12 +104,11 @@ class Utils {
       {question_id, answer_id}) {
     List<Question> _questions = report.responses;
 
-    // TODO: fix question_id!
     //increase answer_value question 2
     if (question_id == 2) {
       int currentIndex = _questions.indexWhere((question) =>
           // question.question_id == question_id &&
-          question.answer_id == answer_id.toString());
+          question.answer_id == answer_id);
       if (currentIndex == -1) {
         _questions.add(Question(
           question: question.toString(),
@@ -122,7 +125,7 @@ class Utils {
 
       //increase total bites answer_value
       int bitesIndex =
-          _questions.indexWhere((question) => question.question_id == '1');
+          _questions.indexWhere((question) => question.question_id == 1);
 
       if (bitesIndex == -1) {
         _questions.add(Question(
@@ -137,6 +140,7 @@ class Utils {
       }
     }
     //add other questions without answer_value
+
     if (question_id != 2 && question_id != 1) {
       _questions.add(Question(
         question: question.toString(),
@@ -145,6 +149,25 @@ class Utils {
         question_id: question_id,
       ));
     }
+  }
+
+  static void addAdultPartsResponse(answer, answerId, i) {
+    var _questions = report.responses;
+    int index =
+        _questions.indexWhere((q) => q.answer_id > i && q.answer_id < i + 10);
+    if (index != -1) {
+      _questions[index].answer_id = answerId;
+      _questions[index].answer = answer;
+    } else {
+      Question newQuestion = new Question(
+        question: '¿Como era el mosquito?',
+        answer: answer,
+        question_id: 7,
+        answer_id: answerId,
+      );
+      _questions.add(newQuestion);
+    }
+    report.responses = _questions;
   }
 
   static void addResponse(Question question) {
@@ -285,7 +308,7 @@ class Utils {
             actions: <Widget>[
               FlatButton(
                 child: Style.body(MyLocalizations.of(context, 'ok'),
-                    color: Colors.red),
+                    color: Style.colorPrimary),
                 onPressed: () {
                   Navigator.of(context).pop();
                   onYesPressed();

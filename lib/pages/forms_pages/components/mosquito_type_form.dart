@@ -38,6 +38,12 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
     'Otro',
     'No lo sé'
   ];
+  List<String> img = [
+    'assets/img/ic_aedes.png',
+    'assets/img/ic_cluex.png',
+    'assets/img/ic_other_mosquito.png',
+    'assets/img/ic_other_mosquito.png'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +82,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                               question.answer_id == (index + 61) ? true : false,
                               answers[index],
                               MyLocalizations.of(context, "recognize_it_txt"),
-                              'assets/img/ic_other_mosquito.png',
+                              img[index],
                               disabled: question.answer_id != null
                                   ? (index + 61) != question.answer_id
                                   : false,

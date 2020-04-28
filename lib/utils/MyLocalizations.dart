@@ -98,6 +98,8 @@ class MyLocalizations {
       "have_foto_txt": "¿Tienes una foto del mosquito?",
       "click_to_add_txt": "Haz click aquí para añadirla",
       "send_photo_title": "Mándanos una foto",
+      "adult_report_title": "Reportar un adulto",
+      "breeding_report_title": "Reportar un nido",
 
       //Notifications page
       "notifications_title": "Notificaciones",

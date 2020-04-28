@@ -12,8 +12,9 @@ import 'components/biting_logation_form.dart';
 
 class BitingReportPage extends StatefulWidget {
   final Report editReport;
+  final Function loadData;
 
-  BitingReportPage({this.editReport});
+  BitingReportPage({this.editReport, this.loadData});
   @override
   _BitingReportPageState createState() => _BitingReportPageState();
 }
@@ -47,8 +48,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
           onPressed: () {
             double currentPage = _pagesController.page;
             if (currentPage == 0.0) {
-              Navigator.pop(context);
               Utils.resetReport();
+              Navigator.pop(context);
             } else {
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);
@@ -67,10 +68,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length - 1) {
                         Utils.createReport();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainVC()),
-                        );
+                        if (widget.editReport != null) {
+                          widget.loadData();
+                        }
+                        Navigator.pop(context);
                       } else {
                         _pagesController.nextPage(
                             duration: Duration(microseconds: 300),

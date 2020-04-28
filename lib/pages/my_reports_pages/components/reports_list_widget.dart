@@ -14,12 +14,10 @@ class ReportsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      // shrinkWrap:
       itemCount: reports.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            print(reports[index].type);
             onTap(context, reports[index]);
           },
           child: Card(
@@ -67,8 +65,9 @@ class ReportsList extends StatelessWidget {
                   reports[index].photos.isNotEmpty
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            'assets/img/placeholder.jpg',
+                          child: Image.network(
+                             'http://humboldt.ceab.csic.es/media/' +
+                                              reports[index].photos[0].photo,
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,

@@ -20,7 +20,7 @@ class _BitingFormState extends State<BitingForm> {
     questions = new List();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
-        if (q.question_id <= 3) {
+        if (q.question_id <= 4) {
           questions.add(q);
         }
       }
@@ -301,10 +301,50 @@ class _BitingFormState extends State<BitingForm> {
                 ),
               ]),
               SizedBox(
+                height: 20,
+              ),
+              Style.titleMedium(
+                  '¿Estabas en interior o exterior cuando te picó el mosquito?',
+                  fontSize: 16),
+              SizedBox(
+                height: 10,
+              ),
+              Row(children: <Widget>[
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      addToList('Itnterior o exterior?', "Interior",
+                          question_id: 4, answer_id: 41);
+                    },
+                    child: SmallQuestionOption(
+                      'Interior',
+                      selected: questions.any((q) => q.answer_id == 41),
+                      index: getIndexAnswer(41),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      addToList('Itnterior o exterior?', "Exterior",
+                          question_id: 4, answer_id: 42);
+                    },
+                    child: SmallQuestionOption(
+                      'Exterior',
+                      selected: questions.any((q) => q.answer_id == 42),
+                      index: getIndexAnswer(42),
+                    ),
+                  ),
+                ),
+              ]),
+              SizedBox(
                 height: 15,
               ),
-              canContinue()
-                  // false
+              // canContinue()
+                  false
                   ? GestureDetector(
                       onTap: () {},
                       child: Container(
