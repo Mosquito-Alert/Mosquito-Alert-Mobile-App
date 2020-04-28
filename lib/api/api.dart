@@ -233,8 +233,7 @@ class ApiSingleton {
       bool show_verions}) async {
     try {
       var userUUID = await UserManager.getUUID();
-      print(
-          '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID');
+
       final response = await http.get(
         '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
             (show_hidden == true ? '&show_hidden=1' : '') +
@@ -255,6 +254,7 @@ class ApiSingleton {
         }
         for (var item in jsonAnswer['results']) {
           allReports.add(Report.fromJson(item));
+         
         }
 
         if (jsonAnswer['next'] == null && jsonAnswer['previous'] != null) {
@@ -278,13 +278,14 @@ class ApiSingleton {
       var img = await MultipartFile.fromFile(image.path,
           filename: fileName, contentType: MediaType('image', 'jpeg'));
 
-      FormData data = FormData.fromMap({"image": img, "report": versionUUID});
+      FormData data = FormData.fromMap({"photo": img, "report": versionUUID});
 
       var response = await dio.post('$serverUrl$photos',
           data: data,
           options: Options(
-              headers: {"Authorization": "Token " + token},
-              contentType: 'multipart/form-data'));
+            headers: {"Authorization": "Token " + token},
+            contentType: 'multipart/form-data',
+          ));
 
       print(response);
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
@@ -386,8 +385,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                   itemBuilder: (context, index) {
                                     return Container(
                                       margin: EdgeInsets.only(right: 5),
-                                      child: Image.asset(
-                                        report.photos[index],
+                                      child: Image.network(
+                                        report.photos[index].photo,
                                         height: 60,
                                         width: 60,
                                         fit: BoxFit.cover,

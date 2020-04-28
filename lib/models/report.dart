@@ -18,7 +18,7 @@ class Report {
   String package_name;
   String package_version;
   int session;
-  List<String> photos;
+  List<Photo> photos;
   List<Question> responses;
 
   Report({
@@ -39,11 +39,11 @@ class Report {
     this.package_name,
     this.package_version,
     this.session,
-    this.photos,
+    // this.photos,
     this.responses,
   });
 
-  Report.fromJson(Map<String, dynamic> json) {
+  Report.fromJson(Map<dynamic, dynamic> json) {
     version_UUID = json['version_UUID'];
     version_number = json['version_number'];
     user = json['user'];
@@ -63,9 +63,12 @@ class Report {
     session = json['session'];
 
     if (json['photos'] != null) {
-      photos = new List<String>();
+      var jj = json['photos'];
+      print(jj);
+      photos = new List<Photo>();
       json['photos'].forEach((p) {
-        photos.add(p);
+        var ph = new Photo.fromJson(p);
+        photos.add(ph);
       });
     }
 
@@ -100,5 +103,24 @@ class Report {
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }
+  }
+}
+
+class Photo {
+  int id;
+  String photo;
+  String uuid;
+
+  Photo({
+    this.id,
+    this.photo,
+    this.uuid,
+  });
+
+  Photo.fromJson(Map<dynamic, dynamic> json) {
+    print(json);
+    id = json['id'];
+    photo = json['photo'];
+    uuid = json['uuid'];
   }
 }

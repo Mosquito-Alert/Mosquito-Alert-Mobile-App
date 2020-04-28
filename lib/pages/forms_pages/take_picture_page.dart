@@ -22,7 +22,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    Utils.saveImgPath(img);
+    Utils.saveImgPath(image);
 
     setState(() {
       img = image;
@@ -109,7 +109,7 @@ class _TakePicturePageState extends State<TakePicturePage> {
 
                         getImage();
 
-                        await _controller.takePicture(img.path);
+                        // await _controller.takePicture(img.path);
                       },
                     ),
                   ),
