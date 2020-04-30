@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import '../biting_report_page.dart';
+class AddOtherReportPage extends StatefulWidget {
+  final Function addReport;
 
-class AddOtherReportPage extends StatelessWidget {
+  AddOtherReportPage(this.addReport);
+
+  @override
+  _AddOtherReportPageState createState() => _AddOtherReportPageState();
+}
+
+class _AddOtherReportPageState extends State<AddOtherReportPage> {
+  String selectedType;
+
+  setSelected(String type) {
+    if (type != 'none') {
+      widget.addReport(type);
+    }
+
+    setState(() {
+      selectedType = type;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,36 +45,30 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Utils.addOtherReport('bite');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BitingReportPage()),
-                      );
+                      setSelected("bite");
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_bite_report.png',
                       title: MyLocalizations.of(context, 'report_biting_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'bitten_by_mosquito_question_txt'),
+                      selected: selectedType == 'bite',
+                      disabled: selectedType != 'bite',
                     ),
                   ),
                 ),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Utils.addOtherReport('site');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BreedingReportPage()),
-                      );
+                      setSelected('site');
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_breeding_report.png',
                       title: MyLocalizations.of(context, 'report_nest_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'found_breeding_place_question_txt'),
+                      selected: selectedType == 'site',
+                      disabled: selectedType != 'site',
                     ),
                   ),
                 ),
@@ -69,24 +79,22 @@ class AddOtherReportPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Utils.addOtherReport('adult');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdultReportPage()),
-                      );
+                      setSelected('adult');
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_mosquito_report.png',
                       title: MyLocalizations.of(context, 'report_adults_txt'),
                       subtitle: MyLocalizations.of(
                           context, 'report_us_adult_mosquitos_txt'),
+                      selected: selectedType == 'adult',
+                      disabled: selectedType != 'adult',
                     ),
                   ),
                 ),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      setSelected('none');
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(
@@ -97,6 +105,8 @@ class AddOtherReportPage extends StatelessWidget {
                       // img: '',
                       title: MyLocalizations.of(context, 'exit'),
                       subtitle: 'No quiero añadir otro reporte',
+                      selected: selectedType == 'none',
+                      disabled: selectedType != 'none',
                     ),
                   ),
                 ),

@@ -6,7 +6,7 @@ import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MyReportsMap extends StatelessWidget {
-  List<Marker> markers;
+  final List<Marker> markers;
 
   MyReportsMap(this.markers);
 

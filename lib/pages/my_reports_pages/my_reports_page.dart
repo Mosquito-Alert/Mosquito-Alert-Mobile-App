@@ -10,6 +10,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -24,6 +25,8 @@ class MyReportsPage extends StatefulWidget {
 
 class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports;
+
+  String currentUser;
 
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
@@ -70,6 +73,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
     List<Report> list =
         await ApiSingleton().getReportsList(41.1613063, 0.4724329, page: 1);
 
+    currentUser = await UserManager.getUUID();
+
     setState(() {
       _reports = list;
     });
@@ -92,7 +97,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   void setCustomMapPin() async {
     iconAdultYours = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
+        ImageConfiguration(size: Size(50, 50)),
         'assets/img/ic_adults_yours.png');
     iconBitesYours = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -100,18 +105,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
     iconBreedingYours = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/img/ic_breeding_yours.png');
-    // iconAdultOthers = await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(devicePixelRatio: 2.5),
-    //     'assets/img/ic_adults_yours.png');
-    // iconBitesOthers = await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(devicePixelRatio: 2.5),
-    //     'assets/img/ic_bites_yours.png');
-    // iconBreedingOthers = await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(devicePixelRatio: 2.5),
-    //     'assets/img/ic_breeding_yours.png');
+    iconAdultOthers = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.5, size: Size(24, 24)),
+        'assets/img/ic_adults_other.png');
+    iconBitesOthers = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(50, 50)),
+        'assets/img/ic_bites_other.png');
+    iconBreedingOthers = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.5, size: Size(24, 24)),
+        'assets/img/ic_breeding_other.png');
   }
 
-  _createMarkers() {
+  _createMarkers() async {
     markers = List();
     for (int i = 0; i < _reports.length; i++) {
       var position;
@@ -127,13 +132,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
           position = LatLng(_reports[i].selected_location_lat,
               _reports[i].selected_location_lon);
         }
-        var icon = setIconMarcker(_reports[i].type);
+        var icon = await setIconMarker(_reports[i].type, _reports[i].user);
 
         if (position != null) {
           markers.add(Marker(
             markerId: MarkerId(_reports[i].report_id),
             position: position,
-            // onTap: _reportBottomSheet(context, _reports[i])   //TODO: get context
+            // onTap: _reportBottomSheet(
+            //     this.context, _reports[i]), //TODO: get context
             icon: icon,
           ));
         }
@@ -141,19 +147,35 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
-  BitmapDescriptor setIconMarcker(type) {
-    switch (type) {
-      case "adult":
-        return iconAdultYours;
-        break;
-      case "bite":
-        return iconBitesYours;
-        break;
-      case "site":
-        return iconBreedingYours;
-        break;
-      default:
-        break;
+  BitmapDescriptor setIconMarker(type, user) {
+    if (currentUser == user) {
+      switch (type) {
+        case "adult":
+          return iconAdultYours;
+          break;
+        case "bite":
+          return iconBitesYours;
+          break;
+        case "site":
+          return iconBreedingYours;
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (type) {
+        case "adult":
+          return iconAdultOthers;
+          break;
+        case "bite":
+          return iconBitesOthers;
+          break;
+        case "site":
+          return iconBreedingOthers;
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -186,7 +208,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           if (index == 0.0) return MyReportsMap(markers);
                           if (index == 1.0)
                             return ReportsList(
-                                snapshot.data, _reportBottomSheet);
+                                snapshot.data, _reportBottomSheet, currentUser);
                         });
                   },
                 )),
@@ -256,7 +278,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     );
   }
 
-  void _reportBottomSheet(BuildContext context, Report report) {
+  _reportBottomSheet(BuildContext context, Report report) {
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -427,7 +449,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             fontSize: 14)
                                         : Container(),
                                     Style.body(report.responses[index].answer !=
-                                            null
+                                            ' '
                                         ? report.responses[index].answer
                                         : report.responses[index].answer_value),
                                   ],
@@ -438,7 +460,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           );
                         }),
                   ),
-                  // Expanded(child: _showResponses(report.responses)),
                   SizedBox(
                     height: 15,
                   ),
@@ -511,6 +532,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _getMarker(Report report) {
     var marker;
+    var icon = setIconMarker(report.type, report.user);
     if (report.location_choice == "current") {
       marker = Marker(
           markerId: MarkerId('currentMarker'),
@@ -518,7 +540,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             report.current_location_lat,
             report.current_location_lon,
           ),
-          icon: setIconMarcker(report.type));
+          icon: icon);
     } else {
       marker = Marker(
           markerId: MarkerId('selectedtMarker'),
@@ -526,7 +548,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             report.selected_location_lat,
             report.selected_location_lon,
           ),
-          icon: setIconMarcker(report.type));
+          icon: icon);
     }
 
     return <Marker>[marker].toSet();

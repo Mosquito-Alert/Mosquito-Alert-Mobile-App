@@ -64,7 +64,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
       bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
       if (geolocationEnabled) {
-        Position currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        Position currentPosition = await Geolocator()
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         circles = Set.from([
           Circle(
               circleId: CircleId('Circle 1'),
@@ -164,7 +165,10 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               child: GoogleMap(
                                 onMapCreated: _onMapCreated,
                                 rotateGesturesEnabled: false,
-                                myLocationEnabled: snapshot.data == LocationType.current ? true : false ,
+                                myLocationEnabled:
+                                    snapshot.data == LocationType.current
+                                        ? true
+                                        : false,
                                 mapToolbarEnabled: false,
                                 onTap: (LatLng pos) {
                                   snapshot.data == LocationType.selected

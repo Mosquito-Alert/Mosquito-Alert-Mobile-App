@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
-
-import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
+import 'adult_report_page.dart';
+import 'breeding_report_page.dart';
 import 'components/biting_form.dart';
 import 'components/biting_logation_form.dart';
 
@@ -22,6 +22,7 @@ class BitingReportPage extends StatefulWidget {
 class _BitingReportPageState extends State<BitingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
+  String otherReport;
 
   @override
   void initState() {
@@ -31,12 +32,42 @@ class _BitingReportPageState extends State<BitingReportPage> {
     super.initState();
   }
 
+  addOtherReport(String reportType) {
+    setState(() {
+      otherReport = reportType;
+    });
+  }
+
+  navigateOtherReport() {
+    Utils.addOtherReport(otherReport);
+    switch (otherReport) {
+      case "bite":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BitingReportPage()),
+        );
+        break;
+      case "site":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BreedingReportPage()),
+        );
+        break;
+      case "adult":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdultReportPage()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
       BitingForm(),
       BitingLocationForm(),
-      AddOtherReportPage(),
+      AddOtherReportPage(addOtherReport),
     ];
 
     return Scaffold(
@@ -67,11 +98,15 @@ class _BitingReportPageState extends State<BitingReportPage> {
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length - 1) {
-                        Utils.createReport();
-                        if (widget.editReport != null) {
-                          widget.loadData();
+                        if (otherReport != null) {
+                          navigateOtherReport();
+                        } else {
+                          Utils.createReport();
+                          if (widget.editReport != null) {
+                            widget.loadData();
+                          }
+                          Navigator.pop(context);
                         }
-                        Navigator.pop(context);
                       } else {
                         _pagesController.nextPage(
                             duration: Duration(microseconds: 300),

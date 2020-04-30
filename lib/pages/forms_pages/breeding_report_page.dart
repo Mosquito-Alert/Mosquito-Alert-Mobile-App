@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
@@ -25,6 +26,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   bool skipReport = false;
   bool addMosquito = false;
+  String otherReport;
 
   @override
   void initState() {
@@ -48,6 +50,36 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     });
   }
 
+  addOtherReport(String reportType) {
+    setState(() {
+      otherReport = reportType;
+    });
+  }
+
+  navigateOtherReport() {
+    Utils.addOtherReport(otherReport);
+    switch (otherReport) {
+      case "bite":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BitingReportPage()),
+        );
+        break;
+      case "site":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BreedingReportPage()),
+        );
+        break;
+      case "adult":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdultReportPage()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
@@ -56,7 +88,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       QuestionsBreedingForm(),
       BitingLocationForm(),
       CouldSeeForm(addAdultReport),
-      AddOtherReportPage(),
+      AddOtherReportPage(addOtherReport),
     ];
 
     return Scaffold(
@@ -87,14 +119,19 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   ? () {
                       double currentPage = _pagesController.page;
                       if (skipReport) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainVC()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => MainVC()),
+                        // );
+                        Navigator.pop(context);
                       } else {
                         if (currentPage == _formsRepot.length - 1) {
-                          Utils.createReport();
-                          Navigator.pop(context);
+                          if (otherReport != null) {
+                            navigateOtherReport();
+                          } else {
+                            Utils.createReport();
+                            Navigator.pop(context);
+                          }
                         } else if (currentPage == 3.0 && addMosquito) {
                           Utils.addOtherReport('adult');
                           Navigator.push(

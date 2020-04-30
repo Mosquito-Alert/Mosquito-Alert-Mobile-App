@@ -10,6 +10,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
+import 'breeding_report_page.dart';
 import 'components/biting_logation_form.dart';
 
 class AdultReportPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   bool skip3 = false;
   bool addBiting = false;
+  String otherReport;
 
   @override
   void initState() {
@@ -47,6 +49,36 @@ class _AdultReportPageState extends State<AdultReportPage> {
     });
   }
 
+  addOtherReport(String reportType) {
+    setState(() {
+      otherReport = reportType;
+    });
+  }
+
+  navigateOtherReport() {
+    Utils.addOtherReport(otherReport);
+    switch (otherReport) {
+      case "bite":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BitingReportPage()),
+        );
+        break;
+      case "site":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BreedingReportPage()),
+        );
+        break;
+      case "adult":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdultReportPage()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
@@ -55,7 +87,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       MosquitoPartsForm(),
       BitingLocationForm(),
       CouldSeeForm(adBitingdReport),
-      AddOtherReportPage(),
+      AddOtherReportPage(addOtherReport),
     ];
 
     return Scaffold(
