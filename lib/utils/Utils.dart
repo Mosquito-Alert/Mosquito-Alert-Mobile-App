@@ -100,6 +100,17 @@ class Utils {
     report.selected_location_lon = lon;
   }
 
+  static void addLocationResponse(double lat, lon) {
+    var newQuestion = new Question(
+        question: "¿DOnde estabas cuando te picaron?",
+        answer: " ",
+        question_id: 5,
+        answer_id: 51,
+        answer_value: "POINT( $lat, $lon)");
+
+    report.responses.add(newQuestion);
+  }
+
   static void addBiteResponse(String question, String answer,
       {question_id, answer_id}) {
     List<Question> _questions = report.responses;

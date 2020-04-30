@@ -95,11 +95,6 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                   child: GestureDetector(
                     onTap: () {
                       setSelected('none');
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => BitingReportPage()),
-                      // );
                     },
                     child: CustomCard(
                       // img: '',

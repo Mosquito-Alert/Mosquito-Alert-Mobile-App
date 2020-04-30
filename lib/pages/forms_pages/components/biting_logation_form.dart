@@ -17,7 +17,7 @@ enum LocationType { current, selected, missing }
 
 class _BitingLocationFormState extends State<BitingLocationForm> {
   GoogleMapController controller;
-  Marker marker;
+  List<Marker> markers = new List();
 
   Set<Circle> circles;
 
@@ -50,12 +50,16 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   updateMarker(LatLng markerPosition) {
+    Marker mk = Marker(markerId: MarkerId('mk${markers.length}'), position: markerPosition);
+    
+    if (Utils.report.selected_location_lat == null) {
+      Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
+    } else {
+      Utils.addLocationResponse(mk.position.latitude, mk.position.longitude);
+    }
     setState(() {
-      this.marker =
-          Marker(markerId: MarkerId('Marker 1'), position: markerPosition);
+      markers.add(mk);
     });
-    Utils.setSelectedLocation(
-        marker.position.latitude, marker.position.longitude);
   }
 
   getPosition(type, {context}) async {
@@ -87,9 +91,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         streamType.add(LocationType.selected);
       }
     } else if (type == LocationType.selected) {
-      updateMarker(LatLng(41.16154, 0.47337));
-      Utils.setSelectedLocation(
-          marker.position.latitude, marker.position.longitude);
+      // updateMarker(LatLng(41.16154, 0.47337));
+
     } else if (type == LocationType.missing) {}
   }
 
@@ -181,8 +184,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                 ),
                                 markers:
                                     snapshot.data == LocationType.selected &&
-                                            marker != null
-                                        ? <Marker>[marker].toSet()
+                                            markers.isNotEmpty
+                                        ? Set.from(markers)
                                         : null,
                                 circles: snapshot.data == LocationType.current
                                     ? circles
