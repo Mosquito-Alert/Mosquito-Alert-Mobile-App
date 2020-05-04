@@ -53,7 +53,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                       subtitle: MyLocalizations.of(
                           context, 'bitten_by_mosquito_question_txt'),
                       selected: selectedType == 'bite',
-                      disabled: selectedType != 'bite',
+                      disabled: selectedType != 'bite' && selectedType != null,
                     ),
                   ),
                 ),
@@ -68,7 +68,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                       subtitle: MyLocalizations.of(
                           context, 'found_breeding_place_question_txt'),
                       selected: selectedType == 'site',
-                      disabled: selectedType != 'site',
+                      disabled: selectedType != 'site' && selectedType != null,
                     ),
                   ),
                 ),
@@ -87,7 +87,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                       subtitle: MyLocalizations.of(
                           context, 'report_us_adult_mosquitos_txt'),
                       selected: selectedType == 'adult',
-                      disabled: selectedType != 'adult',
+                      disabled: selectedType != 'adult' && selectedType != null,
                     ),
                   ),
                 ),
@@ -101,7 +101,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                       title: MyLocalizations.of(context, 'exit'),
                       subtitle: 'No quiero añadir otro reporte',
                       selected: selectedType == 'none',
-                      disabled: selectedType != 'none',
+                      disabled: selectedType != 'none' && selectedType != null,
                     ),
                   ),
                 ),

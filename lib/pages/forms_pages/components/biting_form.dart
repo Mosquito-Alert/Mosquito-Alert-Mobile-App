@@ -17,7 +17,7 @@ class _BitingFormState extends State<BitingForm> {
 
   @override
   void initState() {
-    questions = new List();
+    questions = [];
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
         if (q.question_id <= 4) {
@@ -344,7 +344,7 @@ class _BitingFormState extends State<BitingForm> {
                 height: 15,
               ),
               // canContinue()
-                  false
+              false
                   ? GestureDetector(
                       onTap: () {},
                       child: Container(

@@ -18,13 +18,13 @@ class Utils {
   static List<CameraDescription> cameras;
 
   //images
-  static List<File> imagePath;
+  static List<Map> imagePath;
 
   static void saveImgPath(File path) {
     if (imagePath == null) {
-      imagePath = new List();
+      imagePath = [];
     }
-    imagePath.add(path);
+    imagePath.add({'image': path, 'id': report.version_UUID});
   }
 
   //REPORTS form
@@ -39,7 +39,7 @@ class Utils {
 
   static createNewReport(String type) async {
     if (session == null) {
-      reportsList = new List();
+      reportsList = [];
 
       String userUUID = await UserManager.getUUID();
 
@@ -62,7 +62,7 @@ class Utils {
         version_UUID: new Uuid().v4(),
         user: userUUID,
         session: session.id,
-        responses: new List());
+        responses: []);
   }
 
   static resetReport() {
@@ -74,6 +74,7 @@ class Utils {
   static setEditReport(Report editReport) {
     report = editReport;
     report.version_number = report.version_number + 1;
+    report.version_UUID = new Uuid().v4();
   }
 
   static addOtherReport(String type) {
@@ -186,7 +187,7 @@ class Utils {
         .indexWhere((q) => q.question_id == question.question_id);
     var _responses = report.responses;
     if (_responses == null) {
-      _responses = new List();
+      _responses = [];
     }
     if (index != -1) {
       _responses[index] = question;
@@ -194,24 +195,26 @@ class Utils {
       _responses.add(question);
       report.responses = _responses;
     }
-    print(report.responses);
   }
 
   static Future<void> createReport() async {
+    List<Map> reportImages = [];
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
-      report.version_UUID = Uuid().v4();
       ApiSingleton().createReport(report);
     } else {
       report.version_time = DateTime.now().toIso8601String();
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
-      for (Report r in reportsList) {
+      print(reportsList);
+
+      reportsList.forEach((r) {
         ApiSingleton().createReport(r);
-      }
+      });
       closeSession();
       resetReport();
+      imagePath = [];
     }
   }
 

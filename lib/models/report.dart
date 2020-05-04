@@ -65,7 +65,7 @@ class Report {
     if (json['photos'] != null) {
       var jj = json['photos'];
       print(jj);
-      photos = new List<Photo>();
+      photos = <Photo>[];
       json['photos'].forEach((p) {
         var ph = new Photo.fromJson(p);
         photos.add(ph);
@@ -73,7 +73,7 @@ class Report {
     }
 
     if (json['responses'] != null) {
-      responses = new List<Question>();
+      responses = <Question>[];
       json['responses'].forEach((q) {
         responses.add(new Question.fromJson(q));
       });

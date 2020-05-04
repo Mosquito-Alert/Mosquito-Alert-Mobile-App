@@ -214,11 +214,12 @@ class ApiSingleton {
       }
 
       if (Utils.imagePath != null) {
-        for (File image in Utils.imagePath) {
-          print(image);
-          saveImage(image, report.version_UUID);
-        }
-        Utils.imagePath = new List();
+        Utils.imagePath.forEach((img) {
+          if (img['id'] == report.version_UUID) {
+            saveImage(img['image'].path, report.version_UUID);
+          }
+        });
+        
       }
     } catch (e) {
       return null;
@@ -254,7 +255,6 @@ class ApiSingleton {
         }
         for (var item in jsonAnswer['results']) {
           allReports.add(Report.fromJson(item));
-         
         }
 
         if (jsonAnswer['next'] == null && jsonAnswer['previous'] != null) {
@@ -270,12 +270,12 @@ class ApiSingleton {
   }
 
   //Images
-  Future<dynamic> saveImage(File image, String versionUUID) async {
+  Future<dynamic> saveImage(String image, String versionUUID) async {
     try {
-      String fileName = image != null ? image.path.split('/').last : null;
+      String fileName = image != null ? image.split('/').last : null;
       var dio = new Dio();
 
-      var img = await MultipartFile.fromFile(image.path,
+      var img = await MultipartFile.fromFile(image,
           filename: fileName, contentType: MediaType('image', 'jpeg'));
 
       FormData data = FormData.fromMap({"photo": img, "report": versionUUID});

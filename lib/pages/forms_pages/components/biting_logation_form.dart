@@ -17,7 +17,7 @@ enum LocationType { current, selected, missing }
 
 class _BitingLocationFormState extends State<BitingLocationForm> {
   GoogleMapController controller;
-  List<Marker> markers = new List();
+  List<Marker> markers = [];
 
   Set<Circle> circles;
 
@@ -41,6 +41,9 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         default:
           streamType.add(LocationType.missing);
       }
+      if (Utils.report.responses.any((r) => r.question_id == 5)) {
+        //TODO: save responses as markers
+      }
     }
     super.initState();
   }
@@ -50,16 +53,21 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   updateMarker(LatLng markerPosition) {
-    Marker mk = Marker(markerId: MarkerId('mk${markers.length}'), position: markerPosition);
-    
-    if (Utils.report.selected_location_lat == null) {
-      Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
-    } else {
+    Marker mk = Marker(
+        markerId: MarkerId('mk${markers.length}'), position: markerPosition);
+
+    if (Utils.report.selected_location_lat != null &&
+        Utils.report.type == "bite") {
       Utils.addLocationResponse(mk.position.latitude, mk.position.longitude);
+      setState(() {
+        markers.add(mk);
+      });
+    } else {
+      Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
+      setState(() {
+        markers = [mk];
+      });
     }
-    setState(() {
-      markers.add(mk);
-    });
   }
 
   getPosition(type, {context}) async {
@@ -90,10 +98,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         });
         streamType.add(LocationType.selected);
       }
-    } else if (type == LocationType.selected) {
-      // updateMarker(LatLng(41.16154, 0.47337));
-
-    } else if (type == LocationType.missing) {}
+    }
   }
 
   @override
