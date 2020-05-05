@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -10,9 +11,12 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
+  final Key _mapKey = UniqueKey();
+
   @override
   _MainVCState createState() => _MainVCState();
 }
@@ -22,6 +26,16 @@ class _MainVCState extends State<MainVC> {
   void initState() {
     super.initState();
     UserManager.startFirstTime(context);
+    _getLastLocation();
+  }
+
+  _getLastLocation() async {
+    GeolocationStatus geolocationStatus =
+        await Geolocator().checkGeolocationPermissionStatus();
+    if (geolocationStatus != null &&
+        geolocationStatus == GeolocationStatus.granted) {
+      Utils.getLocation();
+    }
   }
 
   @override
@@ -254,11 +268,8 @@ class _MainVCState extends State<MainVC> {
             ),
             Container(
                 width: double.infinity,
-                child: SvgPicture.asset(
-                  'assets/img/ic_bottom_waves.svg',
-                  width: 500,
-                  fit: BoxFit.cover
-                )),
+                child: SvgPicture.asset('assets/img/ic_bottom_waves.svg',
+                    width: 500, fit: BoxFit.cover)),
           ],
         ),
       ),

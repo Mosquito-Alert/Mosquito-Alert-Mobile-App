@@ -5,11 +5,16 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class MyReportsMap extends StatelessWidget {
+class MyReportsMap extends StatefulWidget {
   final List<Marker> markers;
 
   MyReportsMap(this.markers);
 
+  @override
+  _MyReportsMapState createState() => _MyReportsMapState();
+}
+
+class _MyReportsMapState extends State<MyReportsMap> {
   GoogleMapController controller;
 
   void _onMapCreated(GoogleMapController controller) {
@@ -28,7 +33,7 @@ class MyReportsMap extends StatelessWidget {
             target: LatLng(41.1613063, 0.4724329),
             zoom: 16.0,
           ),
-          markers: markers != null ? Set<Marker>.of(markers) : null,
+          markers: widget.markers != null ? Set<Marker>.of(widget.markers) : null,
         ),
         Style.button("Leyenda", () {
           _reportBottomSheet(context);

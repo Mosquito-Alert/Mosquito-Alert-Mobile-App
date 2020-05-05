@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -19,6 +21,8 @@ import 'package:intl/intl.dart';
 import 'components/reports_list_widget.dart';
 
 class MyReportsPage extends StatefulWidget {
+  MyReportsPage({Key key}) : super(key: key);
+
   @override
   _MyReportsPageState createState() => _MyReportsPageState();
 }
@@ -27,6 +31,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports;
 
   String currentUser;
+
+  Position location;
 
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
@@ -46,15 +52,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
   Map<int, Widget> _children;
 
   GoogleMapController mapController;
-  List<Marker> markers;
+  GoogleMapController miniMapController;
 
   void _onMapCreated(GoogleMapController controller) {
-    this.mapController = controller;
+    setState(() {
+      mapController = controller;
+    });
+  }
+
+  void _onMiniMapCreated(GoogleMapController controller) async {
+    setState(() {
+      miniMapController = controller;
+    });
   }
 
   @override
   initState() {
     super.initState();
+    location = Utils.location;
+
     loadingStream.add(true);
     if (_reports == null) {
       _getData();
@@ -70,14 +86,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
-    List<Report> list =
-        await ApiSingleton().getReportsList(41.1613063, 0.4724329, page: 1);
+    List<Report> list = await ApiSingleton()
+        .getReportsList(location.latitude, location.longitude, page: 1);
 
     currentUser = await UserManager.getUUID();
 
-    setState(() {
-      _reports = list;
-    });
+    // setState(() {
+    //   _reports = list;
+    // });
 
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
@@ -90,14 +106,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
       }
     }
 
+    setState(() {
+      _reports = list;
+    });
+
     dataStream.add(data);
     loadingStream.add(false);
-    _createMarkers();
+    // _createMarkers();
   }
 
   void setCustomMapPin() async {
     iconAdultYours = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(50, 50)),
+        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
         'assets/img/ic_adults_yours.png');
     iconBitesYours = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -106,45 +126,50 @@ class _MyReportsPageState extends State<MyReportsPage> {
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/img/ic_breeding_yours.png');
     iconAdultOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 5.5, size: Size(24, 24)),
+        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
         'assets/img/ic_adults_other.png');
     iconBitesOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(50, 50)),
+        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
         'assets/img/ic_bites_other.png');
     iconBreedingOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 5.5, size: Size(24, 24)),
+        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
         'assets/img/ic_breeding_other.png');
   }
 
-  _createMarkers() async {
-    markers = List();
+  _createMarkers(BuildContext ctx) {
+    var markers = <Marker>[];
     for (int i = 0; i < _reports.length; i++) {
       var position;
-      if (_reports[i].location_choice != 'missing') {
-        if (_reports[i].location_choice == 'current' &&
-            _reports[i].current_location_lat != null &&
-            _reports[i].current_location_lon != null) {
-          position = LatLng(_reports[i].current_location_lat,
-              _reports[i].current_location_lon);
-        } else if (_reports[i].location_choice == 'selected' &&
-            _reports[i].selected_location_lat != null &&
-            _reports[i].selected_location_lon != null) {
-          position = LatLng(_reports[i].selected_location_lat,
-              _reports[i].selected_location_lon);
-        }
-        var icon = await setIconMarker(_reports[i].type, _reports[i].user);
-
-        if (position != null) {
-          markers.add(Marker(
-            markerId: MarkerId(_reports[i].report_id),
-            position: position,
-            // onTap: _reportBottomSheet(
-            //     this.context, _reports[i]), //TODO: get context
-            icon: icon,
-          ));
-        }
+      // if (_reports[i].location_choice != 'missing') {
+      if (_reports[i].location_choice == 'current' &&
+          _reports[i].current_location_lat != null &&
+          _reports[i].current_location_lon != null) {
+        position = LatLng(
+            _reports[i].current_location_lat, _reports[i].current_location_lon);
+      } else if (_reports[i].location_choice == 'selected' &&
+          _reports[i].selected_location_lat != null &&
+          _reports[i].selected_location_lon != null) {
+        position = LatLng(_reports[i].selected_location_lat,
+            _reports[i].selected_location_lon);
       }
+      var icon = setIconMarker(_reports[i].type, _reports[i].user);
+
+      if (position != null) {
+        markers.add(Marker(
+          markerId: MarkerId(_reports[i].report_id),
+          position: position,
+          onTap: () {
+            // mapController
+            //     .animateCamera(CameraUpdate.newLatLngZoom(position, 18.0));
+            _reportBottomSheet(ctx, _reports[i]);
+          },
+          icon: icon,
+        ));
+      }
+      // }
     }
+
+    return Set<Marker>.of(markers).toSet();
   }
 
   BitmapDescriptor setIconMarker(type, user) {
@@ -205,7 +230,34 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         itemCount: 2,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          if (index == 0.0) return MyReportsMap(markers);
+                          if (index == 0.0) {
+                            // return MyReportsMap(markers);
+
+                            return Stack(
+                              alignment: Alignment.bottomLeft,
+                              children: <Widget>[
+                                GoogleMap(
+                                  onMapCreated: _onMapCreated,
+                                  mapType: MapType.normal,
+                                  mapToolbarEnabled: false,
+                                  initialCameraPosition: CameraPosition(
+                                    target: location != null
+                                        ? LatLng(location.latitude,
+                                            location.longitude)
+                                        : LatLng(41.3874, 2.1688),
+                                    zoom: 16.0,
+                                  ),
+                                  markers: snapshot.data != null
+                                      ? _createMarkers(context)
+                                      : null,
+                                ),
+                                Style.button("Leyenda", () {
+                                  _infoBottom(context);
+                                })
+                              ],
+                            );
+                          }
+
                           if (index == 1.0)
                             return ReportsList(
                                 snapshot.data, _reportBottomSheet, currentUser);
@@ -278,6 +330,96 @@ class _MyReportsPageState extends State<MyReportsPage> {
     );
   }
 
+  void _infoBottom(BuildContext context) {
+    CustomShowModalBottomSheet.customShowModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+              child: Container(
+            height: MediaQuery.of(context).size.height * 0.40,
+            // color: Colors.white,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                )),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_bites_yours.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_breeding_yours.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_adults_yours.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                  ]),
+                  Row(children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_bites_other.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_breeding_other.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/img/ic_adults_other.svg'),
+                          Style.body("Tus reportes de picadas",
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    ),
+                  ]),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+            ),
+          ));
+        });
+  }
+
   _reportBottomSheet(BuildContext context, Report report) {
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
@@ -301,23 +443,24 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   SizedBox(
                     height: 15,
                   ),
-                  report.location_choice != 'missing'
-                      ? Container(
-                          height: 120,
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: GoogleMap(
-                              rotateGesturesEnabled: false,
-                              mapToolbarEnabled: false,
-                              scrollGesturesEnabled: false,
-                              onMapCreated: _onMapCreated,
-                              initialCameraPosition: _getPosition(report),
-                              markers: _getMarker(report),
-                            ),
-                          ),
-                        )
-                      : Container(),
+                  // report.location_choice != 'missing'
+                  //     ?
+                  Container(
+                    height: 120,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      //   child: GoogleMap(
+                      //     rotateGesturesEnabled: false,
+                      //     mapToolbarEnabled: false,
+                      //     scrollGesturesEnabled: false,
+                      //     onMapCreated: _onMiniMapCreated,
+                      //     initialCameraPosition: _getPosition(report),
+                      //     // markers: _getMarker(report),
+                      //   ),
+                    ),
+                  ),
+                  //     : Container(),
                   SizedBox(
                     height: 20,
                   ),

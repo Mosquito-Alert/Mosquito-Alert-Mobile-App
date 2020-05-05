@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -16,6 +17,8 @@ import 'MyLocalizations.dart';
 
 class Utils {
   static List<CameraDescription> cameras;
+
+  static Position location;
 
   //images
   static List<Map> imagePath;
@@ -225,6 +228,10 @@ class Utils {
     deleteReport.version_UUID = Uuid().v4();
 
     ApiSingleton().createReport(deleteReport);
+  }
+
+  static getLocation() async {
+    location = await Geolocator().getLastKnownPosition();
   }
 
   //Alerts

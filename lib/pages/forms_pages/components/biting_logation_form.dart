@@ -19,6 +19,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   GoogleMapController controller;
   List<Marker> markers = [];
 
+  Position location;
+
   Set<Circle> circles;
 
   StreamController<LocationType> streamType =
@@ -26,6 +28,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
 
   @override
   void initState() {
+    location = Utils.location;
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
         case "selected":
@@ -183,8 +186,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                       ? updateMarker(pos)
                                       : null;
                                 },
-                                initialCameraPosition: const CameraPosition(
-                                  target: LatLng(41.1613063, 0.4724329),
+                                initialCameraPosition: CameraPosition(
+                                  target: location != null
+                                      ? LatLng(
+                                          location.latitude, location.longitude)
+                                      : LatLng(41.3874, 2.1688),
                                   zoom: 15.0,
                                 ),
                                 markers:
