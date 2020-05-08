@@ -142,19 +142,20 @@ class MyLocalizations {
   }
 }
 
-class MyLocalizationsDelegate extends LocalizationsDelegate<MyLocalizations> {
-  const MyLocalizationsDelegate();
+// class MyLocalizationsDelegate extends LocalizationsDelegate<MyLocalizations> {
+//   const MyLocalizationsDelegate();
 
-  @override
-  bool isSupported(Locale locale) => [
-        'es',
-      ].contains(locale.languageCode);
+//   @override
+//   bool isSupported(Locale locale) => [
+//         'es',
+//         'en'
+//       ].contains(locale.languageCode);
 
-  @override
-  Future<MyLocalizations> load(Locale locale) {
-    return SynchronousFuture<MyLocalizations>(MyLocalizations(locale));
-  }
+//   @override
+//   Future<MyLocalizations> load(Locale locale) {
+//     return SynchronousFuture<MyLocalizations>(MyLocalizations(locale));
+//   }
 
-  @override
-  bool shouldReload(MyLocalizationsDelegate old) => false;
-}
+//   @override
+//   bool shouldReload(MyLocalizationsDelegate old) => false;
+// }

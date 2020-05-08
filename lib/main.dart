@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 Future<void> main() async {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: [
         const Locale('es'),
-        const Locale('en'),
+        // const Locale('en'),
       ],
     );
   }

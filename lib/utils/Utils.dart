@@ -90,16 +90,16 @@ class Utils {
 
   static setCurrentLocation(double latitude, double longitude) {
     report.location_choice = 'current';
-    report.selected_location_lat = null;
-    report.selected_location_lon = null;
+    // report.selected_location_lat = null;
+    // report.selected_location_lon = null;
     report.current_location_lat = latitude;
     report.current_location_lon = longitude;
   }
 
   static setSelectedLocation(double lat, lon) {
     report.location_choice = "selected";
-    report.current_location_lat = null;
-    report.current_location_lon = null;
+    // report.current_location_lat = null;
+    // report.current_location_lon = null;
     report.selected_location_lat = lat;
     report.selected_location_lon = lon;
   }
@@ -232,6 +232,7 @@ class Utils {
 
   static getLocation() async {
     location = await Geolocator().getLastKnownPosition();
+    print(location);
   }
 
   //Alerts
@@ -392,6 +393,6 @@ class Utils {
 
   //Manage Data
   static String getLanguage() {
-    return 'en';
+    return 'es';
   }
 }
