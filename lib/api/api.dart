@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
@@ -34,6 +36,9 @@ class ApiSingleton {
     "Content-Type": " application/json",
     "Authorization": "Token " + token
   };
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final ApiSingleton _singleton = new ApiSingleton._internal();
 
@@ -65,6 +70,50 @@ class ApiSingleton {
     } catch (c) {
       return null;
     }
+  }
+
+  Future<bool> singUp(String email, String password) async {
+    final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    ))
+        .user;
+    if (user != null) {
+      print(user);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> loginEmail(String email, String password) async {
+    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    ))
+        .user;
+    if (user != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<FirebaseUser> sigInWithGoogle() async {
+    _auth.signOut();
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+    return user;
   }
 
   //Sessions
@@ -219,7 +268,6 @@ class ApiSingleton {
             saveImage(img['image'].path, report.version_UUID);
           }
         });
-        
       }
     } catch (e) {
       return null;
@@ -241,7 +289,7 @@ class ApiSingleton {
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
-      // print(response);
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");

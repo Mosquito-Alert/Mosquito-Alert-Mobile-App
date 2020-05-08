@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/pages/auth/login_password_page.dart';
+import 'package:mosquito_alert_app/pages/auth/signup_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -71,9 +72,26 @@ class _LoginEmailState extends State<LoginEmail> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPassword()),
+                                    builder: (context) =>
+                                        LoginPassword(_emailController.text)),
                               );
                             })),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Divider(),
+                        Container(
+                          width: double.infinity,
+                          child: Style.noBgButton(
+                              MyLocalizations.of(
+                                  context, "register_txt"), () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignupPage()),
+                            );
+                          }, textColor: Colors.black),
+                        ),
                       ],
                     ),
                   ),

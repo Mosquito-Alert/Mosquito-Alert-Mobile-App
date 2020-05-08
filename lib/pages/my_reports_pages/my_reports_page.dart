@@ -69,8 +69,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   initState() {
     super.initState();
-    location = Utils.location;
+    // location = Utils.location;
 
+    Utils.location != null
+        ? location = Utils.location
+        : location = Position(latitude: 41.1619686, longitude: 0.4735487);
     loadingStream.add(true);
     if (_reports == null) {
       _getData();
@@ -244,7 +247,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     target: location != null
                                         ? LatLng(location.latitude,
                                             location.longitude)
-                                        : LatLng(41.3874, 2.1688),
+                                        : LatLng(41.1619686, 0.4735487),
                                     zoom: 16.0,
                                   ),
                                   markers: snapshot.data != null

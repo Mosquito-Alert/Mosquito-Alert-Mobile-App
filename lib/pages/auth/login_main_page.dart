@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/auth/login_email_page.dart';
+import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class LoginMainPage extends StatefulWidget {
@@ -10,6 +15,8 @@ class LoginMainPage extends StatefulWidget {
 }
 
 class _LoginMainPageState extends State<LoginMainPage> {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -78,9 +85,9 @@ class _LoginMainPageState extends State<LoginMainPage> {
                       ),
                       MyLocalizations.of(context, "login_btn2"),
                       Colors.white,
-                      Colors.black,
-                      () {},
-                      colorBorder: Colors.black.withOpacity(0.1)),
+                      Colors.black, () {
+                    _googleSignIn();
+                  }, colorBorder: Colors.black.withOpacity(0.1)),
                   SizedBox(
                     height: 10,
                   ),
@@ -129,5 +136,25 @@ class _LoginMainPageState extends State<LoginMainPage> {
         )),
       ),
     );
+  }
+
+  _showGoogleError() {
+    //TODO: set texts
+    Utils.showAlert("title", "text", context);
+  }
+
+  _googleSignIn() async {
+    //TODO: add loading
+    ApiSingleton().sigInWithGoogle().then((FirebaseUser user) {
+      //TODO: save token
+      print(user);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainVC()),
+      );
+    }).catchError((e) {
+      _showGoogleError();
+      print(e);
+    });
   }
 }

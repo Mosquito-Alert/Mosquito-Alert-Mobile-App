@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/auth/recover_password_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class LoginPassword extends StatefulWidget {
+  final String email;
+
+  LoginPassword(this.email);
   @override
   _LoginPasswordState createState() => _LoginPasswordState();
 }
@@ -65,11 +69,7 @@ class _LoginPasswordState extends State<LoginPassword> {
                             width: double.infinity,
                             child: Style.button(
                                 MyLocalizations.of(context, "access_txt"), () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainVC()),
-                              );
+                              _login();
                             })),
                         SizedBox(
                           height: 20,
@@ -107,5 +107,22 @@ class _LoginPasswordState extends State<LoginPassword> {
         ),
       ],
     );
+  }
+
+  _login() async {
+    bool doLogin =
+        await ApiSingleton().loginEmail(widget.email, _passwordController.text);
+
+    if (doLogin) {
+      //TODO: save token and create profile
+      print('logged');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainVC()),
+      );
+    } else {
+      print('ubo un error');
+      //TODO: showAlert
+    }
   }
 }

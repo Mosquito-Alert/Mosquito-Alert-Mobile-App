@@ -36,6 +36,7 @@ class MyLocalizations {
       "enter_email_title": " Introduce tu correo electrónico",
       "email_txt": "Correo electrónico",
       "access_txt": "Acceder",
+      "register_txt": "Darse de alta",
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",

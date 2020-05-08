@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -9,6 +10,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
                           child: Column(children: <Widget>[
                             Style.textField(
                                 MyLocalizations.of(context, "email_txt"),
-                                _passwordController,
+                                _emailController,
                                 context),
                             SizedBox(
                               height: 10,
@@ -88,8 +90,9 @@ class _SignupPageState extends State<SignupPage> {
                         Container(
                             width: double.infinity,
                             child: Style.button(
-                                MyLocalizations.of(context, "signup_btn"),
-                                () {})),
+                                MyLocalizations.of(context, "signup_btn"), () {
+                              _signUp();
+                            })),
                       ],
                     ),
                   ),
@@ -110,5 +113,18 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ],
     );
+  }
+
+  _signUp() async {
+    //TODO: add loader
+    ApiSingleton()
+        .singUp(_emailController.text, _passwordController.text)
+        .then((user) {
+      //TODO: save token
+      print(user);
+    }).catchError((e) {
+      //TODO: show alert
+      print(e);
+    });
   }
 }

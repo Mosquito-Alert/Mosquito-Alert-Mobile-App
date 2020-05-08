@@ -75,23 +75,30 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
 
   getPosition(type, {context}) async {
     streamType.add(type);
+    var circle;
     if (type == LocationType.current) {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
       bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
+
       if (geolocationEnabled) {
-        Position currentPosition = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        circles = Set.from([
-          Circle(
-              circleId: CircleId('Circle 1'),
-              center:
-                  LatLng(currentPosition.latitude, currentPosition.longitude),
-              radius: 100,
-              strokeColor: Colors.transparent,
-              fillColor: Colors.blue.withOpacity(0.1))
-        ]);
+        Position currentPosition = await Geolocator().getCurrentPosition();
+        print(currentPosition);
         Utils.setCurrentLocation(
             currentPosition.latitude, currentPosition.longitude);
+
+        // circle = Set.from([
+        //   Circle(
+        //       circleId: CircleId('Circle 1'),
+        //       center:
+        //           LatLng(currentPosition.latitude, currentPosition.longitude),
+        //       radius: 100,
+        //       strokeColor: Colors.transparent,
+        //       fillColor: Colors.red.withOpacity(0.1))
+        // ]);
+
+        setState(() {
+          location = currentPosition;
+        });
       } else {
         Utils.showAlert(
             MyLocalizations.of(context, "location_not_active_title"),
@@ -180,6 +187,9 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                     snapshot.data == LocationType.current
                                         ? true
                                         : false,
+                                myLocationButtonEnabled: false,
+                                minMaxZoomPreference:
+                                    MinMaxZoomPreference(6, 18),
                                 mapToolbarEnabled: false,
                                 onTap: (LatLng pos) {
                                   snapshot.data == LocationType.selected
@@ -198,9 +208,9 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                             markers.isNotEmpty
                                         ? Set.from(markers)
                                         : null,
-                                circles: snapshot.data == LocationType.current
-                                    ? circles
-                                    : null,
+                                // circles: snapshot.data == LocationType.current
+                                //     ? circles
+                                //     : null,
                               ),
                             ),
                           ),

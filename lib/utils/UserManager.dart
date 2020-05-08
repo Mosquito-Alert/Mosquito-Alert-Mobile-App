@@ -13,6 +13,7 @@ class UserManager {
       prefs.setString("uuid", uuid);
       ApiSingleton().createUser(uuid);
     }
+  
   }
 
   //get
