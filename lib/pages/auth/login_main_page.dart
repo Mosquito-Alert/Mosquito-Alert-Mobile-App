@@ -6,6 +6,7 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/auth/login_email_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -72,8 +73,9 @@ class _LoginMainPageState extends State<LoginMainPage> {
                       ),
                       MyLocalizations.of(context, "login_btn1"),
                       Color(0XFF3B5998),
-                      Colors.white,
-                      () {}),
+                      Colors.white, () {
+                    _facebookSignIn();
+                  }),
                   SizedBox(
                     height: 10,
                   ),
@@ -138,14 +140,35 @@ class _LoginMainPageState extends State<LoginMainPage> {
     );
   }
 
-  _showGoogleError() {
+  _showSocialError() {
     //TODO: set texts
-    Utils.showAlert("title", "text", context);
+    Utils.showAlert(MyLocalizations.of(context, "app_name"), "text", context);
   }
 
   _googleSignIn() async {
     //TODO: add loading
-    ApiSingleton().sigInWithGoogle().then((FirebaseUser user) {
+    ApiSingleton().sigInWithGoogle().then((FirebaseUser user) async {
+      //TODO: save token
+      print(user);
+      if (user != null) {
+        await UserManager.setUserName(user.displayName);
+        var createProfile = ApiSingleton().createProfile(user.uid);
+
+        if (createProfile == true) {}
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainVC()),
+        );
+      }
+    }).catchError((e) {
+      _showSocialError();
+      print(e);
+    });
+  }
+
+  _facebookSignIn() async {
+    //TODO: add loading
+    ApiSingleton().singInWithFacebook().then((FirebaseUser user) {
       //TODO: save token
       print(user);
       Navigator.push(
@@ -153,7 +176,7 @@ class _LoginMainPageState extends State<LoginMainPage> {
         MaterialPageRoute(builder: (context) => MainVC()),
       );
     }).catchError((e) {
-      _showGoogleError();
+      _showSocialError();
       print(e);
     });
   }

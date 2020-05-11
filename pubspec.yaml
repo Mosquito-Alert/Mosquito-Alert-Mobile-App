@@ -30,6 +30,7 @@ dependencies:
   firebase_messaging: ^6.0.13
   firebase_auth: ^0.16.0
   google_sign_in: ^4.4.4
+  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -44,8 +45,6 @@ flutter:
   assets:
    - assets/img/
    - assets/
-  #  - images/a_dot_ham.jpeg
-
  
   
   fonts:

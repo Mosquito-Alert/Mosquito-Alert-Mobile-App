@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:mosquito_alert_app/models/report.dart';
@@ -19,6 +19,8 @@ class ApiSingleton {
 
   //User
   static const users = '/users/';
+  static const profile = '/profile/';
+  static const newProfile = '/profile/new/';
 
   //Reports
   static const reports = '/reports/';
@@ -38,6 +40,7 @@ class ApiSingleton {
   };
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final _fbSignIn = FacebookLogin();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final ApiSingleton _singleton = new ApiSingleton._internal();
@@ -86,21 +89,21 @@ class ApiSingleton {
     }
   }
 
-  Future<bool> loginEmail(String email, String password) async {
+  Future<FirebaseUser> loginEmail(String email, String password) async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     ))
         .user;
     if (user != null) {
-      return true;
+      return user;
     } else {
-      return false;
+      return user;
     }
   }
 
   Future<FirebaseUser> sigInWithGoogle() async {
-    _auth.signOut();
+    // _auth.signOut();
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -113,7 +116,52 @@ class ApiSingleton {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     print("signed in " + user.displayName);
+
+    _googleSignIn.signOut();
     return user;
+  }
+
+  Future<FirebaseUser> singInWithFacebook() async {
+    final FacebookLoginResult fbResult = await _fbSignIn.logIn(['email']);
+    final AuthCredential credential = FacebookAuthProvider.getCredential(
+      accessToken: fbResult.accessToken.token,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+    return currentUser;
+  }
+
+  Future<bool> logout() async {
+    await _auth.signOut();
+    UserManager.signOut();
+  }
+
+  Future<dynamic> createProfile(String firebaseId) async {
+    String userUUID = await UserManager.getUUID();
+
+    try {
+      final response = await http.post(
+          '$serverUrl$newProfile?fbt=$firebaseId&usr=$userUUID',
+          headers: headers);
+      print(response);
+
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return ApiResponse.fromJson(json.decode(response.body));
+      }
+      return true;
+    } catch (e) {
+      print(e.errorMessage);
+    }
   }
 
   //Sessions

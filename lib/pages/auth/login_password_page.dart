@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -110,19 +111,18 @@ class _LoginPasswordState extends State<LoginPassword> {
   }
 
   _login() async {
-    bool doLogin =
-        await ApiSingleton().loginEmail(widget.email, _passwordController.text);
-
-    if (doLogin) {
-      //TODO: save token and create profile
-      print('logged');
-      Navigator.push(
+    ApiSingleton()
+        .loginEmail(widget.email, _passwordController.text)
+        .then((FirebaseUser user) {
+      //TODO: save token
+      print(user);
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainVC()),
       );
-    } else {
-      print('ubo un error');
-      //TODO: showAlert
-    }
+    }).catchError((e) {
+      //Todo: show alert
+      print(e);
+    });
   }
 }

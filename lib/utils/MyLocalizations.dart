@@ -31,6 +31,7 @@ class MyLocalizations {
       "login_btn4": "Acceder con mi correo electrónico",
       "terms_and_conditions_txt":
           "Entrando en Mosquito Alert, aceptas nuestros términos y condiciones y nuestra política de privacidad.",
+      "login_soscial_failed_txt": "Something went wrong. Please check your account and try again.",
 
       //Login - email
       "enter_email_title": " Introduce tu correo electrónico",
@@ -114,6 +115,7 @@ class MyLocalizations {
       "open_web_txt": "Abrir página web...",
       "more_info_app_txt": "Más información acerca de Mosquito Alert",
       "our_partners_txt": "Nuestros partners y colaboradores",
+      "logout_txt": "Cerrar sesión",
 
       //My reports page
       "your_reports_txt": "Tus reportes",

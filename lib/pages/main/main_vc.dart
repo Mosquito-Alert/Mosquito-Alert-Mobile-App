@@ -90,7 +90,7 @@ class _MainVCState extends State<MainVC> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Style.title(
-                                    " ${MyLocalizations.of(context, "welcome_text")} Alex.",
+                                    " ${MyLocalizations.of(context, "welcome_text")} ${UserManager.userName}.",
                                     fontSize: 18),
                                 SizedBox(
                                   height: 5,
