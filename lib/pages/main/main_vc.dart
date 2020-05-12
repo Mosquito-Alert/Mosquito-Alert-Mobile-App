@@ -27,6 +27,7 @@ class _MainVCState extends State<MainVC> {
     super.initState();
     UserManager.startFirstTime(context);
     _getLastLocation();
+    UserManager.fetchUser();
   }
 
   _getLastLocation() async {
@@ -90,7 +91,9 @@ class _MainVCState extends State<MainVC> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Style.title(
-                                    " ${MyLocalizations.of(context, "welcome_text")} ${UserManager.userName}.",
+                                    UserManager.user.displayName != null
+                                        ? " ${MyLocalizations.of(context, "welcome_text")}, ${UserManager.user.displayName}."
+                                        : " ${MyLocalizations.of(context, "welcome_text")}",
                                     fontSize: 18),
                                 SizedBox(
                                   height: 5,

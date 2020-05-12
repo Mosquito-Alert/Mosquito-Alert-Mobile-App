@@ -148,11 +148,13 @@ class _LoginMainPageState extends State<LoginMainPage> {
   _googleSignIn() async {
     //TODO: add loading
     ApiSingleton().sigInWithGoogle().then((FirebaseUser user) async {
-      //TODO: save token
       print(user);
       if (user != null) {
+        UserManager.user = user;
         await UserManager.setUserName(user.displayName);
-        var createProfile = ApiSingleton().createProfile(user.uid);
+        await UserManager.setFrirebaseId(user.uid);
+
+        var createProfile = await ApiSingleton().createProfile(user.uid);
 
         if (createProfile == true) {}
         Navigator.push(

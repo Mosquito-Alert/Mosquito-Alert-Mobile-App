@@ -75,15 +75,20 @@ class ApiSingleton {
     }
   }
 
-  Future<bool> singUp(String email, String password) async {
+  Future<dynamic> singUp(
+      String email, String password, String firstName, String lastName) async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     ))
         .user;
     if (user != null) {
+      UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+      userUpdateInfo.displayName = '$firstName $lastName';
+      user.updateProfile(userUpdateInfo);
+
       print(user);
-      return true;
+      return user;
     } else {
       return false;
     }
@@ -115,7 +120,7 @@ class ApiSingleton {
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    print("signed in " + user.displayName);
+    // print("signed in " + user.displayName);
 
     _googleSignIn.signOut();
     return user;
@@ -140,8 +145,12 @@ class ApiSingleton {
   }
 
   Future<bool> logout() async {
-    await _auth.signOut();
-    UserManager.signOut();
+    _auth.signOut().then((res) {
+      return true;
+    }).catchError((e) {
+      print(e);
+      return false;
+    });
   }
 
   Future<dynamic> createProfile(String firebaseId) async {

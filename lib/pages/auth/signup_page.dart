@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class SignupPage extends StatefulWidget {
@@ -12,6 +14,8 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -66,14 +70,14 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             Style.textField(
                                 MyLocalizations.of(context, "first_name_txt"),
-                                _passwordController,
+                                _firstNameController,
                                 context),
                             SizedBox(
                               height: 10,
                             ),
                             Style.textField(
                                 MyLocalizations.of(context, "last_name_txt"),
-                                _passwordController,
+                                _lastNameController,
                                 context),
                             SizedBox(
                               height: 10,
@@ -118,9 +122,20 @@ class _SignupPageState extends State<SignupPage> {
   _signUp() async {
     //TODO: add loader
     ApiSingleton()
-        .singUp(_emailController.text, _passwordController.text)
-        .then((user) {
-      //TODO: save token
+        .singUp(_emailController.text, _passwordController.text,
+            _firstNameController.text, _lastNameController.text)
+        .then((user) async {
+      UserManager.user = user;
+      await UserManager.setUserName(user.displayName);
+      await UserManager.setFrirebaseId(user.uid);
+
+      var createProfile = await ApiSingleton().createProfile(user.uid);
+
+      if (createProfile == true) {}
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainVC()),
+      );
       print(user);
     }).catchError((e) {
       //TODO: show alert

@@ -33,15 +33,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   SizedBox(
                     height: 35,
                   ),
-                  UserManager.userName != null
+                  UserManager.user != null
                       ? SettingsMenuWidget(
                           MyLocalizations.of(context, "logout_txt"), () {
                           Utils.showAlertYesNo("Cerrar sesión", "text", () {
-                            ApiSingleton().logout();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainVC()));
+                            _signOut();
                           }, context);
                         })
                       : Column(
@@ -105,5 +101,15 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  _signOut() async {
+    ApiSingleton().logout().then((res) {
+      UserManager.signOut();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => MainVC()));
+    }).catchError((e) {
+      print(e);
+    });
   }
 }

@@ -56,7 +56,7 @@ class MyLocalizations {
       "password_txt": "Contraseña",
 
       //Main page
-      "welcome_text": "Bienvenido de nuevo, ",
+      "welcome_text": "Bienvenido de nuevo",
       "what_to_do_txt": "¿Que quieres hacer?",
       "more_info_points_txt":
           "Haz click aquí para conocer más acerca esta puntuación.",
