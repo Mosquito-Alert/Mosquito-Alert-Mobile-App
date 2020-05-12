@@ -22,12 +22,15 @@ class MainVC extends StatefulWidget {
 }
 
 class _MainVCState extends State<MainVC> {
+  String userName;
   @override
   void initState() {
+    UserManager.fetchUser();
+
     super.initState();
     UserManager.startFirstTime(context);
     _getLastLocation();
-    UserManager.fetchUser();
+    userName = UserManager.user.displayName;
   }
 
   _getLastLocation() async {
@@ -91,8 +94,8 @@ class _MainVCState extends State<MainVC> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Style.title(
-                                    UserManager.user.displayName != null
-                                        ? " ${MyLocalizations.of(context, "welcome_text")}, ${UserManager.user.displayName}."
+                                    userName != null
+                                        ? " ${MyLocalizations.of(context, "welcome_text")}, $userName."
                                         : " ${MyLocalizations.of(context, "welcome_text")}",
                                     fontSize: 18),
                                 SizedBox(

@@ -18,7 +18,7 @@ class ReportsList extends StatelessWidget {
     return ListView.builder(
       itemCount: reports.length,
       itemBuilder: (context, index) {
-        if (reports[index].user == currentUser) {
+        if (UserManager.profileUUIDs.any((id) => id == reports[index].user)) {
           return GestureDetector(
             onTap: () {
               onTap(context, reports[index]);

@@ -94,10 +94,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
     currentUser = await UserManager.getUUID();
 
-    // setState(() {
-    //   _reports = list;
-    // });
-
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice != "missing" &&
@@ -176,7 +172,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   BitmapDescriptor setIconMarker(type, user) {
-    if (currentUser == user) {
+    if (UserManager.profileUUIDs.any((id) => id == user)) {
       switch (type) {
         case "adult":
           return iconAdultYours;

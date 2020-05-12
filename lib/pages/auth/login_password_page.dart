@@ -116,6 +116,7 @@ class _LoginPasswordState extends State<LoginPassword> {
         .then((FirebaseUser user) {
       //TODO: save token
       print(user);
+      ApiSingleton().createProfile(user.uid);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainVC()),

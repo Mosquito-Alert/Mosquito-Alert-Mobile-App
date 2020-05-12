@@ -120,7 +120,6 @@ class ApiSingleton {
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    // print("signed in " + user.displayName);
 
     _googleSignIn.signOut();
     return user;
@@ -357,6 +356,7 @@ class ApiSingleton {
 
         if (allReports == null) {
           allReports = List();
+          UserManager.profileUUIDs = jsonAnswer['user_uuids'];
         }
         for (var item in jsonAnswer['results']) {
           allReports.add(Report.fromJson(item));

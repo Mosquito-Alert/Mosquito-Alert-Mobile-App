@@ -7,6 +7,7 @@ class UserManager {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static FirebaseUser user;
+  static var profileUUIDs;
 
   static Future startFirstTime(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,7 +29,7 @@ class UserManager {
   //set
   static Future<void> setUserName(name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString("userName", name);
+    prefs.setString("userName", name);
   }
 
   static Future<void> setFrirebaseId(id) async {

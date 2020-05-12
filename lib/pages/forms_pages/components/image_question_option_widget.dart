@@ -40,7 +40,7 @@ class ImageQuestionOption extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 gradient: LinearGradient(
-                  colors: [Colors.transparent, Colors.black],
+                  colors: [Colors.transparent, Colors.black87],
                   begin: Alignment.center,
                   end: Alignment.bottomCenter,
                 ),
