@@ -30,7 +30,7 @@ class _MainVCState extends State<MainVC> {
     super.initState();
     UserManager.startFirstTime(context);
     _getLastLocation();
-    userName = UserManager.user.displayName;
+    userName = UserManager.user!= null ? UserManager.user.displayName : 'i';
   }
 
   _getLastLocation() async {

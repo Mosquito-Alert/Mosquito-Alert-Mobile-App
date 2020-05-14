@@ -46,13 +46,16 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       }
       if (Utils.report.responses.any((r) => r.question_id == 5)) {
         //TODO: save responses as markers
+
       }
     }
     super.initState();
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    this.controller = controller;
+    setState(() {
+      this.controller = controller;
+    });
   }
 
   updateMarker(LatLng markerPosition) {
@@ -74,31 +77,32 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   getPosition(type, {context}) async {
-    streamType.add(type);
-    var circle;
     if (type == LocationType.current) {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+
       bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
 
       if (geolocationEnabled) {
-        Position currentPosition = await Geolocator().getCurrentPosition();
+        Geolocator geolocator = Geolocator()
+          ..forceAndroidLocationManager = false;
+        Position currentPosition = await Geolocator()
+            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         print(currentPosition);
         Utils.setCurrentLocation(
             currentPosition.latitude, currentPosition.longitude);
 
-        // circle = Set.from([
-        //   Circle(
-        //       circleId: CircleId('Circle 1'),
-        //       center:
-        //           LatLng(currentPosition.latitude, currentPosition.longitude),
-        //       radius: 100,
-        //       strokeColor: Colors.transparent,
-        //       fillColor: Colors.red.withOpacity(0.1))
-        // ]);
+        controller.moveCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target:
+                    LatLng(currentPosition.latitude, currentPosition.longitude),
+                zoom: 16.0),
+          ),
+        );
 
-        setState(() {
-          location = currentPosition;
-        });
+        // setState(() {
+        //   location = currentPosition;
+        // });
       } else {
         Utils.showAlert(
             MyLocalizations.of(context, "location_not_active_title"),
@@ -109,6 +113,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         streamType.add(LocationType.selected);
       }
     }
+    streamType.add(type);
   }
 
   @override
@@ -183,11 +188,12 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               child: GoogleMap(
                                 onMapCreated: _onMapCreated,
                                 rotateGesturesEnabled: false,
+                                myLocationButtonEnabled: false,
+                                zoomControlsEnabled: false,
                                 myLocationEnabled:
                                     snapshot.data == LocationType.current
                                         ? true
                                         : false,
-                                myLocationButtonEnabled: false,
                                 minMaxZoomPreference:
                                     MinMaxZoomPreference(6, 18),
                                 mapToolbarEnabled: false,

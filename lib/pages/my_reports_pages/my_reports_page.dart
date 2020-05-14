@@ -30,8 +30,6 @@ class MyReportsPage extends StatefulWidget {
 class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> _reports;
 
-  String currentUser;
-
   Position location;
 
   BitmapDescriptor iconAdultYours;
@@ -91,8 +89,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   _getData() async {
     List<Report> list = await ApiSingleton()
         .getReportsList(location.latitude, location.longitude, page: 1);
-
-    currentUser = await UserManager.getUUID();
 
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
@@ -235,6 +231,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             return Stack(
                               alignment: Alignment.bottomLeft,
                               children: <Widget>[
+                               
                                 GoogleMap(
                                   onMapCreated: _onMapCreated,
                                   mapType: MapType.normal,
@@ -244,12 +241,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         ? LatLng(location.latitude,
                                             location.longitude)
                                         : LatLng(41.1619686, 0.4735487),
-                                    zoom: 16.0,
+                                    zoom: 14.0,
                                   ),
                                   markers: snapshot.data != null
                                       ? _createMarkers(context)
                                       : null,
                                 ),
+                                
                                 Style.button("Leyenda", () {
                                   _infoBottom(context);
                                 })
@@ -259,7 +257,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
                           if (index == 1.0)
                             return ReportsList(
-                                snapshot.data, _reportBottomSheet, currentUser);
+                                snapshot.data, _reportBottomSheet);
                         });
                   },
                 )),
@@ -447,16 +445,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   Container(
                     height: 120,
                     width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      //   child: GoogleMap(
-                      //     rotateGesturesEnabled: false,
-                      //     mapToolbarEnabled: false,
-                      //     scrollGesturesEnabled: false,
-                      //     onMapCreated: _onMiniMapCreated,
-                      //     initialCameraPosition: _getPosition(report),
-                      //     // markers: _getMarker(report),
-                      //   ),
+                    child: Stack(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: GoogleMap(
+                            rotateGesturesEnabled: false,
+                            mapToolbarEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomControlsEnabled: false,
+                            zoomGesturesEnabled: false,
+                            onMapCreated: _onMiniMapCreated,
+                            initialCameraPosition: _getPosition(report),
+                            markers: _getMarker(report),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   //     : Container(),

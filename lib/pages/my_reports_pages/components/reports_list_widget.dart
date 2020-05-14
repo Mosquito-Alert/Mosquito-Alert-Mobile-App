@@ -9,9 +9,8 @@ import 'package:intl/intl.dart';
 class ReportsList extends StatelessWidget {
   final Function onTap;
   final List<Report> reports;
-  final String currentUser;
 
-  ReportsList(this.reports, this.onTap, this.currentUser);
+  ReportsList(this.reports, this.onTap);
 
   @override
   Widget build(BuildContext context) {

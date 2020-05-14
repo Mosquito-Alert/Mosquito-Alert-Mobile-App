@@ -23,7 +23,7 @@ class UserManager {
 
   static fetchUser() async {
     user = await _auth.currentUser();
-    print(user);
+    // print(user);
   }
 
   //set
