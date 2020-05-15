@@ -81,6 +81,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
 
       bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
+      streamType.add(type);
 
       if (geolocationEnabled) {
         Geolocator geolocator = Geolocator()
@@ -113,7 +114,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         streamType.add(LocationType.selected);
       }
     }
-    streamType.add(type);
   }
 
   @override

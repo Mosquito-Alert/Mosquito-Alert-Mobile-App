@@ -144,7 +144,7 @@ class _MainVCState extends State<MainVC> {
                           ),
                           child: Center(
                               child: AutoSizeText(
-                            '188',
+                            '88888',
                             maxLines: 1,
                             maxFontSize: 26,
                             minFontSize: 16,

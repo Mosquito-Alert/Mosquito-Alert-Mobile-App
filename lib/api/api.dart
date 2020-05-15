@@ -21,7 +21,7 @@ class ApiSingleton {
   static const users = '/users/';
   static const profile = '/profile/';
   static const newProfile = '/profile/new/';
-  static const userScore = '/user_score';
+  static const userScore = '/user_score/';
 
   //Reports
   static const reports = '/reports/';
@@ -179,7 +179,7 @@ class ApiSingleton {
       String userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$userScore?user_id=$userUUID',
+        '$userScore?user=$userUUID',
         headers: headers,
       );
 

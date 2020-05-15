@@ -215,8 +215,8 @@ class Utils {
       });
       closeSession();
       resetReport();
-      imagePath = [];
     }
+    
   }
 
   static Future<void> deleteReport(r) async {
