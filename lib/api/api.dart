@@ -160,7 +160,8 @@ class ApiSingleton {
       final response = await http.post(
           '$serverUrl$newProfile?fbt=$firebaseId&usr=$userUUID',
           headers: headers);
-      print(response);
+
+      // print(response);
 
       if (response.statusCode != 200) {
         print(

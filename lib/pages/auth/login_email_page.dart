@@ -33,80 +33,84 @@ class _LoginEmailState extends State<LoginEmail> {
             elevation: 0,
             centerTitle: true,
             backgroundColor: Colors.transparent,
-            title: SvgPicture.asset('assets/img/logo_inverse.svg', width: 200),
+            title: Image.asset('assets/img/ic_logo.png', width: 200),
           ),
           backgroundColor: Colors.transparent,
-          // appBar: AppBar(
-          //   backgroundColor: Colors.transparent,
-          //   title: SvgPicture.asset('assets/img/logo_inverse.svg'),
-          // ),
           body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 80,
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Style.titleMedium(
-                            MyLocalizations.of(context, "enter_email_title")),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Style.textField(
-                            MyLocalizations.of(context, "email_txt"),
-                            _emailController,
-                            context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                            width: double.infinity,
-                            child: Style.button(
-                                MyLocalizations.of(context, "access_txt"), () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoginPassword(_emailController.text)),
-                              );
-                            })),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Divider(),
-                        Container(
-                          width: double.infinity,
-                          child: Style.noBgButton(
-                              MyLocalizations.of(
-                                  context, "register_txt"), () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignupPage()),
-                            );
-                          }, textColor: Colors.black),
-                        ),
-                      ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: ClampingScrollPhysics(),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 80,
                     ),
-                  ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Style.titleMedium(MyLocalizations.of(
+                                context, "enter_email_title")),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Style.textField(
+                                MyLocalizations.of(context, "email_txt"),
+                                _emailController,
+                                context),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                                width: double.infinity,
+                                child: Style.button(
+                                    MyLocalizations.of(context, "access_txt"),
+                                    () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPassword(
+                                            _emailController.text)),
+                                  );
+                                })),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Divider(),
+                            Container(
+                              width: double.infinity,
+                              child: Style.noBgButton(
+                                  MyLocalizations.of(context, "register_txt"),
+                                  () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignupPage()),
+                                );
+                              }, textColor: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                          margin: EdgeInsets.all(10.0),
+                          alignment: Alignment.bottomCenter,
+                          child: Style.body(
+                              MyLocalizations.of(
+                                  context, "terms_and_conditions_txt"),
+                              color: Style.greyColor,
+                              textAlign: TextAlign.center)),
+                    )
+                  ],
                 ),
-                Expanded(
-                  child: Container(
-                      margin: EdgeInsets.all(10.0),
-                      alignment: Alignment.bottomCenter,
-                      child: Style.body(
-                          MyLocalizations.of(
-                              context, "terms_and_conditions_txt"),
-                          color: Style.greyColor,
-                          textAlign: TextAlign.center)),
-                )
-              ],
+              ),
             ),
           ),
         ),
