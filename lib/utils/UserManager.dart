@@ -19,11 +19,13 @@ class UserManager {
       prefs.setString("uuid", uuid);
       ApiSingleton().createUser(uuid);
     }
+    fetchUser();
   }
 
   static fetchUser() async {
     user = await _auth.currentUser();
-    // print(user);
+    return user;
+    print(user);
   }
 
   //set

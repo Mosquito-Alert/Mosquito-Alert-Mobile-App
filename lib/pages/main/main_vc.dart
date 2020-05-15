@@ -1,6 +1,8 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -15,8 +17,6 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
-  final Key _mapKey = UniqueKey();
-
   @override
   _MainVCState createState() => _MainVCState();
 }
@@ -25,12 +25,19 @@ class _MainVCState extends State<MainVC> {
   String userName;
   @override
   void initState() {
-    UserManager.fetchUser();
-
     super.initState();
     UserManager.startFirstTime(context);
     _getLastLocation();
-    userName = UserManager.user!= null ? UserManager.user.displayName : 'i';
+    _getData();
+  }
+
+  _getData() async {
+    var user = await UserManager.fetchUser();
+    if (user != null && user.displayName != null) {
+      setState(() {
+        userName = user.displayName;
+      });
+    }
   }
 
   _getLastLocation() async {
@@ -65,7 +72,6 @@ class _MainVCState extends State<MainVC> {
           IconButton(
             icon: Icon(Icons.notifications),
             onPressed: () {
-              // print('jeasld');
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NotificationsPage()),
@@ -137,8 +143,16 @@ class _MainVCState extends State<MainVC> {
                             ),
                           ),
                           child: Center(
-                              child: Style.title('2',
-                                  color: Color(0xFF4B3D04), fontSize: 30)),
+                              child: AutoSizeText(
+                            '188',
+                            maxLines: 1,
+                            maxFontSize: 26,
+                            minFontSize: 16,
+                            style: TextStyle(
+                                color: Color(0xFF4B3D04),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 30),
+                          )),
                         ),
                       ]),
                   Padding(

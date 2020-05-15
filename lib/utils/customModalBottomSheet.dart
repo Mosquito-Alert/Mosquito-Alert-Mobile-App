@@ -18,7 +18,7 @@ class CustomShowModalBottomSheet {
           theme: Theme.of(context, shadowThemeOnly: true),
           barrierLabel:
               MaterialLocalizations.of(context).modalBarrierDismissLabel,
-            dismissible: dismissible,
+          dismissible: dismissible,
         ));
   }
 }
@@ -98,6 +98,10 @@ class _CustomModalBottomSheetState<T>
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         routeLabel = localizations.dialogLabel;
+        break;
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
         break;
     }
 

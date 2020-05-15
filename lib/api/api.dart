@@ -21,6 +21,7 @@ class ApiSingleton {
   static const users = '/users/';
   static const profile = '/profile/';
   static const newProfile = '/profile/new/';
+  static const userScore = '/user_score';
 
   //Reports
   static const reports = '/reports/';
@@ -169,6 +170,28 @@ class ApiSingleton {
       return true;
     } catch (e) {
       print(e.errorMessage);
+    }
+  }
+
+  Future<dynamic> getUserScores() async {
+    try {
+      String userUUID = await UserManager.getUUID();
+
+      final response = await http.get(
+        '$userScore?user_id=$userUUID',
+        headers: headers,
+      );
+
+      print(response);
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return ApiResponse.fromJson(json.decode(response.body));
+      }
+
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

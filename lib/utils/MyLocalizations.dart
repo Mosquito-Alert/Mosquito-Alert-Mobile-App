@@ -118,13 +118,11 @@ class MyLocalizations {
       "logout_txt": "Cerrar sesión",
 
       //My reports page
-      "your_reports_txt": "Tus reportes",
       "map_txt": "Mapa",
       "list_txt": "Lista",
       "report_of_the_day_txt": "Reporte del día ",
       "location_txt": "Ubicación aproximada: ",
       "at_time_txt": "A las: ",
-      "report_of_the_day_txt": "Reporte del día ",
       "registered_location_txt": "Ubicación registrada",
       "exact_time_register_txt": "Hora exacta del regitro",
       "reported_images_txt": "Imagenes reportadas",
@@ -132,7 +130,13 @@ class MyLocalizations {
       "when_biting_txt": "¿Cuando te ha picado?",
       "which_situation_txt": "¿En qué situación?",
       "delete_report_title": "¿Seguro que quieres eliminar el reporte?",
-      "delete_report_txt": "Esta acción no se puede deshacer."
+      "delete_report_txt": "Esta acción no se puede deshacer.",
+      "your_reports_bites_txt": "Tus reportes de picadas", 
+      "your_reports_breeding_txt": "Tus reportes de lugares de cría",
+      "your_reports_adults_txt": "Tus reportes de adultos", 
+      "other_reports_bites_txt": "Reportes de picadas", 
+      "other_reports_breeding_txt": "Reportes de lugares de cría",
+      "other_reports_adults_txt": "Reportes de adultos", 
     },
   };
   String translate(key) {

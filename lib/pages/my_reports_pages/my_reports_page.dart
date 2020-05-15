@@ -154,8 +154,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
           markerId: MarkerId(_reports[i].report_id),
           position: position,
           onTap: () {
-            // mapController
-            //     .animateCamera(CameraUpdate.newLatLngZoom(position, 18.0));
             _reportBottomSheet(ctx, _reports[i]);
           },
           icon: icon,
@@ -226,12 +224,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == 0.0) {
-                            // return MyReportsMap(markers);
-
                             return Stack(
                               alignment: Alignment.bottomLeft,
                               children: <Widget>[
-                               
                                 GoogleMap(
                                   onMapCreated: _onMapCreated,
                                   mapType: MapType.normal,
@@ -247,7 +242,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                       ? _createMarkers(context)
                                       : null,
                                 ),
-                                
                                 Style.button("Leyenda", () {
                                   _infoBottom(context);
                                 })
@@ -354,7 +348,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_bites_yours.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "your_reports_bites_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -363,7 +359,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_breeding_yours.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "your_reports_breeding_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -372,7 +370,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_adults_yours.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "your_reports_adults_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -383,7 +383,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_bites_other.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "other_reports_bites_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -392,7 +394,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_breeding_other.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "other_reports_breeding_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -401,7 +405,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_adults_other.svg'),
-                          Style.body("Tus reportes de picadas",
+                          Style.body(
+                              MyLocalizations.of(
+                                  context, "other_reports_adults_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
@@ -434,14 +440,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
                     height: 15,
                   ),
-                  // report.location_choice != 'missing'
-                  //     ?
                   Container(
                     height: 120,
                     width: double.infinity,
@@ -463,7 +466,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       ],
                     ),
                   ),
-                  //     : Container(),
                   SizedBox(
                     height: 20,
                   ),

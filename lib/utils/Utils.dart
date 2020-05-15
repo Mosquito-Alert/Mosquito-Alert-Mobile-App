@@ -201,7 +201,6 @@ class Utils {
   }
 
   static Future<void> createReport() async {
-    List<Map> reportImages = [];
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
       ApiSingleton().createReport(report);
@@ -210,7 +209,6 @@ class Utils {
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
-      print(reportsList);
 
       reportsList.forEach((r) {
         ApiSingleton().createReport(r);
