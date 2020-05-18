@@ -13,6 +13,152 @@ class BitingForm extends StatefulWidget {
 }
 
 class _BitingFormState extends State<BitingForm> {
+  List<Map> displayQuestions = [
+    // {
+    //   "question": {
+    //     "id": 1,
+    //     "text": {
+    //       "en": "How many bites did you get?",
+    //       "ca": "Quantes vegades t'han picat?"
+    //     }
+    //   },
+    //   "answers": [
+    //     //Number of bites - value equals TOTAL number of bites
+    //     {
+    //       "id": 11,
+    //       "text": {"en": "", "ca": ""}
+    //     }
+    //   ]
+    // },
+    // {
+    //   "question": {
+    //     "id": 2,
+    //     "text": {"en": "Where have you been bitten?", "ca": "On t'han picat?"}
+    //   },
+    //   "answers": [
+    //     //Bites by body are - value equals number of bites in each area, must be = to total number of bites
+    //     {
+    //       "id": 21,
+    //       "text": {"en": "Head", "ca": "Cap"}
+    //     },
+    //     {
+    //       "id": 22,
+    //       "text": {"en": "Left arm", "ca": "Braç esquerre"}
+    //     },
+    //     {
+    //       "id": 23,
+    //       "text": {"en": "Right arm", "ca": "Braç dret"}
+    //     },
+    //     {
+    //       "id": 24,
+    //       "text": {"en": "Chest", "ca": "Tronc"}
+    //     },
+    //     {
+    //       "id": 25,
+    //       "text": {"en": "Left leg", "ca": "Cama esquerra"}
+    //     },
+    //     {
+    //       "id": 26,
+    //       "text": {"en": "Right leg", "ca": "Cama dreta"}
+    //     }
+    //   ]
+    // },
+    {
+      "question": {
+        "id": 3,
+        "text": {
+          "en": "At what time of the day were you bitten?",
+          "ca": "A quina hora et van picar?",
+          "es": "¿A que hora te picaron?"
+        }
+      },
+      "answers": [
+        {
+          "id": 31,
+          "text": {
+            "en": "Sunrise",
+            "ca": "Sortida de sol",
+            "es": "Salida del sol",
+          }
+        },
+        {
+          "id": 32,
+          "text": {
+            "en": "Mid-day",
+            "ca": "Migdia",
+            "es": "Mediodía",
+          }
+        },
+        {
+          "id": 33,
+          "text": {
+            "en": "Sunset",
+            "ca": "Posta de sol",
+            "es": 'Puesta de sol',
+          }
+        },
+        {
+          "id": 34,
+          "text": {
+            "en": "Night",
+            "ca": "Nit",
+            "es": "Noche",
+          }
+        },
+        // {
+        //   "id": 35,
+        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        // }
+      ]
+    },
+    {
+      "question": {
+        "id": 4,
+        "text": {
+          "en": "Were you indoors or outdoors when you were bitten?",
+          "ca": "Estaves a dins o a fora quan et van picar?",
+          "es": "¿Estabas en el interior o en el exterior cuando te picaron?"
+        }
+      },
+      "answers": [
+        {
+          "id": 41,
+          "text": {
+            "en": "Indoors",
+            "ca": "A dins",
+            "es": "Interior",
+          }
+        },
+        {
+          "id": 42,
+          "text": {
+            "en": "Outdoors",
+            "ca": "A fora",
+            "es": "Exterior",
+          }
+        },
+        // {
+        //   "id": 35,
+        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        // }
+      ]
+    },
+    // {
+    //   "question": {
+    //     "id": 5,
+    //     "text": {
+    //       "en": "Where were you when you were bitten?",
+    //       "ca": "On estaves quan et van picar?"
+    //     }
+    //   },
+    //   "answers": [
+    //     {
+    //       "id": 51, //Location - value equals WKT of point
+    //       "text": {"en": "", "ca": ""}
+    //     }
+    //   ]
+    // }
+  ];
   List<Question> questions;
 
   @override
@@ -227,137 +373,72 @@ class _BitingFormState extends State<BitingForm> {
                   fontSize: 10,
                 ),
               ),
-              SizedBox(
-                height: 20,
+
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: displayQuestions.length,
+                itemBuilder: (context, i) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Style.titleMedium(
+                          displayQuestions[i]['question']['text']['es'],
+                          fontSize: 16),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        // height: 450,
+                        child: GridView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: displayQuestions[i]['answers'].length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 5 / 2,
+                              // crossAxisSpacing: 10,
+                            ),
+                            itemBuilder: (context, index) {
+                              String answerTxt = displayQuestions[i]['answers']
+                                  [index]['text']['ca'];
+                              String questionTxt =
+                                  displayQuestions[i]['question']['text']['es'];
+                              int questionId =
+                                  displayQuestions[i]['question']['id'];
+                              int answerId =
+                                  displayQuestions[i]['answers'][index]['id'];
+                              return Container(
+                                padding: EdgeInsets.all(5),
+                                child: InkWell(
+                                  onTap: _getDisabled(answerId, questionId)
+                                      ? null
+                                      : () {
+                                          addToList(questionTxt, answerTxt,
+                                              question_id: questionId,
+                                              answer_id: answerId);
+                                        },
+                                  child: SmallQuestionOption(
+                                    answerTxt,
+                                    selected: questions
+                                        .any((q) => q.answer_id == answerId),
+                                    index: getIndexAnswer(answerId),
+                                    disabled:
+                                        _getDisabled(answerId, questionId),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                      //TOODO: Question "nolose"
+                    ],
+                  );
+                },
               ),
-              Style.titleMedium('¿Cuándo te ha picado el mosquito?',
-                  fontSize: 16),
-              SizedBox(
-                height: 10,
-              ),
-              Row(children: <Widget>[
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(31, 3)
-                        ? null
-                        : () {
-                            addToList('cuando pico', "amanecer",
-                                question_id: 3, answer_id: 31);
-                          },
-                    child: SmallQuestionOption(
-                      'Amanecer',
-                      selected: questions.any((q) => q.answer_id == 31),
-                      index: getIndexAnswer(31),
-                      disabled: _getDisabled(31, 3),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(8, 3)
-                        ? null
-                        : () {
-                            addToList('cuando pico', "Mediodia",
-                                question_id: 3, answer_id: 32);
-                          },
-                    child: SmallQuestionOption(
-                      'Mediodía',
-                      selected: questions.any((q) => q.answer_id == 32),
-                      index: getIndexAnswer(32),
-                      disabled: _getDisabled(32, 3),
-                    ),
-                  ),
-                ),
-              ]),
-              SizedBox(
-                height: 10,
-              ),
-              Row(children: <Widget>[
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(33, 3)
-                        ? null
-                        : () {
-                            addToList('cuando pico', "atardeser",
-                                question_id: 3, answer_id: 33);
-                          },
-                    child: SmallQuestionOption(
-                      'Atardecer',
-                      selected: questions.any((q) => q.answer_id == 33),
-                      index: getIndexAnswer(33),
-                      disabled: _getDisabled(33, 3),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(34, 3)
-                        ? null
-                        : () {
-                            addToList('cuando pico', 'noshe',
-                                question_id: 3, answer_id: 34);
-                          },
-                    child: SmallQuestionOption(
-                      'Noche',
-                      selected: questions.any((q) => q.answer_id == 34),
-                      index: getIndexAnswer(34),
-                      disabled: _getDisabled(34, 3),
-                    ),
-                  ),
-                ),
-              ]),
-              SizedBox(
-                height: 20,
-              ),
-              Style.titleMedium(
-                  '¿Estabas en interior o exterior cuando te picó el mosquito?',
-                  fontSize: 16),
-              SizedBox(
-                height: 10,
-              ),
-              Row(children: <Widget>[
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(41, 4)
-                        ? null
-                        : () {
-                            addToList('Itnterior o exterior?', "Interior",
-                                question_id: 4, answer_id: 41);
-                          },
-                    child: SmallQuestionOption(
-                      'Interior',
-                      selected: questions.any((q) => q.answer_id == 41),
-                      index: getIndexAnswer(41),
-                      disabled: _getDisabled(41, 4),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: _getDisabled(42, 4)
-                        ? null
-                        : () {
-                            addToList('Itnterior o exterior?', "Exterior",
-                                question_id: 4, answer_id: 42);
-                          },
-                    child: SmallQuestionOption(
-                      'Exterior',
-                      selected: questions.any((q) => q.answer_id == 42),
-                      index: getIndexAnswer(42),
-                      disabled: _getDisabled(42, 4),
-                    ),
-                  ),
-                ),
-              ]),
               SizedBox(
                 height: 15,
               ),
