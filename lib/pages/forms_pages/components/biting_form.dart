@@ -238,14 +238,17 @@ class _BitingFormState extends State<BitingForm> {
               Row(children: <Widget>[
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('cuando pico', "amanecer",
-                          question_id: 3, answer_id: 7);
-                    },
+                    onTap: _getDisabled(31, 3)
+                        ? null
+                        : () {
+                            addToList('cuando pico', "amanecer",
+                                question_id: 3, answer_id: 31);
+                          },
                     child: SmallQuestionOption(
                       'Amanecer',
-                      selected: questions.any((q) => q.answer_id == 7),
-                      index: getIndexAnswer(7),
+                      selected: questions.any((q) => q.answer_id == 31),
+                      index: getIndexAnswer(31),
+                      disabled: _getDisabled(31, 3),
                     ),
                   ),
                 ),
@@ -254,14 +257,17 @@ class _BitingFormState extends State<BitingForm> {
                 ),
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('cuando pico', "Mediodia",
-                          question_id: 3, answer_id: 8);
-                    },
+                    onTap: _getDisabled(8, 3)
+                        ? null
+                        : () {
+                            addToList('cuando pico', "Mediodia",
+                                question_id: 3, answer_id: 32);
+                          },
                     child: SmallQuestionOption(
                       'Mediodía',
-                      selected: questions.any((q) => q.answer_id == 8),
-                      index: getIndexAnswer(8),
+                      selected: questions.any((q) => q.answer_id == 32),
+                      index: getIndexAnswer(32),
+                      disabled: _getDisabled(32, 3),
                     ),
                   ),
                 ),
@@ -272,14 +278,17 @@ class _BitingFormState extends State<BitingForm> {
               Row(children: <Widget>[
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('cuando pico', "atardeser",
-                          question_id: 3, answer_id: 9);
-                    },
+                    onTap: _getDisabled(33, 3)
+                        ? null
+                        : () {
+                            addToList('cuando pico', "atardeser",
+                                question_id: 3, answer_id: 33);
+                          },
                     child: SmallQuestionOption(
                       'Atardecer',
-                      selected: questions.any((q) => q.answer_id == 9),
-                      index: getIndexAnswer(9),
+                      selected: questions.any((q) => q.answer_id == 33),
+                      index: getIndexAnswer(33),
+                      disabled: _getDisabled(33, 3),
                     ),
                   ),
                 ),
@@ -288,14 +297,17 @@ class _BitingFormState extends State<BitingForm> {
                 ),
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('cuando pico', 'noshe',
-                          question_id: 3, answer_id: 10);
-                    },
+                    onTap: _getDisabled(34, 3)
+                        ? null
+                        : () {
+                            addToList('cuando pico', 'noshe',
+                                question_id: 3, answer_id: 34);
+                          },
                     child: SmallQuestionOption(
                       'Noche',
-                      selected: questions.any((q) => q.answer_id == 10),
-                      index: getIndexAnswer(10),
+                      selected: questions.any((q) => q.answer_id == 34),
+                      index: getIndexAnswer(34),
+                      disabled: _getDisabled(34, 3),
                     ),
                   ),
                 ),
@@ -312,14 +324,17 @@ class _BitingFormState extends State<BitingForm> {
               Row(children: <Widget>[
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('Itnterior o exterior?', "Interior",
-                          question_id: 4, answer_id: 41);
-                    },
+                    onTap: _getDisabled(41, 4)
+                        ? null
+                        : () {
+                            addToList('Itnterior o exterior?', "Interior",
+                                question_id: 4, answer_id: 41);
+                          },
                     child: SmallQuestionOption(
                       'Interior',
                       selected: questions.any((q) => q.answer_id == 41),
                       index: getIndexAnswer(41),
+                      disabled: _getDisabled(41, 4),
                     ),
                   ),
                 ),
@@ -328,14 +343,17 @@ class _BitingFormState extends State<BitingForm> {
                 ),
                 Expanded(
                   child: InkWell(
-                    onTap: () {
-                      addToList('Itnterior o exterior?', "Exterior",
-                          question_id: 4, answer_id: 42);
-                    },
+                    onTap: _getDisabled(42, 4)
+                        ? null
+                        : () {
+                            addToList('Itnterior o exterior?', "Exterior",
+                                question_id: 4, answer_id: 42);
+                          },
                     child: SmallQuestionOption(
                       'Exterior',
                       selected: questions.any((q) => q.answer_id == 42),
                       index: getIndexAnswer(42),
+                      disabled: _getDisabled(42, 4),
                     ),
                   ),
                 ),
@@ -380,6 +398,26 @@ class _BitingFormState extends State<BitingForm> {
         ),
       ),
     );
+  }
+
+  bool _getDisabled(int answerId, int questionId) {
+    if (questions.isEmpty) {
+      return false;
+    }
+
+    int index = questions.indexWhere((q) => q.question_id == 1);
+    int totalAnswers =
+        index != -1 ? int.parse(questions[index].answer_value) : 0;
+
+    int currentValues = 0;
+
+    questions.forEach((q) {
+      if (q.question_id == questionId) {
+        currentValues = currentValues + 1;
+      }
+    });
+
+    return currentValues >= totalAnswers;
   }
 
   String getIndexBody(int answer_id) {
