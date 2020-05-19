@@ -5,6 +5,10 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class QuestionsBreedingForm extends StatefulWidget {
+  final Map displayQuestion;
+
+  QuestionsBreedingForm(this.displayQuestion);
+
   @override
   _QuestionsBreedingFormState createState() => _QuestionsBreedingFormState();
 }
@@ -16,11 +20,12 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
   void initState() {
     super.initState();
     question = new Question(
-      question: '¿El nido tiene agua?',
-      question_id: 8,
+      question: widget.displayQuestion['question']['text']['es'],
+      question_id: widget.displayQuestion['question']['id'],
     );
     if (Utils.report != null) {
-      int index = Utils.report.responses.indexWhere((q) => q.question_id == 8);
+      int index = Utils.report.responses.indexWhere(
+          (q) => q.question_id == widget.displayQuestion['question']['id']);
       if (index != -1) {
         question.answer = Utils.report.responses[index].answer;
         question.answer_id = Utils.report.responses[index].answer_id;
@@ -39,33 +44,36 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
             SizedBox(
               height: 35,
             ),
-            Style.title('¿El nido tiene agua?'),
+            Style.title(widget.displayQuestion['question']['text']['es']),
             SizedBox(
               height: 30,
             ),
-            Row(children: <Widget>[
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        addQuestion('Tiene agua', 81);
-                      },
-                      child: SmallQuestionOption(
-                        'Tiene agua',
-                        selected: question.answer_id == 81,
-                      ))),
-              SizedBox(
-                width: 10,
+            GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.displayQuestion['answers'].length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 5 / 2,
+                // crossAxisSpacing: 10,
               ),
-              Expanded(
+              itemBuilder: (context, index) {
+                String text =
+                    widget.displayQuestion['answers'][index]['text']['es'];
+                int id = widget.displayQuestion['answers'][index]['id'];
+                return Container(
+                  padding: EdgeInsets.all(5),
                   child: GestureDetector(
                       onTap: () {
-                        addQuestion('No tiene agua', 82);
+                        addQuestion(text, id);
                       },
                       child: SmallQuestionOption(
-                        'No tiene agua',
-                        selected: question.answer_id == 82,
-                      ))),
-            ]),
+                        text,
+                        selected: question.answer_id == id,
+                      )),
+                );
+              },
+            ),
           ],
         ),
       ),

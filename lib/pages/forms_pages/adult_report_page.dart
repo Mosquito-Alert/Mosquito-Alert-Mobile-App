@@ -25,6 +25,110 @@ class _AdultReportPageState extends State<AdultReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
 
+  List<Map> displayQuestions = [
+    {
+      "question": {
+        "id": 6,
+        "text": {
+          "en": "What kind of mosquito do you think it is?",
+          "ca": "Quin tipus de mosquit creus que és?"
+        }
+      },
+      "answers": [
+        {
+          "id": 61,
+          "text": {"en": "Invasive Aedes", "ca": "Aedes Invasiu"}
+        },
+        {
+          "id": 62,
+          "text": {"en": "Common mosquito", "ca": "Mosquit comú"}
+        },
+        {
+          "id": 63,
+          "text": {"en": "Other", "ca": "Altres"}
+        }
+      ]
+    },
+    {
+      "question": {
+        "id": 7,
+        "text": {
+          "en": "How does your mosquito look?",
+          "ca": "Quin aspecte té el teu mosquit?"
+        }
+      },
+      "answers": [
+        {
+          "id": 711,
+          "text": {"en": "Thorax 1", "ca": "Tòrax 1"}
+        },
+        {
+          "id": 712,
+          "text": {"en": "Thorax 2", "ca": "Tòrax 2"}
+        },
+        {
+          "id": 713,
+          "text": {"en": "Thorax 3", "ca": "Tòrax 3"}
+        },
+        {
+          "id": 714,
+          "text": {"en": "Thorax 4", "ca": "Tòrax 4"}
+        },
+        {
+          "id": 721,
+          "text": {"en": "Abdomen 1", "ca": "Abdomen 1"}
+        },
+        {
+          "id": 722,
+          "text": {"en": "Abdomen 2", "ca": "Abdomen 2"}
+        },
+        {
+          "id": 723,
+          "text": {"en": "Abdomen 3", "ca": "Abdomen 3"}
+        },
+        {
+          "id": 724,
+          "text": {"en": "Abdomen 4", "ca": "Abdomen 4"}
+        },
+        {
+          "id": 731,
+          "text": {"en": "3d leg 1", "ca": "3a cama 1"}
+        },
+        {
+          "id": 732,
+          "text": {"en": "3d leg 2", "ca": "3a cama 2"}
+        },
+        {
+          "id": 733,
+          "text": {"en": "3d leg 3", "ca": "3a cama 3"}
+        },
+        {
+          "id": 734,
+          "text": {"en": "3d leg 4", "ca": "3a cama 4"}
+        }
+      ]
+    },
+    {
+      "question": {
+        "id": 8,
+        "text": {
+          "en": "Did this mosquito bite you?",
+          "ca": "T'ha picat el mosquit?"
+        }
+      },
+      "answers": [
+        {
+          "id": 81,
+          "text": {"en": "No", "ca": "No"}
+        },
+        {
+          "id": 35,
+          "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        }
+      ]
+    }
+  ];
+
   bool skip3 = false;
   bool addBiting = false;
   String otherReport;
@@ -43,7 +147,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     });
   }
 
-  adBitingdReport() {
+  addBitingReport() {
     setState(() {
       addBiting = !addBiting;
     });
@@ -86,7 +190,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       // TakePicturePage(),
       MosquitoPartsForm(),
       BitingLocationForm(),
-      CouldSeeForm(adBitingdReport),
+      CouldSeeForm(addBitingReport, displayQuestions.elementAt(2)),
       AddOtherReportPage(addOtherReport),
     ];
 

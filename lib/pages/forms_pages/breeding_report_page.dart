@@ -7,7 +7,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/public_breeding_site_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
-import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -23,6 +22,73 @@ class BreedingReportPage extends StatefulWidget {
 class _BreedingReportPageState extends State<BreedingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
+
+  List<Map> displayQuestions = [
+    {
+      "question": {
+        "id": 9,
+        "text": {
+          "en": "It's a public or a private location?",
+          "ca": "Estàs a un lloc públic o propietat privada?",
+          "es": "¿Estas en un sitio público o es propiedad privada?",
+        }
+      },
+      "answers": [
+        {
+          "id": 91,
+          "text": {
+            "en": "Public place",
+            "ca": "Lloc públic",
+            "es": "Sitio público"
+          }
+        },
+        {
+          "id": 92,
+          "text": {
+            "en": "Private location",
+            "ca": "Propietat privada",
+            "es": "Propiedad pirvada"
+          }
+        }
+      ]
+    },
+    {
+      "question": {
+        "id": 10,
+        "text": {"en": "Does it have water?", "ca": "Hi ha aigua?", "es": "¿Hay agua?"},
+      },
+      "answers": [
+        {
+          "id": 101,
+          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+        },
+        {
+          "id": 81,
+          "text": {"en": "No", "ca": "No", "es": "No"}
+        }
+      ]
+    },
+    {
+      "question": {
+        "id": 11,
+        "text": {
+          "en": "Have you seen mosquitoes around?",
+          "ca": "Has vist mosquits a la vora?", 
+          "es": "¿Has visto mosquitos alrededor?"
+        }
+      },
+      "answers": [
+        {
+          "id": 101,
+          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+        },
+        {
+          "id": 81,
+          "text": {"en": "No", "ca": "No", "es": "No"}
+        }
+      ]
+    }
+  ];
 
   bool skipReport = false;
   bool addMosquito = false;
@@ -83,11 +149,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      PublicBreedingForm(setSkipReport),
+      PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0)),
       // TakePicturePage(),
-      QuestionsBreedingForm(),
+      QuestionsBreedingForm(displayQuestions.elementAt(1)),
       BitingLocationForm(),
-      CouldSeeForm(addAdultReport),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2)),
       AddOtherReportPage(addOtherReport),
     ];
 

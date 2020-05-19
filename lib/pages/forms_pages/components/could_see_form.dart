@@ -5,8 +5,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class CouldSeeForm extends StatefulWidget {
   final Function addReport;
+  final Map displayQuestion;
 
-  CouldSeeForm(this.addReport);
+  CouldSeeForm(this.addReport, this.displayQuestion);
   @override
   _CouldSeeFormState createState() => _CouldSeeFormState();
 }
@@ -25,42 +26,45 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
             SizedBox(
               height: 35,
             ),
-            Utils.report.type == "adult"
-                ? Style.title('¿El mosquito te ha picado?')
-                : Utils.report.type == "site"
-                    ? Style.title('¿Has visto mosquitos alrededor del nido?')
-                    : Container(),
+            // Utils.report.type == "adult"
+            //     ? Style.title('¿El mosquito te ha picado?')
+            //     : Utils.report.type == "site"
+            //         ? Style.title('¿Has visto mosquitos alrededor del nido?')
+            //         : Container(),
+            Style.title(widget.displayQuestion['question']['text']['es']),
             SizedBox(
               height: 30,
             ),
-            Row(children: <Widget>[
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selected = 'si';
-                        });
-                        widget.addReport();
-                      },
-                      child: SmallQuestionOption(
-                        'Si',
-                        selected: selected == 'si' ? true : false,
-                      ))),
-              SizedBox(
-                width: 10,
+
+            GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.displayQuestion['answers'].length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 5 / 2,
+                // crossAxisSpacing: 10,
               ),
-              Expanded(
+              itemBuilder: (context, index) {
+                String text =
+                    widget.displayQuestion['answers'][index]['text']['es'];
+                int id = widget.displayQuestion['answers'][index]['id'];
+                return Container(
+                  padding: EdgeInsets.all(5),
                   child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          selected = 'no';
+                          selected = text;
                         });
+                        id == 101 ? widget.addReport() : null;
                       },
                       child: SmallQuestionOption(
-                        'No',
-                        selected: selected == 'no' ? true : false,
-                      ))),
-            ]),
+                        text,
+                        selected: selected == text,
+                      )),
+                );
+              },
+            ),
           ],
         ),
       ),

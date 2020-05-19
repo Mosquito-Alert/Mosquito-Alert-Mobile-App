@@ -24,6 +24,153 @@ class _BitingReportPageState extends State<BitingReportPage> {
   List _formsRepot;
   String otherReport;
 
+  List<Map> displayQuestions = [
+    // {
+    //   "question": {
+    //     "id": 1,
+    //     "text": {
+    //       "en": "How many bites did you get?",
+    //       "ca": "Quantes vegades t'han picat?"
+    //     }
+    //   },
+    //   "answers": [
+    //     //Number of bites - value equals TOTAL number of bites
+    //     {
+    //       "id": 11,
+    //       "text": {"en": "", "ca": ""}
+    //     }
+    //   ]
+    // },
+    // {
+    //   "question": {
+    //     "id": 2,
+    //     "text": {"en": "Where have you been bitten?", "ca": "On t'han picat?"}
+    //   },
+    //   "answers": [
+    //     //Bites by body are - value equals number of bites in each area, must be = to total number of bites
+    //     {
+    //       "id": 21,
+    //       "text": {"en": "Head", "ca": "Cap"}
+    //     },
+    //     {
+    //       "id": 22,
+    //       "text": {"en": "Left arm", "ca": "Braç esquerre"}
+    //     },
+    //     {
+    //       "id": 23,
+    //       "text": {"en": "Right arm", "ca": "Braç dret"}
+    //     },
+    //     {
+    //       "id": 24,
+    //       "text": {"en": "Chest", "ca": "Tronc"}
+    //     },
+    //     {
+    //       "id": 25,
+    //       "text": {"en": "Left leg", "ca": "Cama esquerra"}
+    //     },
+    //     {
+    //       "id": 26,
+    //       "text": {"en": "Right leg", "ca": "Cama dreta"}
+    //     }
+    //   ]
+    // },
+    {
+      "question": {
+        "id": 3,
+        "text": {
+          "en": "At what time of the day were you bitten?",
+          "ca": "A quina hora et van picar?",
+          "es": "¿A que hora te picaron?"
+        }
+      },
+      "answers": [
+        {
+          "id": 31,
+          "text": {
+            "en": "Sunrise",
+            "ca": "Sortida de sol",
+            "es": "Salida del sol",
+          }
+        },
+        {
+          "id": 32,
+          "text": {
+            "en": "Mid-day",
+            "ca": "Migdia",
+            "es": "Mediodía",
+          }
+        },
+        {
+          "id": 33,
+          "text": {
+            "en": "Sunset",
+            "ca": "Posta de sol",
+            "es": 'Puesta de sol',
+          }
+        },
+        {
+          "id": 34,
+          "text": {
+            "en": "Night",
+            "ca": "Nit",
+            "es": "Noche",
+          }
+        },
+        // {
+        //   "id": 35,
+        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        // }
+      ]
+    },
+    {
+      "question": {
+        "id": 4,
+        "text": {
+          "en": "Were you indoors or outdoors when you were bitten?",
+          "ca": "Estaves a dins o a fora quan et van picar?",
+          "es": "¿Estabas en el interior o en el exterior cuando te picaron?"
+        }
+      },
+      "answers": [
+        {
+          "id": 41,
+          "text": {
+            "en": "Indoors",
+            "ca": "A dins",
+            "es": "Interior",
+          }
+        },
+        {
+          "id": 42,
+          "text": {
+            "en": "Outdoors",
+            "ca": "A fora",
+            "es": "Exterior",
+          }
+        },
+        // {
+        //   "id": 35,
+        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        // }
+      ]
+    },
+    // {
+    //   "question": {
+    //     "id": 5,
+    //     "text": {
+    //       "en": "Where were you when you were bitten?",
+    //       "ca": "On estaves quan et van picar?"
+    //     }
+    //   },
+    //   "answers": [
+    //     {
+    //       "id": 51, //Location - value equals WKT of point
+    //       "text": {"en": "", "ca": ""}
+    //     }
+    //   ]
+    // }
+  ];
+
   @override
   void initState() {
     if (widget.editReport != null) {
@@ -65,7 +212,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm(),
+      BitingForm(displayQuestions),
       BitingLocationForm(),
       AddOtherReportPage(addOtherReport),
     ];
