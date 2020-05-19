@@ -9,8 +9,9 @@ import 'image_question_option_widget.dart';
 
 class MosquitoTypeForm extends StatefulWidget {
   final Function setSkip3;
+  final Map displayQuestion;
 
-  MosquitoTypeForm(this.setSkip3);
+  MosquitoTypeForm(this.setSkip3, this.displayQuestion);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
@@ -32,19 +33,6 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
     }
   }
 
-  List<String> answers = [
-    'Invasive Aedes',
-    'Mosquito Común',
-    'Otro',
-    'No lo sé'
-  ];
-  List<String> img = [
-    'assets/img/ic_aedes.png',
-    'assets/img/ic_cluex.png',
-    'assets/img/ic_other_mosquito.png',
-    'assets/img/ic_other_mosquito.png'
-  ];
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,7 +45,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
               SizedBox(
                 height: 35,
               ),
-              Style.title(MyLocalizations.of(context, "could_see_txt")),
+              Style.title(widget.displayQuestion['question']['text']['es']),
               Style.body(MyLocalizations.of(context, "could_recognise_txt")),
               Container(
                 margin: EdgeInsets.only(top: 10),
@@ -69,23 +57,34 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                             crossAxisCount: 2, crossAxisSpacing: 10),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: answers.length,
+                        itemCount: widget.displayQuestion['answers'].length,
                         itemBuilder: (ctx, index) {
                           return GestureDetector(
                             onTap: () {
-                              onSelect(answers[index], (index + 61));
-                              index == 1
+                              onSelect(
+                                  widget.displayQuestion['answers'][index]
+                                      ['text']['es'],
+                                  widget.displayQuestion['answers'][index]
+                                      ['id']);
+                              widget.displayQuestion['answers'][index]
+                                      ['id'] == 62
                                   ? widget.setSkip3()
                                   : null; // skip when type = comon mosquito
                             },
                             child: ImageQuestionOption(
-                              question.answer_id == (index + 61) ? true : false,
-                              answers[index],
-                              MyLocalizations.of(context, "recognize_it_txt"),
-                              img[index],
-                              disabled: question.answer_id != null
-                                  ? (index + 61) != question.answer_id
+                              question.answer_id ==
+                                      (widget.displayQuestion['answers'][index]
+                                          ['id'])
+                                  ? true
                                   : false,
+                              widget.displayQuestion['answers'][index]['text']
+                                  ['es'],
+                              MyLocalizations.of(context, "recognize_it_txt"),
+                              widget.displayQuestion['answers'][index]['img'],
+                              disabled: question.answer_id != null &&
+                                  widget.displayQuestion['answers'][index]
+                                          ['id'] !=
+                                      question.answer_id,
                             ),
                           );
                         })

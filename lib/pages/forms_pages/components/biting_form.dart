@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
@@ -8,15 +6,14 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingForm extends StatefulWidget {
-  final List<Map> displayQuestions; 
+  final List<Map> displayQuestions;
 
-  BitingForm(this.displayQuestions); 
+  BitingForm(this.displayQuestions);
   @override
   _BitingFormState createState() => _BitingFormState();
 }
 
 class _BitingFormState extends State<BitingForm> {
-  
   List<Question> questions;
 
   @override
@@ -254,7 +251,8 @@ class _BitingFormState extends State<BitingForm> {
                         child: GridView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: widget.displayQuestions[i]['answers'].length,
+                            itemCount:
+                                widget.displayQuestions[i]['answers'].length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -262,14 +260,14 @@ class _BitingFormState extends State<BitingForm> {
                               // crossAxisSpacing: 10,
                             ),
                             itemBuilder: (context, index) {
-                              String answerTxt = widget.displayQuestions[i]['answers']
-                                  [index]['text']['es'];
-                              String questionTxt =
-                                  widget.displayQuestions[i]['question']['text']['es'];
+                              String answerTxt = widget.displayQuestions[i]
+                                  ['answers'][index]['text']['es'];
+                              String questionTxt = widget.displayQuestions[i]
+                                  ['question']['text']['es'];
                               int questionId =
                                   widget.displayQuestions[i]['question']['id'];
-                              int answerId =
-                                  widget.displayQuestions[i]['answers'][index]['id'];
+                              int answerId = widget.displayQuestions[i]
+                                  ['answers'][index]['id'];
                               return Container(
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(

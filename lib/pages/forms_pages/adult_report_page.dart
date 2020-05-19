@@ -31,21 +31,37 @@ class _AdultReportPageState extends State<AdultReportPage> {
         "id": 6,
         "text": {
           "en": "What kind of mosquito do you think it is?",
-          "ca": "Quin tipus de mosquit creus que és?"
+          "ca": "Quin tipus de mosquit creus que és?",
+          "es": "¿Que tipo de mosquito crees que es?"
         }
       },
       "answers": [
         {
           "id": 61,
-          "text": {"en": "Invasive Aedes", "ca": "Aedes Invasiu"}
+          "img": "assets/img/ic_aedes.png",
+          "text": {
+            "en": "Invasive Aedes",
+            "ca": "Aedes Invasiu",
+            "es": "Invasive Aedes"
+          }
         },
         {
           "id": 62,
-          "text": {"en": "Common mosquito", "ca": "Mosquit comú"}
+          "img": "assets/img/ic_cluex.png",
+          "text": {
+            "en": "Common mosquito",
+            "ca": "Mosquit comú",
+            "es": "Mosquito común"
+          }
         },
         {
           "id": 63,
-          "text": {"en": "Other", "ca": "Altres"}
+          "img": "assets/img/ic_other_mosquito.png",
+          "text": {
+            "en": "Other",
+            "ca": "Altres",
+            "es": "Otro",
+          }
         }
       ]
     },
@@ -54,57 +70,70 @@ class _AdultReportPageState extends State<AdultReportPage> {
         "id": 7,
         "text": {
           "en": "How does your mosquito look?",
-          "ca": "Quin aspecte té el teu mosquit?"
+          "ca": "Quin aspecte té el teu mosquit?",
+          "es": "¿Que aspecto tiene tu mosquito?"
         }
       },
       "answers": [
         {
           "id": 711,
-          "text": {"en": "Thorax 1", "ca": "Tòrax 1"}
+          "img": "assets/img/torax_711.png",
+          "text": {"en": "Thorax 1", "ca": "Tòrax 1", "es": "Tórax 1"}
         },
         {
           "id": 712,
-          "text": {"en": "Thorax 2", "ca": "Tòrax 2"}
+          "img": "assets/img/torax_712.png",
+          "text": {"en": "Thorax 2", "ca": "Tòrax 2", "es": "Tórax 21"}
         },
         {
           "id": 713,
-          "text": {"en": "Thorax 3", "ca": "Tòrax 3"}
+          "img": "assets/img/torax_713.png",
+          "text": {"en": "Thorax 3", "ca": "Tòrax 3", "es": "Tórax 3"}
         },
         {
           "id": 714,
-          "text": {"en": "Thorax 4", "ca": "Tòrax 4"}
+          "img": "assets/img/torax_714.png",
+          "text": {"en": "Thorax 4", "ca": "Tòrax 4", "es": "Tórax 1"}
         },
         {
           "id": 721,
-          "text": {"en": "Abdomen 1", "ca": "Abdomen 1"}
+          "img": "assets/img/abdomen_721.png",
+          "text": {"en": "Abdomen 1", "ca": "Abdomen 1", "es": "Abdomen 1"}
         },
         {
           "id": 722,
-          "text": {"en": "Abdomen 2", "ca": "Abdomen 2"}
+          "img": "assets/img/abdomen_722.png",
+          "text": {"en": "Abdomen 2", "ca": "Abdomen 2", "es": "Abdomen 2"}
         },
         {
           "id": 723,
-          "text": {"en": "Abdomen 3", "ca": "Abdomen 3"}
+          "img": "assets/img/abdomen_723.png",
+          "text": {"en": "Abdomen 3", "ca": "Abdomen 3", "es": "Abdomen 3"}
         },
         {
           "id": 724,
-          "text": {"en": "Abdomen 4", "ca": "Abdomen 4"}
+          "img": "assets/img/abdomen_724.png",
+          "text": {"en": "Abdomen 4", "ca": "Abdomen 4", "es": "Abdomen 4"}
         },
         {
           "id": 731,
-          "text": {"en": "3d leg 1", "ca": "3a cama 1"}
+          "img": "assets/img/leg_731.png",
+          "text": {"en": "3d leg 1", "ca": "3a cama 1", "es": "Pierna 1"}
         },
         {
           "id": 732,
-          "text": {"en": "3d leg 2", "ca": "3a cama 2"}
+          "img": "assets/img/leg_732.png",
+          "text": {"en": "3d leg 2", "ca": "3a cama 2", "es": "Pierna 2"}
         },
         {
           "id": 733,
-          "text": {"en": "3d leg 3", "ca": "3a cama 3"}
+          "img": "assets/img/leg_733.png",
+          "text": {"en": "3d leg 3", "ca": "3a cama 3", "es": "Pierna 3"}
         },
         {
           "id": 734,
-          "text": {"en": "3d leg 4", "ca": "3a cama 4"}
+          "img": "assets/img/leg_734.png",
+          "text": {"en": "3d leg 4", "ca": "3a cama 4", "es": "Pierna 4"}
         }
       ]
     },
@@ -113,17 +142,22 @@ class _AdultReportPageState extends State<AdultReportPage> {
         "id": 8,
         "text": {
           "en": "Did this mosquito bite you?",
-          "ca": "T'ha picat el mosquit?"
+          "ca": "T'ha picat el mosquit?",
+          "es": "¿Te ha picado el mosquito?"
         }
       },
       "answers": [
         {
           "id": 81,
-          "text": {"en": "No", "ca": "No"}
+          "text": {"en": "No", "ca": "No", "es": "No"}
         },
         {
           "id": 35,
-          "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+          "text": {
+            "en": "Not sure",
+            "ca": "No ho tinc clar",
+            "es": "No lo tengo claro"
+          }
         }
       ]
     }
@@ -186,9 +220,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      MosquitoTypeForm(setSkip3),
+      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0)),
       // TakePicturePage(),
-      MosquitoPartsForm(),
+      MosquitoPartsForm(displayQuestions.elementAt(1)),
       BitingLocationForm(),
       CouldSeeForm(addBitingReport, displayQuestions.elementAt(2)),
       AddOtherReportPage(addOtherReport),

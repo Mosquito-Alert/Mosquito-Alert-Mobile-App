@@ -27,14 +27,14 @@ class ImageQuestionOption extends StatelessWidget {
               decoration: BoxDecoration(
                 // color: Colors.blue,
                 borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  image: AssetImage(img),
-                  fit: BoxFit.cover,
-                  // colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcOver))
-                ),
+                // image: DecorationImage(
+                //   image: AssetImage(img!= null ? img : "assets/img/torax_711.png"),
+                //   fit: BoxFit.cover,
+                //   // colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcOver))
+                // ),
               ),
               padding: EdgeInsets.all(5),
-              // child: SvgPicture.asset(img),
+              child: Image.asset(img),
             ),
             Container(
               decoration: BoxDecoration(
