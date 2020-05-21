@@ -143,6 +143,7 @@ class MyLocalizations {
       "other_reports_bites_txt": "Reportes de picadas",
       "other_reports_breeding_txt": "Reportes de lugares de cría",
       "other_reports_adults_txt": "Reportes de adultos",
+      "no_reports_yet_txt": "No hay reportes registrados",
     },
   };
   String translate(key) {

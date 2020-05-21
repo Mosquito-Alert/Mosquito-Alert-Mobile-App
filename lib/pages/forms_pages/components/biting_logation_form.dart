@@ -20,6 +20,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   List<Marker> markers = [];
 
   Position location;
+  Position currentLocation;
 
   Set<Circle> circles;
 
@@ -28,9 +29,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
 
   @override
   void initState() {
-    //TODO: get current location if not exist and center map
     Utils.getLocation();
-    location = Utils.location;
+    currentLocation = Utils.location;
+
+    _getCurrentLocation();
+
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
         case "selected":
@@ -54,7 +57,29 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     super.initState();
   }
 
+  _getCurrentLocation() async {
+    Position loc;
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+
+    bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
+
+    if (geolocationEnabled) {
+      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = false;
+      loc = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    } else {
+      await Utils.getLocation();
+      loc = Utils.location;
+    }
+    controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
+    setState(() {
+      currentLocation = loc;
+    });
+  }
+
   void _onMapCreated(GoogleMapController controller) {
+    _getCurrentLocation();
     setState(() {
       this.controller = controller;
     });
@@ -79,6 +104,9 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   getPosition(type, {context}) async {
+    streamType.add(type);
+    List<Marker> currentMarkers = [];
+
     if (type == LocationType.current) {
       Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
 
@@ -103,9 +131,12 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
           ),
         );
 
-        // setState(() {
-        //   location = currentPosition;
-        // });
+        currentMarkers = [
+          Marker(
+              markerId: MarkerId('mk${markers.length}'),
+              position:
+                  LatLng(currentPosition.latitude, currentPosition.longitude))
+        ];
       } else {
         Utils.showAlert(
             MyLocalizations.of(context, "location_not_active_title"),
@@ -116,6 +147,9 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         streamType.add(LocationType.selected);
       }
     }
+    setState(() {
+      markers = currentMarkers;
+    });
   }
 
   @override
@@ -192,10 +226,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                 rotateGesturesEnabled: false,
                                 myLocationButtonEnabled: false,
                                 zoomControlsEnabled: false,
-                                myLocationEnabled:
-                                    snapshot.data == LocationType.current
-                                        ? true
-                                        : false,
                                 minMaxZoomPreference:
                                     MinMaxZoomPreference(6, 18),
                                 mapToolbarEnabled: false,
@@ -205,20 +235,15 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                       : null;
                                 },
                                 initialCameraPosition: CameraPosition(
-                                  target: location != null
-                                      ? LatLng(
-                                          location.latitude, location.longitude)
+                                  target: currentLocation != null
+                                      ? LatLng(currentLocation.latitude,
+                                          currentLocation.longitude)
                                       : LatLng(41.3874, 2.1688),
                                   zoom: 15.0,
                                 ),
-                                markers:
-                                    snapshot.data == LocationType.selected &&
-                                            markers.isNotEmpty
-                                        ? Set.from(markers)
-                                        : null,
-                                // circles: snapshot.data == LocationType.current
-                                //     ? circles
-                                //     : null,
+                                markers: markers.isNotEmpty
+                                    ? Set.from(markers)
+                                    : null,
                               ),
                             ),
                           ),

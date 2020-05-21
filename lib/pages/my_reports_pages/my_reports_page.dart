@@ -10,7 +10,6 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/components/my_reports_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -53,6 +52,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   GoogleMapController miniMapController;
 
   void _onMapCreated(GoogleMapController controller) {
+    _initLocation();
     setState(() {
       mapController = controller;
     });
@@ -67,15 +67,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   initState() {
     super.initState();
-    // get location if not exist
-    // Utils.getLocation(); 
-    // location = Utils.location;
 
-    //center map
-
-    Utils.location != null
-        ? location = Utils.location
-        : location = Position(latitude: 41.1619686, longitude: 0.4735487);
+    Utils.getLocation();
     loadingStream.add(true);
     if (_reports == null) {
       _getData();
@@ -85,14 +78,35 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
+  _initLocation() async {
+    await Utils.getLocation();
+    var loc;
+
+    Utils.location != null
+        ? loc = Utils.location
+        : loc = Position(latitude: 41.3874, longitude: 2.1688);
+
+    mapController.animateCamera(
+        CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
+
+    setState(() {
+      location = loc;
+    });
+  }
+
   _updateData() {
     loadingStream.add(true);
     _getData();
   }
 
   _getData() async {
-    List<Report> list = await ApiSingleton()
-        .getReportsList(location.latitude, location.longitude, page: 1);
+    List<Report> list = await ApiSingleton().getReportsList(
+        Utils.location.latitude, Utils.location.longitude,
+        page: 1);
+
+    if (list == null) {
+      list = [];
+    }
 
     List<Report> data = [];
     for (int i = 0; i < list.length; i++) {
@@ -170,7 +184,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   BitmapDescriptor setIconMarker(type, user) {
-    if (UserManager.profileUUIDs.any((id) => id == user)) {
+    if (UserManager.profileUUIDs != null &&
+        UserManager.profileUUIDs.any((id) => id == user)) {
       switch (type) {
         case "adult":
           return iconAdultYours;
@@ -239,7 +254,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     target: location != null
                                         ? LatLng(location.latitude,
                                             location.longitude)
-                                        : LatLng(41.1619686, 0.4735487),
+                                        : LatLng(41.3948975, 2.0785562),
                                     zoom: 14.0,
                                   ),
                                   markers: snapshot.data != null
@@ -253,9 +268,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             );
                           }
 
-                          if (index == 1.0)
+                          if (index == 1.0) {
                             return ReportsList(
                                 snapshot.data, _reportBottomSheet);
+                          }
                         });
                   },
                 )),
