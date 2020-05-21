@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/take_picture_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -66,8 +67,8 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                       ['text']['es'],
                                   widget.displayQuestion['answers'][index]
                                       ['id']);
-                              widget.displayQuestion['answers'][index]
-                                      ['id'] == 62
+                              widget.displayQuestion['answers'][index]['id'] ==
+                                      62
                                   ? widget.setSkip3()
                                   : null; // skip when type = comon mosquito
                             },
@@ -95,48 +96,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Divider(),
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TakePicturePage()),
-                  );
-                },
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 25, horizontal: 10),
-                            child: Icon(
-                              Icons.camera_alt,
-                              size: 40,
-                            )),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                  MyLocalizations.of(context, 'have_foto_txt'),
-                                  fontSize: 16),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Style.bodySmall(MyLocalizations.of(
-                                  context, 'click_to_add_txt'))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              AddPhotoButton(),
             ],
           ),
         ),

@@ -28,6 +28,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
 
   @override
   void initState() {
+    //TODO: get current location if not exist and center map
+    Utils.getLocation();
     location = Utils.location;
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
@@ -220,13 +222,13 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Style.noBgButton(
-                              MyLocalizations.of(context, "not_sure_txt"), () {
-                            getPosition(LocationType.missing);
-                          }, textColor: Colors.grey)
+                          // SizedBox(
+                          //   height: 10,
+                          // ),
+                          // Style.noBgButton(
+                          //     MyLocalizations.of(context, "not_sure_txt"), () {
+                          //   getPosition(LocationType.missing);
+                          // }, textColor: Colors.grey)
                         ],
                       );
                     },

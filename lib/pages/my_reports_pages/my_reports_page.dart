@@ -67,7 +67,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   initState() {
     super.initState();
+    // get location if not exist
+    // Utils.getLocation(); 
     // location = Utils.location;
+
+    //center map
 
     Utils.location != null
         ? location = Utils.location

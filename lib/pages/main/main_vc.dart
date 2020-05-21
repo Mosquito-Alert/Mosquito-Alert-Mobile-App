@@ -27,7 +27,6 @@ class _MainVCState extends State<MainVC> {
   void initState() {
     super.initState();
     UserManager.startFirstTime(context);
-    _getLastLocation();
     _getData();
   }
 
@@ -40,14 +39,7 @@ class _MainVCState extends State<MainVC> {
     }
   }
 
-  _getLastLocation() async {
-    GeolocationStatus geolocationStatus =
-        await Geolocator().checkGeolocationPermissionStatus();
-    if (geolocationStatus != null &&
-        geolocationStatus == GeolocationStatus.granted) {
-      Utils.getLocation();
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

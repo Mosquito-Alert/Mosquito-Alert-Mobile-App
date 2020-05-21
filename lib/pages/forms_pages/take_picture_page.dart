@@ -14,9 +14,6 @@ class TakePicturePage extends StatefulWidget {
 }
 
 class _TakePicturePageState extends State<TakePicturePage> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
-  String _path;
 
   File img;
 
@@ -29,20 +26,8 @@ class _TakePicturePageState extends State<TakePicturePage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
+ 
 
-    _controller = CameraController(Utils.cameras[0], ResolutionPreset.medium);
-
-    _initializeControllerFuture = _controller.initialize();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,19 +39,19 @@ class _TakePicturePageState extends State<TakePicturePage> {
       ),
       body: Column(
         children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_controller);
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-          ),
+          // Container(
+          //   height: MediaQuery.of(context).size.height * 0.8,
+          //   child: FutureBuilder<void>(
+          //     future: _initializeControllerFuture,
+          //     builder: (context, snapshot) {
+          //       if (snapshot.connectionState == ConnectionState.done) {
+          //         return CameraPreview(_controller);
+          //       } else {
+          //         return Center(child: CircularProgressIndicator());
+          //       }
+          //     },
+          //   ),
+          // ),
           Expanded(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.1,
@@ -76,15 +61,15 @@ class _TakePicturePageState extends State<TakePicturePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      File(_path != null ? _path : ''),
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  // ClipRRect(
+                  //   borderRadius: BorderRadius.circular(10),
+                  //   child: Image.file(
+                  //     File(_path != null ? _path : ''),
+                  //     height: 50,
+                  //     width: 50,
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // ),
                   Expanded(
                     child: FloatingActionButton(
                       backgroundColor: Colors.white,

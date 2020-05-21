@@ -75,66 +75,72 @@ class _AdultReportPageState extends State<AdultReportPage> {
         }
       },
       "answers": [
-        {
-          "id": 711,
-          "img": "assets/img/torax_711.png",
-          "text": {"en": "Thorax 1", "ca": "Tòrax 1", "es": "Tórax 1"}
-        },
-        {
-          "id": 712,
-          "img": "assets/img/torax_712.png",
-          "text": {"en": "Thorax 2", "ca": "Tòrax 2", "es": "Tórax 21"}
-        },
-        {
-          "id": 713,
-          "img": "assets/img/torax_713.png",
-          "text": {"en": "Thorax 3", "ca": "Tòrax 3", "es": "Tórax 3"}
-        },
-        {
-          "id": 714,
-          "img": "assets/img/torax_714.png",
-          "text": {"en": "Thorax 4", "ca": "Tòrax 4", "es": "Tórax 1"}
-        },
-        {
-          "id": 721,
-          "img": "assets/img/abdomen_721.png",
-          "text": {"en": "Abdomen 1", "ca": "Abdomen 1", "es": "Abdomen 1"}
-        },
-        {
-          "id": 722,
-          "img": "assets/img/abdomen_722.png",
-          "text": {"en": "Abdomen 2", "ca": "Abdomen 2", "es": "Abdomen 2"}
-        },
-        {
-          "id": 723,
-          "img": "assets/img/abdomen_723.png",
-          "text": {"en": "Abdomen 3", "ca": "Abdomen 3", "es": "Abdomen 3"}
-        },
-        {
-          "id": 724,
-          "img": "assets/img/abdomen_724.png",
-          "text": {"en": "Abdomen 4", "ca": "Abdomen 4", "es": "Abdomen 4"}
-        },
-        {
-          "id": 731,
-          "img": "assets/img/leg_731.png",
-          "text": {"en": "3d leg 1", "ca": "3a cama 1", "es": "Pierna 1"}
-        },
-        {
-          "id": 732,
-          "img": "assets/img/leg_732.png",
-          "text": {"en": "3d leg 2", "ca": "3a cama 2", "es": "Pierna 2"}
-        },
-        {
-          "id": 733,
-          "img": "assets/img/leg_733.png",
-          "text": {"en": "3d leg 3", "ca": "3a cama 3", "es": "Pierna 3"}
-        },
-        {
-          "id": 734,
-          "img": "assets/img/leg_734.png",
-          "text": {"en": "3d leg 4", "ca": "3a cama 4", "es": "Pierna 4"}
-        }
+        [
+          {
+            "id": 711,
+            "img": "assets/img/torax_711.png",
+            "text": {"en": "Thorax 1", "ca": "Tòrax 1", "es": "Tórax 1"}
+          },
+          {
+            "id": 712,
+            "img": "assets/img/torax_712.png",
+            "text": {"en": "Thorax 2", "ca": "Tòrax 2", "es": "Tórax 21"}
+          },
+          {
+            "id": 713,
+            "img": "assets/img/torax_713.png",
+            "text": {"en": "Thorax 3", "ca": "Tòrax 3", "es": "Tórax 3"}
+          },
+          {
+            "id": 714,
+            "img": "assets/img/torax_714.png",
+            "text": {"en": "Thorax 4", "ca": "Tòrax 4", "es": "Tórax 1"}
+          },
+        ],
+        [
+          {
+            "id": 721,
+            "img": "assets/img/abdomen_721.png",
+            "text": {"en": "Abdomen 1", "ca": "Abdomen 1", "es": "Abdomen 1"}
+          },
+          {
+            "id": 722,
+            "img": "assets/img/abdomen_722.png",
+            "text": {"en": "Abdomen 2", "ca": "Abdomen 2", "es": "Abdomen 2"}
+          },
+          {
+            "id": 723,
+            "img": "assets/img/abdomen_723.png",
+            "text": {"en": "Abdomen 3", "ca": "Abdomen 3", "es": "Abdomen 3"}
+          },
+          {
+            "id": 724,
+            "img": "assets/img/abdomen_724.png",
+            "text": {"en": "Abdomen 4", "ca": "Abdomen 4", "es": "Abdomen 4"}
+          },
+        ],
+        [
+          {
+            "id": 731,
+            "img": "assets/img/leg_731.png",
+            "text": {"en": "3d leg 1", "ca": "3a cama 1", "es": "Pierna 1"}
+          },
+          {
+            "id": 732,
+            "img": "assets/img/leg_732.png",
+            "text": {"en": "3d leg 2", "ca": "3a cama 2", "es": "Pierna 2"}
+          },
+          {
+            "id": 733,
+            "img": "assets/img/leg_733.png",
+            "text": {"en": "3d leg 3", "ca": "3a cama 3", "es": "Pierna 3"}
+          },
+          {
+            "id": 734,
+            "img": "assets/img/leg_734.png",
+            "text": {"en": "3d leg 4", "ca": "3a cama 4", "es": "Pierna 4"}
+          }
+        ],
       ]
     },
     {
@@ -221,7 +227,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0)),
-      // TakePicturePage(),
       MosquitoPartsForm(displayQuestions.elementAt(1)),
       BitingLocationForm(),
       CouldSeeForm(addBitingReport, displayQuestions.elementAt(2)),

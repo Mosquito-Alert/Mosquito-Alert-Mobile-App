@@ -4,6 +4,8 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_o
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
+import 'add_photo_button_widget.dart';
+
 class QuestionsBreedingForm extends StatefulWidget {
   final Map displayQuestion;
 
@@ -74,6 +76,11 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                 );
               },
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Divider(),
+            ),
+            AddPhotoButton(),
           ],
         ),
       ),

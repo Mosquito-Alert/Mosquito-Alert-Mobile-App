@@ -47,56 +47,57 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 20,
               ),
-              // GridView.builder(
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //         crossAxisCount: 4,
-              //         crossAxisSpacing: 10,
-              //         mainAxisSpacing: 10),
-              //     shrinkWrap: true,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     itemCount: widget.displayQuestion['answers'].length,
-              //     itemBuilder: (ctx, index) {
-              //       String text =
-              //           widget.displayQuestion['answers'][index]['text']['es'];
-              //       int id = widget.displayQuestion['answers'][index]['id'];
-              //       return Container(
-              //         child: GestureDetector(
-              //           onTap: () {
-              //             onSelect(text, id, 710);
-              //           },
-              //           child: Container(
-              //             // width: sizeWidth * 0.22,
-              //             // height: 20,
-              //             // margin: EdgeInsets.only(right: 2.5),
-              //             // color: Colors.green,
-              //             // child: Image.asset(
-              //             //     widget.displayQuestion['answers'][index]['img']),
-              //             child: ImageQuestionOption(
-              //               questions.any((q) => q.answer_id == id),
-              //               '',
-              //               '',
-              //               "",
-              //               // widget.displayQuestion['answers'][index]['img'],
-              //               disabled: questions.length != null
-              //                   ? isDisabled(710, id)
-              //                   : false,
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     }),
+
+              Container(
+                height: 200,
+                child: ListView.builder(
+                    itemCount: 4,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      int id =
+                          widget.displayQuestion['answers'][0][index]['id'];
+                      String txt = widget.displayQuestion['answers'][0][index]
+                          ['text']['es'];
+                      print(txt);
+                      return GestureDetector(
+                        onTap: () {
+                          onSelect(txt, id, 710);
+                        },
+                        child: Container(
+                          width: sizeWidth * 0.22,
+                          margin: EdgeInsets.only(right: 5),
+                          child: ImageQuestionOption(
+                            questions.any((q) => q.answer_id == id),
+                            '',
+                            '',
+                            widget.displayQuestion['answers'][0][index]['img'],
+                            disabled: questions.length != null
+                                ? isDisabled(710, id)
+                                : false,
+                          ),
+                        ),
+                      );
+                    }),
+              ),
               // Container(
               //   height: 200,
               //   child: ListView.builder(
-              //       itemCount: torax.length,
+              //       itemCount: 4,
               //       shrinkWrap: true,
               //       physics: NeverScrollableScrollPhysics(),
               //       scrollDirection: Axis.horizontal,
               //       itemBuilder: (context, index) {
-              //         int i = index + 711;
+              //         int i = 711;
+              //         int id =
+              //             widget.displayQuestion['answers'][1][index]['id'];
+              //         String txt = widget.displayQuestion['answers'][1][index]
+              //             ['text']['es'];
+              //         print(txt);
               //         return GestureDetector(
               //           onTap: () {
-              //             onSelect('Torax${index + 1}', i, 710);
+              //             onSelect(txt, id, 720);
               //           },
               //           child: Container(
               //             width: sizeWidth * 0.22,
@@ -105,9 +106,9 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               //               questions.any((q) => q.answer_id == i),
               //               '',
               //               '',
-              //               'assets/img/abdomen_711.png',
+              //               widget.displayQuestion['answers'][1][index]['img'],
               //               disabled: questions.length != null
-              //                   ? isDisabled(710, index + 711)
+              //                   ? isDisabled(710, index + 721)
               //                   : false,
               //             ),
               //           ),
@@ -122,64 +123,35 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               //       physics: NeverScrollableScrollPhysics(),
               //       scrollDirection: Axis.horizontal,
               //       itemBuilder: (context, index) {
+              //         int i = 711;
+              //         int id =
+              //             widget.displayQuestion['answers'][2][index]['id'];
+              //         String txt = widget.displayQuestion['answers'][2][index]
+              //             ['text']['es'];
+              //         print(txt);
               //         return GestureDetector(
               //           onTap: () {
-              //             onSelect('Abdomen${index + 1}', (index + 721), 720);
+              //             onSelect(txt, id, 710);
               //           },
               //           child: Container(
               //             width: sizeWidth * 0.22,
               //             margin: EdgeInsets.only(right: 5),
-              //             // color: Colors.green,
               //             child: ImageQuestionOption(
-              //               questions.any((q) => q.answer_id == (index + 721)),
+              //               questions.any((q) => q.answer_id == i),
               //               '',
               //               '',
-              //               'assets/img/abdomen_721.png',
+              //               widget.displayQuestion['answers'][2][index]['img'],
               //               disabled: questions.length != null
-              //                   ? isDisabled(720, (index + 721))
+              //                   ? isDisabled(710, index + 711)
               //                   : false,
               //             ),
               //           ),
               //         );
               //       }),
               // ),
-              Container(
-                height: 200,
-                child: ListView.builder(
-                    itemCount: 4,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      String text = widget.displayQuestion['answers'][index]
-                          ['text']['es'];
-                      int id = widget.displayQuestion['answers'][index]['id'];
-                      print(text);
-                      return GestureDetector(
-                        onTap: () {
-                          onSelect('Leg ${index + 1}', (index + 731), 730);
-                        },
-                        child: Container(
-                          width: sizeWidth * 0.22,
-                          // height: 20,
-                          margin: EdgeInsets.only(right: 5),
-                          // color: Colors.green,
-                          // child: Image.asset(
-                          //     widget.displayQuestion['answers'][index]['img']),
-                          child: ImageQuestionOption(
-                            questions.any((q) => q.answer_id == id),
-                            '',
-                            '',
-                            // "",
-                            widget.displayQuestion['answers'][index]['img'],
-                            disabled: questions.length != null
-                                ? isDisabled(710, id)
-                                : false,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
+              
+
+              
               SizedBox(
                 height: 15,
               ),

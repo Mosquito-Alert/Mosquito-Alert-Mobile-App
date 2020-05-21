@@ -31,7 +31,8 @@ class MyLocalizations {
       "login_btn4": "Acceder con mi correo electrónico",
       "terms_and_conditions_txt":
           "Entrando en Mosquito Alert, aceptas nuestros términos y condiciones y nuestra política de privacidad.",
-      "login_soscial_failed_txt": "Something went wrong. Please check your account and try again.",
+      "login_soscial_failed_txt":
+          "Something went wrong. Please check your account and try again.",
 
       //Login - email
       "enter_email_title": " Introduce tu correo electrónico",
@@ -91,6 +92,11 @@ class MyLocalizations {
       "current_location_txt": "Ubicación actual",
       "select_location_txt": "Seleccionar...",
       "not_sure_txt": "No lo tengo claro",
+      "gallery": "Galería",
+      "camera": "Cámara",
+      "add_image_txt": "Añadir foto",
+      "add_image_from_where_txt": "¿De dónde quieres subir la imagen?",
+      "ok_next_txt": "De acuerdo, hacer foto!",
 
       //Moquito type - report
       "could_see_txt": "¿Has podido ver el mosquito?",
@@ -131,12 +137,12 @@ class MyLocalizations {
       "which_situation_txt": "¿En qué situación?",
       "delete_report_title": "¿Seguro que quieres eliminar el reporte?",
       "delete_report_txt": "Esta acción no se puede deshacer.",
-      "your_reports_bites_txt": "Tus reportes de picadas", 
+      "your_reports_bites_txt": "Tus reportes de picadas",
       "your_reports_breeding_txt": "Tus reportes de lugares de cría",
-      "your_reports_adults_txt": "Tus reportes de adultos", 
-      "other_reports_bites_txt": "Reportes de picadas", 
+      "your_reports_adults_txt": "Tus reportes de adultos",
+      "other_reports_bites_txt": "Reportes de picadas",
       "other_reports_breeding_txt": "Reportes de lugares de cría",
-      "other_reports_adults_txt": "Reportes de adultos", 
+      "other_reports_adults_txt": "Reportes de adultos",
     },
   };
   String translate(key) {
