@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -41,7 +42,7 @@ class ApiSingleton {
   };
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final _fbSignIn = FacebookLogin();
+  final FacebookLogin facebookLogin = FacebookLogin();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final ApiSingleton _singleton = new ApiSingleton._internal();
@@ -74,6 +75,11 @@ class ApiSingleton {
     } catch (c) {
       return null;
     }
+  }
+
+  Future<dynamic> checkEmail(String email) async {
+    var response = (await _auth.fetchSignInMethodsForEmail(email: email));
+    return response;
   }
 
   Future<dynamic> singUp(
@@ -109,7 +115,6 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> sigInWithGoogle() async {
-    // _auth.signOut();
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -127,7 +132,14 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> singInWithFacebook() async {
-    final FacebookLoginResult fbResult = await _fbSignIn.logIn(['email']);
+    facebookLogin.loginBehavior = Platform.isIOS
+        ? FacebookLoginBehavior.webViewOnly
+        : FacebookLoginBehavior.nativeWithFallback;
+
+    // final result = await facebookLogin
+    //     .logInWithReadPermissions(['email', 'public_profile']);
+
+    final FacebookLoginResult fbResult = await facebookLogin.logIn(['email', 'public_profile']);
     final AuthCredential credential = FacebookAuthProvider.getCredential(
       accessToken: fbResult.accessToken.token,
     );

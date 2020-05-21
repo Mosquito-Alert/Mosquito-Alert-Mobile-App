@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/auth/login_password_page.dart';
 import 'package:mosquito_alert_app/pages/auth/signup_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class LoginEmail extends StatefulWidget {
@@ -71,29 +73,14 @@ class _LoginEmailState extends State<LoginEmail> {
                                 child: Style.button(
                                     MyLocalizations.of(context, "access_txt"),
                                     () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPassword(
-                                            _emailController.text)),
-                                  );
+                                  _checkEmail();
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => LoginPassword(
+                                  //           _emailController.text)),
+                                  // );
                                 })),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Divider(),
-                            Container(
-                              width: double.infinity,
-                              child: Style.noBgButton(
-                                  MyLocalizations.of(context, "register_txt"),
-                                  () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SignupPage()),
-                                );
-                              }, textColor: Colors.black),
-                            ),
                           ],
                         ),
                       ),
@@ -116,5 +103,31 @@ class _LoginEmailState extends State<LoginEmail> {
         ),
       ],
     );
+  }
+
+  _checkEmail() async {
+    if (!Utils.mailRegExp.hasMatch(_emailController.text)) {
+      Utils.showAlert(MyLocalizations.of(context, "app_name"),
+          MyLocalizations.of(context, "invalid_mail_txt"), context);
+    } else {
+      ApiSingleton().checkEmail(_emailController.text).then((res) {
+        if (res.length > 0) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginPassword(_emailController.text)),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SignupPage(_emailController.text)),
+          );
+        }
+      }).catchError((e) {
+        //Todo: show alert
+        print(e);
+      });
+    }
   }
 }

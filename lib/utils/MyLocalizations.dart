@@ -39,6 +39,7 @@ class MyLocalizations {
       "email_txt": "Correo electrónico",
       "access_txt": "Acceder",
       "register_txt": "Darse de alta",
+      "invalid_mail_txt": "Correo electrónico no valido. Intentalo de nuevo.",
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",

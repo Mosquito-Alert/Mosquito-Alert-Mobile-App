@@ -216,7 +216,6 @@ class Utils {
       closeSession();
       resetReport();
     }
-    
   }
 
   static Future<void> deleteReport(r) async {
@@ -232,6 +231,9 @@ class Utils {
     location = await Geolocator().getLastKnownPosition();
     print(location);
   }
+
+  static final RegExp mailRegExp = RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
   //Alerts
   static Future showAlert(String title, String text, BuildContext context,

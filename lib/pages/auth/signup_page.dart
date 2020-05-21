@@ -7,6 +7,9 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class SignupPage extends StatefulWidget {
+  final String email;
+
+  SignupPage(this.email);
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -16,6 +19,14 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _emailController.text = widget.email;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -68,7 +79,8 @@ class _SignupPageState extends State<SignupPage> {
                                 Style.textField(
                                     MyLocalizations.of(context, "email_txt"),
                                     _emailController,
-                                    context),
+                                    context,
+                                    enabled: false),
                                 SizedBox(
                                   height: 10,
                                 ),
