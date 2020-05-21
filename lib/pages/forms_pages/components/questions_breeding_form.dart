@@ -8,8 +8,9 @@ import 'add_photo_button_widget.dart';
 
 class QuestionsBreedingForm extends StatefulWidget {
   final Map displayQuestion;
+  final Function setValid;
 
-  QuestionsBreedingForm(this.displayQuestion);
+  QuestionsBreedingForm(this.displayQuestion, this.setValid);
 
   @override
   _QuestionsBreedingFormState createState() => _QuestionsBreedingFormState();
@@ -68,6 +69,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                   child: GestureDetector(
                       onTap: () {
                         addQuestion(text, id);
+                        widget.setValid(true);
                       },
                       child: SmallQuestionOption(
                         text,

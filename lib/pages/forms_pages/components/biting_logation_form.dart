@@ -9,6 +9,10 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingLocationForm extends StatefulWidget {
+  final Function setValid;
+
+  BitingLocationForm(this.setValid);
+
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
 }
@@ -97,6 +101,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       });
     } else {
       Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
+      widget.setValid(true);
+
       setState(() {
         markers = [mk];
       });
@@ -121,7 +127,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         print(currentPosition);
         Utils.setCurrentLocation(
             currentPosition.latitude, currentPosition.longitude);
-
+        widget.setValid(true);
         controller.moveCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
@@ -202,6 +208,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               Expanded(
                                   child: GestureDetector(
                                 onTap: () {
+                                  widget.setValid(false);
                                   getPosition(LocationType.selected);
                                 },
                                 child: SmallQuestionOption(

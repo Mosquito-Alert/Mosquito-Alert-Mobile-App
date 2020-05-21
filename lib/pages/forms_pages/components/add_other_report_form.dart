@@ -5,8 +5,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class AddOtherReportPage extends StatefulWidget {
   final Function addReport;
+  final Function setValid;
 
-  AddOtherReportPage(this.addReport);
+  AddOtherReportPage(this.addReport, this.setValid);
 
   @override
   _AddOtherReportPageState createState() => _AddOtherReportPageState();
@@ -16,9 +17,9 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
   String selectedType;
 
   setSelected(String type) {
-    if (type != 'none') {
+    // if (type != 'none') {
       widget.addReport(type);
-    }
+    // }
 
     setState(() {
       selectedType = type;
@@ -46,6 +47,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                   child: GestureDetector(
                     onTap: () {
                       setSelected("bite");
+                      widget.setValid(true);
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_bite_report.png',
@@ -61,6 +63,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                   child: GestureDetector(
                     onTap: () {
                       setSelected('site');
+                      widget.setValid(true);
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_breeding_report.png',
@@ -80,6 +83,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                   child: GestureDetector(
                     onTap: () {
                       setSelected('adult');
+                      widget.setValid(true);
                     },
                     child: CustomCard(
                       img: 'assets/img/ic_mosquito_report.png',
@@ -95,6 +99,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                   child: GestureDetector(
                     onTap: () {
                       setSelected('none');
+                      widget.setValid(true);
                     },
                     child: CustomCard(
                       // img: '',

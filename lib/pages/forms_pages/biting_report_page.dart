@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -23,6 +24,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
   String otherReport;
+  bool seeButton = false;
+  bool addMosquito = false;
+  bool validContent = false;
 
   List<Map> displayQuestions = [
     // {
@@ -169,6 +173,26 @@ class _BitingReportPageState extends State<BitingReportPage> {
     //     }
     //   ]
     // }
+    {
+      "question": {
+        "id": 11,
+        "text": {
+          "en": "Did you see any of the mosquitoes that have bitten you?",
+          "ca": "Has vist algun dels mosquits que t'han picat?",
+          "es": "¿Has visto alguno de los mosquitos que te han picado?"
+        }
+      },
+      "answers": [
+        {
+          "id": 101,
+          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+        },
+        {
+          "id": 81,
+          "text": {"en": "No", "ca": "No", "es": "No"}
+        }
+      ]
+    }
   ];
 
   @override
@@ -182,6 +206,18 @@ class _BitingReportPageState extends State<BitingReportPage> {
   addOtherReport(String reportType) {
     setState(() {
       otherReport = reportType;
+    });
+  }
+
+  addAdultReport() {
+    setState(() {
+      addMosquito = !addMosquito;
+    });
+  }
+
+  setValid(isValid) {
+    setState(() {
+      validContent = isValid;
     });
   }
 
@@ -206,15 +242,31 @@ class _BitingReportPageState extends State<BitingReportPage> {
           MaterialPageRoute(builder: (context) => AdultReportPage()),
         );
         break;
+      default:
+        Utils.createReport();
+        if (widget.editReport != null) {
+          widget.loadData();
+        }
+        Navigator.pop(context);
+        break;
     }
+  }
+
+  goNextPage() {
+    _pagesController.nextPage(
+        duration: Duration(microseconds: 300), curve: Curves.ease);
+    setState(() {
+      seeButton = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm(displayQuestions),
-      BitingLocationForm(),
-      AddOtherReportPage(addOtherReport),
+      BitingForm(displayQuestions, goNextPage),
+      BitingLocationForm(setValid),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
+      AddOtherReportPage(addOtherReport, setValid),
     ];
 
     return Scaffold(
@@ -228,6 +280,12 @@ class _BitingReportPageState extends State<BitingReportPage> {
             if (currentPage == 0.0) {
               Utils.resetReport();
               Navigator.pop(context);
+            } else if (currentPage == 1) {
+              _pagesController.previousPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease);
+              setState(() {
+                seeButton = false;
+              });
             } else {
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);
@@ -237,30 +295,35 @@ class _BitingReportPageState extends State<BitingReportPage> {
         title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
             fontSize: 16),
         actions: <Widget>[
-          Style.noBgButton(
-              false //TODO: show finish in last page
-                  ? MyLocalizations.of(context, "finish")
-                  : MyLocalizations.of(context, "next"),
-              true
-                  ? () {
-                      double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length - 1) {
-                        if (otherReport != null) {
-                          navigateOtherReport();
-                        } else {
-                          Utils.createReport();
-                          if (widget.editReport != null) {
-                            widget.loadData();
+          seeButton
+              // true
+
+              ? Style.noBgButton(
+                  _pagesController.page == _formsRepot.length - 1
+                      // false
+                      ? MyLocalizations.of(context, "finish")
+                      : MyLocalizations.of(context, "next"),
+                  validContent
+                      ? () {
+                          double currentPage = _pagesController.page;
+                          if (currentPage == _formsRepot.length - 1) {
+                            navigateOtherReport();
+                          } else if (currentPage == 2 && addMosquito) {
+                            Utils.addOtherReport('adult');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AdultReportPage()),
+                            );
+                          } else {
+                            setValid(false);
+                            _pagesController.nextPage(
+                                duration: Duration(microseconds: 300),
+                                curve: Curves.ease);
                           }
-                          Navigator.pop(context);
                         }
-                      } else {
-                        _pagesController.nextPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease);
-                      }
-                    }
-                  : null)
+                      : null)
+              : Container(),
         ],
       ),
       body: PageView.builder(

@@ -55,7 +55,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     {
       "question": {
         "id": 10,
-        "text": {"en": "Does it have water?", "ca": "Hi ha aigua?", "es": "¿Hay agua?"},
+        "text": {
+          "en": "Does it have water?",
+          "ca": "Hi ha aigua?",
+          "es": "¿Hay agua?"
+        },
       },
       "answers": [
         {
@@ -73,7 +77,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "id": 11,
         "text": {
           "en": "Have you seen mosquitoes around?",
-          "ca": "Has vist mosquits a la vora?", 
+          "ca": "Has vist mosquits a la vora?",
           "es": "¿Has visto mosquitos alrededor?"
         }
       },
@@ -92,6 +96,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   bool skipReport = false;
   bool addMosquito = false;
+  bool validContent = false;
   String otherReport;
 
   @override
@@ -122,6 +127,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     });
   }
 
+  setValid(isValid) {
+    setState(() {
+      validContent = isValid;
+    });
+  }
+
   navigateOtherReport() {
     Utils.addOtherReport(otherReport);
     switch (otherReport) {
@@ -143,18 +154,26 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           MaterialPageRoute(builder: (context) => AdultReportPage()),
         );
         break;
+      default:
+        Utils.createReport();
+        if (widget.editReport != null) {
+          // widget.loadData();
+        }
+        Navigator.pop(context);
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0)),
+      PublicBreedingForm(
+          setSkipReport, displayQuestions.elementAt(0), setValid),
       // TakePicturePage(),
-      QuestionsBreedingForm(displayQuestions.elementAt(1)),
-      BitingLocationForm(),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2)),
-      AddOtherReportPage(addOtherReport),
+      QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
+      BitingLocationForm(setValid),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
+      AddOtherReportPage(addOtherReport, setValid),
     ];
 
     return Scaffold(
@@ -181,7 +200,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               false //TODO: show finish in last page
                   ? MyLocalizations.of(context, "finish")
                   : MyLocalizations.of(context, "next"),
-              true
+              validContent
                   ? () {
                       double currentPage = _pagesController.page;
                       if (skipReport) {
@@ -192,12 +211,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                         Navigator.pop(context);
                       } else {
                         if (currentPage == _formsRepot.length - 1) {
-                          if (otherReport != null) {
-                            navigateOtherReport();
-                          } else {
-                            Utils.createReport();
-                            Navigator.pop(context);
-                          }
+                          navigateOtherReport();
                         } else if (currentPage == 3.0 && addMosquito) {
                           Utils.addOtherReport('adult');
                           Navigator.push(
@@ -206,6 +220,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                 builder: (context) => AdultReportPage()),
                           );
                         } else {
+                          setValid(false);
                           _pagesController.nextPage(
                               duration: Duration(microseconds: 300),
                               curve: Curves.ease);

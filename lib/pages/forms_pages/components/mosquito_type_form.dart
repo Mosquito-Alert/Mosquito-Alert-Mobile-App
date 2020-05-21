@@ -10,8 +10,9 @@ import 'image_question_option_widget.dart';
 class MosquitoTypeForm extends StatefulWidget {
   final Function setSkip3;
   final Map displayQuestion;
+  final Function setValid;
 
-  MosquitoTypeForm(this.setSkip3, this.displayQuestion);
+  MosquitoTypeForm(this.setSkip3, this.displayQuestion, this.setValid);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
@@ -66,10 +67,12 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                       ['text']['es'],
                                   widget.displayQuestion['answers'][index]
                                       ['id']);
+
                               widget.displayQuestion['answers'][index]['id'] ==
                                       62
                                   ? widget.setSkip3()
                                   : null; // skip when type = comon mosquito
+                              widget.setValid(true);
                             },
                             child: ImageQuestionOption(
                               question.answer_id ==

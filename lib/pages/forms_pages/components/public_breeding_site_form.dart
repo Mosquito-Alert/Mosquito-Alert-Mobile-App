@@ -5,8 +5,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 class PublicBreedingForm extends StatefulWidget {
   final Function skipReport;
   final Map displayQuestion;
+  final Function setValid;
 
-  PublicBreedingForm(this.skipReport, this.displayQuestion);
+  PublicBreedingForm(this.skipReport, this.displayQuestion, this.setValid);
   @override
   _PublicBreedingFormState createState() => _PublicBreedingFormState();
 }
@@ -50,6 +51,7 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
                           selected = text;
                         });
                         id == 92 ? widget.skipReport() : null;
+                        widget.setValid(true);
                       },
                       child: SmallQuestionOption(
                         text,

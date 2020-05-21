@@ -7,8 +7,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingForm extends StatefulWidget {
   final List<Map> displayQuestions;
+  final Function nextPage;
 
-  BitingForm(this.displayQuestions);
+  BitingForm(this.displayQuestions, this.nextPage);
   @override
   _BitingFormState createState() => _BitingFormState();
 }
@@ -228,7 +229,6 @@ class _BitingFormState extends State<BitingForm> {
                   fontSize: 10,
                 ),
               ),
-
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -298,10 +298,12 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
-              // canContinue()
-              false
+              canContinue()
+                  // true
                   ? GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        widget.nextPage();
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         width: double.infinity,
@@ -390,30 +392,44 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   bool canContinue() {
-    if (questions.length > 1 && questions != null && questions.isNotEmpty) {
+    if (questions.length > 1 && questions.isNotEmpty) {
       int totalIndex = questions.indexWhere((q) => q.question_id == 1);
       int totalValues = int.parse(questions[totalIndex].answer_value);
       bool canContinue = false;
-      for (int j = 2; j <= 3; j++) {
-        int questionValue = 0;
-        int total3 = 0;
-        for (int i = 0; i < questions.length; i++) {
-          // 2 = first questions on screen; 3 = only 3 questions in this screen (2 shown + 1 auto)
-          if (questions[i].question_id == 2) {
-            questionValue =
-                questionValue + int.parse(questions[i].answer_value);
-          } else if (questions[i].question_id == 3) {
-            total3++;
-          }
+      int totalParts = 0;
+      int totalQ3 = 0;
+      int totalQ4 = 0;
+
+      questions.forEach((q) {
+        if (q.question_id == 2) {
+          totalParts = totalParts + int.parse(q.answer_value);
         }
-        if (questionValue == totalValues || total3 == totalValues) {
-          canContinue = true;
-        } else {
-          canContinue = false;
-        }
-      }
-      return canContinue;
+        if (q.question_id == 3) totalQ3++;
+        if (q.question_id == 4) totalQ3++;
+      });
+      return totalQ3 >= totalParts;
+
+      //   for (int j = 2; j <= 3; j++) {
+      //     int questionValue = 0;
+      //     int total3 = 0;
+      //     for (int i = 0; i < questions.length; i++) {
+      //       // 2 = first questions on screen; 3 = only 3 questions in this screen (2 shown + 1 auto)
+      //       if (questions[i].question_id == 2) {
+      //         questionValue =
+      //             questionValue + int.parse(questions[i].answer_value);
+      //       } else if (questions[i].question_id == 3) {
+      //         total3++;
+      //       }
+      //     }
+      //     if (questionValue == totalValues || total3 == totalValues) {
+      //       canContinue = true;
+      //     } else {
+      //       canContinue = false;
+      //     }
+      //   }
+      //   return canContinue;
     }
-    return true;
+    return false;
+    // }
   }
 }

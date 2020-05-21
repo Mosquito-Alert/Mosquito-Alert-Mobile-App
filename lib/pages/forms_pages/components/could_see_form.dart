@@ -5,8 +5,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 class CouldSeeForm extends StatefulWidget {
   final Function addReport;
   final Map displayQuestion;
+  final Function setValid;
 
-  CouldSeeForm(this.addReport, this.displayQuestion);
+  CouldSeeForm(this.addReport, this.displayQuestion, this.setValid);
   @override
   _CouldSeeFormState createState() => _CouldSeeFormState();
 }
@@ -50,6 +51,7 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
                           selected = text;
                         });
                         id == 101 ? widget.addReport() : null;
+                        widget.setValid(true);
                       },
                       child: SmallQuestionOption(
                         text,

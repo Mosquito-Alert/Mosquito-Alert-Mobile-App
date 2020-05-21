@@ -171,6 +171,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   bool skip3 = false;
   bool addBiting = false;
+  bool validContent = false;
   String otherReport;
 
   @override
@@ -196,6 +197,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
   addOtherReport(String reportType) {
     setState(() {
       otherReport = reportType;
+    });
+  }
+
+  setValid(isValid) {
+    setState(() {
+      validContent = isValid;
     });
   }
 
@@ -226,11 +233,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0)),
+      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid),
       MosquitoPartsForm(displayQuestions.elementAt(1)),
-      BitingLocationForm(),
-      CouldSeeForm(addBitingReport, displayQuestions.elementAt(2)),
-      AddOtherReportPage(addOtherReport),
+      BitingLocationForm(setValid),
+      CouldSeeForm(addBitingReport, displayQuestions.elementAt(2), setValid),
+      AddOtherReportPage(addOtherReport, setValid),
     ];
 
     return Scaffold(
@@ -260,15 +267,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
               false //TODO: show finish in last page
                   ? MyLocalizations.of(context, "finish")
                   : MyLocalizations.of(context, "next"),
-              true
+              validContent
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length - 1 && !addBiting) {
                         Utils.createReport();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainVC()),
-                        );
+                        Navigator.pop(context);
                       } else if (currentPage == 3.0 && addBiting) {
                         Utils.addOtherReport('bite');
                         Navigator.push(
@@ -277,10 +281,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
                               builder: (context) => BitingReportPage()),
                         );
                       } else if (currentPage == 0.0 && skip3) {
+                        setValid(false);
                         _pagesController.animateToPage(2,
                             duration: Duration(microseconds: 300),
                             curve: Curves.ease);
                       } else {
+                        setValid(false);
                         _pagesController.nextPage(
                             duration: Duration(microseconds: 300),
                             curve: Curves.ease);
