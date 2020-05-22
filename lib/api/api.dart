@@ -42,7 +42,7 @@ class ApiSingleton {
   };
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FacebookLogin facebookLogin = FacebookLogin();
+  final facebookLogin = FacebookLogin();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final ApiSingleton _singleton = new ApiSingleton._internal();
@@ -132,29 +132,32 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> singInWithFacebook() async {
-    facebookLogin.loginBehavior = Platform.isIOS
-        ? FacebookLoginBehavior.webViewOnly
-        : FacebookLoginBehavior.nativeWithFallback;
+    AuthCredential credential;
 
-    // final result = await facebookLogin
-    //     .logInWithReadPermissions(['email', 'public_profile']);
+    final FacebookLoginResult result = await facebookLogin.logIn(['email']);
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token,
+        );
 
-    final FacebookLoginResult fbResult =
-        await facebookLogin.logIn(['email', 'public_profile']);
-    final AuthCredential credential = FacebookAuthProvider.getCredential(
-      accessToken: fbResult.accessToken.token,
-    );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-
-    return currentUser;
+        final FirebaseUser user =
+            (await _auth.signInWithCredential(credential)).user;
+        assert(user.email != null);
+        assert(user.displayName != null);
+        assert(!user.isAnonymous);
+        assert(await user.getIdToken() != null);
+        final FirebaseUser currentUser = await _auth.currentUser();
+        assert(user.uid == currentUser.uid);
+        return currentUser;
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        // Todo: Show alert
+        break;
+      case FacebookLoginStatus.error:
+        print(result.errorMessage);
+        break;
+    }
   }
 
   Future<bool> logout() async {
