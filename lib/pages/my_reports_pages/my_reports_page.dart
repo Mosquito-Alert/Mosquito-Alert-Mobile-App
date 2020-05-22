@@ -71,7 +71,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     Utils.getLocation();
     loadingStream.add(true);
     if (_reports == null) {
-      _getData();
+      // _getData();
     }
     if (iconAdultYours == null) {
       setCustomMapPin();
@@ -92,6 +92,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
     setState(() {
       location = loc;
     });
+
+    _getData();
   }
 
   _updateData() {
@@ -100,9 +102,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
-    List<Report> list = await ApiSingleton().getReportsList(
-        Utils.location.latitude, Utils.location.longitude,
-        page: 1);
+    var loc = location != null
+        ? location
+        : Utils.location != null
+            ? Utils.location
+            : Position(latitude: 41.3948975, longitude: 2.0785562);
+    List<Report> list = await ApiSingleton()
+        .getReportsList(loc.latitude, loc.longitude, page: 1);
 
     if (list == null) {
       list = [];
@@ -606,24 +612,32 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             children: <Widget>[
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                    const EdgeInsets.symmetric(vertical: 20.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     report.responses[index].question != null
-                                        ? Style.titleMedium(
-                                            report.responses[index].question,
-                                            fontSize: 14)
+                                        ? Expanded(
+                                            flex: 3,
+                                            child: Style.titleMedium(
+                                                report
+                                                    .responses[index].question,
+                                                fontSize: 14),
+                                          )
                                         : Container(),
-                                    Style.body(report.responses[index].answer !=
-                                            ' '
-                                        ? report.responses[index].answer
-                                        : report.responses[index].answer_value),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Style.body(
+                                          report.responses[index].answer != ' '
+                                              ? report.responses[index].answer
+                                              : report.responses[index]
+                                                  .answer_value,
+                                          textAlign: TextAlign.end),
+                                    ),
                                   ],
                                 ),
                               ),
-                              Divider(),
                             ],
                           );
                         }),
@@ -671,7 +685,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           _updateData();
                         }, context);
                         //
-                      }))
+                      }, textColor: Colors.red))
                     ],
                   ),
                 ],

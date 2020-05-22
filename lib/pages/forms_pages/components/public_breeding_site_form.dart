@@ -6,14 +6,23 @@ class PublicBreedingForm extends StatefulWidget {
   final Function skipReport;
   final Map displayQuestion;
   final Function setValid;
+  final bool selectPublic;
 
-  PublicBreedingForm(this.skipReport, this.displayQuestion, this.setValid);
+  PublicBreedingForm(
+      this.skipReport, this.displayQuestion, this.setValid, this.selectPublic);
   @override
   _PublicBreedingFormState createState() => _PublicBreedingFormState();
 }
 
 class _PublicBreedingFormState extends State<PublicBreedingForm> {
-  String selected;
+  int selected;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.selectPublic ? selected = 91 : selected = 92;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +56,7 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
                   child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          selected = text;
+                          selected = id;
                         });
                         id == 92
                             ? widget.skipReport(true)
@@ -56,7 +65,7 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
                       },
                       child: SmallQuestionOption(
                         text,
-                        selected: selected == text,
+                        selected: selected == id,
                       )),
                 );
               },

@@ -139,7 +139,8 @@ class ApiSingleton {
     // final result = await facebookLogin
     //     .logInWithReadPermissions(['email', 'public_profile']);
 
-    final FacebookLoginResult fbResult = await facebookLogin.logIn(['email', 'public_profile']);
+    final FacebookLoginResult fbResult =
+        await facebookLogin.logIn(['email', 'public_profile']);
     final AuthCredential credential = FacebookAuthProvider.getCredential(
       accessToken: fbResult.accessToken.token,
     );
@@ -191,18 +192,19 @@ class ApiSingleton {
       String userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$userScore?user=$userUUID',
+        '$serverUrl$userScore?user_id=$userUUID',
         headers: headers,
       );
 
-      print(response);
+      // print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return ApiResponse.fromJson(json.decode(response.body));
       }
+      Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      return true;
+      return jsonAnswer['score'];
     } catch (e) {
       return false;
     }

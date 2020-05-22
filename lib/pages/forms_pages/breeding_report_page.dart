@@ -171,7 +171,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       PublicBreedingForm(
-          setSkipReport, displayQuestions.elementAt(0), setValid),
+          setSkipReport, displayQuestions.elementAt(0), setValid, widget.editReport != null),
       QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
       BitingLocationForm(setValid),
       CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),

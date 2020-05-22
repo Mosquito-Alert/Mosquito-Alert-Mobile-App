@@ -23,6 +23,7 @@ class MainVC extends StatefulWidget {
 
 class _MainVCState extends State<MainVC> {
   String userName;
+  int userScore = 0;
   @override
   void initState() {
     super.initState();
@@ -32,14 +33,14 @@ class _MainVCState extends State<MainVC> {
 
   _getData() async {
     var user = await UserManager.fetchUser();
+    int points = await UserManager.getUserScores();
     if (user != null && user.displayName != null) {
       setState(() {
         userName = user.displayName;
+        userScore = points;
       });
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +137,7 @@ class _MainVCState extends State<MainVC> {
                           ),
                           child: Center(
                               child: AutoSizeText(
-                            '88888',
+                            userScore != null ? userScore.toString() : '',
                             maxLines: 1,
                             maxFontSize: 26,
                             minFontSize: 16,

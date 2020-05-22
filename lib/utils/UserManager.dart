@@ -20,12 +20,13 @@ class UserManager {
       ApiSingleton().createUser(uuid);
     }
     fetchUser();
+    int scores = await ApiSingleton().getUserScores();
+    setUserScores(scores); 
   }
 
   static fetchUser() async {
     user = await _auth.currentUser();
     return user;
-    print(user);
   }
 
   //set
@@ -37,6 +38,11 @@ class UserManager {
   static Future<void> setFrirebaseId(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("firebaseId", id);
+  }
+
+   static Future<void> setUserScores(scores) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt("userScores", scores);
   }
 
   //get
@@ -53,6 +59,11 @@ class UserManager {
   static Future<String> getFirebaseId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("firebaseId");
+  }
+
+   static Future<int> getUserScores() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt("userScores");
   }
 
   static signOut() async {
