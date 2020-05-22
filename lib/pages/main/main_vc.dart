@@ -13,7 +13,6 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
@@ -23,7 +22,7 @@ class MainVC extends StatefulWidget {
 
 class _MainVCState extends State<MainVC> {
   String userName;
-  int userScore = 0;
+  int userScore = 1;
   @override
   void initState() {
     super.initState();
@@ -34,9 +33,13 @@ class _MainVCState extends State<MainVC> {
   _getData() async {
     var user = await UserManager.fetchUser();
     int points = await UserManager.getUserScores();
-    if (user != null && user.displayName != null) {
+    if (user != null && user.displayName != null ) {
       setState(() {
         userName = user.displayName;
+        userScore = points;
+      });
+    } else {
+       setState(() {
         userScore = points;
       });
     }

@@ -180,10 +180,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
     }
-    super.initState();
   }
 
   setSkip3(skip) {

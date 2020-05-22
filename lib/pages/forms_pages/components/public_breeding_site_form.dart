@@ -21,7 +21,7 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.selectPublic ? selected = 91 : selected = 92;
+    widget.selectPublic  ? selected = 91 : null;
   }
 
   @override

@@ -48,7 +48,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           "text": {
             "en": "Private location",
             "ca": "Propietat privada",
-            "es": "Propiedad pirvada"
+            "es": "Propiedad privada"
           }
         }
       ]
