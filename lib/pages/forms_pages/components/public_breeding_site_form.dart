@@ -37,7 +37,6 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 5 / 2,
-                // crossAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
                 String text =
@@ -50,7 +49,9 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
                         setState(() {
                           selected = text;
                         });
-                        id == 92 ? widget.skipReport() : null;
+                        id == 92
+                            ? widget.skipReport(true)
+                            : widget.skipReport(false);
                         widget.setValid(true);
                       },
                       child: SmallQuestionOption(

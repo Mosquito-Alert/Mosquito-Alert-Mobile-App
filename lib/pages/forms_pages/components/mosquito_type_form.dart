@@ -24,9 +24,11 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   void initState() {
     super.initState();
     question = new Question(
-        question: '¿Pudiste reconocer el mosquito?', question_id: 6);
+        question: widget.displayQuestion['question']['text']['es'],
+        question_id: widget.displayQuestion['question']['id']);
     if (Utils.report != null) {
-      int index = Utils.report.responses.indexWhere((q) => q.question_id == 6);
+      int index = Utils.report.responses.indexWhere(
+          (q) => q.question_id == widget.displayQuestion['question']['id']);
       question.answer = Utils.report.responses[index].answer;
       question.answer_id = Utils.report.responses[index].answer_id;
     } else {
@@ -70,9 +72,8 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
 
                               widget.displayQuestion['answers'][index]['id'] ==
                                       62
-                                  ? widget.setSkip3()
-                                  : null; // skip when type = comon mosquito
-                              widget.setValid(true);
+                                  ? widget.setSkip3(true)
+                                  : widget.setSkip3(false);
                             },
                             child: ImageQuestionOption(
                               question.answer_id ==
@@ -111,6 +112,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
       question.answer = answer;
       question.answer_id = answerId;
     });
+    widget.setValid(true);
     Utils.addResponse(question);
   }
 }

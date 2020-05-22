@@ -50,7 +50,9 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
                         setState(() {
                           selected = text;
                         });
-                        id == 101 ? widget.addReport() : null;
+                        id == 101
+                            ? widget.addReport(true)
+                            : widget.addReport(false);
                         widget.setValid(true);
                       },
                       child: SmallQuestionOption(

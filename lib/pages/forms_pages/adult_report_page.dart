@@ -5,7 +5,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
-import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -15,8 +14,9 @@ import 'components/biting_logation_form.dart';
 
 class AdultReportPage extends StatefulWidget {
   final Report editReport;
+  final Function loadData;
 
-  AdultReportPage({this.editReport});
+  AdultReportPage({this.editReport, this.loadData});
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
 }
@@ -154,6 +154,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
       },
       "answers": [
         {
+          "id": 101,
+          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+        },
+        {
           "id": 81,
           "text": {"en": "No", "ca": "No", "es": "No"}
         },
@@ -164,7 +168,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
             "ca": "No ho tinc clar",
             "es": "No lo tengo claro"
           }
-        }
+        },
       ]
     }
   ];
@@ -182,15 +186,15 @@ class _AdultReportPageState extends State<AdultReportPage> {
     super.initState();
   }
 
-  setSkip3() {
+  setSkip3(skip) {
     setState(() {
-      skip3 = !skip3;
+      skip3 = skip;
     });
   }
 
-  addBitingReport() {
+  addBitingReport(addReport) {
     setState(() {
-      addBiting = !addBiting;
+      addBiting = addReport;
     });
   }
 
@@ -207,25 +211,34 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   navigateOtherReport() {
-    Utils.addOtherReport(otherReport);
     switch (otherReport) {
       case "bite":
+        Utils.addOtherReport("bite");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BitingReportPage()),
         );
         break;
       case "site":
+        Utils.addOtherReport("site");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BreedingReportPage()),
         );
         break;
       case "adult":
+        Utils.addOtherReport("adult");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AdultReportPage()),
         );
+        break;
+      default:
+        Utils.createReport();
+        if (widget.editReport != null) {
+          widget.loadData();
+        }
+        Navigator.pop(context);
         break;
     }
   }
@@ -234,7 +247,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   Widget build(BuildContext context) {
     _formsRepot = [
       MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid),
-      MosquitoPartsForm(displayQuestions.elementAt(1)),
+      MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
       BitingLocationForm(setValid),
       CouldSeeForm(addBitingReport, displayQuestions.elementAt(2), setValid),
       AddOtherReportPage(addOtherReport, setValid),
@@ -252,9 +265,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
               Utils.resetReport();
               Navigator.pop(context);
             } else if (currentPage == 2.0 && skip3) {
+              setValid(true);
               _pagesController.animateToPage(0,
                   duration: Duration(microseconds: 300), curve: Curves.ease);
             } else {
+              setValid(true);
+              addOtherReport(null);
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);
             }
@@ -264,15 +280,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
             fontSize: 16),
         actions: <Widget>[
           Style.noBgButton(
-              false //TODO: show finish in last page
+              _pagesController.hasClients &&
+                      _pagesController.page == _formsRepot.length - 1 &&
+                      otherReport == 'none'
                   ? MyLocalizations.of(context, "finish")
                   : MyLocalizations.of(context, "next"),
               validContent
                   ? () {
                       double currentPage = _pagesController.page;
                       if (currentPage == _formsRepot.length - 1 && !addBiting) {
-                        Utils.createReport();
-                        Navigator.pop(context);
+                        navigateOtherReport();
                       } else if (currentPage == 3.0 && addBiting) {
                         Utils.addOtherReport('bite');
                         Navigator.push(

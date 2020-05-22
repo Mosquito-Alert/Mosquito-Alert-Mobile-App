@@ -209,9 +209,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
     });
   }
 
-  addAdultReport() {
+  addAdultReport(addReport) {
     setState(() {
-      addMosquito = !addMosquito;
+      addMosquito = addReport;
     });
   }
 
@@ -222,21 +222,23 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   navigateOtherReport() {
-    Utils.addOtherReport(otherReport);
     switch (otherReport) {
       case "bite":
+        Utils.addOtherReport('bite');
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BitingReportPage()),
         );
         break;
       case "site":
+        Utils.addOtherReport('site');
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BreedingReportPage()),
         );
         break;
       case "adult":
+        Utils.addOtherReport('adult');
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AdultReportPage()),
@@ -263,7 +265,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm([displayQuestions.elementAt(0),displayQuestions.elementAt(1), ], goNextPage),
+      BitingForm([
+        displayQuestions.elementAt(0),
+        displayQuestions.elementAt(1),
+      ], goNextPage),
       BitingLocationForm(setValid),
       CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
       AddOtherReportPage(addOtherReport, setValid),
@@ -287,6 +292,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 seeButton = false;
               });
             } else {
+              addOtherReport(null);
               _pagesController.previousPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease);
             }
@@ -299,7 +305,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
               // true
 
               ? Style.noBgButton(
-                  _pagesController.page == _formsRepot.length - 1
+                  _pagesController.page == _formsRepot.length - 1 &&
+                          otherReport == 'none'
                       // false
                       ? MyLocalizations.of(context, "finish")
                       : MyLocalizations.of(context, "next"),

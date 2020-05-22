@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class ImageQuestionOption extends StatelessWidget {
