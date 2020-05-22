@@ -405,9 +405,16 @@ class _BitingFormState extends State<BitingForm> {
           totalParts = totalParts + int.parse(q.answer_value);
         }
         if (q.question_id == 3) totalQ3++;
-        if (q.question_id == 4) totalQ3++;
+        if (q.question_id == 4) totalQ4++;
       });
-      return totalQ3 >= totalParts;
+
+      if (totalParts > 0 &&
+          totalQ3 > 0 &&
+          totalQ4 > 0 &&
+          totalQ3 <= totalValues &&
+          totalQ4 <= totalValues) return true;
+
+      return false;
 
       //   for (int j = 2; j <= 3; j++) {
       //     int questionValue = 0;

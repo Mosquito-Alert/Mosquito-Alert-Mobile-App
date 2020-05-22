@@ -28,16 +28,12 @@ class ImageQuestionOption extends StatelessWidget {
                 // color: Colors.blue,
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
-                  image: AssetImage(img!= null ? img : "assets/img/torax_711.png"),
+                  image: AssetImage(
+                      img != null ? img : "assets/img/torax_711.png"),
                   fit: BoxFit.cover,
-                  // colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcOver))
                 ),
               ),
               // padding: EdgeInsets.all(5),
-              // child: Image.asset(
-              //   img,
-              //   fit: BoxFit.cover,
-              // ),
             ),
             Container(
               decoration: BoxDecoration(
@@ -49,19 +45,21 @@ class ImageQuestionOption extends StatelessWidget {
                 ),
               ),
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Style.title(title, color: Colors.white),
-                  Style.bodySmall(
-                    text,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
-            ),
+            text != null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Style.title(title, color: Colors.white),
+                        Style.bodySmall(
+                          text,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),

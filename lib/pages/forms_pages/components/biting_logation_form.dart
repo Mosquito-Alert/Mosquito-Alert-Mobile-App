@@ -75,8 +75,10 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       await Utils.getLocation();
       loc = Utils.location;
     }
-    controller.animateCamera(
-        CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
+    if (loc != null) {
+      controller.animateCamera(
+          CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
+    }
     setState(() {
       currentLocation = loc;
     });

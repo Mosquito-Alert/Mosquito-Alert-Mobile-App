@@ -263,7 +263,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm(displayQuestions, goNextPage),
+      BitingForm([displayQuestions.elementAt(0),displayQuestions.elementAt(1), ], goNextPage),
       BitingLocationForm(setValid),
       CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
       AddOtherReportPage(addOtherReport, setValid),

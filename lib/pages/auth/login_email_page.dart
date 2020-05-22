@@ -74,12 +74,6 @@ class _LoginEmailState extends State<LoginEmail> {
                                     MyLocalizations.of(context, "access_txt"),
                                     () {
                                   _checkEmail();
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => LoginPassword(
-                                  //           _emailController.text)),
-                                  // );
                                 })),
                           ],
                         ),
