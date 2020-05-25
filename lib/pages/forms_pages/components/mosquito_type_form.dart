@@ -18,7 +18,7 @@ class MosquitoTypeForm extends StatefulWidget {
 }
 
 class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
-  Question question;
+  Question question = Question();
 
   @override
   void initState() {
