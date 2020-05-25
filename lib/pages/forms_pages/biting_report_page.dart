@@ -248,7 +248,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         );
         break;
       default:
-        Utils.createReport();
+        loadingStream.add(true);
         bool res = await Utils.createReport();
         !res ? _showAlertKo() : _showAlertOk();
         if (widget.editReport != null) {

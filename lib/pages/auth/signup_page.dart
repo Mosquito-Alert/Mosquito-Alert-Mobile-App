@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class SignupPage extends StatefulWidget {
@@ -19,6 +22,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
+  StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
   @override
   void initState() {
@@ -136,16 +140,34 @@ class _SignupPageState extends State<SignupPage> {
             ),
           ),
         ),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
       ],
     );
   }
 
+  _showSocialError() {
+    Utils.showAlert(MyLocalizations.of(context, "app_name"),
+        MyLocalizations.of(context, "social_login_ko_txt"), context);
+  }
+
   _signUp() async {
-    //TODO: add loader
+    loadingStream.add(true);
     ApiSingleton()
         .singUp(_emailController.text, _passwordController.text,
             _firstNameController.text, _lastNameController.text)
         .then((user) async {
+      loadingStream.add(false);
       UserManager.user = user;
       await UserManager.setUserName(user.displayName);
       await UserManager.setFrirebaseId(user.uid);
@@ -157,9 +179,9 @@ class _SignupPageState extends State<SignupPage> {
         context,
         MaterialPageRoute(builder: (context) => MainVC()),
       );
-      print(user);
     }).catchError((e) {
-      //TODO: show alert
+      loadingStream.add(false);
+      _showSocialError();
       print(e);
     });
   }

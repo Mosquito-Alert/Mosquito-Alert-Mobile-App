@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class RecoverPassword extends StatefulWidget {
@@ -10,6 +14,8 @@ class RecoverPassword extends StatefulWidget {
 
 class _RecoverPasswordState extends State<RecoverPassword> {
   TextEditingController _emailController = TextEditingController();
+  StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -67,8 +73,9 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                 width: double.infinity,
                                 child: Style.button(
                                     MyLocalizations.of(
-                                        context, "recover_password_btn"),
-                                    () {})),
+                                        context, "recover_password_btn"), () {
+                                  _recoverPassword();
+                                })),
                             SizedBox(
                               height: 20,
                             ),
@@ -92,7 +99,28 @@ class _RecoverPasswordState extends State<RecoverPassword> {
             ),
           ),
         ),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
       ],
     );
+  }
+
+  _recoverPassword() {
+    loadingStream.add(true);
+    ApiSingleton().recoverPassword(_emailController.text).then((value) {
+      loadingStream.add(false);
+    }).catchError((e) {
+      loadingStream.add(false);
+    });
   }
 }

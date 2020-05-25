@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,138 +19,159 @@ class LoginMainPage extends StatefulWidget {
 
 class _LoginMainPageState extends State<LoginMainPage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-            child: Container(
-          child: Column(children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  decoration: new BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Image.asset("assets/img/bg_login.png"),
-                ),
-                SafeArea(
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back),
+    return Stack(
+      children: <Widget>[
+        new Scaffold(
+          backgroundColor: Colors.white,
+          body: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+                child: Container(
+              child: Column(children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      width: double.infinity,
+                      decoration: new BoxDecoration(
+                        color: Colors.white,
                       ),
+                      child: Image.asset("assets/img/bg_login.png"),
+                    ),
+                    SafeArea(
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Style.title(
+                          MyLocalizations.of(context, "welcome_app_title")),
+                      Style.body(
+                          MyLocalizations.of(context, "login_method_txt")),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Style.loginButton(
+                          SvgPicture.asset(
+                            'assets/img/ic_facebook.svg',
+                            height: 21,
+                            fit: BoxFit.fitHeight,
+                          ),
+                          MyLocalizations.of(context, "login_btn1"),
+                          Color(0XFF3B5998),
+                          Colors.white, () {
+                        _facebookSignIn();
+                      }),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Style.loginButton(
+                          SvgPicture.asset(
+                            'assets/img/ic_google.svg',
+                            height: 21,
+                            fit: BoxFit.fitHeight,
+                          ),
+                          MyLocalizations.of(context, "login_btn2"),
+                          Colors.white,
+                          Colors.black, () {
+                        _googleSignIn();
+                      }, colorBorder: Colors.black.withOpacity(0.1)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Style.loginButton(
+                          SvgPicture.asset(
+                            'assets/img/ic_apple.svg',
+                            height: 21,
+                            fit: BoxFit.fitHeight,
+                          ),
+                          MyLocalizations.of(context, "login_btn3"),
+                          Colors.black,
+                          Colors.white,
+                          () {},
+                          colorBorder: Colors.black.withOpacity(0.1)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Style.noBgButton(
+                            MyLocalizations.of(context, "login_btn4"), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginEmail()),
+                          );
+                        }, textColor: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Style.body(
+                            MyLocalizations.of(
+                                context, "terms_and_conditions_txt"),
+                            textAlign: TextAlign.center,
+                            color: Style.greyColor,
+                          ))
                     ],
                   ),
                 ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Style.title(MyLocalizations.of(context, "welcome_app_title")),
-                  Style.body(MyLocalizations.of(context, "login_method_txt")),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Style.loginButton(
-                      SvgPicture.asset(
-                        'assets/img/ic_facebook.svg',
-                        height: 21,
-                        fit: BoxFit.fitHeight,
-                      ),
-                      MyLocalizations.of(context, "login_btn1"),
-                      Color(0XFF3B5998),
-                      Colors.white, () {
-                    _facebookSignIn();
-                  }),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Style.loginButton(
-                      SvgPicture.asset(
-                        'assets/img/ic_google.svg',
-                        height: 21,
-                        fit: BoxFit.fitHeight,
-                      ),
-                      MyLocalizations.of(context, "login_btn2"),
-                      Colors.white,
-                      Colors.black, () {
-                    _googleSignIn();
-                  }, colorBorder: Colors.black.withOpacity(0.1)),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Style.loginButton(
-                      SvgPicture.asset(
-                        'assets/img/ic_apple.svg',
-                        height: 21,
-                        fit: BoxFit.fitHeight,
-                      ),
-                      MyLocalizations.of(context, "login_btn3"),
-                      Colors.black,
-                      Colors.white,
-                      () {},
-                      colorBorder: Colors.black.withOpacity(0.1)),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: Style.noBgButton(
-                        MyLocalizations.of(context, "login_btn4"), () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginEmail()),
-                      );
-                    }, textColor: Colors.black),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Style.body(
-                        MyLocalizations.of(context, "terms_and_conditions_txt"),
-                        textAlign: TextAlign.center,
-                        color: Style.greyColor,
-                      ))
-                ],
-              ),
-            ),
-          ]),
-        )),
-      ),
+              ]),
+            )),
+          ),
+        ),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
+      ],
     );
   }
 
   _showSocialError() {
-    //TODO: set texts
-    Utils.showAlert(MyLocalizations.of(context, "app_name"), "text", context);
+    Utils.showAlert(MyLocalizations.of(context, "app_name"),
+        MyLocalizations.of(context, "social_login_ko_txt"), context);
   }
 
   _googleSignIn() async {
-    //TODO: add loading
+    loadingStream.add(true);
     ApiSingleton().sigInWithGoogle().then((FirebaseUser user) async {
-      print(user);
+      loadingStream.add(false);
       if (user != null) {
         UserManager.user = user;
         await UserManager.setUserName(user.displayName);
@@ -163,20 +186,22 @@ class _LoginMainPageState extends State<LoginMainPage> {
         );
       }
     }).catchError((e) {
+      loadingStream.add(false);
       _showSocialError();
       print(e);
     });
   }
 
   _facebookSignIn() async {
-    //TODO: add loading
+    loadingStream.add(true);
     ApiSingleton().singInWithFacebook().then((FirebaseUser user) {
-      print(user);
+      loadingStream.add(false);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MainVC()),
       );
     }).catchError((e) {
+      loadingStream.add(false);
       _showSocialError();
       print(e);
     });

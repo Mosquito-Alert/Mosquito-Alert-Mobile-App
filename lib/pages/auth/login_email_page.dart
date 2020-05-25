@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -14,6 +16,8 @@ class LoginEmail extends StatefulWidget {
 
 class _LoginEmailState extends State<LoginEmail> {
   TextEditingController _emailController = TextEditingController();
+  StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -95,16 +99,31 @@ class _LoginEmailState extends State<LoginEmail> {
             ),
           ),
         ),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
       ],
     );
   }
 
   _checkEmail() async {
+    loadingStream.add(true);
     if (!Utils.mailRegExp.hasMatch(_emailController.text)) {
       Utils.showAlert(MyLocalizations.of(context, "app_name"),
           MyLocalizations.of(context, "invalid_mail_txt"), context);
+      loadingStream.add(false);
     } else {
       ApiSingleton().checkEmail(_emailController.text).then((res) {
+        loadingStream.add(false);
         if (res.length > 0) {
           Navigator.push(
             context,
@@ -119,7 +138,9 @@ class _LoginEmailState extends State<LoginEmail> {
           );
         }
       }).catchError((e) {
-        //Todo: show alert
+        loadingStream.add(false);
+        Utils.showAlert(MyLocalizations.of(context, "app_name"),
+            MyLocalizations.of(context, "email_error_txt"), context);
         print(e);
       });
     }

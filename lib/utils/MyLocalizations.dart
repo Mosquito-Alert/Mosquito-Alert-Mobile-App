@@ -31,8 +31,6 @@ class MyLocalizations {
       "login_btn4": "Acceder con mi correo electrónico",
       "terms_and_conditions_txt":
           "Entrando en Mosquito Alert, aceptas nuestros términos y condiciones y nuestra política de privacidad.",
-      "login_soscial_failed_txt":
-          "Something went wrong. Please check your account and try again.",
 
       //Login - email
       "enter_email_title": " Introduce tu correo electrónico",
@@ -40,11 +38,13 @@ class MyLocalizations {
       "access_txt": "Acceder",
       "register_txt": "Darse de alta",
       "invalid_mail_txt": "Correo electrónico no valido. Intentalo de nuevo.",
+      "email_error_txt": "Error al revisar el correo electrónico. Intentalo de nuevo.",
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",
       "user_password_txt": "Contrseña de usuario",
       "forgot_password_txt": "¿Has olvidado tu contrseña?",
+      "social_login_ko_txt": "Ocurrió un error, intentalo de nuevo por favor.",
 
       //Recover password
       "recover_password_title": "Recupera tu contraseña",

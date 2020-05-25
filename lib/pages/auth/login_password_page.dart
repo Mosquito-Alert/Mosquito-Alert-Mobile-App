@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,6 +7,7 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/auth/recover_password_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class LoginPassword extends StatefulWidget {
@@ -17,6 +20,8 @@ class LoginPassword extends StatefulWidget {
 
 class _LoginPasswordState extends State<LoginPassword> {
   TextEditingController _passwordController = TextEditingController();
+  StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -115,15 +120,28 @@ class _LoginPasswordState extends State<LoginPassword> {
             ),
           ),
         ),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
       ],
     );
   }
 
   _login() async {
+    loadingStream.add(true);
     ApiSingleton()
         .loginEmail(widget.email, _passwordController.text)
         .then((FirebaseUser user) {
-      print(user);
+      loadingStream.add(false);
       ApiSingleton().createProfile(user.uid);
       Navigator.pushReplacement(
         context,
@@ -131,6 +149,7 @@ class _LoginPasswordState extends State<LoginPassword> {
       );
     }).catchError((e) {
       //Todo: show alert
+      loadingStream.add(false);
       print(e);
     });
   }
