@@ -94,7 +94,7 @@ class MyLocalizations {
       "select_location_txt": "Seleccionar...",
       "not_sure_txt": "No lo tengo claro",
       "gallery": "Galería",
-      "camera": "Cámara",
+      "camara": "Cámara",
       "add_image_txt": "Añadir foto",
       "add_image_from_where_txt": "¿De dónde quieres subir la imagen?",
       "ok_next_txt": "De acuerdo, hacer foto!",

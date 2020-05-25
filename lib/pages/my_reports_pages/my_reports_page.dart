@@ -107,8 +107,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
         : Utils.location != null
             ? Utils.location
             : Position(latitude: 41.3948975, longitude: 2.0785562);
-    List<Report> list = await ApiSingleton()
+    List<Report> list = [];
+    list = await ApiSingleton()
         .getReportsList(loc.latitude, loc.longitude, page: 1);
+    loadingStream.add(false);
 
     if (list == null) {
       list = [];

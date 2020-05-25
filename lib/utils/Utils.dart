@@ -30,6 +30,11 @@ class Utils {
     imagePath.add({'image': path, 'id': report.version_UUID});
   }
 
+  static void deleteImage(File image) {
+    imagePath.removeWhere((element) => element['image'] == image);
+    // print(imagePath);
+  }
+
   //REPORTS form
   static Report report;
   static Session session;

@@ -410,7 +410,7 @@ class ApiSingleton {
 
       return getReportsList(lat, lon, allReports: allReports, page: page);
     } catch (e) {
-      print(e.message);
+      print(e);
       return null;
     }
   }
