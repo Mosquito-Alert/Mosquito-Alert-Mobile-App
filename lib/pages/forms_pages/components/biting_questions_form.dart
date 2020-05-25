@@ -53,7 +53,7 @@ class BitingQuestionsForm extends StatelessWidget {
                                     },
                                     child: QuestionOption(
                                       selectedAnswer(
-                                          questions[index]['question'][0],   // TODO: fix selector state
+                                          questions[index]['question'][0],   
                                           questions[index]['answers'][i]),
                                       questions[index]['answers'][i],
                                       'assets/img/ic_image.PNG',

@@ -22,7 +22,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _emailController.text = widget.email;
     super.initState();
   }

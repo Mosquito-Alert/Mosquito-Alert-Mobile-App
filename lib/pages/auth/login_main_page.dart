@@ -171,7 +171,6 @@ class _LoginMainPageState extends State<LoginMainPage> {
   _facebookSignIn() async {
     //TODO: add loading
     ApiSingleton().singInWithFacebook().then((FirebaseUser user) {
-      //TODO: save token
       print(user);
       Navigator.push(
         context,

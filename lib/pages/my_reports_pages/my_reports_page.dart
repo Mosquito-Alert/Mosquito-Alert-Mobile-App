@@ -278,7 +278,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
                           if (index == 1.0) {
                             return ReportsList(
-                                snapshot.data, _reportBottomSheet);
+                                snapshot.hasData ? snapshot.data : [],
+                                _reportBottomSheet);
                           }
                         });
                   },
@@ -656,22 +657,28 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    BitingReportPage(editReport: report)),
+                                builder: (context) => BitingReportPage(
+                                      editReport: report,
+                                      loadData: _updateData,
+                                    )),
                           );
                         } else if (report.type == "adult") {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    AdultReportPage(editReport: report)),
+                                builder: (context) => AdultReportPage(
+                                      editReport: report,
+                                      loadData: _updateData,
+                                    )),
                           );
                         } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    BreedingReportPage(editReport: report)),
+                                builder: (context) => BreedingReportPage(
+                                      editReport: report,
+                                      loadData: _updateData,
+                                    )),
                           );
                         }
                       })),
@@ -683,8 +690,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             MyLocalizations.of(context, "delete_report_txt"),
                             () {
                           Utils.deleteReport(report);
-                          Navigator.pop(context);
+
                           _updateData();
+                          Navigator.pop(context);
                         }, context);
                         //
                       }, textColor: Colors.red))

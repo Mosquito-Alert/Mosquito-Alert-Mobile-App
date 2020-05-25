@@ -83,6 +83,8 @@ class MyLocalizations {
           "Haz click encima de la imagen para reportar una nueva picada.",
       "continue_txt": "Continuar",
       "complete_all_txt": "Complete todos los campos para continuar",
+      "save_report_ok_txt": "Reporte guardado correctamente",
+      "save_report_ko_txt": "Error, intentalo de nuevo más tarde",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",

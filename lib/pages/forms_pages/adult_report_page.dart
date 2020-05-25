@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
@@ -24,6 +26,7 @@ class AdultReportPage extends StatefulWidget {
 class _AdultReportPageState extends State<AdultReportPage> {
   final _pagesController = PageController();
   List _formsRepot;
+  StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
     {
@@ -210,7 +213,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     });
   }
 
-  navigateOtherReport() {
+  navigateOtherReport() async {
     switch (otherReport) {
       case "bite":
         Utils.addOtherReport("bite");
@@ -234,11 +237,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
         );
         break;
       default:
-        Utils.createReport();
+        loadingStream.add(true);
+        bool res = await Utils.createReport();
+
+        !res ? _showAlertKo() : _showAlertOk();
         if (widget.editReport != null) {
           widget.loadData();
         }
-        Navigator.pop(context);
+
         break;
     }
   }
@@ -253,72 +259,120 @@ class _AdultReportPageState extends State<AdultReportPage> {
       AddOtherReportPage(addOtherReport, setValid),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            double currentPage = _pagesController.page;
-            if (currentPage == 0.0) {
-              Utils.resetReport();
-              Navigator.pop(context);
-            } else if (currentPage == 2.0 && skip3) {
-              setValid(true);
-              _pagesController.animateToPage(0,
-                  duration: Duration(microseconds: 300), curve: Curves.ease);
-            } else {
-              setValid(true);
-              addOtherReport(null);
-              _pagesController.previousPage(
-                  duration: Duration(microseconds: 300), curve: Curves.ease);
-            }
-          },
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                double currentPage = _pagesController.page;
+                if (currentPage == 0.0) {
+                  Utils.resetReport();
+                  Navigator.pop(context);
+                } else if (currentPage == 2.0 && skip3) {
+                  setValid(true);
+                  _pagesController.animateToPage(0,
+                      duration: Duration(microseconds: 300),
+                      curve: Curves.ease);
+                } else {
+                  setValid(true);
+                  addOtherReport(null);
+                  _pagesController.previousPage(
+                      duration: Duration(microseconds: 300),
+                      curve: Curves.ease);
+                }
+              },
+            ),
+            title: Style.title(
+                MyLocalizations.of(context, "adult_report_title"),
+                fontSize: 16),
+            actions: <Widget>[
+              Style.noBgButton(
+                  _pagesController.hasClients &&
+                          _pagesController.page == _formsRepot.length - 1 &&
+                          otherReport == 'none'
+                      ? MyLocalizations.of(context, "finish")
+                      : MyLocalizations.of(context, "next"),
+                  validContent
+                      ? () {
+                          double currentPage = _pagesController.page;
+                          if (currentPage == _formsRepot.length - 1 &&
+                              !addBiting) {
+                            navigateOtherReport();
+                          } else if (currentPage == 3.0 && addBiting) {
+                            Utils.addOtherReport('bite');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BitingReportPage()),
+                            );
+                          } else if (currentPage == 0.0 && skip3) {
+                            setValid(false);
+                            _pagesController.animateToPage(2,
+                                duration: Duration(microseconds: 300),
+                                curve: Curves.ease);
+                          } else {
+                            setValid(false);
+                            _pagesController.nextPage(
+                                duration: Duration(microseconds: 300),
+                                curve: Curves.ease);
+                          }
+                        }
+                      : null)
+            ],
+          ),
+          body: PageView.builder(
+              controller: _pagesController,
+              itemCount: _formsRepot.length,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return _formsRepot[index];
+              }),
         ),
-        title: Style.title(MyLocalizations.of(context, "adult_report_title"),
-            fontSize: 16),
-        actions: <Widget>[
-          Style.noBgButton(
-              _pagesController.hasClients &&
-                      _pagesController.page == _formsRepot.length - 1 &&
-                      otherReport == 'none'
-                  ? MyLocalizations.of(context, "finish")
-                  : MyLocalizations.of(context, "next"),
-              validContent
-                  ? () {
-                      double currentPage = _pagesController.page;
-                      if (currentPage == _formsRepot.length - 1 && !addBiting) {
-                        navigateOtherReport();
-                      } else if (currentPage == 3.0 && addBiting) {
-                        Utils.addOtherReport('bite');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BitingReportPage()),
-                        );
-                      } else if (currentPage == 0.0 && skip3) {
-                        setValid(false);
-                        _pagesController.animateToPage(2,
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease);
-                      } else {
-                        setValid(false);
-                        _pagesController.nextPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease);
-                      }
-                    }
-                  : null)
-        ],
-      ),
-      body: PageView.builder(
-          controller: _pagesController,
-          itemCount: _formsRepot.length,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return _formsRepot[index];
-          }),
+        StreamBuilder<bool>(
+          stream: loadingStream.stream,
+          initialData: false,
+          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.hasData == false || snapshot.data == false) {
+              return Container();
+            }
+            return Utils.loading(
+              snapshot.data,
+            );
+          },
+        )
+      ],
+    );
+  }
+
+  _showAlertOk() {
+    loadingStream.add(false);
+    Utils.showAlert(
+      MyLocalizations.of(context, "app_name"),
+      MyLocalizations.of(context, 'save_report_ok_txt'),
+      context,
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      barrierDismissible: false,
+    );
+  }
+
+  _showAlertKo() {
+    loadingStream.add(false);
+    Utils.showAlert(
+      MyLocalizations.of(context, "app_name"),
+      MyLocalizations.of(context, 'save_report_ko_txt'),
+      context,
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      barrierDismissible: false,
     );
   }
 }

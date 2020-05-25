@@ -14,7 +14,10 @@ class ReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (UserManager.profileUUIDs == null) {
+    if (UserManager.profileUUIDs == null ||
+        reports.isEmpty ||
+        !reports.any((report) =>
+            UserManager.profileUUIDs.any((id) => id == report.user))) {
       return Center(
         child: Style.body(MyLocalizations.of(context, "no_reports_yet_txt")),
       );

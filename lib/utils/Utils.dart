@@ -205,21 +205,24 @@ class Utils {
     }
   }
 
-  static Future<void> createReport() async {
+  static Future<bool> createReport() async {
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
-      ApiSingleton().createReport(report);
+      bool res = await ApiSingleton().createReport(report);
+      return res;
     } else {
       report.version_time = DateTime.now().toIso8601String();
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
 
-      reportsList.forEach((r) {
-        ApiSingleton().createReport(r);
+      reportsList.forEach((r) async {
+        bool res = await ApiSingleton().createReport(r);
+        if (!res) return false;
       });
       closeSession();
       resetReport();
+      return true;
     }
   }
 

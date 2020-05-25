@@ -294,7 +294,6 @@ class ApiSingleton {
     try {
       var body = {};
 
-      //TODO: fix this!
       if (report.version_UUID != null && report.version_UUID.isNotEmpty) {
         body.addAll({'version_UUID': report.version_UUID});
       }
@@ -366,8 +365,9 @@ class ApiSingleton {
           }
         });
       }
+      return true; 
     } catch (e) {
-      return null;
+      return false;
     }
   }
 

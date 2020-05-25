@@ -123,7 +123,6 @@ class _LoginPasswordState extends State<LoginPassword> {
     ApiSingleton()
         .loginEmail(widget.email, _passwordController.text)
         .then((FirebaseUser user) {
-      //TODO: save token
       print(user);
       ApiSingleton().createProfile(user.uid);
       Navigator.pushReplacement(
