@@ -44,27 +44,27 @@ class Report {
   });
 
   Report.fromJson(Map<dynamic, dynamic> json) {
-    version_UUID = json['version_UUID'];
+    version_UUID = json['version_UUID'].toString();
     version_number = json['version_number'];
-    user = json['user'];
-    report_id = json['report_id'];
-    phone_upload_time = json['phone_upload_time'];
-    creation_time = json['creation_time'];
-    version_time = json['version_time'];
-    type = json['type'];
-    location_choice = json['location_choice'];
+    user = json['user'].toString();
+    report_id = json['report_id'].toString();
+    phone_upload_time = json['phone_upload_time'].toString();
+    creation_time = json['creation_time'].toString();
+    version_time = json['version_time'].toString();
+    type = json['type'].toString();
+    location_choice = json['location_choice'].toString();
     current_location_lon = json['current_location_lon'];
     current_location_lat = json['current_location_lat'];
     selected_location_lon = json['selected_location_lon'];
     selected_location_lat = json['selected_location_lat'];
-    note = json['note'];
-    package_name = json['package_name'];
-    package_version = json['package_version'];
+    note = json['note'].toString();
+    package_name = json['package_name'].toString();
+    package_version = json['package_version'].toString();
     session = json['session'];
 
     if (json['photos'] != null) {
       var jj = json['photos'];
-      print(jj);
+      // print(jj);
       photos = <Photo>[];
       json['photos'].forEach((p) {
         var ph = new Photo.fromJson(p);
@@ -118,7 +118,7 @@ class Photo {
   });
 
   Photo.fromJson(Map<dynamic, dynamic> json) {
-    print(json);
+    // print(json);
     id = json['id'];
     photo = json['photo'];
     uuid = json['uuid'];

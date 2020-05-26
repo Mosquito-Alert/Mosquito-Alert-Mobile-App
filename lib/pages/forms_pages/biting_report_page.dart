@@ -23,7 +23,7 @@ class BitingReportPage extends StatefulWidget {
 }
 
 class _BitingReportPageState extends State<BitingReportPage> {
-  final _pagesController = PageController();
+  PageController _pagesController;
   List _formsRepot;
   String otherReport;
   bool seeButton = false;
@@ -200,10 +200,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
     }
-    super.initState();
+    _pagesController = PageController();
   }
 
   addOtherReport(String reportType) {
@@ -260,11 +261,19 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   goNextPage() {
-    _pagesController.nextPage(
-        duration: Duration(microseconds: 300), curve: Curves.ease);
-    setState(() {
-      seeButton = true;
+    _pagesController
+        .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+        .then((value) {
+      setState(() {
+        seeButton = true;
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    _pagesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -293,11 +302,14 @@ class _BitingReportPageState extends State<BitingReportPage> {
                   Utils.resetReport();
                   Navigator.pop(context);
                 } else if (currentPage == 1) {
-                  _pagesController.previousPage(
-                      duration: Duration(microseconds: 300),
-                      curve: Curves.ease);
-                  setState(() {
-                    seeButton = false;
+                  _pagesController
+                      .previousPage(
+                          duration: Duration(microseconds: 300),
+                          curve: Curves.ease)
+                      .then((value) {
+                    setState(() {
+                      seeButton = false;
+                    });
                   });
                 } else {
                   addOtherReport(null);
@@ -332,10 +344,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                       builder: (context) => AdultReportPage()),
                                 );
                               } else {
-                                setValid(false);
-                                _pagesController.nextPage(
-                                    duration: Duration(microseconds: 300),
-                                    curve: Curves.ease);
+                                _pagesController
+                                    .nextPage(
+                                        duration: Duration(microseconds: 300),
+                                        curve: Curves.ease)
+                                    .then((value) => setValid(false));
                               }
                             }
                           : null)

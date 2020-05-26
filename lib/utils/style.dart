@@ -95,7 +95,8 @@ class Style {
 
   ///Buttons
 
-  static Widget button(text, onPressed, {color, textColor, borderColor, elevation}) {
+  static Widget button(text, onPressed,
+      {color, textColor, borderColor, elevation}) {
     return RaisedButton(
       onPressed: onPressed,
       elevation: 0,
@@ -130,8 +131,10 @@ class Style {
       padding: EdgeInsets.symmetric(vertical: 14),
       color: Colors.transparent,
       disabledColor: Colors.white.withOpacity(0.3),
-      textColor:  textColor != null ? textColor : Colors.black,
-      disabledTextColor: textColor != null ? textColor.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+      textColor: textColor != null ? textColor : Colors.black,
+      disabledTextColor: textColor != null
+          ? textColor.withOpacity(0.3)
+          : Colors.black.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3),
       ),

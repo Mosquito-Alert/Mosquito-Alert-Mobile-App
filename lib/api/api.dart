@@ -169,7 +169,7 @@ class ApiSingleton {
     });
   }
 
-  Future<dynamic> recoverPassword(String email){
+  Future<dynamic> recoverPassword(String email) {
     _auth.sendPasswordResetEmail(email: email);
   }
 
@@ -369,7 +369,7 @@ class ApiSingleton {
           }
         });
       }
-      return true; 
+      return true;
     } catch (e) {
       return false;
     }
@@ -385,7 +385,7 @@ class ApiSingleton {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&radius=8000&page=$page&user=$userUUID' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=25' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
@@ -408,7 +408,7 @@ class ApiSingleton {
         }
 
         if (jsonAnswer['next'] == null && jsonAnswer['previous'] != null) {
-          return allReports;
+          return  allReports;
         }
       }
 

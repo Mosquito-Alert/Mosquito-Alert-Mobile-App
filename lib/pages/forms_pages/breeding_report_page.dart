@@ -23,7 +23,7 @@ class BreedingReportPage extends StatefulWidget {
 }
 
 class _BreedingReportPageState extends State<BreedingReportPage> {
-  final _pagesController = PageController();
+  PageController _pagesController;
   List _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
@@ -110,6 +110,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     } else {
       Utils.createNewReport('site');
     }
+    _pagesController = PageController();
     super.initState();
   }
 
@@ -173,6 +174,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   @override
+  void dispose() {
+    _pagesController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _formsRepot = [
       PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0), setValid,
@@ -197,10 +204,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   Navigator.pop(context);
                   Utils.resetReport();
                 } else {
-                  addOtherReport(null);
-                  _pagesController.previousPage(
-                      duration: Duration(microseconds: 300),
-                      curve: Curves.ease);
+                  _pagesController
+                      .previousPage(
+                          duration: Duration(microseconds: 300),
+                          curve: Curves.ease)
+                      .then((value) => addOtherReport(null));
                 }
               },
             ),
@@ -234,10 +242,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                     builder: (context) => AdultReportPage()),
                               );
                             } else {
-                              setValid(false);
-                              _pagesController.nextPage(
-                                  duration: Duration(microseconds: 300),
-                                  curve: Curves.ease);
+                              _pagesController
+                                  .nextPage(
+                                      duration: Duration(microseconds: 300),
+                                      curve: Curves.ease)
+                                  .then((value) => setValid(false));
                             }
                           }
                         }

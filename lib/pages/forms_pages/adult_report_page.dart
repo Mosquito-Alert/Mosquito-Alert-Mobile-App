@@ -24,7 +24,7 @@ class AdultReportPage extends StatefulWidget {
 }
 
 class _AdultReportPageState extends State<AdultReportPage> {
-  final _pagesController = PageController();
+  PageController _pagesController;
   List _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
@@ -187,6 +187,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
     }
+    _pagesController = PageController();
   }
 
   setSkip3(skip) {
@@ -250,6 +251,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   @override
+  void dispose() {
+    _pagesController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _formsRepot = [
       MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid),
@@ -273,16 +280,20 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   Utils.resetReport();
                   Navigator.pop(context);
                 } else if (currentPage == 2.0 && skip3) {
-                  setValid(true);
-                  _pagesController.animateToPage(0,
-                      duration: Duration(microseconds: 300),
-                      curve: Curves.ease);
+                  _pagesController
+                      .animateToPage(0,
+                          duration: Duration(microseconds: 300),
+                          curve: Curves.ease)
+                      .then((value) => setValid(true));
                 } else {
-                  setValid(true);
-                  addOtherReport(null);
-                  _pagesController.previousPage(
-                      duration: Duration(microseconds: 300),
-                      curve: Curves.ease);
+                  _pagesController
+                      .previousPage(
+                          duration: Duration(microseconds: 300),
+                          curve: Curves.ease)
+                      .then((value) {
+                    setValid(true);
+                    addOtherReport(null);
+                  });
                 }
               },
             ),
@@ -310,15 +321,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                   builder: (context) => BitingReportPage()),
                             );
                           } else if (currentPage == 0.0 && skip3) {
-                            setValid(false);
-                            _pagesController.animateToPage(2,
-                                duration: Duration(microseconds: 300),
-                                curve: Curves.ease);
+                            _pagesController
+                                .animateToPage(2,
+                                    duration: Duration(microseconds: 300),
+                                    curve: Curves.ease)
+                                .then((value) => setValid(false));
                           } else {
-                            setValid(false);
-                            _pagesController.nextPage(
-                                duration: Duration(microseconds: 300),
-                                curve: Curves.ease);
+                            _pagesController
+                                .nextPage(
+                                    duration: Duration(microseconds: 300),
+                                    curve: Curves.ease)
+                                .then((value) => setValid(false));
                           }
                         }
                       : null)
