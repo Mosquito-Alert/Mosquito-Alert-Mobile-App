@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +21,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     return images.isEmpty
         ? GestureDetector(
             onTap: () {
-              _showAlertImage(context);
+              _chooseTypeImage();
             },
             child: Card(
               elevation: 2,
@@ -61,13 +62,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 10),
+                crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
             itemCount: images.length + 1,
             itemBuilder: (context, index) {
               return index == (images.length)
                   ? GestureDetector(
                       onTap: () {
-                        _showAlertImage(context);
+                        _chooseTypeImage();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -87,8 +88,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                           width: double.infinity,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              images[index].path,
+                            child: Image.file(
+                              images[index],
                               fit: BoxFit.cover,
                               height: 100,
                               width: 100,
@@ -109,94 +110,70 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
             });
   }
 
-  _showAlertImage(context) {
-    if (Platform.isAndroid) {
-      return showBottomSheet(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        // backgroundColor: Colors.orange,
-        elevation: 2,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 120,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  height: 5,
-                ),
-                Style.title(MyLocalizations.of(context, 'add_image_txt')),
-                //  Style.body(
-                //       MyLocalizations.of(context, 'add_image_from_where_txt')),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: FlatButton(
-                        child: Style.body(
-                          MyLocalizations.of(context, 'gallery'),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          getImageGallery();
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: FlatButton(
-                        child:
-                            Style.body(MyLocalizations.of(context, 'camara')),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _showInfoImage();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          );
+  _chooseTypeImage() {
+    List<Widget> listForiOS = <Widget>[
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          getGalleryImages();
         },
-      );
-    } else {
-      return showCupertinoModalPopup(
-        context: context, //
-        builder: (BuildContext context) {
-          return CupertinoActionSheet(
-            title: Style.title(MyLocalizations.of(context, 'add_image_txt'),
-                textAlign: TextAlign.center),
-            // message: Style.body(
-            //     MyLocalizations.of(context, 'add_image_from_where_txt')),
-            actions: <Widget>[
-              CupertinoActionSheetAction(
-                // isDefaultAction: true,
-                child: Style.body(MyLocalizations.of(context, 'gallery')),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  getImageGallery();
-                },
-              ),
-              CupertinoActionSheetAction(
-                child: Style.body(MyLocalizations.of(context, 'camara')),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _showInfoImage();
-                },
-              ),
-            ],
-          );
+        child: Text(
+          MyLocalizations.of(context, 'gallery'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          _showInfoImage();
         },
-      );
-    }
+        child: Text(
+          MyLocalizations.of(context, 'camara'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+    ];
+    List<Widget> listForAndroid = <Widget>[
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          _showInfoImage();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'camara'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
+      Divider(height: 1.0),
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          getGalleryImages();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'gallery'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
+    ];
+
+    Utils.modalDetailTrackingforPlatform(
+        Theme.of(context).platform == TargetPlatform.iOS
+            ? listForiOS
+            : listForAndroid,
+        Theme.of(context).platform,
+        context, () {
+      Navigator.pop(context);
+    });
   }
 
   _showInfoImage() {
     return showDialog(
-        barrierDismissible: false,
+        barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -217,7 +194,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                     MyLocalizations.of(context, "ok_next_txt"),
                     () {
                       Navigator.of(context).pop();
-                      getImageCamara();
+                      getImage(ImageSource.camera);
                     },
                     textColor: Style.colorPrimary,
                   )
@@ -235,21 +212,33 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     });
   }
 
-  Future getImageCamara() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    Utils.saveImgPath(image);
+  getGalleryImages() async {
+    List<File> files = await FilePicker.getMultiFile(
+      type: FileType.image,
+    );
 
-    setState(() {
-      images.add(image);
-    });
+    if (files != null) {
+      files.forEach((image) {
+        Utils.saveImgPath(image);
+      });
+
+      setState(() {
+        images = [...images, ...files];
+      });
+    }
   }
 
-  Future getImageGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Utils.saveImgPath(image);
+  Future getImage(source) async {
+    var image = await ImagePicker.pickImage(
+      source: source,
+    );
 
-    setState(() {
-      images.add(image);
-    });
+    if (image != null) {
+      Utils.saveImgPath(image);
+
+      setState(() {
+        images.add(image);
+      });
+    }
   }
 }

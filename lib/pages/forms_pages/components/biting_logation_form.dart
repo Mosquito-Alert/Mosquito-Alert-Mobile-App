@@ -55,7 +55,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       }
       if (Utils.report.responses.any((r) => r.question_id == 5)) {
         //TODO: save responses as markers
-
       }
     }
     super.initState();

@@ -357,13 +357,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
           return SafeArea(
               child: Container(
             height: MediaQuery.of(context).size.height * 0.40,
-            // color: Colors.white,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                )),
+            color: Colors.white,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: Column(
@@ -377,6 +371,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_bites_yours.svg'),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Style.body(
                               MyLocalizations.of(
                                   context, "your_reports_bites_txt"),
@@ -384,16 +381,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_breeding_yours.svg'),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Style.body(
                               MyLocalizations.of(
                                   context, "your_reports_breeding_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     Expanded(
                       child: Column(
@@ -407,11 +413,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       ),
                     ),
                   ]),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(children: <Widget>[
                     Expanded(
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_bites_other.svg'),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Style.body(
                               MyLocalizations.of(
                                   context, "other_reports_bites_txt"),
@@ -419,16 +431,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         ],
                       ),
                     ),
+                     SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                       child: Column(
                         children: <Widget>[
                           SvgPicture.asset('assets/img/ic_breeding_other.svg'),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Style.body(
                               MyLocalizations.of(
                                   context, "other_reports_breeding_txt"),
                               textAlign: TextAlign.center)
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     Expanded(
                       child: Column(

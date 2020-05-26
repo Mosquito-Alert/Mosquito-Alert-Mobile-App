@@ -383,6 +383,43 @@ class Utils {
     }
   }
 
+  static Future modalDetailTrackingforPlatform(List<Widget> list,
+      TargetPlatform platform, BuildContext context, Function close,
+      {title, cancelButton}) {
+    if (platform == TargetPlatform.iOS) {
+      return showCupertinoModalPopup(
+          context: context,
+          builder: (context) {
+            return CupertinoActionSheet(
+                title: title != null ? Text(title) : null,
+                cancelButton: cancelButton != null
+                    ? cancelButton
+                    : CupertinoActionSheetAction(
+                        onPressed: close,
+                        child: Text(
+                          MyLocalizations.of(context, 'cancel'),
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                actions: list);
+          });
+    } else if (platform == TargetPlatform.android) {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return BottomSheet(
+              builder: (BuildContext context) {
+                return SafeArea(
+                    child: Container(
+                  child: Wrap(children: list),
+                ));
+              },
+              onClosing: close,
+            );
+          });
+    }
+  }
+
   static Widget loading(_isLoading, [Color indicatorColor]) {
     return _isLoading == true
         ? new Container(

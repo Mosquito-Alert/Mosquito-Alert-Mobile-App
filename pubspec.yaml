@@ -32,6 +32,7 @@ dependencies:
   google_sign_in: ^4.4.4
   flutter_facebook_login: ^3.0.0
   auto_size_text: ^2.1.0
+  file_picker: ^1.9.0+1
 
 dev_dependencies:
   flutter_test:

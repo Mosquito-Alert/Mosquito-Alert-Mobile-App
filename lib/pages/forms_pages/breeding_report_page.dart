@@ -161,7 +161,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         );
         break;
       default:
-        Utils.createReport();
+        loadingStream.add(true);
         bool res = await Utils.createReport();
 
         !res ? _showAlertKo() : _showAlertOk();
