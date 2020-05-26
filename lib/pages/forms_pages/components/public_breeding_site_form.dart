@@ -39,16 +39,17 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
               height: 30,
             ),
             GridView.builder(
+              // scrollDirection: Axis.horizontal,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: widget.displayQuestion['answers'].length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 5 / 2,
+                childAspectRatio: 5/2,
               ),
               itemBuilder: (context, index) {
                 String text =
-                    widget.displayQuestion['answers'][index]['text']['es'];
+                    widget.displayQuestion['answers'][index]['text']['es'] ;
                 int id = widget.displayQuestion['answers'][index]['id'];
                 return Container(
                   padding: EdgeInsets.all(5),

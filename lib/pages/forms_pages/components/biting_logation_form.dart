@@ -36,27 +36,44 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     Utils.getLocation();
     currentLocation = Utils.location;
 
-    _getCurrentLocation();
-
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
         case "selected":
           streamType.add(LocationType.selected);
           updateMarker(LatLng(Utils.report.selected_location_lat,
               Utils.report.selected_location_lon));
+          currentLocation = Position(
+              latitude: Utils.report.selected_location_lat,
+              longitude: Utils.report.selected_location_lon);
           break;
         case "current":
           streamType.add(LocationType.current);
           updateMarker(LatLng(Utils.report.current_location_lat,
               Utils.report.current_location_lon));
+          currentLocation = Position(
+              latitude: Utils.report.current_location_lat,
+              longitude: Utils.report.current_location_lon);
           break;
         default:
           streamType.add(LocationType.missing);
       }
       if (Utils.report.responses.any((r) => r.question_id == 5)) {
-        //TODO: save responses as markers
+        Utils.report.responses.forEach((q) {
+          if (q.question_id == 5) {
+            var res = q.answer_value
+                .substring(q.answer_value.indexOf('( ') + 2,
+                    q.answer_value.indexOf(')'))
+                .split(', ');
+            markers.add(new Marker(
+                markerId: MarkerId('mk'),
+                position: LatLng(double.parse(res[0]), double.parse(res[1]))));
+          }
+        });
       }
+    } else {
+      _getCurrentLocation();
     }
+
     super.initState();
   }
 
@@ -188,38 +205,41 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                         AsyncSnapshot<LocationType> snapshot) {
                       return Column(
                         children: <Widget>[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        getPosition(LocationType.current,
-                                            context: context);
-                                      },
-                                      child: SmallQuestionOption(
-                                        MyLocalizations.of(
-                                            context, "current_location_txt"),
-                                        selected: snapshot.data ==
-                                            LocationType.current,
-                                      ))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  widget.setValid(false);
-                                  getPosition(LocationType.selected);
-                                },
-                                child: SmallQuestionOption(
-                                  MyLocalizations.of(
-                                      context, "select_location_txt"),
-                                  selected:
-                                      snapshot.data == LocationType.selected,
+                          Container(
+                            height: 60,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          getPosition(LocationType.current,
+                                              context: context);
+                                        },
+                                        child: SmallQuestionOption(
+                                          MyLocalizations.of(
+                                              context, "current_location_txt"),
+                                          selected: snapshot.data ==
+                                              LocationType.current,
+                                        ))),
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              )),
-                            ],
+                                Expanded(
+                                    child: GestureDetector(
+                                  onTap: () {
+                                    widget.setValid(false);
+                                    getPosition(LocationType.selected);
+                                  },
+                                  child: SmallQuestionOption(
+                                    MyLocalizations.of(
+                                        context, "select_location_txt"),
+                                    selected:
+                                        snapshot.data == LocationType.selected,
+                                  ),
+                                )),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 10,

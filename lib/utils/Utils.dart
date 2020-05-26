@@ -111,7 +111,7 @@ class Utils {
 
   static void addLocationResponse(double lat, lon) {
     var newQuestion = new Question(
-        question: "¿DOnde estabas cuando te picaron?",
+        question: "¿Donde estabas cuando te picaron?",
         answer: " ",
         question_id: 5,
         answer_id: 51,
