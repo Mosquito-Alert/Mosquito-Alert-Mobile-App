@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
@@ -70,9 +71,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
     Utils.getLocation();
     loadingStream.add(true);
-    if (_reports == null) {
-      // _getData();
-    }
     if (iconAdultYours == null) {
       setCustomMapPin();
     }
@@ -93,7 +91,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       location = loc;
     });
 
-    _getData();
+    // _getData();
   }
 
   _updateData() {
@@ -148,7 +146,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         'assets/img/ic_breeding_yours.png');
     iconAdultOthers = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
-        'assets/img/ic_adults_other.png');
+        'assets/img/ic_adult_other.png');
     iconBitesOthers = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
         'assets/img/ic_bites_other.png');
@@ -179,6 +177,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         markers.add(Marker(
           markerId: MarkerId(_reports[i].report_id),
           position: position,
+          consumeTapEvents: true,
           onTap: () {
             _reportBottomSheet(ctx, _reports[i]);
           },
@@ -225,6 +224,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _children = {
       0: Container(
@@ -258,12 +262,26 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                   onMapCreated: _onMapCreated,
                                   mapType: MapType.normal,
                                   mapToolbarEnabled: false,
+                                  zoomControlsEnabled: false,
+                                  zoomGesturesEnabled: false,
+                                  onCameraMove: (newPosition) {
+                                    setState(() {
+                                      location = Position(
+                                          latitude: newPosition.target.latitude,
+                                          longitude:
+                                              newPosition.target.longitude);
+                                    });
+                                  },
+                                  onCameraIdle: () {
+                                    loadingStream.add(true);
+                                    _getData();
+                                  },
                                   initialCameraPosition: CameraPosition(
                                     target: location != null
                                         ? LatLng(location.latitude,
                                             location.longitude)
                                         : LatLng(41.3948975, 2.0785562),
-                                    zoom: 14.0,
+                                    zoom: 15.0,
                                   ),
                                   markers: snapshot.data != null
                                       ? _createMarkers(context)
@@ -431,7 +449,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         ],
                       ),
                     ),
-                     SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
                     Expanded(
@@ -473,7 +491,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
         });
   }
 
-  _reportBottomSheet(BuildContext context, Report report) {
+  _reportBottomSheet(BuildContext context, Report report) async {
+    bool isMine = UserManager.profileUUIDs.any((id) => id == report.user);
+    Coordinates coord;
+    if (report.location_choice == "current") {
+      coord =
+          Coordinates(report.current_location_lat, report.current_location_lon);
+    } else if (report.location_choice == 'selected') {
+      coord = Coordinates(
+          report.selected_location_lat, report.selected_location_lon);
+    }
+    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -554,7 +582,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             .toStringAsFixed(5) +
                                         ')',
                                 fontSize: 12),
-                            Style.body('Cercad de **Bellaterra (Barcelona)',
+                            Style.body(
+                                ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
                                 fontSize: 12),
                           ],
                         ),
@@ -669,56 +698,59 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   SizedBox(
                     height: 15,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Style.noBgButton(
-                              MyLocalizations.of(context, "edit"), () {
-                        if (report.type == "bite") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BitingReportPage(
-                                      editReport: report,
-                                      loadData: _updateData,
-                                    )),
-                          );
-                        } else if (report.type == "adult") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdultReportPage(
-                                      editReport: report,
-                                      loadData: _updateData,
-                                    )),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BreedingReportPage(
-                                      editReport: report,
-                                      loadData: _updateData,
-                                    )),
-                          );
-                        }
-                      })),
-                      Expanded(
-                          child: Style.noBgButton(
-                              MyLocalizations.of(context, "delete"), () {
-                        Utils.showAlertYesNo(
-                            MyLocalizations.of(context, "delete_report_title"),
-                            MyLocalizations.of(context, "delete_report_txt"),
-                            () {
-                          Utils.deleteReport(report);
+                  isMine
+                      ? Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: Style.noBgButton(
+                                    MyLocalizations.of(context, "edit"), () {
+                              if (report.type == "bite") {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BitingReportPage(
+                                            editReport: report,
+                                            loadData: _updateData,
+                                          )),
+                                );
+                              } else if (report.type == "adult") {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AdultReportPage(
+                                            editReport: report,
+                                            loadData: _updateData,
+                                          )),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BreedingReportPage(
+                                            editReport: report,
+                                            loadData: _updateData,
+                                          )),
+                                );
+                              }
+                            })),
+                            Expanded(
+                                child: Style.noBgButton(
+                                    MyLocalizations.of(context, "delete"), () {
+                              Utils.showAlertYesNo(
+                                  MyLocalizations.of(
+                                      context, "delete_report_title"),
+                                  MyLocalizations.of(
+                                      context, "delete_report_txt"), () {
+                                Utils.deleteReport(report);
 
-                          _updateData();
-                          Navigator.pop(context);
-                        }, context);
-                        //
-                      }, textColor: Colors.red))
-                    ],
-                  ),
+                                _updateData();
+                                Navigator.pop(context);
+                              }, context);
+                              //
+                            }, textColor: Colors.red))
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
             ),

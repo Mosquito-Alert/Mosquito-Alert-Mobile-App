@@ -133,7 +133,7 @@ class MyLocalizations {
       "location_txt": "Ubicación aproximada: ",
       "at_time_txt": "A las: ",
       "registered_location_txt": "Ubicación registrada",
-      "exact_time_register_txt": "Hora exacta del regitro",
+      "exact_time_register_txt": "Hora exacta del registro",
       "reported_images_txt": "Imagenes reportadas",
       "reported_species_txt": "Especie reportada",
       "when_biting_txt": "¿Cuando te ha picado?",
@@ -147,6 +147,7 @@ class MyLocalizations {
       "other_reports_breeding_txt": "Reportes de lugares de cría",
       "other_reports_adults_txt": "Reportes de adultos",
       "no_reports_yet_txt": "No hay reportes registrados",
+      "near_from_txt": "Cerca de ",
     },
   };
   String translate(key) {

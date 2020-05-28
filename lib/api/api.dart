@@ -385,7 +385,7 @@ class ApiSingleton {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=25' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=50&radius=1000' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
@@ -407,7 +407,7 @@ class ApiSingleton {
           allReports.add(Report.fromJson(item));
         }
 
-        if (jsonAnswer['next'] == null && jsonAnswer['previous'] != null) {
+        if (jsonAnswer['next'] == null) {
           return  allReports;
         }
       }
