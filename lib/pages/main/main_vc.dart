@@ -31,13 +31,9 @@ class _MainVCState extends State<MainVC> {
   _getData() async {
     var user = await UserManager.fetchUser();
     int points = await UserManager.getUserScores();
-    if (user != null && user.displayName != null ) {
+    if (user != null && user.displayName != null && points != null) {
       setState(() {
         userName = user.displayName;
-        userScore = points;
-      });
-    } else {
-       setState(() {
         userScore = points;
       });
     }

@@ -96,13 +96,25 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                             ),
                           ),
                         ),
+                        Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            gradient: LinearGradient(
+                              colors: [ Colors.black54, Colors.transparent,],
+                              begin: Alignment.topLeft,
+                              end: Alignment.center,
+                            ),
+                          ),
+                        ),
                         IconButton(
                           onPressed: () {
                             _deleteImage(images[index], index);
                           },
                           icon: Icon(
                             Icons.close,
-                            color: Style.colorPrimary,
+                            color: Colors.white,
                           ),
                         ),
                       ],

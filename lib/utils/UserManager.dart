@@ -17,10 +17,11 @@ class UserManager {
       prefs.setBool("firstTime", true);
       var uuid = new Uuid().v4();
       prefs.setString("uuid", uuid);
-      ApiSingleton().createUser(uuid);
+      await ApiSingleton().createUser(uuid);
+      setUserScores(1); 
     }
     fetchUser();
-    int scores = await ApiSingleton().getUserScores();
+    var scores = await ApiSingleton().getUserScores();
     setUserScores(scores); 
   }
 

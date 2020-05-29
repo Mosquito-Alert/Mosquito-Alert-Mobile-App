@@ -725,7 +725,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                       }),
                                 ),
                                 SizedBox(
-                                  height: 15,
+                                  height: 10,
                                 ),
                                 Row(
                                   children: <Widget>[
@@ -783,7 +783,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                       //
                                     }, textColor: Colors.red))
                                   ],
-                                )
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
                               ],
                             ),
                           )
