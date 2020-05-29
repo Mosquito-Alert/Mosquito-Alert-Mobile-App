@@ -19,12 +19,14 @@ class MosquitoTypeForm extends StatefulWidget {
 
 class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   Question question = Question();
+  String language; 
 
   @override
   void initState() {
     super.initState();
+    language = Utils.getLanguage(); 
     question = new Question(
-        question: widget.displayQuestion['question']['text']['es'],
+        question: widget.displayQuestion['question']['text'][language],
         question_id: widget.displayQuestion['question']['id']);
     if (Utils.report != null) {
       int index = Utils.report.responses.indexWhere(
@@ -48,7 +50,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
               SizedBox(
                 height: 35,
               ),
-              Style.title(widget.displayQuestion['question']['text']['es']),
+              Style.title(widget.displayQuestion['question']['text'][language]),
               Style.body(MyLocalizations.of(context, "could_recognise_txt")),
               Container(
                 margin: EdgeInsets.only(top: 10),
@@ -66,7 +68,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                             onTap: () {
                               onSelect(
                                   widget.displayQuestion['answers'][index]
-                                      ['text']['es'],
+                                      ['text'][language],
                                   widget.displayQuestion['answers'][index]
                                       ['id']);
 
@@ -82,7 +84,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   ? true
                                   : false,
                               widget.displayQuestion['answers'][index]['text']
-                                  ['es'],
+                                  [language],
                               MyLocalizations.of(context, "recognize_it_txt"),
                               widget.displayQuestion['answers'][index]['img'],
                               disabled: question.answer_id != null &&

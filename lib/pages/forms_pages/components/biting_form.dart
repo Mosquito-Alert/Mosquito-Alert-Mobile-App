@@ -16,9 +16,11 @@ class BitingForm extends StatefulWidget {
 
 class _BitingFormState extends State<BitingForm> {
   List<Question> questions;
+  String language;
 
   @override
   void initState() {
+    super.initState();
     questions = [];
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
@@ -29,8 +31,7 @@ class _BitingFormState extends State<BitingForm> {
     } else {
       Utils.createNewReport('bite');
     }
-
-    super.initState();
+    language = Utils.getLanguage();
   }
 
   @override
@@ -241,7 +242,7 @@ class _BitingFormState extends State<BitingForm> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                          widget.displayQuestions[i]['question']['text']['es'],
+                          widget.displayQuestions[i]['question']['text'][language],
                           fontSize: 16),
                       SizedBox(
                         height: 10,
@@ -261,9 +262,9 @@ class _BitingFormState extends State<BitingForm> {
                             ),
                             itemBuilder: (context, index) {
                               String answerTxt = widget.displayQuestions[i]
-                                  ['answers'][index]['text']['es'];
+                                  ['answers'][index]['text'][language];
                               String questionTxt = widget.displayQuestions[i]
-                                  ['question']['text']['es'];
+                                  ['question']['text'][language];
                               int questionId =
                                   widget.displayQuestions[i]['question']['id'];
                               int answerId = widget.displayQuestions[i]

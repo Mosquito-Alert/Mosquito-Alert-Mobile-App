@@ -18,12 +18,14 @@ class QuestionsBreedingForm extends StatefulWidget {
 
 class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
   Question question;
+  String language; 
 
   @override
   void initState() {
     super.initState();
+    language = Utils.getLanguage();
     question = new Question(
-      question: widget.displayQuestion['question']['text']['es'],
+      question: widget.displayQuestion['question']['text'][language],
       question_id: widget.displayQuestion['question']['id'],
     );
     if (Utils.report != null) {
@@ -47,7 +49,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
             SizedBox(
               height: 35,
             ),
-            Style.title(widget.displayQuestion['question']['text']['es']),
+            Style.title(widget.displayQuestion['question']['text'][language]),
             SizedBox(
               height: 30,
             ),
@@ -62,7 +64,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
               ),
               itemBuilder: (context, index) {
                 String text =
-                    widget.displayQuestion['answers'][index]['text']['es'];
+                    widget.displayQuestion['answers'][index]['text'][language];
                 int id = widget.displayQuestion['answers'][index]['id'];
                 return Container(
                   padding: EdgeInsets.all(5),

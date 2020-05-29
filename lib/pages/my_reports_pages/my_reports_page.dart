@@ -281,7 +281,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         ? LatLng(location.latitude,
                                             location.longitude)
                                         : LatLng(41.3948975, 2.0785562),
-                                    zoom: 15.0,
+                                    zoom: 15.7,
                                   ),
                                   markers: snapshot.data != null
                                       ? _createMarkers(context)

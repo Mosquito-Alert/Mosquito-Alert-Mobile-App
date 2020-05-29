@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class CouldSeeForm extends StatefulWidget {
@@ -14,6 +15,13 @@ class CouldSeeForm extends StatefulWidget {
 
 class _CouldSeeFormState extends State<CouldSeeForm> {
   String selected;
+  String language;
+
+  @override
+  void initState() {
+    super.initState();
+    language = Utils.getLanguage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,7 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
             SizedBox(
               height: 35,
             ),
-            Style.title(widget.displayQuestion['question']['text']['es']),
+            Style.title(widget.displayQuestion['question']['text'][language]),
             SizedBox(
               height: 30,
             ),
@@ -41,7 +49,7 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
               ),
               itemBuilder: (context, index) {
                 String text =
-                    widget.displayQuestion['answers'][index]['text']['es'];
+                    widget.displayQuestion['answers'][index]['text'][language];
                 int id = widget.displayQuestion['answers'][index]['id'];
                 return Container(
                   padding: EdgeInsets.all(5),

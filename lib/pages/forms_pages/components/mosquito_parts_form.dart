@@ -15,6 +15,7 @@ class MosquitoPartsForm extends StatefulWidget {
 
 class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   List<Question> questions = List();
+  String language;
 
   List<String> torax;
 
@@ -22,6 +23,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   void initState() {
     super.initState();
 
+    language = Utils.getLanguage();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
         if (q.question_id == widget.displayQuestion['question']['id']) {
@@ -44,7 +46,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
-              Style.title(widget.displayQuestion['question']['text']['es']),
+              Style.title(widget.displayQuestion['question']['text'][language]),
               SizedBox(
                 height: 20,
               ),
@@ -58,7 +60,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                       int id =
                           widget.displayQuestion['answers'][0][index]['id'];
                       String txt = widget.displayQuestion['answers'][0][index]
-                          ['text']['es'];
+                          ['text'][language];
                       return GestureDetector(
                         onTap: () {
                           onSelect(txt, id, 710);
@@ -88,7 +90,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                       int id =
                           widget.displayQuestion['answers'][1][index]['id'];
                       String txt = widget.displayQuestion['answers'][1][index]
-                          ['text']['es'];
+                          ['text'][language];
                       return GestureDetector(
                         onTap: () {
                           onSelect(txt, id, 720);
@@ -118,7 +120,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                       int id =
                           widget.displayQuestion['answers'][2][index]['id'];
                       String txt = widget.displayQuestion['answers'][2][index]
-                          ['text']['es'];
+                          ['text'][language];
                       return GestureDetector(
                         onTap: () {
                           onSelect(txt, id, 730);
