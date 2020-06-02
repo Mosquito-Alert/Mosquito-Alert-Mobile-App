@@ -299,7 +299,12 @@ class _BitingReportPageState extends State<BitingReportPage> {
               onPressed: () {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {
-                  Utils.resetReport();
+                  if (Utils.reportsList.isNotEmpty) {
+                    Utils.deleteLastReport();
+                  } else {
+                    Utils.resetReport();
+                  }
+
                   Navigator.pop(context);
                 } else if (currentPage == 1) {
                   _pagesController
@@ -355,13 +360,24 @@ class _BitingReportPageState extends State<BitingReportPage> {
                   : Container(),
             ],
           ),
-          body: PageView.builder(
-              controller: _pagesController,
-              itemCount: _formsRepot.length,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return _formsRepot[index];
-              }),
+          body: PageView(
+            controller: _pagesController,
+            // itemCount: _formsRepot.length,
+            physics: NeverScrollableScrollPhysics(),
+            // itemBuilder: (BuildContext context, int index) {
+            //   return _formsRepot[index];
+            // },
+            children: <Widget>[
+              BitingForm([
+                displayQuestions.elementAt(0),
+                displayQuestions.elementAt(1),
+              ], goNextPage),
+              BitingLocationForm(setValid),
+              CouldSeeForm(
+                  addAdultReport, displayQuestions.elementAt(2), setValid),
+              AddOtherReportPage(addOtherReport, setValid),
+            ],
+          ),
         ),
         StreamBuilder<bool>(
           stream: loadingStream.stream,

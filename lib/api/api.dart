@@ -344,7 +344,7 @@ class ApiSingleton {
   }
 
   //Reports
-  Future<dynamic> createReport(Report report) async {
+  Future<bool> createReport(Report report) async {
     try {
       var body = {};
 
@@ -409,7 +409,7 @@ class ApiSingleton {
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return ApiResponse.fromJson(json.decode(response.body));
+        return false;
       }
 
       if (Utils.imagePath != null) {

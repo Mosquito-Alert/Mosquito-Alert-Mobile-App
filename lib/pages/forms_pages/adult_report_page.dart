@@ -277,7 +277,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
               onPressed: () {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {
-                  Utils.resetReport();
+                  if (Utils.reportsList != null &&
+                      Utils.reportsList.isNotEmpty) {
+                    Utils.deleteLastReport();
+                  } else {
+                    Utils.resetReport();
+                  }
                   Navigator.pop(context);
                 } else if (currentPage == 2.0 && skip3) {
                   _pagesController
@@ -337,13 +342,23 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       : null)
             ],
           ),
-          body: PageView.builder(
-              controller: _pagesController,
-              itemCount: _formsRepot.length,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return _formsRepot[index];
-              }),
+          body: PageView(
+            controller: _pagesController,
+            // itemCount: _formsRepot.length,
+            physics: NeverScrollableScrollPhysics(),
+            // itemBuilder: (BuildContext context, int index) {
+            //   return _formsRepot[index];
+            // }),
+            children: <Widget>[
+              MosquitoTypeForm(
+                  setSkip3, displayQuestions.elementAt(0), setValid),
+              MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
+              BitingLocationForm(setValid),
+              CouldSeeForm(
+                  addBitingReport, displayQuestions.elementAt(2), setValid),
+              AddOtherReportPage(addOtherReport, setValid),
+            ],
+          ),
         ),
         StreamBuilder<bool>(
           stream: loadingStream.stream,

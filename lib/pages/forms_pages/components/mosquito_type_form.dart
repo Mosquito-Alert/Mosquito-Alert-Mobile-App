@@ -25,17 +25,17 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   void initState() {
     super.initState();
     language = Utils.getLanguage(); 
-    question = new Question(
-        question: widget.displayQuestion['question']['text'][language],
-        question_id: widget.displayQuestion['question']['id']);
-    if (Utils.report != null) {
-      int index = Utils.report.responses.indexWhere(
-          (q) => q.question_id == widget.displayQuestion['question']['id']);
-      question.answer = Utils.report.responses[index].answer;
-      question.answer_id = Utils.report.responses[index].answer_id;
-    } else {
-      Utils.createNewReport('adult');
-    }
+    // question = new Question(
+    //     question: widget.displayQuestion['question']['text'][language],
+    //     question_id: widget.displayQuestion['question']['id']);
+    // if (Utils.report != null) {
+    //   int index = Utils.report.responses.indexWhere(
+    //       (q) => q.question_id == widget.displayQuestion['question']['id']);
+    //   question.answer = Utils.report.responses[index].answer;
+    //   question.answer_id = Utils.report.responses[index].answer_id;
+    // } else {
+    //   Utils.createNewReport('adult');
+    // }
   }
 
   @override

@@ -93,6 +93,12 @@ class Utils {
     createNewReport(type);
   }
 
+  static deleteLastReport() {
+    report = reportsList.last;
+    reportsList.removeLast();
+    print(reportsList);
+  }
+
   static setCurrentLocation(double latitude, double longitude) {
     report.location_choice = 'current';
     // report.selected_location_lat = null;

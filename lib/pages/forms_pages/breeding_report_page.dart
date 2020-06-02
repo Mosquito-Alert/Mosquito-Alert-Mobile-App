@@ -201,8 +201,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               onPressed: () {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {
+                  if (Utils.reportsList != null &&
+                      Utils.reportsList.isNotEmpty) {
+                    Utils.deleteLastReport();
+                  } else {
+                    Utils.resetReport();
+                  }
                   Navigator.pop(context);
-                  Utils.resetReport();
                 } else {
                   _pagesController
                       .previousPage(
@@ -253,13 +258,23 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                       : null)
             ],
           ),
-          body: PageView.builder(
-              controller: _pagesController,
-              itemCount: _formsRepot.length,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return _formsRepot[index];
-              }),
+          body: PageView(
+            controller: _pagesController,
+            // itemCount: _formsRepot.length,
+            physics: NeverScrollableScrollPhysics(),
+            // itemBuilder: (BuildContext context, int index) {
+            //   return _formsRepot[index];
+            // }),
+            children: <Widget>[
+              PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0),
+                  setValid, widget.editReport != null),
+              QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
+              BitingLocationForm(setValid),
+              CouldSeeForm(
+                  addAdultReport, displayQuestions.elementAt(2), setValid),
+              AddOtherReportPage(addOtherReport, setValid),
+            ],
+          ),
         ),
         StreamBuilder<bool>(
           stream: loadingStream.stream,
