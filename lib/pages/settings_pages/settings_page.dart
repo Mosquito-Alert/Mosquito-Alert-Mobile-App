@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:share/share.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -65,7 +66,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     height: 35,
                   ),
                   SettingsMenuWidget(
-                      MyLocalizations.of(context, "share_app_txt"), () {}),
+                      MyLocalizations.of(context, "share_app_txt"), () {
+                    Share.share('https://www.google.es'); //TODO: fix url
+                  }),
                   SizedBox(
                     height: 10,
                   ),

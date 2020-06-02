@@ -170,6 +170,31 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         });
         streamType.add(LocationType.selected);
       }
+    } else {
+      if (Utils.report.selected_location_lat != null &&
+          Utils.report.selected_location_lon != null) {
+        currentMarkers.add(new Marker(
+          markerId: MarkerId('selected'),
+          position: LatLng(Utils.report.selected_location_lat,
+              Utils.report.selected_location_lon),
+        ));
+        widget.setValid(true);
+      }
+      if (Utils.report.responses.any((r) => r.question_id == 5)) {
+        int i = 0;
+        Utils.report.responses.forEach((q) {
+          i++;
+          if (q.question_id == 5) {
+            var res = q.answer_value
+                .substring(q.answer_value.indexOf('( ') + 2,
+                    q.answer_value.indexOf(')'))
+                .split(', ');
+            currentMarkers.add(new Marker(
+                markerId: MarkerId('mk_$i'),
+                position: LatLng(double.parse(res[0]), double.parse(res[1]))));
+          }
+        });
+      }
     }
     setState(() {
       markers = currentMarkers;

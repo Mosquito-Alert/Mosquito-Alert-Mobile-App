@@ -26,8 +26,7 @@ class ReportsList extends StatelessWidget {
       return ListView.builder(
         itemCount: reports.length,
         itemBuilder: (context, index) {
-          if (UserManager.profileUUIDs != null &&
-              UserManager.profileUUIDs.any((id) => id == reports[index].user)) {
+          if (UserManager.profileUUIDs.any((id) => id == reports[index].user)) {
             //  String address = getCity(reports[index]);
             return FutureBuilder(
                 future: getCity(reports[index]),

@@ -35,6 +35,9 @@ class ApiSingleton {
   //Images
   static const photos = '/photos/';
 
+  //Notifications
+  static const notifications = '/user_notifications/';
+
   //Headders
   var headers = {
     "Content-Type": " application/json",
@@ -204,6 +207,53 @@ class ApiSingleton {
       );
 
       // print(response);
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return ApiResponse.fromJson(json.decode(response.body));
+      }
+      Map<String, dynamic> jsonAnswer = json.decode(response.body);
+
+      return jsonAnswer['score'];
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //Notifications
+  Future<dynamic> getNotifications() async {
+    try {
+      String userUUID = await UserManager.getUUID();
+
+      final response = await http.get(
+        '$serverUrl$notifications?user_id=$userUUID',
+        headers: headers,
+      );
+
+      print(response);
+      if (response.statusCode != 200) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return ApiResponse.fromJson(json.decode(response.body));
+      }
+      Map<String, dynamic> jsonAnswer = json.decode(response.body);
+
+      return jsonAnswer['score'];
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<dynamic> updateNotification(id, aknowlaged) async {
+    try {
+      String userUUID = await UserManager.getUUID();
+
+      final response = await http.post(
+        '$serverUrl$notifications?id=$id&aknowlaged=$aknowlaged',
+        headers: headers,
+      );
+
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -408,7 +458,7 @@ class ApiSingleton {
         }
 
         if (jsonAnswer['next'] == null) {
-          return  allReports;
+          return allReports;
         }
       }
 

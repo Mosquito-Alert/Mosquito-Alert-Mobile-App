@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -9,6 +10,12 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  @override
+  void initState() {
+    super.initState();
+    // ApiSingleton().getNotifications();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,12 +102,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    SizedBox(height: 10,),
-                    Style.title("¡Nueva especie detectada en Barcelona!"), 
-                    SizedBox(height: 10,),
-                    Style.body("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"),
-                    SizedBox(height: 10,),
-                    Style.bodySmall('fecha y quien lo ha enviado', color: Colors.grey)
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Style.title("¡Nueva especie detectada en Barcelona!"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Style.body(
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Style.bodySmall('fecha y quien lo ha enviado',
+                        color: Colors.grey)
                   ],
                 ),
               ),
