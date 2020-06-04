@@ -107,6 +107,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   void initState() {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
+      validContent = true;
     } else {
       Utils.createNewReport('site');
     }
@@ -231,10 +232,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                       ? () {
                           double currentPage = _pagesController.page;
                           if (skipReport) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => MainVC()),
-                            // );
+                            Utils.saveReports();
                             Navigator.pop(context);
                           } else {
                             if (currentPage == _formsRepot.length - 1) {
@@ -251,7 +249,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                   .nextPage(
                                       duration: Duration(microseconds: 300),
                                       curve: Curves.ease)
-                                  .then((value) => setValid(false));
+                                  .then((value) =>
+                                      setValid(widget.editReport != null));
                             }
                           }
                         }

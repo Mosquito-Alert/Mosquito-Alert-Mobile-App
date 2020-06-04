@@ -10,7 +10,11 @@ class PublicBreedingForm extends StatefulWidget {
   final bool selectPublic;
 
   PublicBreedingForm(
-      this.skipReport, this.displayQuestion, this.setValid, this.selectPublic);
+    this.skipReport,
+    this.displayQuestion,
+    this.setValid,
+    this.selectPublic,
+  );
   @override
   _PublicBreedingFormState createState() => _PublicBreedingFormState();
 }
@@ -23,6 +27,8 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
   void initState() {
     super.initState();
     widget.selectPublic ? selected = 91 : null;
+
+    // widget.selectPublic ? widget.setValid(true) : widget.setValid(false);
     language = Utils.getLanguage();
   }
 

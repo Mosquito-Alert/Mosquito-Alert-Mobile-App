@@ -24,7 +24,7 @@ class BitingReportPage extends StatefulWidget {
 
 class _BitingReportPageState extends State<BitingReportPage> {
   PageController _pagesController;
-  List _formsRepot;
+  List<Widget> _formsRepot;
   String otherReport;
   bool seeButton = false;
   bool addMosquito = false;
@@ -299,7 +299,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
               onPressed: () {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {
-                  if (Utils.reportsList.isNotEmpty) {
+                  if (Utils.reportsList != null &&
+                      Utils.reportsList.isNotEmpty) {
                     Utils.deleteLastReport();
                   } else {
                     Utils.resetReport();
@@ -353,30 +354,32 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                     .nextPage(
                                         duration: Duration(microseconds: 300),
                                         curve: Curves.ease)
-                                    .then((value) => setValid(false));
+                                    .then((value) =>
+                                        setValid(widget.editReport != null));
                               }
                             }
                           : null)
                   : Container(),
             ],
           ),
-          body: PageView(
+          body: PageView.builder(
             controller: _pagesController,
-            // itemCount: _formsRepot.length,
+            itemCount: _formsRepot.length,
             physics: NeverScrollableScrollPhysics(),
-            // itemBuilder: (BuildContext context, int index) {
-            //   return _formsRepot[index];
-            // },
-            children: <Widget>[
-              BitingForm([
-                displayQuestions.elementAt(0),
-                displayQuestions.elementAt(1),
-              ], goNextPage),
-              BitingLocationForm(setValid),
-              CouldSeeForm(
-                  addAdultReport, displayQuestions.elementAt(2), setValid),
-              AddOtherReportPage(addOtherReport, setValid),
-            ],
+            itemBuilder: (BuildContext context, int index) {
+              return _formsRepot[index];
+            },
+            // children: _formsRepot,
+            //  <Widget>[
+            //   BitingForm([
+            //     displayQuestions.elementAt(0),
+            //     displayQuestions.elementAt(1),
+            //   ], goNextPage),
+            //   BitingLocationForm(setValid),
+            //   CouldSeeForm(
+            //       addAdultReport, displayQuestions.elementAt(2), setValid),
+            //   AddOtherReportPage(addOtherReport, setValid),
+            // ],
           ),
         ),
         StreamBuilder<bool>(

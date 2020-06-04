@@ -25,7 +25,7 @@ class AdultReportPage extends StatefulWidget {
 
 class _AdultReportPageState extends State<AdultReportPage> {
   PageController _pagesController;
-  List _formsRepot;
+  List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
@@ -181,12 +181,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
   bool validContent = false;
   String otherReport;
 
-
   @override
   void initState() {
     super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
+      validContent = true;
     }
     _pagesController = PageController();
   }
@@ -331,13 +331,15 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                 .animateToPage(2,
                                     duration: Duration(microseconds: 300),
                                     curve: Curves.ease)
-                                .then((value) => setValid(false));
+                                .then((value) =>
+                                    setValid(widget.editReport != null));
                           } else {
                             _pagesController
                                 .nextPage(
                                     duration: Duration(microseconds: 300),
                                     curve: Curves.ease)
-                                .then((value) => setValid(false));
+                                .then((value) =>
+                                    setValid(widget.editReport != null));
                           }
                         }
                       : null)
@@ -350,15 +352,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
             // itemBuilder: (BuildContext context, int index) {
             //   return _formsRepot[index];
             // }),
-            children: <Widget>[
-              MosquitoTypeForm(
-                  setSkip3, displayQuestions.elementAt(0), setValid),
-              MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
-              BitingLocationForm(setValid),
-              CouldSeeForm(
-                  addBitingReport, displayQuestions.elementAt(2), setValid),
-              AddOtherReportPage(addOtherReport, setValid),
-            ],
+            children: _formsRepot,
+            //  <Widget>[
+            //   MosquitoTypeForm(
+            //       setSkip3, displayQuestions.elementAt(0), setValid),
+            //   MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
+            //   BitingLocationForm(setValid),
+            //   CouldSeeForm(
+            //       addBitingReport, displayQuestions.elementAt(2), setValid),
+            //   AddOtherReportPage(addOtherReport, setValid),
+            // ],
           ),
         ),
         StreamBuilder<bool>(

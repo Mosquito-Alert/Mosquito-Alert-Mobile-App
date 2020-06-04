@@ -211,6 +211,16 @@ class Utils {
     }
   }
 
+  static bool saveReports() {
+    if (reportsList != null && reportsList.isNotEmpty) {
+      reportsList.forEach((r) async {
+        bool res = await ApiSingleton().createReport(r);
+        if (!res) return false;
+      });
+    }
+    return true;
+  }
+
   static Future<bool> createReport() async {
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
@@ -221,14 +231,10 @@ class Utils {
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
-
-      reportsList.forEach((r) async {
-        bool res = await ApiSingleton().createReport(r);
-        if (!res) return false;
-      });
+      bool isCreated = await saveReports();
       closeSession();
       resetReport();
-      return true;
+      return isCreated;
     }
   }
 

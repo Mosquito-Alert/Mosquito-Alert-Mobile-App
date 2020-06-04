@@ -33,6 +33,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
 
   @override
   void initState() {
+    super.initState();
     Utils.getLocation();
     currentLocation = Utils.location;
 
@@ -45,7 +46,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
           currentLocation = Position(
               latitude: Utils.report.selected_location_lat,
               longitude: Utils.report.selected_location_lon);
-          widget.setValid(true);
+          // widget.setValid(true);
           break;
         case "current":
           streamType.add(LocationType.current);
@@ -54,7 +55,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
           currentLocation = Position(
               latitude: Utils.report.current_location_lat,
               longitude: Utils.report.current_location_lon);
-          widget.setValid(true);
+          // widget.setValid(true);
           break;
         default:
           streamType.add(LocationType.missing);
@@ -75,8 +76,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     } else {
       _getCurrentLocation();
     }
-
-    super.initState();
   }
 
   _getCurrentLocation() async {
