@@ -181,6 +181,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   bool validContent = false;
   String otherReport;
 
+
   @override
   void initState() {
     super.initState();

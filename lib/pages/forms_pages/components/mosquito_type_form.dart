@@ -19,23 +19,25 @@ class MosquitoTypeForm extends StatefulWidget {
 
 class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
   Question question = Question();
-  String language; 
+  String language;
 
   @override
   void initState() {
     super.initState();
-    language = Utils.getLanguage(); 
-    // question = new Question(
-    //     question: widget.displayQuestion['question']['text'][language],
-    //     question_id: widget.displayQuestion['question']['id']);
-    // if (Utils.report != null) {
-    //   int index = Utils.report.responses.indexWhere(
-    //       (q) => q.question_id == widget.displayQuestion['question']['id']);
-    //   question.answer = Utils.report.responses[index].answer;
-    //   question.answer_id = Utils.report.responses[index].answer_id;
-    // } else {
-    //   Utils.createNewReport('adult');
-    // }
+    language = Utils.getLanguage();
+    question = new Question(
+        question: widget.displayQuestion['question']['text'][language],
+        question_id: widget.displayQuestion['question']['id']);
+    if (Utils.report != null) {
+      int index = Utils.report.responses.indexWhere(
+          (q) => q.question_id == widget.displayQuestion['question']['id']);
+      if (index != -1) {
+        question.answer = Utils.report.responses[index].answer;
+        question.answer_id = Utils.report.responses[index].answer_id;
+      }
+    } else {
+      Utils.createNewReport('adult');
+    }
   }
 
   @override
@@ -44,6 +46,8 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
       child: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 15),
+          // height: double.infinity,
+          // width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
