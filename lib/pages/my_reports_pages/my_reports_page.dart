@@ -775,10 +775,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                           MyLocalizations.of(
                                               context, "delete_report_txt"),
                                           () {
-                                        Utils.deleteReport(report);
-
-                                        _updateData();
-                                        Navigator.pop(context);
+                                        _deleteReport(report);
                                       }, context);
                                       //
                                     }, textColor: Colors.red))
@@ -795,6 +792,28 @@ class _MyReportsPageState extends State<MyReportsPage> {
             ),
           ));
         });
+  }
+
+  _deleteReport(report) async {
+    Navigator.pop(context);
+    loadingStream.add(true);
+    bool res = await Utils.deleteReport(report);
+    if (res) {
+      loadingStream.add(false);
+      _getData();
+    } else {
+      loadingStream.add(false);
+      Utils.showAlert(
+        MyLocalizations.of(context, "app_name"),
+        MyLocalizations.of(context, 'save_report_ko_txt'),
+        context,
+        onPressed: () {
+          Navigator.pop(context);
+          // _getData();
+        },
+        barrierDismissible: false,
+      );
+    }
   }
 
   _getPosition(Report report) {

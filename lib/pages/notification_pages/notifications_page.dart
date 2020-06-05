@@ -10,10 +10,19 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  List notifications = [];
   @override
   void initState() {
     super.initState();
+    _getData();
     // ApiSingleton().getNotifications();
+  }
+
+  _getData() async {
+    var response = await ApiSingleton().getNotifications();
+    setState(() {
+      notifications = response;
+    });
   }
 
   @override
@@ -25,49 +34,51 @@ class _NotificationsPageState extends State<NotificationsPage> {
         title: Style.title(MyLocalizations.of(context, "notifications_title"),
             fontSize: 16),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(15),
-            child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 9,
-                itemBuilder: (ctx, index) {
-                  return Opacity(
-                    opacity: index == 0 ? 1 : 0.5,
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: ListTile(
-                        onTap: () {
-                          _infoBottomSheet(context);
-                        },
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Style.titleMedium(
-                                "¡Nueva especie detectada en Barceloa!",
-                                fontSize: 14),
-                            Style.body(
-                                "Lorem ipsum dolor sit amet, consectetur adipis..."),
-                            Style.bodySmall("Leer más", color: Colors.grey),
-                          ],
-                        ),
-                        trailing: Image.asset(
-                          'assets/img/placeholder.jpg',
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ),
-      ),
+      body: notifications.isNotEmpty
+          ? SingleChildScrollView(
+              child: Container(
+                  margin: EdgeInsets.all(15),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: notifications.length,
+                      itemBuilder: (ctx, index) {
+                        return Opacity(
+                          opacity: index == 0 ? 1 : 0.5,
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: ListTile(
+                              onTap: () {
+                                _infoBottomSheet(context);
+                              },
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Style.titleMedium(
+                                      "¡Nueva especie detectada en Barceloa!",
+                                      fontSize: 14),
+                                  Style.body(
+                                      "Lorem ipsum dolor sit amet, consectetur adipis..."),
+                                  Style.bodySmall("Leer más",
+                                      color: Colors.grey),
+                                ],
+                              ),
+                              trailing: Image.asset(
+                                'assets/img/placeholder.jpg',
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      })))
+          : Center(
+              child: Style.body(
+                  MyLocalizations.of(context, "no_notifications_yet_txt")),
+            ),
     );
   }
 

@@ -97,7 +97,7 @@ class ApiSingleton {
       userUpdateInfo.displayName = '$firstName $lastName';
       user.updateProfile(userUpdateInfo);
 
-      print(user);
+      // print(user);
       return user;
     } else {
       return false;
@@ -216,7 +216,7 @@ class ApiSingleton {
 
       return jsonAnswer['score'];
     } catch (e) {
-      return false;
+      return 1;
     }
   }
 
@@ -238,7 +238,8 @@ class ApiSingleton {
       }
       Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      return jsonAnswer['score'];
+      List data = jsonAnswer['body'].toList();
+      return data;
     } catch (e) {
       return false;
     }
@@ -253,7 +254,7 @@ class ApiSingleton {
         headers: headers,
       );
 
-      print(response);
+      // print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -294,7 +295,7 @@ class ApiSingleton {
         return allSessions[0].session_ID;
       }
     } catch (e) {
-      print(e.message);
+      // print(e.message);
       return false;
     }
   }
@@ -316,7 +317,7 @@ class ApiSingleton {
       // Todo: Save id
       // Utils.session.id = response.body['id']
       var body = json.decode(response.body);
-      print(body);
+      // print(body);
       return body['id'];
     } catch (e) {
       print(e);
@@ -405,7 +406,7 @@ class ApiSingleton {
         body: json.encode(body),
       );
 
-      print(response);
+      // print(response);
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -440,7 +441,7 @@ class ApiSingleton {
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
-      print(response);
+      // print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -464,7 +465,7 @@ class ApiSingleton {
 
       return getReportsList(lat, lon, allReports: allReports, page: page);
     } catch (e) {
-      print(e);
+      // print(e);
       return null;
     }
   }
@@ -487,11 +488,11 @@ class ApiSingleton {
             contentType: 'multipart/form-data',
           ));
 
-      print(response);
+      // print(response);
 
       return response.statusCode == 200;
     } catch (c) {
-      print(c.message);
+      // print(c.message);
       return false;
     }
   }

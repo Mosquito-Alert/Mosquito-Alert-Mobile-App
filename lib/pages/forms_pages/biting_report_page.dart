@@ -394,7 +394,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
       context,
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pop(context);
+        if (widget.editReport != null) {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).popUntil((r) => r.isFirst);
+        }
       },
       barrierDismissible: false,
     );
@@ -408,7 +412,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
       context,
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pop(context);
+        if (widget.editReport != null) {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).popUntil((r) => r.isFirst);
+        }
       },
       barrierDismissible: false,
     );

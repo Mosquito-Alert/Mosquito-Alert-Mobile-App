@@ -86,9 +86,9 @@ class Utils {
   }
 
   static addOtherReport(String type) {
-    report.version_time = DateTime.now().toUtc().toString();
-    report.creation_time = DateTime.now().toUtc().toString();
-    report.phone_upload_time = DateTime.now().toUtc().toString();
+    report.version_time = DateTime.now().toIso8601String();
+    report.creation_time = DateTime.now().toIso8601String();
+    report.phone_upload_time = DateTime.now().toIso8601String();
     reportsList.add(report);
     createNewReport(type);
   }
@@ -231,20 +231,25 @@ class Utils {
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
-      bool isCreated = saveReports();
+      bool isCreated;
+      for (int i = 0; i < reportsList.length; i++) {
+        isCreated = await ApiSingleton().createReport(reportsList[i]);
+      }
+
       closeSession();
       resetReport();
       return isCreated;
     }
   }
 
-  static Future<void> deleteReport(r) async {
+  static Future<bool> deleteReport(r) async {
     Report deleteReport = r;
     deleteReport.version_time = DateTime.now().toIso8601String();
     deleteReport.version_number = -1;
     deleteReport.version_UUID = Uuid().v4();
 
-    ApiSingleton().createReport(deleteReport);
+    bool res = await ApiSingleton().createReport(deleteReport);
+    return res;
   }
 
   static getLocation() async {

@@ -24,6 +24,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               _chooseTypeImage();
             },
             child: Card(
+              margin: EdgeInsets.only(bottom: 15),
               elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
@@ -58,68 +59,77 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               ),
             ),
           )
-        : GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
-            itemCount: images.length + 1,
-            itemBuilder: (context, index) {
-              return index == (images.length)
-                  ? GestureDetector(
-                      onTap: () {
-                        _chooseTypeImage();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 1),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Icon(
-                          Icons.add,
-                          size: 30,
-                        ),
-                      ),
-                    )
-                  : Stack(
-                      alignment: Alignment.topLeft,
-                      children: <Widget>[
-                        Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.file(
-                              images[index],
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: 100,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            gradient: LinearGradient(
-                              colors: [ Colors.black54, Colors.transparent,],
-                              begin: Alignment.topLeft,
-                              end: Alignment.center,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _deleteImage(images[index], index);
+        : Container(
+            margin: EdgeInsets.only(bottom: 15),
+            child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemCount: images.length + 1,
+                itemBuilder: (context, index) {
+                  return index == (images.length)
+                      ? GestureDetector(
+                          onTap: () {
+                            _chooseTypeImage();
                           },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.white,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 1),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-            });
+                        )
+                      : Stack(
+                          alignment: Alignment.topLeft,
+                          children: <Widget>[
+                            Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.file(
+                                  images[index],
+                                  fit: BoxFit.cover,
+                                  height: 100,
+                                  width: 100,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black54,
+                                    Colors.transparent,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.center,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                _deleteImage(images[index], index);
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        );
+                }),
+          );
   }
 
   _chooseTypeImage() {

@@ -265,7 +265,10 @@ class _MainVCState extends State<MainVC> {
                                   height: 5,
                                 ),
                                 Style.bodySmall(MyLocalizations.of(
-                                    context, 'we_need_help_txt'))
+                                    context, 'we_need_help_txt')),
+                                SizedBox(
+                                  height: 5,
+                                ),
                               ],
                             ),
                           )

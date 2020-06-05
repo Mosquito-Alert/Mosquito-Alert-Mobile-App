@@ -291,7 +291,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       context,
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pop(context);
+        if (widget.editReport != null) {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).popUntil((r) => r.isFirst);
+        }
       },
       barrierDismissible: false,
     );
@@ -305,7 +309,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       context,
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pop(context);
+        if (widget.editReport != null) {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).popUntil((r) => r.isFirst);
+        }
       },
       barrierDismissible: false,
     );

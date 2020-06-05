@@ -38,7 +38,8 @@ class MyLocalizations {
       "access_txt": "Acceder",
       "register_txt": "Darse de alta",
       "invalid_mail_txt": "Correo electrónico no valido. Intentalo de nuevo.",
-      "email_error_txt": "Error al revisar el correo electrónico. Intentalo de nuevo.",
+      "email_error_txt":
+          "Error al revisar el correo electrónico. Intentalo de nuevo.",
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",
@@ -114,6 +115,7 @@ class MyLocalizations {
 
       //Notifications page
       "notifications_title": "Notificaciones",
+      "no_notifications_yet_txt": "No tienes notificaciones",
 
       //Setings page
       "settings_title": "Ajustes",
