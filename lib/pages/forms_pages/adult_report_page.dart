@@ -27,6 +27,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   PageController _pagesController;
   List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
+  StreamController<bool> validStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
     {
@@ -210,9 +211,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   setValid(isValid) {
-    setState(() {
-      validContent = isValid;
-    });
+    validStream.add(isValid);
+    // setState(() {
+    //   validContent = isValid;
+    // });
   }
 
   navigateOtherReport() async {
@@ -307,42 +309,49 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 MyLocalizations.of(context, "adult_report_title"),
                 fontSize: 16),
             actions: <Widget>[
-              Style.noBgButton(
-                  _pagesController.hasClients &&
-                          _pagesController.page == _formsRepot.length - 1 &&
-                          otherReport == 'none'
-                      ? MyLocalizations.of(context, "finish")
-                      : MyLocalizations.of(context, "next"),
-                  validContent
-                      ? () {
-                          double currentPage = _pagesController.page;
-                          if (currentPage == _formsRepot.length - 1 &&
-                              !addBiting) {
-                            navigateOtherReport();
-                          } else if (currentPage == 3.0 && addBiting) {
-                            Utils.addOtherReport('bite');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BitingReportPage()),
-                            );
-                          } else if (currentPage == 0.0 && skip3) {
-                            _pagesController
-                                .animateToPage(2,
-                                    duration: Duration(microseconds: 300),
-                                    curve: Curves.ease)
-                                .then((value) =>
-                                    setValid(widget.editReport != null));
-                          } else {
-                            _pagesController
-                                .nextPage(
-                                    duration: Duration(microseconds: 300),
-                                    curve: Curves.ease)
-                                .then((value) =>
-                                    setValid(widget.editReport != null));
-                          }
-                        }
-                      : null)
+              StreamBuilder<bool>(
+                  stream: validStream.stream,
+                  initialData: false,
+                  builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+                    return Style.noBgButton(
+                        _pagesController.hasClients &&
+                                _pagesController.page ==
+                                    _formsRepot.length - 1 &&
+                                otherReport == 'none'
+                            ? MyLocalizations.of(context, "finish")
+                            : MyLocalizations.of(context, "next"),
+                        snapshot.data
+                            ? () {
+                                double currentPage = _pagesController.page;
+                                if (currentPage == _formsRepot.length - 1 &&
+                                    !addBiting) {
+                                  navigateOtherReport();
+                                } else if (currentPage == 3.0 && addBiting) {
+                                  Utils.addOtherReport('bite');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BitingReportPage()),
+                                  );
+                                } else if (currentPage == 0.0 && skip3) {
+                                  _pagesController
+                                      .animateToPage(2,
+                                          duration: Duration(microseconds: 300),
+                                          curve: Curves.ease)
+                                      .then((value) =>
+                                          setValid(widget.editReport != null));
+                                } else {
+                                  _pagesController
+                                      .nextPage(
+                                          duration: Duration(microseconds: 300),
+                                          curve: Curves.ease)
+                                      .then((value) =>
+                                          setValid(widget.editReport != null));
+                                }
+                              }
+                            : null);
+                  })
             ],
           ),
           body: PageView(
@@ -406,7 +415,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       context,
       onPressed: () {
         Navigator.pop(context);
-       if (widget.editReport != null) {
+        if (widget.editReport != null) {
           Navigator.pop(context);
         } else {
           Navigator.of(context).popUntil((r) => r.isFirst);

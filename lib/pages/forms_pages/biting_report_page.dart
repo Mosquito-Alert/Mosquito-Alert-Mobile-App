@@ -30,6 +30,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   bool addMosquito = false;
   bool validContent = false;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
+  StreamController<bool> validStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
     // {
@@ -220,9 +221,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   setValid(isValid) {
-    setState(() {
-      validContent = isValid;
-    });
+    validStream.add(isValid);
   }
 
   navigateOtherReport() async {
@@ -330,34 +329,42 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 fontSize: 16),
             actions: <Widget>[
               seeButton
-                  ? Style.noBgButton(
-                      _pagesController.page == _formsRepot.length - 1 &&
-                              otherReport == 'none'
-                          // false
-                          ? MyLocalizations.of(context, "finish")
-                          : MyLocalizations.of(context, "next"),
-                      validContent
-                          ? () {
-                              double currentPage = _pagesController.page;
-                              if (currentPage == _formsRepot.length - 1) {
-                                navigateOtherReport();
-                              } else if (currentPage == 2 && addMosquito) {
-                                Utils.addOtherReport('adult');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AdultReportPage()),
-                                );
-                              } else {
-                                _pagesController
-                                    .nextPage(
-                                        duration: Duration(microseconds: 300),
-                                        curve: Curves.ease)
-                                    .then((value) =>
-                                        setValid(widget.editReport != null));
-                              }
-                            }
-                          : null)
+                  ? StreamBuilder<bool>(
+                      stream: validStream.stream,
+                      initialData: false,
+                      builder:
+                          (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+                        return Style.noBgButton(
+                            _pagesController.page == _formsRepot.length - 1 &&
+                                    otherReport == 'none'
+                                ? MyLocalizations.of(context, "finish")
+                                : MyLocalizations.of(context, "next"),
+                            snapshot.data
+                                ? () {
+                                    double currentPage = _pagesController.page;
+                                    if (currentPage == _formsRepot.length - 1) {
+                                      navigateOtherReport();
+                                    } else if (currentPage == 2 &&
+                                        addMosquito) {
+                                      Utils.addOtherReport('adult');
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AdultReportPage()),
+                                      );
+                                    } else {
+                                      _pagesController
+                                          .nextPage(
+                                              duration:
+                                                  Duration(microseconds: 300),
+                                              curve: Curves.ease)
+                                          .then((value) => setValid(
+                                              widget.editReport != null));
+                                    }
+                                  }
+                                : null);
+                      })
                   : Container(),
             ],
           ),

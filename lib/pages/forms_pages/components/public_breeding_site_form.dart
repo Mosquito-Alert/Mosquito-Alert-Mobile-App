@@ -28,7 +28,7 @@ class _PublicBreedingFormState extends State<PublicBreedingForm> {
     super.initState();
     widget.selectPublic ? selected = 91 : null;
 
-    // widget.selectPublic ? widget.setValid(true) : widget.setValid(false);
+    widget.selectPublic ? widget.setValid(true) : widget.setValid(false);
     language = Utils.getLanguage();
   }
 

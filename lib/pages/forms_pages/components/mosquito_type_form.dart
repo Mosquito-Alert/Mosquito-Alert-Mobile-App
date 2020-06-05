@@ -34,6 +34,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
       if (index != -1) {
         question.answer = Utils.report.responses[index].answer;
         question.answer_id = Utils.report.responses[index].answer_id;
+        widget.setValid(true);
       }
     } else {
       Utils.createNewReport('adult');

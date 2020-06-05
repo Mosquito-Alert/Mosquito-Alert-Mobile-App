@@ -14,13 +14,14 @@ class CouldSeeForm extends StatefulWidget {
 }
 
 class _CouldSeeFormState extends State<CouldSeeForm> {
-  String selected;
+  String selected = '';
   String language;
 
   @override
   void initState() {
     super.initState();
     language = Utils.getLanguage();
+    print(selected);
   }
 
   @override

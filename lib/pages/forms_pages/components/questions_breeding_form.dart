@@ -18,7 +18,7 @@ class QuestionsBreedingForm extends StatefulWidget {
 
 class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
   Question question;
-  String language; 
+  String language;
 
   @override
   void initState() {
@@ -34,6 +34,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
       if (index != -1) {
         question.answer = Utils.report.responses[index].answer;
         question.answer_id = Utils.report.responses[index].answer_id;
+        widget.setValid(true);
       }
     }
   }

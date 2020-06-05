@@ -17,8 +17,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   List<Question> questions = List();
   String language;
 
-  List<String> torax;
-
   @override
   void initState() {
     super.initState();
@@ -28,6 +26,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
       for (Question q in Utils.report.responses) {
         if (q.question_id == widget.displayQuestion['question']['id']) {
           questions.add(q);
+          widget.setValid(true);
         }
       }
     }
