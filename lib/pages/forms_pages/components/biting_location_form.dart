@@ -41,8 +41,10 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       switch (Utils.report.location_choice) {
         case "selected":
           streamType.add(LocationType.selected);
-          updateMarker(LatLng(Utils.report.selected_location_lat,
-              Utils.report.selected_location_lon));
+          markers.add(new Marker(
+              markerId: MarkerId('mk_${markers.length}'),
+              position: LatLng(Utils.report.selected_location_lat,
+                  Utils.report.selected_location_lon)));
           currentLocation = Position(
               latitude: Utils.report.selected_location_lat,
               longitude: Utils.report.selected_location_lon);
@@ -50,8 +52,10 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
           break;
         case "current":
           streamType.add(LocationType.current);
-          updateMarker(LatLng(Utils.report.current_location_lat,
-              Utils.report.current_location_lon));
+          markers.add(new Marker(
+              markerId: MarkerId('mk_${markers.length}'),
+              position: LatLng(Utils.report.current_location_lat,
+                  Utils.report.current_location_lon)));
           currentLocation = Position(
               latitude: Utils.report.current_location_lat,
               longitude: Utils.report.current_location_lon);
@@ -68,7 +72,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                     q.answer_value.indexOf(')'))
                 .split(', ');
             markers.add(new Marker(
-                markerId: MarkerId('mk'),
+                markerId: MarkerId('mk_${markers.length}'),
                 position: LatLng(double.parse(res[0]), double.parse(res[1]))));
           }
         });
@@ -102,7 +106,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _getCurrentLocation();
+    currentLocation == null ? _getCurrentLocation() : null;
     setState(() {
       this.controller = controller;
     });
@@ -128,74 +132,100 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     }
   }
 
-  getPosition(type, {context}) async {
+  updateType(type, {context}) async {
     streamType.add(type);
+
     List<Marker> currentMarkers = [];
-
-    if (type == LocationType.current) {
-      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-
-      bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
-      streamType.add(type);
-
-      if (geolocationEnabled) {
+    switch (type) {
+      case LocationType.current:
         Geolocator geolocator = Geolocator()
-          ..forceAndroidLocationManager = false;
-        Position currentPosition = await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        print(currentPosition);
-        Utils.setCurrentLocation(
-            currentPosition.latitude, currentPosition.longitude);
-        widget.setValid(true);
-        controller.moveCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target:
-                    LatLng(currentPosition.latitude, currentPosition.longitude),
-                zoom: 16.0),
-          ),
-        );
+          ..forceAndroidLocationManager = true;
 
-        currentMarkers = [
-          Marker(
-              markerId: MarkerId('mk${markers.length}'),
-              position:
-                  LatLng(currentPosition.latitude, currentPosition.longitude))
-        ];
-      } else {
-        Utils.showAlert(
-            MyLocalizations.of(context, "location_not_active_title"),
-            MyLocalizations.of(context, "location_not_active_txt"),
-            context, onPressed: () {
-          Navigator.pop(context);
-        });
-        streamType.add(LocationType.selected);
-      }
-    } else {
-      if (Utils.report.selected_location_lat != null &&
-          Utils.report.selected_location_lon != null) {
-        currentMarkers.add(new Marker(
-          markerId: MarkerId('selected'),
-          position: LatLng(Utils.report.selected_location_lat,
-              Utils.report.selected_location_lon),
-        ));
-        widget.setValid(true);
-      }
-      if (Utils.report.responses.any((r) => r.question_id == 5)) {
-        int i = 0;
-        Utils.report.responses.forEach((q) {
-          i++;
-          if (q.question_id == 5) {
-            var res = q.answer_value
-                .substring(q.answer_value.indexOf('( ') + 2,
-                    q.answer_value.indexOf(')'))
-                .split(', ');
-            currentMarkers.add(new Marker(
-                markerId: MarkerId('mk_$i'),
-                position: LatLng(double.parse(res[0]), double.parse(res[1]))));
-          }
-        });
-      }
+        bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
+        streamType.add(type);
+
+        if (geolocationEnabled) {
+          Geolocator geolocator = Geolocator()
+            ..forceAndroidLocationManager = false;
+          Position currentPosition = await Geolocator()
+              .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          print(currentPosition);
+          Utils.setCurrentLocation(
+              currentPosition.latitude, currentPosition.longitude);
+          controller.moveCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(
+                      currentPosition.latitude, currentPosition.longitude),
+                  zoom: 15.0),
+            ),
+          );
+          currentMarkers = [
+            Marker(
+                markerId: MarkerId('mk${markers.length}'),
+                position:
+                    LatLng(currentPosition.latitude, currentPosition.longitude))
+          ];
+          widget.setValid(true);
+        } else {
+          Utils.showAlert(
+              MyLocalizations.of(context, "location_not_active_title"),
+              MyLocalizations.of(context, "location_not_active_txt"),
+              context, onPressed: () {
+            Navigator.pop(context);
+          });
+          streamType.add(LocationType.selected);
+        }
+
+        break;
+      case LocationType.selected:
+        currentMarkers = [];
+        // get saved marker
+        if (Utils.report.selected_location_lat != null &&
+            Utils.report.selected_location_lon != null) {
+          controller.moveCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(Utils.report.selected_location_lat,
+                      Utils.report.selected_location_lon),
+                  zoom: 15.0),
+            ),
+          );
+          Utils.setSelectedLocation(Utils.report.selected_location_lat,
+              Utils.report.selected_location_lon);
+          currentMarkers.add(new Marker(
+            markerId: MarkerId('selected'),
+            position: LatLng(Utils.report.selected_location_lat,
+                Utils.report.selected_location_lon),
+          ));
+          widget.setValid(true);
+        }
+        //get markers in responses
+        if (Utils.report.responses.any((r) => r.question_id == 5)) {
+          int i = 0;
+          Utils.report.responses.forEach((q) {
+            i++;
+            if (q.question_id == 5) {
+              var res = q.answer_value
+                  .substring(q.answer_value.indexOf('( ') + 2,
+                      q.answer_value.indexOf(')'))
+                  .split(', ');
+              currentMarkers.add(new Marker(
+                  markerId: MarkerId('mk_$i'),
+                  position:
+                      LatLng(double.parse(res[0]), double.parse(res[1]))));
+            }
+          });
+        }
+
+        //get selected position
+        //update report
+        //update marker
+        //setvalid true
+        break;
+      default:
+        streamType.add(LocationType.missing);
+        break;
     }
     setState(() {
       markers = currentMarkers;
@@ -239,8 +269,10 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                 Expanded(
                                     child: GestureDetector(
                                         onTap: () {
-                                          getPosition(LocationType.current,
+                                          updateType(LocationType.current,
                                               context: context);
+                                          // getPosition(LocationType.current,
+                                          //     context: context);
                                         },
                                         child: SmallQuestionOption(
                                           MyLocalizations.of(
@@ -255,7 +287,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                     child: GestureDetector(
                                   onTap: () {
                                     widget.setValid(false);
-                                    getPosition(LocationType.selected);
+                                    updateType(LocationType.selected);
                                   },
                                   child: SmallQuestionOption(
                                     MyLocalizations.of(

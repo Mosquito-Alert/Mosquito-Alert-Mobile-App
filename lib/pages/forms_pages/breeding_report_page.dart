@@ -5,7 +5,7 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/biting_logation_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/biting_location_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/public_breeding_site_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
@@ -24,7 +24,7 @@ class BreedingReportPage extends StatefulWidget {
 
 class _BreedingReportPageState extends State<BreedingReportPage> {
   PageController _pagesController;
-  List _formsRepot;
+  List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
@@ -264,15 +264,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
             // itemBuilder: (BuildContext context, int index) {
             //   return _formsRepot[index];
             // }),
-            children: <Widget>[
-              PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0),
-                  setValid, widget.editReport != null),
-              QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
-              BitingLocationForm(setValid),
-              CouldSeeForm(
-                  addAdultReport, displayQuestions.elementAt(2), setValid),
-              AddOtherReportPage(addOtherReport, setValid),
-            ],
+            children: _formsRepot,
           ),
         ),
         StreamBuilder<bool>(

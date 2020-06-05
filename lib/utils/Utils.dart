@@ -231,7 +231,7 @@ class Utils {
       report.creation_time = DateTime.now().toIso8601String();
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
-      bool isCreated = await saveReports();
+      bool isCreated = saveReports();
       closeSession();
       resetReport();
       return isCreated;

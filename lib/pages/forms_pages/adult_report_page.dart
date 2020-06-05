@@ -12,7 +12,7 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'breeding_report_page.dart';
-import 'components/biting_logation_form.dart';
+import 'components/biting_location_form.dart';
 
 class AdultReportPage extends StatefulWidget {
   final Report editReport;

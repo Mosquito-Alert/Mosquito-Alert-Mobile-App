@@ -11,7 +11,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'adult_report_page.dart';
 import 'breeding_report_page.dart';
 import 'components/biting_form.dart';
-import 'components/biting_logation_form.dart';
+import 'components/biting_location_form.dart';
 
 class BitingReportPage extends StatefulWidget {
   final Report editReport;
@@ -300,7 +300,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {
                   if (Utils.reportsList != null &&
-                      Utils.reportsList.isNotEmpty) {
+                      Utils.reportsList.isNotEmpty &&
+                      widget.editReport == null) {
                     Utils.deleteLastReport();
                   } else {
                     Utils.resetReport();
@@ -329,8 +330,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 fontSize: 16),
             actions: <Widget>[
               seeButton
-                  // true
-
                   ? Style.noBgButton(
                       _pagesController.page == _formsRepot.length - 1 &&
                               otherReport == 'none'
@@ -369,17 +368,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
             itemBuilder: (BuildContext context, int index) {
               return _formsRepot[index];
             },
-            // children: _formsRepot,
-            //  <Widget>[
-            //   BitingForm([
-            //     displayQuestions.elementAt(0),
-            //     displayQuestions.elementAt(1),
-            //   ], goNextPage),
-            //   BitingLocationForm(setValid),
-            //   CouldSeeForm(
-            //       addAdultReport, displayQuestions.elementAt(2), setValid),
-            //   AddOtherReportPage(addOtherReport, setValid),
-            // ],
           ),
         ),
         StreamBuilder<bool>(
