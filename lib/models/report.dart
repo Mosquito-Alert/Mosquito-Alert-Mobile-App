@@ -16,10 +16,16 @@ class Report {
   double selected_location_lat;
   String note;
   String package_name;
-  String package_version;
+  int package_version;
   int session;
   List<Photo> photos;
   List<Question> responses;
+  String device_manufacturer;
+  String device_model;
+  String os;
+  String os_version;
+  String os_language;
+  String app_language;
 
   Report({
     this.version_UUID,
@@ -41,6 +47,12 @@ class Report {
     this.session,
     // this.photos,
     this.responses,
+    this.device_manufacturer,
+    this.device_model,
+    this.os,
+    this.os_language,
+    this.os_version,
+    this.app_language,
   });
 
   Report.fromJson(Map<dynamic, dynamic> json) {
@@ -59,7 +71,7 @@ class Report {
     selected_location_lat = json['selected_location_lat'];
     note = json['note'].toString();
     package_name = json['package_name'].toString();
-    package_version = json['package_version'].toString();
+    package_version = json['package_version'];
     session = json['session'];
 
     if (json['photos'] != null) {
@@ -78,6 +90,13 @@ class Report {
         responses.add(new Question.fromJson(q));
       });
     }
+
+    device_manufacturer = json['device_manufacturer'];
+    device_model = json['device_model'];
+    os = json['os'];
+    os_version = json['os_version'];
+    os_language = json['os_language'];
+    app_language = json['app_language'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +122,12 @@ class Report {
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }
+    data['device_manfacturer'] = this.device_manufacturer;
+    data['device_model'] = this.device_model;
+    data['os'] = this.os;
+    data['os_version'] = this.os_version;
+    data['os_language'] = this.os_language;
+    data['app_language'] = this.app_language;
   }
 }
 

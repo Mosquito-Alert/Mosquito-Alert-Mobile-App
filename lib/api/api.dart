@@ -399,6 +399,24 @@ class ApiSingleton {
         body.addAll(
             {'responses': report.responses.map((r) => r.toJson()).toList()});
       }
+      if (report.device_manufacturer != null) {
+        body.addAll({'device_manufacturer': report.device_manufacturer});
+      }
+      if (report.device_model != null) {
+        body.addAll({'device_model': report.device_model});
+      }
+      if (report.os != null) {
+        body.addAll({'os': report.os});
+      }
+      if (report.os_version != null) {
+        body.addAll({'os_version': report.os_version});
+      }
+      if (report.os_language != null) {
+        body.addAll({'os_language': report.os_language});
+      }
+      if (report.app_language != null) {
+        body.addAll({'app_language': report.app_language});
+      }
 
       final response = await http.post(
         '$serverUrl$reports',
@@ -406,7 +424,7 @@ class ApiSingleton {
         body: json.encode(body),
       );
 
-      // print(response);
+      print(response);
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");

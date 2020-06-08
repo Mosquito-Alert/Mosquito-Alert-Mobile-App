@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,6 +11,7 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:package_info/package_info.dart';
 import 'package:random_string/random_string.dart';
 import 'package:uuid/uuid.dart';
 
@@ -71,6 +73,28 @@ class Utils {
         user: userUUID,
         session: session.id,
         responses: []);
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    report.package_name = packageInfo.packageName;
+    report.package_version = 1; //TODO: fix this
+
+    if (Platform.isAndroid) {
+      var buildData = await DeviceInfoPlugin().androidInfo;
+      report.device_manufacturer = buildData.manufacturer;
+      report.device_model = buildData.model;
+      report.os = 'Android';
+      report.os_language = getLanguage();
+      report.os_version = buildData.version.sdkInt.toString();
+      report.app_language = getLanguage(); //TODO: fix get app language
+    } else if (Platform.isIOS) {
+      var buildData = await DeviceInfoPlugin().iosInfo;
+      report.device_manufacturer = 'Apple';
+      report.device_model = buildData.model;
+      report.os = buildData.systemName;
+      report.os_language = getLanguage();
+      report.os_version = buildData.systemVersion;
+      report.app_language = getLanguage();
+    }
   }
 
   static resetReport() {
