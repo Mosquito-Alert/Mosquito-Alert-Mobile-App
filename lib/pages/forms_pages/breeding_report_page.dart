@@ -173,6 +173,15 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     }
   }
 
+  _saveReports() async {
+    loadingStream.add(true);
+    bool res = await Utils.saveReports();
+    res == null || !res ? _showAlertKo() : _showAlertOk();
+    // _showAlertOk();
+    Utils.resetReport();
+    // Navigator.pop(context);
+  }
+
   @override
   void dispose() {
     _pagesController.dispose();
@@ -232,12 +241,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                 otherReport == 'none'
                             ? MyLocalizations.of(context, "finish")
                             : MyLocalizations.of(context, "next"),
-                        validContent
+                        snapshot.data
                             ? () {
                                 double currentPage = _pagesController.page;
                                 if (skipReport) {
-                                  Utils.saveReports();
-                                  Navigator.pop(context);
+                                  _saveReports();
                                 } else {
                                   if (currentPage == _formsRepot.length - 1) {
                                     navigateOtherReport();

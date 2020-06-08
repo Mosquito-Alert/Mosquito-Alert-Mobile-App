@@ -114,6 +114,7 @@ class Utils {
     report.creation_time = DateTime.now().toIso8601String();
     report.phone_upload_time = DateTime.now().toIso8601String();
     reportsList.add(report);
+    report = null;
     createNewReport(type);
   }
 
@@ -235,14 +236,15 @@ class Utils {
     }
   }
 
-  static bool saveReports() {
+  static Future<bool> saveReports() async {
+    bool res;
     if (reportsList != null && reportsList.isNotEmpty) {
-      reportsList.forEach((r) async {
-        bool res = await ApiSingleton().createReport(r);
-        if (!res) return false;
-      });
+      for (int i = 0; i < reportsList.length; i++) {
+        res = await ApiSingleton().createReport(reportsList[i]);
+      }
     }
     return true;
+    // return res;
   }
 
   static Future<bool> createReport() async {

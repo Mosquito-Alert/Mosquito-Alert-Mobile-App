@@ -20,9 +20,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   _getData() async {
     var response = await ApiSingleton().getNotifications();
-    setState(() {
-      notifications = response;
-    });
+    if (response != false && response != null) {
+      setState(() {
+        notifications = response;
+      });
+    }
   }
 
   @override
