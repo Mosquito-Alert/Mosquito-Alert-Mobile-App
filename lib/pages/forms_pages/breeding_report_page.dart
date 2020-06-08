@@ -177,9 +177,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     loadingStream.add(true);
     bool res = await Utils.saveReports();
     res == null || !res ? _showAlertKo() : _showAlertOk();
-    // _showAlertOk();
     Utils.resetReport();
-    // Navigator.pop(context);
   }
 
   @override

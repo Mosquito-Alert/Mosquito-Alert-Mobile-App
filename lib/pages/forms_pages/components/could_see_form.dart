@@ -21,7 +21,6 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
   void initState() {
     super.initState();
     language = Utils.getLanguage();
-    print(selected);
   }
 
   @override
