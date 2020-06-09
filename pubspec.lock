@@ -105,7 +105,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0+1"
+    version: "1.10.0"
   firebase:
     dependency: transitive
     description:
@@ -113,20 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.3.0"
-  firebase_analytics:
-    dependency: "direct main"
-    description:
-      name: firebase_analytics
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.11"
   firebase_auth:
     dependency: "direct main"
     description:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.16.1"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
@@ -142,7 +135,7 @@ packages:
     source: hosted
     version: "0.1.2"
   firebase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
@@ -162,13 +155,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
-  firebase_messaging:
-    dependency: "direct main"
-    description:
-      name: firebase_messaging
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.13"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -300,14 +286,14 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.6+1"
+    version: "0.6.7+1"
   image_picker_platform_interface:
     dependency: transitive
     description:
       name: image_picker_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   intl:
     dependency: transitive
     description:
