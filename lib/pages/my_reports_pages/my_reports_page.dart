@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,6 +19,7 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 
 import 'components/reports_list_widget.dart';
 
@@ -135,24 +138,21 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   void setCustomMapPin() async {
-    iconAdultYours = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
-        'assets/img/ic_adults_yours.png');
-    iconBitesYours = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/img/ic_bites_yours.png');
-    iconBreedingYours = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/img/ic_breeding_yours.png');
-    iconAdultOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
-        'assets/img/ic_adult_other.png');
-    iconBitesOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
-        'assets/img/ic_bites_other.png');
-    iconBreedingOthers = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(150, 150), devicePixelRatio: 2.5),
-        'assets/img/ic_breeding_other.png');
+    int width = 125;
+
+    iconAdultYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
+    iconBitesYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
+    iconBreedingYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
+    iconAdultOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_adult_other.png', width));
+    iconBitesOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_bites_other.png', width));
+    iconBreedingOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
   _createMarkers(BuildContext ctx) {
