@@ -34,11 +34,17 @@ dependencies:
   share: ^0.6.4+3
   device_info: ^0.4.2+4
   package_info: ^0.4.1
+  flutter_launcher_icons: ^0.7.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path_android: "assets/img/ic_launcher.png"
+  image_path_ios: "assets/img/ic_launcher.png"
+  android: true
+  ios: true
 
 
 flutter:
