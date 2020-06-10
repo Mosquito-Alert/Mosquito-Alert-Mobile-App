@@ -14,13 +14,14 @@ class MyLocalizations {
       "finish": "Finalizar",
       "unknoun": "Desconocido",
       "ok": 'Aceptar',
-      "delete": "Eliminar",
-      "edit": "Editar",
-      "exit": "Salir",
+      "cancel": "Cancelar",
       "yes": "Si",
       "no": "No",
       "delete": "Eliminar",
-      "cancel": "Cancelar",
+      "edit": "Editar",
+      "exit": "Salir",
+      "url_politics": "https://www.google.cat",
+      "url_legal": "https://www.google.cat",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -29,8 +30,10 @@ class MyLocalizations {
       "login_btn2": "Acceder con Gmail",
       "login_btn3": "Acceder con tu AppleID",
       "login_btn4": "Acceder con mi correo electrónico",
-      "terms_and_conditions_txt":
-          "Entrando en Mosquito Alert, aceptas nuestros términos y condiciones y nuestra política de privacidad.",
+      "terms_and_conditions_txt1": "Entrando en Mosquito Alert, aceptas nuestros",
+      "terms_and_conditions_txt2": "términos y condiciones",
+      "terms_and_conditions_txt3": "y nuestra",
+      "terms_and_conditions_txt4": "política de privacidad",
 
       //Login - email
       "enter_email_title": " Introduce tu correo electrónico",
@@ -46,10 +49,12 @@ class MyLocalizations {
       "user_password_txt": "Contrseña de usuario",
       "forgot_password_txt": "¿Has olvidado tu contrseña?",
       "social_login_ko_txt": "Ocurrió un error, intentalo de nuevo por favor.",
+      "login_alert_ko_text": "Los datos de acceso no son correctos. Por favor, revísalos e inténtalo de nuevo.",
 
       //Recover password
       "recover_password_title": "Recupera tu contraseña",
       "recover_password_btn": "Recuperar contraseña",
+      "recover_password_alert": "Si ya tenemos tu e-mail en nuestra base de datos, recibirás un correo para recuperar tu contraseña.",
 
       //Signup
       "signup_user_title": "Registro de usuario",

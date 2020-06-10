@@ -37,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   UserManager.user != null
                       ? SettingsMenuWidget(
                           MyLocalizations.of(context, "logout_txt"), () {
-                          Utils.showAlertYesNo("Cerrar sesión", "text", () {
+                          Utils.showAlertYesNo("Cerrar sesión", "¿Estás segurx que quieres cerrar sesión?", () {
                             _signOut();
                           }, context);
                         })

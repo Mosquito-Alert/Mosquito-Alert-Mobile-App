@@ -8,6 +8,10 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class RecoverPassword extends StatefulWidget {
+  final String email;
+
+  RecoverPassword({Key key, this.email}) : super(key: key);
+
   @override
   _RecoverPasswordState createState() => _RecoverPasswordState();
 }
@@ -15,6 +19,14 @@ class RecoverPassword extends StatefulWidget {
 class _RecoverPasswordState extends State<RecoverPassword> {
   TextEditingController _emailController = TextEditingController();
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.email != null) {
+      _emailController.text = widget.email;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,76 +41,80 @@ class _RecoverPasswordState extends State<RecoverPassword> {
           ),
           child: SvgPicture.asset(
             'assets/img/bg_login_small.svg',
-            fit: BoxFit.cover,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topCenter,
           ),
         ),
         Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
+            appBar: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              title: Image.asset('assets/img/ic_logo.png', width: 200),
+            ),
             backgroundColor: Colors.transparent,
-            title: Image.asset('assets/img/ic_logo.png', width: 200),
-          ),
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 80,
+            body: LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints viewportConstraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: IntrinsicHeight(
+                      child: SafeArea(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            Style.titleMedium(MyLocalizations.of(
-                                context, "recover_password_title")),
                             SizedBox(
-                              height: 20,
+                              height: 60,
                             ),
-                            Style.textField(
-                                MyLocalizations.of(context, "email_txt"),
-                                _emailController,
-                                context),
-                            SizedBox(
-                              height: 20,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Style.titleMedium(MyLocalizations.of(
+                                      context, "recover_password_title")),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Style.textField(
+                                      MyLocalizations.of(context, "email_txt"),
+                                      _emailController,
+                                      context),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                      width: double.infinity,
+                                      child: Style.button(
+                                          MyLocalizations.of(
+                                              context, "recover_password_btn"),
+                                          () {
+                                        _recoverPassword();
+                                      })),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Container(
-                                width: double.infinity,
-                                child: Style.button(
-                                    MyLocalizations.of(
-                                        context, "recover_password_btn"), () {
-                                  _recoverPassword();
-                                })),
-                            SizedBox(
-                              height: 20,
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                              ),
                             ),
+                            Utils.authBottomInfo(context),
                           ],
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          alignment: Alignment.bottomCenter,
-                          child: Style.body(
-                              MyLocalizations.of(
-                                  context, "terms_and_conditions_txt"),
-                              color: Style.greyColor,
-                              textAlign: TextAlign.center)),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+                  ),
+                );
+              },
+            )),
         StreamBuilder<bool>(
           stream: loadingStream.stream,
           initialData: false,
@@ -115,12 +131,19 @@ class _RecoverPasswordState extends State<RecoverPassword> {
     );
   }
 
-  _recoverPassword() {
+  _recoverPassword() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
     loadingStream.add(true);
-    ApiSingleton().recoverPassword(_emailController.text).then((value) {
-      loadingStream.add(false);
-    }).catchError((e) {
-      loadingStream.add(false);
-    });
+    try {
+      await ApiSingleton().recoverPassword(_emailController.text);
+    } catch (e) {
+      print(e.message);
+    }
+
+    Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'recover_password_alert'), context);
+
+    loadingStream.add(false);
   }
 }

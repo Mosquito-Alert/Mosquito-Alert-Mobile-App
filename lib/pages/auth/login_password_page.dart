@@ -14,6 +14,7 @@ class LoginPassword extends StatefulWidget {
   final String email;
 
   LoginPassword(this.email);
+
   @override
   _LoginPasswordState createState() => _LoginPasswordState();
 }
@@ -35,91 +36,98 @@ class _LoginPasswordState extends State<LoginPassword> {
           ),
           child: SvgPicture.asset(
             'assets/img/bg_login_small.svg',
-            fit: BoxFit.cover,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topCenter,
           ),
         ),
         Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
+            appBar: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              title: Image.asset('assets/img/ic_logo.png', width: 200),
+            ),
             backgroundColor: Colors.transparent,
-            title: Image.asset('assets/img/ic_logo.png', width: 200),
-          ),
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 80,
+            body: LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints viewportConstraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: viewportConstraints.maxHeight,
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: IntrinsicHeight(
+                      child: SafeArea(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            Style.titleMedium(MyLocalizations.of(
-                                context, "enter_password_title")),
                             SizedBox(
-                              height: 20,
+                              height: 60,
                             ),
-                            Style.textField(
-                                MyLocalizations.of(
-                                    context, "user_password_txt"),
-                                _passwordController,
-                                context,
-                                obscure: true),
-                            SizedBox(
-                              height: 20,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Style.titleMedium(MyLocalizations.of(
+                                      context, "enter_password_title")),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Style.textField(
+                                      MyLocalizations.of(
+                                          context, "user_password_txt"),
+                                      _passwordController,
+                                      context,
+                                      obscure: true),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                      width: double.infinity,
+                                      child: Style.button(
+                                          MyLocalizations.of(
+                                              context, "access_txt"), () {
+                                        _login();
+                                      })),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Divider(),
+                                  Container(
+                                    width: double.infinity,
+                                    child: Style.noBgButton(
+                                        MyLocalizations.of(
+                                            context, "forgot_password_txt"),
+                                        () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RecoverPassword(
+                                                  email: widget.email,
+                                                )),
+                                      );
+                                    }, textColor: Colors.black),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Container(
-                                width: double.infinity,
-                                child: Style.button(
-                                    MyLocalizations.of(context, "access_txt"),
-                                    () {
-                                  _login();
-                                })),
-                            SizedBox(
-                              height: 20,
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                              ),
                             ),
-                            Divider(),
-                            Container(
-                              width: double.infinity,
-                              child: Style.noBgButton(
-                                  MyLocalizations.of(
-                                      context, "forgot_password_txt"), () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RecoverPassword()),
-                                );
-                              }, textColor: Colors.black),
-                            )
+                            Utils.authBottomInfo(context),
                           ],
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          alignment: Alignment.bottomCenter,
-                          child: Style.body(
-                              MyLocalizations.of(
-                                  context, "terms_and_conditions_txt"),
-                              color: Style.greyColor,
-                              textAlign: TextAlign.center)),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+                  ),
+                );
+              },
+            )),
         StreamBuilder<bool>(
           stream: loadingStream.stream,
           initialData: false,
@@ -137,6 +145,8 @@ class _LoginPasswordState extends State<LoginPassword> {
   }
 
   _login() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
     loadingStream.add(true);
     ApiSingleton()
         .loginEmail(widget.email, _passwordController.text)
@@ -148,7 +158,8 @@ class _LoginPasswordState extends State<LoginPassword> {
         MaterialPageRoute(builder: (context) => MainVC()),
       );
     }).catchError((e) {
-      //Todo: show alert
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'login_alert_ko_text'), context);
       loadingStream.add(false);
       print(e);
     });

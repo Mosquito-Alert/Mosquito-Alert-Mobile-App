@@ -14,6 +14,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
 import 'package:random_string/random_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import 'MyLocalizations.dart';
@@ -373,25 +374,24 @@ class Utils {
         context: context, // user must tap button!
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Style.title(title),
+            title: Text(title),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Style.body(text),
+                  Text(text),
                 ],
               ),
             ),
             actions: <Widget>[
               FlatButton(
-                child: Style.body(MyLocalizations.of(context, 'ok'),
-                    color: Style.colorPrimary),
+                child: Text(MyLocalizations.of(context, 'yes')),
                 onPressed: () {
                   Navigator.of(context).pop();
                   onYesPressed();
                 },
               ),
               FlatButton(
-                child: Style.body(MyLocalizations.of(context, 'cancel')),
+                child: Text(MyLocalizations.of(context, 'no')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -405,19 +405,28 @@ class Utils {
         context: context, //
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Style.title(title),
-            content: Style.body(text),
+            title: Text(title),
+            content: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  text,
+                )
+              ],
+            ),
             actions: <Widget>[
               CupertinoDialogAction(
                 isDefaultAction: true,
-                child: Style.body(MyLocalizations.of(context, 'ok')),
+                child: Text(MyLocalizations.of(context, 'yes')),
                 onPressed: () {
-                  Navigator.of(context).pop();
                   onYesPressed();
+                  Navigator.of(context).pop();
                 },
               ),
               CupertinoDialogAction(
-                child: Style.body(MyLocalizations.of(context, 'cancel')),
+                child: Text(MyLocalizations.of(context, 'no')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -466,6 +475,55 @@ class Utils {
     }
   }
 
+  static Widget authBottomInfo(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 15, left: 15, right: 15),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          children: <Widget>[
+            Text('${MyLocalizations.of(context, 'terms_and_conditions_txt1')} ',
+                style: TextStyle(color: Style.textColor, fontSize: 12)),
+            InkWell(
+              onTap: () async {
+                final url = MyLocalizations.of(context, 'url_politics');
+                if (await canLaunch(url))
+                  await launch(url);
+                else
+                  throw 'Could not launch $url';
+              },
+              child: Text(
+                  MyLocalizations.of(context, 'terms_and_conditions_txt2'),
+                  style: TextStyle(
+                      color: Style.textColor,
+                      fontSize: 12,
+                      decoration: TextDecoration.underline)),
+            ),
+            Text(' ${MyLocalizations.of(context, 'terms_and_conditions_txt3')} ',
+                style: TextStyle(color: Style.textColor, fontSize: 12)),
+            InkWell(
+              onTap: () async {
+                final url = MyLocalizations.of(context, 'url_legal');
+                if (await canLaunch(url))
+                  await launch(url);
+                else
+                  throw 'Could not launch $url';
+              },
+              child: Text(
+                  MyLocalizations.of(context, 'terms_and_conditions_txt4'),
+                  style: TextStyle(
+                      color: Style.textColor,
+                      fontSize: 12,
+                      decoration: TextDecoration.underline)),
+            ),
+            Text('.', style: TextStyle(color: Style.textColor, fontSize: 12)),
+          ],
+        ),
+      ),
+    );
+  }
+
   static Widget loading(_isLoading, [Color indicatorColor]) {
     return _isLoading == true
         ? new Container(
@@ -489,4 +547,12 @@ class Utils {
   static String getLanguage() {
     return 'es';
   }
+
+  static launchUrl(url) async {
+    if (await canLaunch(url))
+      await launch(url, forceSafariVC: false);
+    else
+      throw 'Could not launch';
+  }
+
 }

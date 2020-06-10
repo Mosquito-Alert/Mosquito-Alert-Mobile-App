@@ -31,7 +31,9 @@ class _LoginEmailState extends State<LoginEmail> {
           ),
           child: SvgPicture.asset(
             'assets/img/bg_login_small.svg',
-            fit: BoxFit.cover,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topCenter,
           ),
         ),
         Scaffold(
@@ -42,61 +44,63 @@ class _LoginEmailState extends State<LoginEmail> {
             title: Image.asset('assets/img/ic_logo.png', width: 200),
           ),
           backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: ClampingScrollPhysics(),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 80,
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Style.titleMedium(MyLocalizations.of(
-                                context, "enter_email_title")),
-                            SizedBox(
-                              height: 20,
+          body: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 60,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Style.titleMedium(MyLocalizations.of(
+                                    context, "enter_email_title")),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Style.textField(
+                                    MyLocalizations.of(context, "email_txt"),
+                                    _emailController,
+                                    context,
+                                    keyboardType: TextInputType.emailAddress),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                    width: double.infinity,
+                                    child: Style.button(
+                                        MyLocalizations.of(
+                                            context, "access_txt"), () {
+                                      _checkEmail();
+                                    })),
+                              ],
                             ),
-                            Style.textField(
-                                MyLocalizations.of(context, "email_txt"),
-                                _emailController,
-                                context),
-                            SizedBox(
-                              height: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 50,
                             ),
-                            Container(
-                                width: double.infinity,
-                                child: Style.button(
-                                    MyLocalizations.of(context, "access_txt"),
-                                    () {
-                                  _checkEmail();
-                                })),
-                          ],
-                        ),
+                          ),
+                          Utils.authBottomInfo(context),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          alignment: Alignment.bottomCenter,
-                          child: Style.body(
-                              MyLocalizations.of(
-                                  context, "terms_and_conditions_txt"),
-                              color: Style.greyColor,
-                              textAlign: TextAlign.center)),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
         StreamBuilder<bool>(
@@ -116,6 +120,8 @@ class _LoginEmailState extends State<LoginEmail> {
   }
 
   _checkEmail() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
     loadingStream.add(true);
     if (!Utils.mailRegExp.hasMatch(_emailController.text)) {
       Utils.showAlert(MyLocalizations.of(context, "app_name"),

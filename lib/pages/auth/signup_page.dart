@@ -13,6 +13,7 @@ class SignupPage extends StatefulWidget {
   final String email;
 
   SignupPage(this.email);
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -43,7 +44,9 @@ class _SignupPageState extends State<SignupPage> {
           ),
           child: SvgPicture.asset(
             'assets/img/bg_login_small.svg',
-            fit: BoxFit.cover,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topCenter,
           ),
         ),
         Scaffold(
@@ -54,90 +57,92 @@ class _SignupPageState extends State<SignupPage> {
             title: Image.asset('assets/img/ic_logo.png', width: 200),
           ),
           backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 80,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Style.titleMedium(MyLocalizations.of(
-                                context, "signup_user_title")),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Form(
-                              child: Column(children: <Widget>[
-                                Style.textField(
-                                    MyLocalizations.of(context, "email_txt"),
-                                    _emailController,
-                                    context,
-                                    enabled: false),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Style.textField(
-                                    MyLocalizations.of(
-                                        context, "first_name_txt"),
-                                    _firstNameController,
-                                    context),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Style.textField(
-                                    MyLocalizations.of(
-                                        context, "last_name_txt"),
-                                    _lastNameController,
-                                    context),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Style.textField(
-                                    MyLocalizations.of(context, "password_txt"),
-                                    _passwordController,
-                                    context,
-                                    obscure: true),
-                              ]),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                                width: double.infinity,
-                                child: Style.button(
-                                    MyLocalizations.of(context, "signup_btn"),
-                                    () {
-                                  _signUp();
-                                })),
-                          ],
-                        ),
+          body: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight,
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          alignment: Alignment.bottomCenter,
-                          child: Style.body(
-                              MyLocalizations.of(
-                                  context, "terms_and_conditions_txt"),
-                              color: Style.greyColor,
-                              textAlign: TextAlign.center)),
-                    )
-                  ],
-                ),
-              ),
-            ),
+                      child: IntrinsicHeight(
+                        child: SafeArea(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 60,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: <Widget>[
+                                      Style.titleMedium(MyLocalizations.of(
+                                          context, "signup_user_title")),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Form(
+                                        child: Column(children: <Widget>[
+                                          Style.textField(
+                                              MyLocalizations.of(
+                                                  context, "email_txt"),
+                                              _emailController,
+                                              context,
+                                              enabled: false),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Style.textField(
+                                              MyLocalizations.of(
+                                                  context, "first_name_txt"),
+                                              _firstNameController,
+                                              context),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Style.textField(
+                                              MyLocalizations.of(
+                                                  context, "last_name_txt"),
+                                              _lastNameController,
+                                              context),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Style.textField(
+                                              MyLocalizations.of(
+                                                  context, "password_txt"),
+                                              _passwordController,
+                                              context,
+                                              obscure: true),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              width: double.infinity,
+                                              child: Style.button(
+                                                  MyLocalizations.of(
+                                                      context, "signup_btn"),
+                                                  () {
+                                                _signUp();
+                                              }))
+                                        ]),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: 50,
+                                  ),
+                                ),
+                                Utils.authBottomInfo(context),
+                              ]),
+                        ),
+                      )));
+            },
           ),
         ),
         StreamBuilder<bool>(

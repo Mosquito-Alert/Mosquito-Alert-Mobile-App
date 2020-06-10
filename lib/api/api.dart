@@ -172,8 +172,8 @@ class ApiSingleton {
     });
   }
 
-  Future<dynamic> recoverPassword(String email) {
-    _auth.sendPasswordResetEmail(email: email);
+  Future<void> recoverPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
   Future<dynamic> createProfile(String firebaseId) async {
