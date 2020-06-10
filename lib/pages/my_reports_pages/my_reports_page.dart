@@ -333,7 +333,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            icon: Icon(Icons.arrow_back),
+                            icon: Style.iconBack,
                           ),
                           Style.title(
                               MyLocalizations.of(context, "your_reports_txt")),

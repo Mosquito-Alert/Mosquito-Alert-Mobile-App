@@ -294,7 +294,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
             backgroundColor: Colors.white,
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Style.iconBack,
               onPressed: () {
                 double currentPage = _pagesController.page;
                 if (currentPage == 0.0) {

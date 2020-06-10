@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class Style {
@@ -5,6 +7,10 @@ class Style {
   static final Color colorPrimary = Color(0XFFF0A402);
   static final Color textColor = Color(0XFF282828);
   static final Color greyColor = Colors.black.withOpacity(0.5);
+
+  //UI
+  static Icon get iconBack =>
+      Platform.isIOS ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_back);
 
   // Texts
   static Widget title(
