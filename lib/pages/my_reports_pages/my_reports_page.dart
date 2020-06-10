@@ -31,9 +31,10 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  List<Report> _reports;
 
-  Position location;
+  Position location = Position(
+      latitude: Utils.defaultLocation.latitude,
+      longitude: Utils.defaultLocation.longitude);
 
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
@@ -44,6 +45,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   final _pagesController = PageController();
 
+  StreamController<List<Report>> dataMarkersStream =
+      new StreamController<List<Report>>.broadcast();
   StreamController<List<Report>> dataStream =
       new StreamController<List<Report>>.broadcast();
 
@@ -55,131 +58,75 @@ class _MyReportsPageState extends State<MyReportsPage> {
   GoogleMapController mapController;
   GoogleMapController miniMapController;
 
-  void _onMapCreated(GoogleMapController controller) {
-    _initLocation();
-    setState(() {
-      mapController = controller;
-    });
-  }
-
-  void _onMiniMapCreated(GoogleMapController controller) async {
-    setState(() {
-      miniMapController = controller;
-    });
-  }
-
   @override
   initState() {
     super.initState();
+    _initLocation();
+    _initMarkers();
+  }
 
-    Utils.getLocation();
-    loadingStream.add(true);
-    if (iconAdultYours == null) {
-      setCustomMapPin();
+  _initLocation() {
+    if (Utils.location != null) {
+      location = Utils.location;
     }
   }
 
-  _initLocation() async {
-    await Utils.getLocation();
-    var loc;
-
-    Utils.location != null
-        ? loc = Utils.location
-        : loc = Position(latitude: 41.3874, longitude: 2.1688);
-
-    mapController.animateCamera(
-        CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
-
-    setState(() {
-      location = loc;
-    });
-
-    // _getData();
-  }
-
-  _updateData() {
-    loadingStream.add(true);
-    _getData();
-  }
-
-  _getData() async {
-    var loc = location != null
-        ? location
-        : Utils.location != null
-            ? Utils.location
-            : Position(latitude: 41.3948975, longitude: 2.0785562);
-    List<Report> list = [];
-    list = await ApiSingleton()
-        .getReportsList(loc.latitude, loc.longitude, page: 1);
-    loadingStream.add(false);
-
-    if (list == null) {
-      list = [];
-    }
-
-    List<Report> data = [];
-    for (int i = 0; i < list.length; i++) {
-      if (list[i].location_choice != "missing" &&
-              list[i].current_location_lat != null &&
-              list[i].current_location_lon != null ||
-          list[i].selected_location_lat != null &&
-              list[i].selected_location_lon != null) {
-        data.add(list[i]);
-      }
-    }
-
-    setState(() {
-      _reports = list;
-    });
-
-    dataStream.add(data);
-    loadingStream.add(false);
-    // _createMarkers();
-  }
-
-  void setCustomMapPin() async {
+  void _initMarkers() async {
     int width = 125;
 
-    iconAdultYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
-    iconBitesYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
-    iconBreedingYours = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
-    iconAdultOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_adult_other.png', width));
-    iconBitesOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_bites_other.png', width));
-    iconBreedingOthers = BitmapDescriptor.fromBytes(await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
+    iconAdultYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
+    iconBitesYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
+    iconBreedingYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
+    iconAdultOthers = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_adult_other.png', width));
+    iconBitesOthers = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_bites_other.png', width));
+    iconBreedingOthers = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        .buffer
+        .asUint8List();
   }
 
-  _createMarkers(BuildContext ctx) {
+  _createMarkers(List<Report> reports) {
+    if (reports == null || reports.isEmpty) {
+      return;
+    }
+
     var markers = <Marker>[];
-    for (int i = 0; i < _reports.length; i++) {
+    for (int i = 0; i < reports.length; i++) {
       var position;
       // if (_reports[i].location_choice != 'missing') {
-      if (_reports[i].location_choice == 'current' &&
-          _reports[i].current_location_lat != null &&
-          _reports[i].current_location_lon != null) {
+      if (reports[i].location_choice == 'current' &&
+          reports[i].current_location_lat != null &&
+          reports[i].current_location_lon != null) {
         position = LatLng(
-            _reports[i].current_location_lat, _reports[i].current_location_lon);
-      } else if (_reports[i].location_choice == 'selected' &&
-          _reports[i].selected_location_lat != null &&
-          _reports[i].selected_location_lon != null) {
-        position = LatLng(_reports[i].selected_location_lat,
-            _reports[i].selected_location_lon);
+            reports[i].current_location_lat, reports[i].current_location_lon);
+      } else if (reports[i].location_choice == 'selected' &&
+          reports[i].selected_location_lat != null &&
+          reports[i].selected_location_lon != null) {
+        position = LatLng(
+            reports[i].selected_location_lat, reports[i].selected_location_lon);
       }
-      var icon = setIconMarker(_reports[i].type, _reports[i].user);
+      var icon = setIconMarker(reports[i].type, reports[i].user);
 
       if (position != null) {
         markers.add(Marker(
-          markerId: MarkerId(_reports[i].report_id),
+          markerId: MarkerId(reports[i].report_id),
           position: position,
           consumeTapEvents: true,
           onTap: () {
-            _reportBottomSheet(ctx, _reports[i]);
+            _reportBottomSheet(reports[i]);
           },
           icon: icon,
         ));
@@ -223,6 +170,35 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    _getLocation();
+  }
+
+  _getLocation() async {
+    LatLng loc = Utils.defaultLocation;
+    if (location.latitude == Utils.defaultLocation.latitude && location.longitude == Utils.defaultLocation.longitude) {
+      await Utils.getLocation();
+      if (Utils.location != null) {
+        location = Utils.location;
+        if (mapController != null) {
+          mapController.animateCamera(CameraUpdate.newLatLng(
+              LatLng(location.latitude, location.longitude)));
+          _getData();
+        }
+      }
+    }
+  }
+
+  void _onMiniMapCreated(GoogleMapController controller) async {
+    miniMapController = controller;
+  }
+
+  _updateData() {
+    loadingStream.add(true);
+    _getData();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -240,130 +216,132 @@ class _MyReportsPageState extends State<MyReportsPage> {
     };
 
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(top: 100),
-                child: StreamBuilder<List<Report>>(
-                  stream: dataStream.stream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Report>> snapshot) {
-                    return PageView.builder(
-                        controller: _pagesController,
-                        itemCount: 2,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == 0.0) {
-                            return Stack(
-                              alignment: Alignment.bottomLeft,
-                              children: <Widget>[
-                                GoogleMap(
-                                  onMapCreated: _onMapCreated,
-                                  mapType: MapType.normal,
-                                  mapToolbarEnabled: false,
-                                  zoomControlsEnabled: false,
-                                  zoomGesturesEnabled: false,
-                                  onCameraMove: (newPosition) {
-                                    setState(() {
-                                      location = Position(
-                                          latitude: newPosition.target.latitude,
-                                          longitude:
-                                              newPosition.target.longitude);
-                                    });
-                                  },
-                                  onCameraIdle: () {
-                                    loadingStream.add(true);
-                                    _getData();
-                                  },
-                                  initialCameraPosition: CameraPosition(
-                                    target: location != null
-                                        ? LatLng(location.latitude,
-                                            location.longitude)
-                                        : LatLng(41.3948975, 2.0785562),
-                                    zoom: 15.7,
-                                  ),
-                                  markers: snapshot.data != null
-                                      ? _createMarkers(context)
-                                      : null,
-                                ),
-                                Style.button("Leyenda", () {
-                                  _infoBottom(context);
-                                })
-                              ],
-                            );
-                          }
-
-                          if (index == 1.0) {
-                            return ReportsList(
-                                snapshot.hasData ? snapshot.data : [],
-                                _reportBottomSheet);
-                          }
-                        });
-                  },
-                )),
-            StreamBuilder<bool>(
-                stream: loadingStream.stream,
-                initialData: true,
-                builder:
-                    (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-                  if (snapLoading.data == true)
-                    return Container(
-                      child: Center(
-                        child: Utils.loading(true),
-                      ),
-                    );
-                  return Container();
-                }),
-            Container(
-              child: Card(
-                margin: EdgeInsets.all(0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0)),
-                color: Colors.white,
-                elevation: 2,
-                child: SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.only(top: 100),
+              child: PageView.builder(
+                  controller: _pagesController,
+                  itemCount: 2,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0.0) {
+                      return Stack(
+                        alignment: Alignment.bottomLeft,
                         children: <Widget>[
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
+                          StreamBuilder<List<Report>>(
+                            stream: dataMarkersStream.stream,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<Report>> snapshot) {
+                              return GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                mapType: MapType.normal,
+                                mapToolbarEnabled: false,
+                                zoomControlsEnabled: false,
+                                zoomGesturesEnabled: false,
+                                myLocationButtonEnabled: false,
+                                onCameraMove: (newPosition) {
+                                  location = Position(
+                                      latitude: newPosition.target.latitude,
+                                      longitude: newPosition.target.longitude);
+                                },
+                                onCameraIdle: () {
+                                  _getData();
+                                },
+                                initialCameraPosition: CameraPosition(
+                                  target: location != null
+                                      ? LatLng(
+                                          location.latitude, location.longitude)
+                                      : Utils.defaultLocation,
+                                  zoom: 15.7,
+                                ),
+                                markers: _createMarkers(snapshot.data),
+                              );
                             },
-                            icon: Style.iconBack,
                           ),
-                          Style.title(
-                              MyLocalizations.of(context, "your_reports_txt")),
-                          SizedBox(
-                            width: 40,
+                          SafeArea(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Style.button("Leyenda", () {
+                                _infoBottom(context);
+                              }),
+                            ),
                           )
                         ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 15),
-                        width: double.infinity,
-                        child: MaterialSegmentedControl(
-                          children: _children,
-                          selectionIndex: _currentIndex,
-                          borderColor: Style.colorPrimary,
-                          selectedColor: Style.colorPrimary,
-                          unselectedColor: Colors.white,
-                          borderRadius: 5.0,
-                          onSegmentChosen: (index) {
-                            _onItemTapped(index);
+                      );
+                    }
+
+                    return StreamBuilder<List<Report>>(
+                      stream: dataStream.stream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Report>> snapshot) {
+                        return ReportsList(
+                            snapshot.data != null ? snapshot.data : [],
+                            _reportBottomSheet);
+                      },
+                    );
+                  })),
+          StreamBuilder<bool>(
+              stream: loadingStream.stream,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                if (snapLoading.data == true)
+                  return Container(
+                    child: Center(
+                      child: Utils.loading(true),
+                    ),
+                  );
+                return Container();
+              }),
+          Container(
+            child: Card(
+              margin: EdgeInsets.all(0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
+              color: Colors.white,
+              elevation: 2,
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
                           },
+                          icon: Style.iconBack,
                         ),
+                        Style.title(
+                            MyLocalizations.of(context, "your_reports_txt")),
+                        SizedBox(
+                          width: 40,
+                        )
+                      ],
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 15, bottom: 16),
+                      width: double.infinity,
+                      child: MaterialSegmentedControl(
+                        children: _children,
+                        selectionIndex: _currentIndex,
+                        borderColor: Style.colorPrimary,
+                        selectedColor: Style.colorPrimary,
+                        unselectedColor: Colors.white,
+                        borderRadius: 5.0,
+                        onSegmentChosen: (index) {
+                          _onItemTapped(index);
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -372,126 +350,131 @@ class _MyReportsPageState extends State<MyReportsPage> {
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
-          return SafeArea(
-              child: Container(
-            height: MediaQuery.of(context).size.height * 0.40,
+          return Container(
             color: Colors.white,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_bites_yours.svg'),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "your_reports_bites_txt"),
-                              textAlign: TextAlign.center)
-                        ],
-                      ),
-                    ),
+            constraints: new BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                     SizedBox(
-                      width: 10,
+                      height: 30,
                     ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_breeding_yours.svg'),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "your_reports_breeding_txt"),
-                              textAlign: TextAlign.center)
-                        ],
+                    Row(children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset('assets/img/ic_bites_yours.svg'),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "your_reports_bites_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                                'assets/img/ic_breeding_yours.svg'),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "your_reports_breeding_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset('assets/img/ic_adults_yours.svg'),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "your_reports_adults_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
+                      ),
+                    ]),
                     SizedBox(
-                      width: 10,
+                      height: 20,
                     ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_adults_yours.svg'),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "your_reports_adults_txt"),
-                              textAlign: TextAlign.center)
-                        ],
+                    Row(children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset('assets/img/ic_bites_other.svg'),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "other_reports_bites_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_bites_other.svg'),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "other_reports_bites_txt"),
-                              textAlign: TextAlign.center)
-                        ],
+                      SizedBox(
+                        width: 10,
                       ),
-                    ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                                'assets/img/ic_breeding_other.svg'),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "other_reports_breeding_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SvgPicture.asset('assets/img/ic_adults_other.svg'),
+                            Style.body(
+                                MyLocalizations.of(
+                                    context, "other_reports_adults_txt"),
+                                textAlign: TextAlign.center)
+                          ],
+                        ),
+                      ),
+                    ]),
                     SizedBox(
-                      width: 10,
+                      height: 30,
                     ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_breeding_other.svg'),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "other_reports_breeding_txt"),
-                              textAlign: TextAlign.center)
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          SvgPicture.asset('assets/img/ic_adults_other.svg'),
-                          Style.body(
-                              MyLocalizations.of(
-                                  context, "other_reports_adults_txt"),
-                              textAlign: TextAlign.center)
-                        ],
-                      ),
-                    ),
-                  ]),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ));
+          );
         });
   }
 
-  _reportBottomSheet(BuildContext context, Report report) async {
+  _reportBottomSheet(Report report) async {
     bool isMine = UserManager.profileUUIDs.any((id) => id == report.user);
     Coordinates coord;
     if (report.location_choice == "current") {
@@ -506,11 +489,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
         context: context,
         dismissible: true,
         builder: (BuildContext bc) {
-          return SafeArea(
-              child: Container(
+          return Container(
             height: isMine
                 ? MediaQuery.of(context).size.height * 0.80
-                : MediaQuery.of(context).size.height * 0.35,
+                : MediaQuery.of(context).size.height * 0.45,
             // color: Colors.white,
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -518,280 +500,314 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 )),
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      height: 120,
-                      width: double.infinity,
-                      child: Stack(
+            child: SafeArea(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Expanded(
+                        child: Stack(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: GoogleMap(
+                                rotateGesturesEnabled: false,
+                                mapToolbarEnabled: false,
+                                scrollGesturesEnabled: false,
+                                zoomControlsEnabled: false,
+                                zoomGesturesEnabled: false,
+                                myLocationButtonEnabled: false,
+                                onMapCreated: _onMiniMapCreated,
+                                initialCameraPosition: _getPosition(report),
+                                markers: _getMarker(report),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Style.titleMedium(
+                          MyLocalizations.of(context, "report_of_the_day_txt") +
+                              DateFormat('dd-MM-yyyy')
+                                  .format(DateTime.parse(report.creation_time))
+                                  .toString()),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
                         children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: GoogleMap(
-                              rotateGesturesEnabled: false,
-                              mapToolbarEnabled: false,
-                              scrollGesturesEnabled: false,
-                              zoomControlsEnabled: false,
-                              zoomGesturesEnabled: false,
-                              onMapCreated: _onMiniMapCreated,
-                              initialCameraPosition: _getPosition(report),
-                              markers: _getMarker(report),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Style.titleMedium(
+                                    MyLocalizations.of(
+                                        context, "registered_location_txt"),
+                                    fontSize: 14),
+                                Style.body(
+                                    report.location_choice == "current"
+                                        ? '(' +
+                                            report.current_location_lat
+                                                .toStringAsFixed(5) +
+                                            ', ' +
+                                            report.current_location_lon
+                                                .toStringAsFixed(5) +
+                                            ')'
+                                        : '(' +
+                                            report.selected_location_lat
+                                                .toStringAsFixed(5) +
+                                            ', ' +
+                                            report.selected_location_lon
+                                                .toStringAsFixed(5) +
+                                            ')',
+                                    fontSize: 12),
+                                Style.body(
+                                    ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
+                                    fontSize: 12),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Style.titleMedium(
+                                    MyLocalizations.of(
+                                        context, "exact_time_register_txt"),
+                                    fontSize: 14),
+                                Style.body(
+                                    DateFormat('EEEE, dd MMMM yyyy')
+                                        .format(DateTime.parse(
+                                            report.creation_time))
+                                        .toString(),
+                                    fontSize: 12),
+                                Style.body(
+                                    'A las ' +
+                                        DateFormat.Hms()
+                                            .format(DateTime.parse(
+                                                report.creation_time))
+                                            .toString() +
+                                        ' horas',
+                                    fontSize: 12),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Style.titleMedium(
-                        MyLocalizations.of(context, "report_of_the_day_txt") +
-                            DateFormat('dd-MM-yyyy')
-                                .format(DateTime.parse(report.creation_time))
-                                .toString()),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                  MyLocalizations.of(
-                                      context, "registered_location_txt"),
-                                  fontSize: 14),
-                              Style.body(
-                                  report.location_choice == "current"
-                                      ? '(' +
-                                          report.current_location_lat
-                                              .toStringAsFixed(5) +
-                                          ', ' +
-                                          report.current_location_lon
-                                              .toStringAsFixed(5) +
-                                          ')'
-                                      : '(' +
-                                          report.selected_location_lat
-                                              .toStringAsFixed(5) +
-                                          ', ' +
-                                          report.selected_location_lon
-                                              .toStringAsFixed(5) +
-                                          ')',
-                                  fontSize: 12),
-                              Style.body(
-                                  ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
-                                  fontSize: 12),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                  MyLocalizations.of(
-                                      context, "exact_time_register_txt"),
-                                  fontSize: 14),
-                              Style.body(
-                                  DateFormat('EEEE, dd MMMM yyyy')
-                                      .format(
-                                          DateTime.parse(report.creation_time))
-                                      .toString(),
-                                  fontSize: 12),
-                              Style.body(
-                                  'A las ' +
-                                      DateFormat.Hms()
-                                          .format(DateTime.parse(
-                                              report.creation_time))
-                                          .toString() +
-                                      ' horas',
-                                  fontSize: 12),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    isMine
-                        ? Expanded(
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Divider(),
-                                ),
-                                report.photos.isNotEmpty
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Style.titleMedium(
-                                              MyLocalizations.of(context,
-                                                  "reported_images_txt"),
-                                              fontSize: 14),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            height: 60,
-                                            child: ListView.builder(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: report.photos.length,
-                                                itemBuilder: (context, index) {
-                                                  return Container(
-                                                    margin: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      child: Image.network(
-                                                        'http://humboldt.ceab.csic.es/media/' +
-                                                            report.photos[index]
-                                                                .photo,
-                                                        height: 60,
-                                                        width: 60,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                                Expanded(
-                                  child: ListView.builder(
-                                      itemCount: report.responses.length,
-                                      itemBuilder: (context, index) {
-                                        return Column(
+                      isMine
+                          ? Expanded(
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    child: Divider(),
+                                  ),
+                                  report.photos.isNotEmpty
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 20.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  report.responses[index]
-                                                              .question !=
-                                                          null
-                                                      ? Expanded(
-                                                          flex: 3,
-                                                          child:
-                                                              Style.titleMedium(
-                                                                  report
-                                                                      .responses[
-                                                                          index]
-                                                                      .question,
-                                                                  fontSize: 14),
-                                                        )
-                                                      : Container(),
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: Style.body(
-                                                        report.responses[index]
-                                                                    .answer !=
-                                                                ' '
-                                                            ? report
-                                                                .responses[
-                                                                    index]
-                                                                .answer
-                                                            : report
-                                                                .responses[
-                                                                    index]
-                                                                .answer_value,
-                                                        textAlign:
-                                                            TextAlign.end),
-                                                  ),
-                                                ],
-                                              ),
+                                            Style.titleMedium(
+                                                MyLocalizations.of(context,
+                                                    "reported_images_txt"),
+                                                fontSize: 14),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                              height: 60,
+                                              child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
+                                                      report.photos.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Container(
+                                                      margin: EdgeInsets.only(
+                                                          right: 5),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        child: Image.network(
+                                                          'http://humboldt.ceab.csic.es/media/' +
+                                                              report
+                                                                  .photos[index]
+                                                                  .photo,
+                                                          height: 60,
+                                                          width: 60,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
                                             ),
                                           ],
-                                        );
-                                      }),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                        child: Style.noBgButton(
-                                            MyLocalizations.of(context, "edit"),
-                                            () {
-                                      if (report.type == "bite") {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BitingReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateData,
-                                                  )),
-                                        );
-                                      } else if (report.type == "adult") {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AdultReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateData,
-                                                  )),
-                                        );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BreedingReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateData,
-                                                  )),
-                                        );
-                                      }
-                                    })),
-                                    Expanded(
-                                        child: Style.noBgButton(
+                                        )
+                                      : Container(),
+                                  Expanded(
+                                    child: ListView.builder(
+                                        itemCount: report.responses.length,
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 20.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    report.responses[index]
+                                                                .question !=
+                                                            null
+                                                        ? Expanded(
+                                                            flex: 3,
+                                                            child: Style.titleMedium(
+                                                                report
+                                                                    .responses[
+                                                                        index]
+                                                                    .question,
+                                                                fontSize: 14),
+                                                          )
+                                                        : Container(),
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Style.body(
+                                                          report
+                                                                      .responses[
+                                                                          index]
+                                                                      .answer !=
+                                                                  ' '
+                                                              ? report
+                                                                  .responses[
+                                                                      index]
+                                                                  .answer
+                                                              : report
+                                                                  .responses[
+                                                                      index]
+                                                                  .answer_value,
+                                                          textAlign:
+                                                              TextAlign.end),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          child: Style.noBgButton(
+                                              MyLocalizations.of(
+                                                  context, "edit"), () {
+                                        if (report.type == "bite") {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BitingReportPage(
+                                                      editReport: report,
+                                                      loadData: _updateData,
+                                                    )),
+                                          );
+                                        } else if (report.type == "adult") {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AdultReportPage(
+                                                      editReport: report,
+                                                      loadData: _updateData,
+                                                    )),
+                                          );
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BreedingReportPage(
+                                                      editReport: report,
+                                                      loadData: _updateData,
+                                                    )),
+                                          );
+                                        }
+                                      })),
+                                      Expanded(
+                                          child: Style.noBgButton(
+                                              MyLocalizations.of(
+                                                  context, "delete"), () {
+                                        Utils.showAlertYesNo(
                                             MyLocalizations.of(
-                                                context, "delete"), () {
-                                      Utils.showAlertYesNo(
-                                          MyLocalizations.of(
-                                              context, "delete_report_title"),
-                                          MyLocalizations.of(
-                                              context, "delete_report_txt"),
-                                          () {
-                                        _deleteReport(report);
-                                      }, context);
-                                      //
-                                    }, textColor: Colors.red))
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container()
-                  ]),
+                                                context, "delete_report_title"),
+                                            MyLocalizations.of(
+                                                context, "delete_report_txt"),
+                                            () {
+                                          _deleteReport(report);
+                                        }, context);
+                                        //
+                                      }, textColor: Colors.red))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ]),
+              ),
             ),
-          ));
+          );
         });
+  }
+
+  _getData() async {
+    loadingStream.add(true);
+
+    List<Report> list = await ApiSingleton()
+        .getReportsList(location.latitude, location.longitude, page: 1);
+
+    if (list == null) {
+      list = [];
+    }
+
+    List<Report> data = [];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].location_choice != "missing" &&
+          list[i].current_location_lat != null &&
+          list[i].current_location_lon != null ||
+          list[i].selected_location_lat != null &&
+              list[i].selected_location_lon != null) {
+        data.add(list[i]);
+      }
+    }
+
+    dataMarkersStream.add(list);
+    dataStream.add(data);
+    loadingStream.add(false);
   }
 
   _deleteReport(report) async {
@@ -807,11 +823,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
         MyLocalizations.of(context, "app_name"),
         MyLocalizations.of(context, 'save_report_ko_txt'),
         context,
-        onPressed: () {
-          Navigator.pop(context);
-          // _getData();
-        },
-        barrierDismissible: false,
       );
     }
   }

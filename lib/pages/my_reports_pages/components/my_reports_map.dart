@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -29,8 +30,8 @@ class _MyReportsMapState extends State<MyReportsMap> {
         GoogleMap(
           onMapCreated: _onMapCreated,
           mapToolbarEnabled: false,
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(41.1613063, 0.4724329),
+          initialCameraPosition: CameraPosition(
+            target: Utils.defaultLocation,
             zoom: 16.0,
           ),
           markers: widget.markers != null ? Set<Marker>.of(widget.markers) : null,

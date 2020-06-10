@@ -23,7 +23,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   GoogleMapController controller;
   List<Marker> markers = [];
 
-  Position location;
   Position currentLocation;
 
   Set<Circle> circles;
@@ -34,8 +33,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   @override
   void initState() {
     super.initState();
-    Utils.getLocation();
-    currentLocation = Utils.location;
 
     if (Utils.report != null) {
       switch (Utils.report.location_choice) {
@@ -83,33 +80,18 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   }
 
   _getCurrentLocation() async {
-    Position loc;
-    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-
-    bool geolocationEnabled = await geolocator.isLocationServiceEnabled();
-
-    if (geolocationEnabled) {
-      Geolocator geolocator = Geolocator()..forceAndroidLocationManager = false;
-      loc = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    } else {
+    if (Utils.location == null) {
       await Utils.getLocation();
-      loc = Utils.location;
+      if (Utils.location != null && controller != null) {
+        controller.animateCamera(CameraUpdate.newLatLng(
+            LatLng(Utils.location.latitude, Utils.location.longitude)));
+      }
     }
-    if (loc != null) {
-      controller.animateCamera(
-          CameraUpdate.newLatLng(LatLng(loc.latitude, loc.longitude)));
-    }
-    setState(() {
-      currentLocation = loc;
-    });
   }
 
   void _onMapCreated(GoogleMapController controller) {
+    this.controller = controller;
     currentLocation == null ? _getCurrentLocation() : null;
-    setState(() {
-      this.controller = controller;
-    });
   }
 
   updateMarker(LatLng markerPosition) {
@@ -316,15 +298,20 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                     MinMaxZoomPreference(6, 18),
                                 mapToolbarEnabled: false,
                                 onTap: (LatLng pos) {
-                                  snapshot.data == LocationType.selected
-                                      ? updateMarker(pos)
-                                      : null;
+                                  if (snapshot.data == LocationType.selected) {
+                                    updateMarker(pos);
+                                  }
                                 },
                                 initialCameraPosition: CameraPosition(
                                   target: currentLocation != null
                                       ? LatLng(currentLocation.latitude,
                                           currentLocation.longitude)
-                                      : LatLng(41.3874, 2.1688),
+                                      : Utils.location != null
+                                          ? LatLng(Utils.location.latitude,
+                                              Utils.location.longitude)
+                                          : LatLng(
+                                              Utils.defaultLocation.latitude,
+                                              Utils.defaultLocation.longitude),
                                   zoom: 15.0,
                                 ),
                                 markers: markers.isNotEmpty

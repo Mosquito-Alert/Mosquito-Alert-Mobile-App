@@ -5,6 +5,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -19,8 +20,6 @@ import 'MyLocalizations.dart';
 
 class Utils {
   static List<CameraDescription> cameras;
-
-  static Position location;
 
   //images
   static List<Map> imagePath;
@@ -153,6 +152,11 @@ class Utils {
 
   static void addBiteResponse(String question, String answer,
       {question_id, answer_id}) {
+
+    if (report == null) {
+      return;
+    }
+
     List<Question> _questions = report.responses;
 
     //increase answer_value question 2
@@ -280,7 +284,6 @@ class Utils {
 
   static getLocation() async {
     location = await Geolocator().getLastKnownPosition();
-    print(location);
   }
 
   static final RegExp mailRegExp = RegExp(
@@ -480,6 +483,9 @@ class Utils {
   }
 
   //Manage Data
+  static Position location;
+  static LatLng defaultLocation = LatLng(41.3874, 2.1688);
+
   static String getLanguage() {
     return 'es';
   }
