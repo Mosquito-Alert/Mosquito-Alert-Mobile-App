@@ -271,14 +271,55 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   })
             ],
           ),
-          body: PageView(
-            controller: _pagesController,
-            // itemCount: _formsRepot.length,
-            physics: NeverScrollableScrollPhysics(),
-            // itemBuilder: (BuildContext context, int index) {
-            //   return _formsRepot[index];
-            // }),
-            children: _formsRepot,
+          body: Stack(
+            children: <Widget>[
+              PageView(
+                controller: _pagesController,
+                // itemCount: _formsRepot.length,
+                physics: NeverScrollableScrollPhysics(),
+                // itemBuilder: (BuildContext context, int index) {
+                //   return _formsRepot[index];
+                // }),
+                children: _formsRepot,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: false
+                    ? GestureDetector(
+                        onTap: () {
+                          // widget.nextPage();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Style.colorPrimary,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Style.body(
+                              MyLocalizations.of(context, "continue_txt"),
+                              textAlign: TextAlign.center,
+                              color: Colors.white),
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Style.body(
+                            MyLocalizations.of(context, "complete_all_txt"),
+                            textAlign: TextAlign.center,
+                            color: Colors.white),
+                      ),
+              ),
+            ],
           ),
         ),
         StreamBuilder<bool>(

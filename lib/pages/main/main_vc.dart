@@ -111,53 +111,62 @@ class _MainVCState extends State<MainVC> {
                                               MyLocalizations.of(
                                                   context, "what_to_do_txt"),
                                               fontSize: 16),
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PointsInfo()),
-                                              );
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5.0),
-                                              child: Style.body(
-                                                  MyLocalizations.of(context,
-                                                      "more_info_points_txt"),
-                                                  color: Color(0XFFC96F00),
-                                                  fontSize: 10),
-                                            ),
-                                          )
+                                          // InkWell(
+                                          // onTap: () {
+                                          //   Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             PointsInfo()),
+                                          //   );
+                                          // },
+                                          //   child: Padding(
+                                          //     padding:
+                                          //         const EdgeInsets.symmetric(
+                                          //             vertical: 5.0),
+                                          //     child: Style.body(
+                                          //         MyLocalizations.of(context,
+                                          //             "more_info_points_txt"),
+                                          //         color: Color(0XFFC96F00),
+                                          //         fontSize: 10),
+                                          //   ),
+                                          // )
                                         ]),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Container(
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/img/points_box.png"),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PointsInfo()),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/img/points_box.png"),
+                                        ),
                                       ),
+                                      child: Center(
+                                          child: AutoSizeText(
+                                        userScore != null
+                                            ? userScore.toString()
+                                            : '',
+                                        maxLines: 1,
+                                        maxFontSize: 26,
+                                        minFontSize: 16,
+                                        style: TextStyle(
+                                            color: Color(0xFF4B3D04),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 30),
+                                      )),
                                     ),
-                                    child: Center(
-                                        child: AutoSizeText(
-                                      userScore != null
-                                          ? userScore.toString()
-                                          : '',
-                                      maxLines: 1,
-                                      maxFontSize: 26,
-                                      minFontSize: 16,
-                                      style: TextStyle(
-                                          color: Color(0xFF4B3D04),
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 30),
-                                    )),
                                   ),
                                 ]),
                             Padding(
@@ -190,31 +199,6 @@ class _MainVCState extends State<MainVC> {
                                   width: 5,
                                 ),
                                 Expanded(
-                                    child: GestureDetector(
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BreedingReportPage()),
-                                    );
-                                  },
-                                  child: CustomCard(
-                                    img: 'assets/img/ic_breeding_report.png',
-                                    title: MyLocalizations.of(
-                                        context, 'report_nest_txt'),
-                                    subtitle: MyLocalizations.of(context,
-                                        'found_breeding_place_question_txt'),
-                                  ),
-                                )),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
@@ -233,6 +217,31 @@ class _MainVCState extends State<MainVC> {
                                     ),
                                   ),
                                 ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: GestureDetector(
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BreedingReportPage()),
+                                    );
+                                  },
+                                  child: CustomCard(
+                                    img: 'assets/img/ic_breeding_report.png',
+                                    title: MyLocalizations.of(
+                                        context, 'report_nest_txt'),
+                                    subtitle: MyLocalizations.of(context,
+                                        'found_breeding_place_question_txt'),
+                                  ),
+                                )),
                                 SizedBox(
                                   width: 5,
                                 ),
@@ -259,43 +268,43 @@ class _MainVCState extends State<MainVC> {
                             SizedBox(
                               height: 10,
                             ),
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Container(
-                                padding: EdgeInsets.only(left: 20, right: 10, top: 15, bottom: 15),
-                                child: Row(
-                                  children: <Widget>[
-                                    Image.asset(
-                                      'assets/img/ic_validate_photos.png',
-                                      width: 55,
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                    SizedBox(width: 15,),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Style.titleMedium(
-                                              MyLocalizations.of(context,
-                                                  'help_validating_other_photos_txt'),
-                                              fontSize: 16),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Style.bodySmall(MyLocalizations.of(
-                                              context, 'we_need_help_txt')),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                            // Card(
+                            //   elevation: 2,
+                            //   shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(20)),
+                            //   child: Container(
+                            //     padding: EdgeInsets.only(left: 20, right: 10, top: 15, bottom: 15),
+                            //     child: Row(
+                            //       children: <Widget>[
+                            //         Image.asset(
+                            //           'assets/img/ic_validate_photos.png',
+                            //           width: 55,
+                            //           fit: BoxFit.fitWidth,
+                            //         ),
+                            //         SizedBox(width: 15,),
+                            //         Expanded(
+                            //           flex: 2,
+                            //           child: Column(
+                            //             children: <Widget>[
+                            //               Style.titleMedium(
+                            //                   MyLocalizations.of(context,
+                            //                       'help_validating_other_photos_txt'),
+                            //                   fontSize: 16),
+                            //               SizedBox(
+                            //                 height: 5,
+                            //               ),
+                            //               Style.bodySmall(MyLocalizations.of(
+                            //                   context, 'we_need_help_txt')),
+                            //               SizedBox(
+                            //                 height: 5,
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

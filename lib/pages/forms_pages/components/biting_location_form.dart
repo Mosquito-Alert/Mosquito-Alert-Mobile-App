@@ -286,7 +286,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 5),
-                            height: 300,
+                            height: MediaQuery.of(context).size.height * 0.5,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: GoogleMap(

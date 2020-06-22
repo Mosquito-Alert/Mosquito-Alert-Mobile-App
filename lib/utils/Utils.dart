@@ -17,6 +17,7 @@ import 'package:random_string/random_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models/question.dart';
 import 'MyLocalizations.dart';
 
 class Utils {
@@ -152,13 +153,31 @@ class Utils {
   }
 
   static void addBiteResponse(String question, String answer,
-      {question_id, answer_id}) {
-
+      {question_id, answer_id, answer_value}) {
     if (report == null) {
       return;
     }
 
     List<Question> _questions = report.responses;
+
+    // add total bites
+
+    if (question_id == 1) {
+      int currentIndex = _questions.indexWhere((question) =>
+          // question.question_id == question_id &&
+          question.question_id == question_id);
+      if (currentIndex == -1) {
+        _questions.add(Question(
+          question: question.toString(),
+          answer: answer.toString(),
+          answer_id: answer_id,
+          question_id: question_id,
+          answer_value: '1',
+        ));
+      } else {
+        _questions[currentIndex].answer_value = answer_value.toString();
+      }
+    }
 
     //increase answer_value question 2
     if (question_id == 2) {
@@ -179,32 +198,55 @@ class Utils {
         _questions[currentIndex].answer_value = value.toString();
       }
 
-      //increase total bites answer_value
-      int bitesIndex =
-          _questions.indexWhere((question) => question.question_id == 1);
+      // //increase total bites answer_value
+      // int bitesIndex =
+      //     _questions.indexWhere((question) => question.question_id == 1);
 
-      if (bitesIndex == -1) {
-        _questions.add(Question(
-            question: 'Cuantas picads',
-            answer: ' ',
-            question_id: 1,
-            answer_value: '1'));
+      // if (bitesIndex == -1) {
+      //   _questions.add(Question(
+      //       question: 'Cuantas picads',
+      //       answer: ' ',
+      //       question_id: 1,
+      //       answer_value: '1'));
+      // } else {
+      // int value = int.parse(_questions[bitesIndex].answer_value);
+      // value = value + 1;
+      // _questions[bitesIndex].answer_value = value.toString();
+      // }
+    }
+
+    //add other questions without answer_value
+    if (question_id != 2 && question_id != 1) {
+      if (_questions.any((q) => q.answer_id == answer_id)) {
+        // delete question from list
+        _questions.removeWhere((q) => q.answer_id == answer_id);
       } else {
-        int value = int.parse(_questions[bitesIndex].answer_value);
-        value = value + 1;
-        _questions[bitesIndex].answer_value = value.toString();
+        if (_questions.any(
+            (q) => q.question_id == question_id && q.answer_id != answer_id)) {
+          //modify question
+          int index =
+              _questions.indexWhere((q) => q.question_id == question_id);
+          _questions[index].answer_id = answer_id;
+          _questions[index].answer = answer;
+        } else {
+          _questions.add(Question(
+            question: question.toString(),
+            answer: answer.toString(),
+            answer_id: answer_id,
+            question_id: question_id,
+          ));
+        }
       }
     }
-    //add other questions without answer_value
+    report.responses = _questions;
+  }
 
-    if (question_id != 2 && question_id != 1) {
-      _questions.add(Question(
-        question: question.toString(),
-        answer: answer.toString(),
-        answer_id: answer_id,
-        question_id: question_id,
-      ));
-    }
+  static void resetBitingQuestion() {
+    List<Question> _questions = report.responses;
+
+    _questions.removeWhere((q) => q.question_id == 2);
+
+    report.responses = _questions;
   }
 
   static void addAdultPartsResponse(answer, answerId, i) {
@@ -500,7 +542,8 @@ class Utils {
                       fontSize: 12,
                       decoration: TextDecoration.underline)),
             ),
-            Text(' ${MyLocalizations.of(context, 'terms_and_conditions_txt3')} ',
+            Text(
+                ' ${MyLocalizations.of(context, 'terms_and_conditions_txt3')} ',
                 style: TextStyle(color: Style.textColor, fontSize: 12)),
             InkWell(
               onTap: () async {
@@ -554,5 +597,4 @@ class Utils {
     else
       throw 'Could not launch';
   }
-
 }

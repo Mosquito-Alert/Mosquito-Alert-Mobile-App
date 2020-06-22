@@ -5,11 +5,13 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
+import '../../../utils/Utils.dart';
+
 class BitingForm extends StatefulWidget {
   final List<Map> displayQuestions;
-  final Function nextPage;
+  final Function setValid;
 
-  BitingForm(this.displayQuestions, this.nextPage);
+  BitingForm(this.displayQuestions, this.setValid);
   @override
   _BitingFormState createState() => _BitingFormState();
 }
@@ -17,11 +19,15 @@ class BitingForm extends StatefulWidget {
 class _BitingFormState extends State<BitingForm> {
   List<Question> questions;
   String language;
+  int bites = 0;
+
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     questions = [];
+    _textController.text = bites.toString();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
         if (q.question_id <= 4) {
@@ -47,46 +53,127 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 35,
               ),
-              Style.title(
-                  MyLocalizations.of(context, "need_more_information_txt")),
-              Style.bodySmall(MyLocalizations.of(context, "lets_go_txt")),
+              // Style.title(
+              //     MyLocalizations.of(context, "need_more_information_txt")),
+              // Style.bodySmall(MyLocalizations.of(context, "lets_go_txt")),
+              // SizedBox(
+              //   height: 25,
+              // ),
+              Style.titleMedium('¿Cuántas picaduras quieres reportar y dónde?',
+                  fontSize: 16),
               SizedBox(
                 height: 25,
               ),
-              Style.titleMedium('¿Cuántas picaduras quieres reportar y dónde?',
-                  fontSize: 16),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 1,
+                      child: Style.textField(
+                        "a",
+                        _textController,
+                        context,
+                        enabled: false,
+                      )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Style.button(
+                    '-',
+                    () {
+                      bites = bites - 1;
+                      _textController.text = bites.toString();
+                      addToList("numero de picadas", "",
+                          question_id: 1,
+                          answer_id: 11,
+                          answer_value: _textController.text);
+                    },
+                  ),
+                  Style.button(
+                    '+',
+                    () {
+                      bites = bites + 1;
+                      _textController.text = bites.toString();
+                      addToList("numero de picadas", "",
+                          question_id: 1,
+                          answer_id: 11,
+                          answer_value: _textController.text);
+                    },
+                  ),
+                ],
+              ),
               Container(
                 alignment: Alignment.topLeft,
                 child: Stack(
                   children: <Widget>[
                     Stack(
                       children: <Widget>[
-                        Image.asset('assets/img/ic_full_body_off.png'),
+                        Image.asset(
+                          'assets/img/ic_full_body_off.png',
+                          width: mediaQuery.width,
+                        ),
                         questions.any((question) => question.answer_id == 6)
-                            ? Image.asset('assets/img/ic_left_leg_on.png')
-                            : Image.asset("assets/img/ic_left_leg_off.png"),
+                            ? Image.asset(
+                                'assets/img/ic_left_leg_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                "assets/img/ic_left_leg_off.png",
+                                width: mediaQuery.width,
+                              ),
                         questions.any((question) => question.answer_id == 5)
-                            ? Image.asset('assets/img/ic_right_leg_on.png')
-                            : Image.asset('assets/img/ic_right_leg_off.png'),
+                            ? Image.asset(
+                                'assets/img/ic_right_leg_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                'assets/img/ic_right_leg_off.png',
+                                width: mediaQuery.width,
+                              ),
                         questions.any((question) => question.answer_id == 4)
-                            ? Image.asset('assets/img/ic_left_hand_on.png')
-                            : Image.asset('assets/img/ic_left_hand_off.png'),
+                            ? Image.asset(
+                                'assets/img/ic_left_hand_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                'assets/img/ic_left_hand_off.png',
+                                width: mediaQuery.width,
+                              ),
                         questions.any((question) => question.answer_id == 3)
-                            ? Image.asset('assets/img/ic_right_hand_on.png')
-                            : Image.asset('assets/img/ic_right_hand_off.png'),
+                            ? Image.asset(
+                                'assets/img/ic_right_hand_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                'assets/img/ic_right_hand_off.png',
+                                width: mediaQuery.width,
+                              ),
                         questions.any((question) => question.answer_id == 1)
-                            ? Image.asset('assets/img/ic_head_on.png')
-                            : Image.asset('assets/img/ic_head_off.png'),
+                            ? Image.asset(
+                                'assets/img/ic_head_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                'assets/img/ic_head_off.png',
+                                width: mediaQuery.width,
+                              ),
                         questions.any((question) => question.answer_id == 2)
-                            ? Image.asset('assets/img/ic_chest_on.png')
-                            : Image.asset('assets/img/ic_chest_off.png'),
+                            ? Image.asset(
+                                'assets/img/ic_chest_on.png',
+                                width: mediaQuery.width,
+                              )
+                            : Image.asset(
+                                'assets/img/ic_chest_off.png',
+                                width: mediaQuery.width,
+                              ),
                         Positioned(
                           top: mediaQuery.height * 0.05,
                           left: mediaQuery.width * 0.37,
                           child: questions
                                   .any((question) => question.answer_id == 1)
                               ? Style.body(getIndexBody(1))
-                              : Container(),
+                              : Container(
+                                  color: Colors.green.withOpacity(0.2),
+                                ),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
@@ -224,6 +311,17 @@ class _BitingFormState extends State<BitingForm> {
                 ),
               ),
               Center(
+                child: Style.button(MyLocalizations.of(context, 'reset'), () {
+                  Utils.resetBitingQuestion();
+                  setState(() {
+                    questions = Utils.report.responses;
+                  });
+                }),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
                 child: Style.body(
                   MyLocalizations.of(context, 'tap_image_biting_txt'),
                   color: Colors.grey,
@@ -242,7 +340,8 @@ class _BitingFormState extends State<BitingForm> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                          widget.displayQuestions[i]['question']['text'][language],
+                          widget.displayQuestions[i]['question']['text']
+                              [language],
                           fontSize: 16),
                       SizedBox(
                         height: 10,
@@ -272,26 +371,23 @@ class _BitingFormState extends State<BitingForm> {
                               return Container(
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(
-                                  onTap: _getDisabled(answerId, questionId)
-                                      ? null
-                                      : () {
-                                          addToList(questionTxt, answerTxt,
-                                              question_id: questionId,
-                                              answer_id: answerId);
-                                        },
+                                  onTap: () {
+                                    addToList(questionTxt, answerTxt,
+                                        question_id: questionId,
+                                        answer_id: answerId);
+                                  },
                                   child: SmallQuestionOption(
                                     answerTxt,
                                     selected: questions
                                         .any((q) => q.answer_id == answerId),
-                                    index: getIndexAnswer(answerId),
-                                    disabled:
-                                        _getDisabled(answerId, questionId),
+                                    // index: getIndexAnswer(answerId),
+                                    // disabled:
+                                    //     _getDisabled(answerId, questionId),
                                   ),
                                 ),
                               );
                             }),
                       ),
-                      //TOODO: Question "nolose"
                     ],
                   );
                 },
@@ -299,37 +395,37 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
-              canContinue()
-                  // true
-                  ? GestureDetector(
-                      onTap: () {
-                        widget.nextPage();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Style.colorPrimary,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Style.body(
-                            MyLocalizations.of(context, "continue_txt"),
-                            textAlign: TextAlign.center,
-                            color: Colors.white),
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Style.body(
-                          MyLocalizations.of(context, "complete_all_txt"),
-                          textAlign: TextAlign.center,
-                          color: Colors.white),
-                    ),
+              // canContinue()
+              // true
+              // ? GestureDetector(
+              //     onTap: () {
+              //       widget.nextPage();
+              //     },
+              //     child: Container(
+              //       padding: EdgeInsets.symmetric(vertical: 20),
+              //       width: double.infinity,
+              //       decoration: BoxDecoration(
+              //         color: Style.colorPrimary,
+              //         borderRadius: BorderRadius.circular(15),
+              //       ),
+              //       child: Style.body(
+              //           MyLocalizations.of(context, "continue_txt"),
+              //           textAlign: TextAlign.center,
+              //           color: Colors.white),
+              //     ),
+              //   )
+              // : Container(
+              //     padding: EdgeInsets.symmetric(vertical: 20),
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       color: Colors.grey,
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //     child: Style.body(
+              //         MyLocalizations.of(context, "complete_all_txt"),
+              //         textAlign: TextAlign.center,
+              //         color: Colors.white),
+              //   ),
               SizedBox(
                 height: 15,
               ),
@@ -383,20 +479,31 @@ class _BitingFormState extends State<BitingForm> {
     }
   }
 
-  addToList(String question, String answer, {question_id, answer_id}) {
-    Utils.addBiteResponse(question, answer,
-        question_id: question_id, answer_id: answer_id);
+  addToList(String question, String answer,
+      {question_id, answer_id, answer_value}) {
+    Utils.addBiteResponse(
+      question,
+      answer,
+      question_id: question_id,
+      answer_id: answer_id,
+      answer_value: answer_value,
+    );
 
     setState(() {
       questions = Utils.report.responses;
     });
+    bool isValid = canContinue();
+    widget.setValid(isValid);
   }
 
   bool canContinue() {
     if (questions.length > 1 && questions.isNotEmpty) {
       int totalIndex = questions.indexWhere((q) => q.question_id == 1);
-      int totalValues = int.parse(questions[totalIndex].answer_value);
-      bool canContinue = false;
+      int totalValues = 0;
+      if (totalIndex != -1) {
+        totalValues = int.parse(questions[totalIndex].answer_value);
+      }
+
       int totalParts = 0;
       int totalQ3 = 0;
       int totalQ4 = 0;
@@ -405,15 +512,11 @@ class _BitingFormState extends State<BitingForm> {
         if (q.question_id == 2) {
           totalParts = totalParts + int.parse(q.answer_value);
         }
-        if (q.question_id == 3) totalQ3++;
-        if (q.question_id == 4) totalQ4++;
+        if (q.question_id == 4) totalQ3++;
+        if (q.question_id == 5) totalQ4++;
       });
 
-      if (totalParts > 0 &&
-          totalQ3 > 0 &&
-          totalQ4 > 0 &&
-          totalQ3 <= totalValues &&
-          totalQ4 <= totalValues) return true;
+      if (totalParts > 0 && totalQ3 == 1 && totalQ4 == 1) return true;
 
       return false;
 

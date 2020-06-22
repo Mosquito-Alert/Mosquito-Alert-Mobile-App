@@ -33,22 +33,27 @@ class _BitingReportPageState extends State<BitingReportPage> {
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
 
   List<Map> displayQuestions = [
-    // {
-    //   "question": {
-    //     "id": 1,
-    //     "text": {
-    //       "en": "How many bites did you get?",
-    //       "ca": "Quantes vegades t'han picat?"
-    //     }
-    //   },
-    //   "answers": [
-    //     //Number of bites - value equals TOTAL number of bites
-    //     {
-    //       "id": 11,
-    //       "text": {"en": "", "ca": ""}
-    //     }
-    //   ]
-    // },
+    {
+      "question": {
+        "id": 1,
+        "text": {
+          "en": "How many bites did you get?",
+          "ca": "Quantes vegades t'han picat?",
+          "es": "¿Cuantas veces te han picado?"
+        }
+      },
+      "answers": [
+        //Number of bites - value equals TOTAL number of bites
+        {
+          "id": 11,
+          "text": {
+            "en": "",
+            "ca": "",
+            "es": "",
+          }
+        }
+      ]
+    },
     // {
     //   "question": {
     //     "id": 2,
@@ -82,6 +87,66 @@ class _BitingReportPageState extends State<BitingReportPage> {
     //     }
     //   ]
     // },
+    {
+      "question": {
+        "id": 4,
+        "text": {
+          "en": "Were you indoors or outdoors when you were bitten?",
+          "ca": "Estaves a dins o a fora quan et van picar?",
+          "es": "¿Estabas en el interior o en el exterior cuando te picaron?"
+        }
+      },
+      "answers": [
+        {
+          "id": 41,
+          "text": {
+            "en": "Indoors",
+            "ca": "A dins",
+            "es": "Interior",
+          }
+        },
+        {
+          "id": 42,
+          "text": {
+            "en": "Outdoors",
+            "ca": "A fora",
+            "es": "Exterior",
+          }
+        },
+        // {
+        //   "id": 35,
+        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
+        // }
+      ]
+    },
+    {
+      "question": {
+        "id": 5,
+        "text": {
+          "en": "When were you bitten?",
+          "ca": "Quan t'han picat?",
+          "es": "¿Cuando te han picado?"
+        }
+      },
+      "answers": [
+        {
+          "id": 51,
+          "text": {
+            "en": "Now",
+            "ca": "Ara",
+            "es": "Ahora",
+          }
+        },
+        {
+          "id": 52,
+          "text": {
+            "en": "Last 24h",
+            "ca": "Darreres 24h",
+            "es": "Ultimas 24h",
+          }
+        },
+      ]
+    },
     {
       "question": {
         "id": 3,
@@ -130,41 +195,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
         // }
       ]
     },
-    {
-      "question": {
-        "id": 4,
-        "text": {
-          "en": "Were you indoors or outdoors when you were bitten?",
-          "ca": "Estaves a dins o a fora quan et van picar?",
-          "es": "¿Estabas en el interior o en el exterior cuando te picaron?"
-        }
-      },
-      "answers": [
-        {
-          "id": 41,
-          "text": {
-            "en": "Indoors",
-            "ca": "A dins",
-            "es": "Interior",
-          }
-        },
-        {
-          "id": 42,
-          "text": {
-            "en": "Outdoors",
-            "ca": "A fora",
-            "es": "Exterior",
-          }
-        },
-        // {
-        //   "id": 35,
-        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
-        // }
-      ]
-    },
+
     // {
     //   "question": {
-    //     "id": 5,
+    //     "id": 6,
     //     "text": {
     //       "en": "Where were you when you were bitten?",
     //       "ca": "On estaves quan et van picar?"
@@ -172,7 +206,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     //   },
     //   "answers": [
     //     {
-    //       "id": 51, //Location - value equals WKT of point
+    //       "id": 61, //Location - value equals WKT of point
     //       "text": {"en": "", "ca": ""}
     //     }
     //   ]
@@ -278,12 +312,15 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   Widget build(BuildContext context) {
     _formsRepot = [
-      BitingForm([
-        displayQuestions.elementAt(0),
-        displayQuestions.elementAt(1),
-      ], goNextPage),
+      BitingForm(
+        [
+          displayQuestions.elementAt(1),
+          displayQuestions.elementAt(2),
+        ],
+        setValid,
+      ),
       BitingLocationForm(setValid),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(3), setValid),
       AddOtherReportPage(addOtherReport, setValid),
     ];
 
@@ -312,11 +349,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
                       .previousPage(
                           duration: Duration(microseconds: 300),
                           curve: Curves.ease)
-                      .then((value) {
-                    setState(() {
-                      seeButton = false;
-                    });
-                  });
+                      .then((value) {});
                 } else {
                   addOtherReport(null);
                   _pagesController.previousPage(
@@ -328,53 +361,128 @@ class _BitingReportPageState extends State<BitingReportPage> {
             title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
                 fontSize: 16),
             actions: <Widget>[
-              seeButton
-                  ? StreamBuilder<bool>(
+              // seeButton
+              //     ? StreamBuilder<bool>(
+              //         stream: validStream.stream,
+              //         initialData: false,
+              //         builder:
+              //             (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+              //           return Style.noBgButton(
+              //               _pagesController.page == _formsRepot.length - 1 &&
+              //                       otherReport == 'none'
+              //                   ? MyLocalizations.of(context, "finish")
+              //                   : MyLocalizations.of(context, "next"),
+              //               snapshot.data
+              //                   ? () {
+              //                       double currentPage = _pagesController.page;
+              //                       if (currentPage == _formsRepot.length - 1) {
+              //                         navigateOtherReport();
+              //                       } else if (currentPage == 2 &&
+              //                           addMosquito) {
+              //                         Utils.addOtherReport('adult');
+              //                         Navigator.push(
+              //                           context,
+              //                           MaterialPageRoute(
+              //                               builder: (context) =>
+              //                                   AdultReportPage()),
+              //                         );
+              //                       } else {
+              //                         _pagesController
+              //                             .nextPage(
+              //                                 duration:
+              //                                     Duration(microseconds: 300),
+              //                                 curve: Curves.ease)
+              //                             .then((value) => setValid(
+              //                                 widget.editReport != null));
+              //                       }
+              //                     }
+              //                   : null);
+              //         })
+              //     : Container(),
+            ],
+          ),
+          body: Stack(
+            alignment: Alignment.bottomCenter,
+            children: <Widget>[
+              PageView(
+                controller: _pagesController,
+                // itemCount: _formsRepot.length,
+                physics: NeverScrollableScrollPhysics(),
+                // itemBuilder: (BuildContext context, int index) {
+                children: _formsRepot,
+                // },
+              ),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: StreamBuilder<bool>(
                       stream: validStream.stream,
                       initialData: false,
                       builder:
                           (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-                        return Style.noBgButton(
-                            _pagesController.page == _formsRepot.length - 1 &&
-                                    otherReport == 'none'
-                                ? MyLocalizations.of(context, "finish")
-                                : MyLocalizations.of(context, "next"),
-                            snapshot.data
-                                ? () {
-                                    double currentPage = _pagesController.page;
-                                    if (currentPage == _formsRepot.length - 1) {
-                                      navigateOtherReport();
-                                    } else if (currentPage == 2 &&
-                                        addMosquito) {
-                                      Utils.addOtherReport('adult');
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AdultReportPage()),
-                                      );
-                                    } else {
-                                      _pagesController
-                                          .nextPage(
-                                              duration:
-                                                  Duration(microseconds: 300),
-                                              curve: Curves.ease)
-                                          .then((value) => setValid(
-                                              widget.editReport != null));
-                                    }
+                        return snapshot.data
+                            ? GestureDetector(
+                                onTap: () {
+                                  double currentPage = _pagesController.page;
+                                  if (currentPage == _formsRepot.length - 1) {
+                                    navigateOtherReport();
+                                  } else if (currentPage == 2 && addMosquito) {
+                                    Utils.addOtherReport('adult');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AdultReportPage()),
+                                    );
+                                  } else {
+                                    _pagesController
+                                        .nextPage(
+                                            duration:
+                                                Duration(microseconds: 300),
+                                            curve: Curves.ease)
+                                        .then((value) => setValid(
+                                            widget.editReport != null));
                                   }
-                                : null);
-                      })
-                  : Container(),
+                                  print(currentPage);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Style.colorPrimary,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Style.body(
+                                      _pagesController.page ==
+                                                  _formsRepot.length - 1 &&
+                                              otherReport == 'none'
+                                          ? MyLocalizations.of(
+                                              context, "finish")
+                                          : MyLocalizations.of(
+                                              context, "continue_txt"),
+                                      // MyLocalizations.of(context, "continue_txt"),
+                                      textAlign: TextAlign.center,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Style.body(
+                                    MyLocalizations.of(
+                                        context, "complete_all_txt"),
+                                    textAlign: TextAlign.center,
+                                    color: Colors.white),
+                              );
+                      })),
             ],
-          ),
-          body: PageView.builder(
-            controller: _pagesController,
-            itemCount: _formsRepot.length,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return _formsRepot[index];
-            },
           ),
         ),
         StreamBuilder<bool>(
