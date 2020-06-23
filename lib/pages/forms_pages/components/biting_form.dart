@@ -494,7 +494,8 @@ class _BitingFormState extends State<BitingForm> {
 
   addToList(String question, String answer,
       {question_id, answer_id, answer_value}) {
-    if (question_id != 1 && int.parse(_textController.text) > 0) {
+    if ((question_id != 1 && int.parse(_textController.text) > 0) ||
+        question_id == 1) {
       Utils.addBiteResponse(
         question,
         answer,
@@ -508,7 +509,7 @@ class _BitingFormState extends State<BitingForm> {
       });
       bool isValid = canContinue();
       widget.setValid(isValid);
-    }
+    } 
   }
 
   bool canContinue() {

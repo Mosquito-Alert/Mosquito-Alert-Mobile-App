@@ -32,6 +32,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
   double percentUploaded = 0.0;
+  double index = 1;
 
   List<Map> displayQuestions = [
     {
@@ -352,6 +353,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
               icon: Style.iconBack,
               onPressed: () {
                 double currentPage = _pagesController.page;
+                setState(() {
+                  index = currentPage + 2;
+                });
+
                 if (currentPage == 0.0) {
                   if (Utils.reportsList != null &&
                       Utils.reportsList.isNotEmpty &&
@@ -430,75 +435,85 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 children: _formsRepot,
                 // },
               ),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: StreamBuilder<bool>(
-                      stream: validStream.stream,
-                      initialData: false,
-                      builder:
-                          (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-                        return snapshot.data
-                            ? GestureDetector(
-                                onTap: () {
-                                  double currentPage = _pagesController.page;
-                                  if (currentPage == _formsRepot.length - 1) {
-                                    navigateOtherReport();
-                                  } else if (currentPage == 2 && addMosquito) {
-                                    Utils.addOtherReport('adult');
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AdultReportPage()),
-                                    );
-                                  } else {
-                                    _pagesController
-                                        .nextPage(
-                                            duration:
-                                                Duration(microseconds: 300),
-                                            curve: Curves.ease)
-                                        .then((value) => setValid(
-                                            widget.editReport != null));
-                                  }
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 20),
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 15),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Style.colorPrimary,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Style.body(
-                                      _pagesController.page ==
-                                                  _formsRepot.length - 1 &&
-                                              otherReport == 'none'
-                                          ? MyLocalizations.of(
-                                              context, "finish")
-                                          : MyLocalizations.of(
-                                              context, "continue_txt"),
-                                      // MyLocalizations.of(context, "continue_txt"),
-                                      textAlign: TextAlign.center,
-                                      color: Colors.white),
-                                ),
-                              )
-                            : Container(
-                                padding: EdgeInsets.symmetric(vertical: 20),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Style.body(
-                                    MyLocalizations.of(
-                                        context, "complete_all_txt"),
-                                    textAlign: TextAlign.center,
-                                    color: Colors.white),
-                              );
-                      })),
+              index != _formsRepot.length.toDouble()
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: StreamBuilder<bool>(
+                          stream: validStream.stream,
+                          initialData: false,
+                          builder: (BuildContext ctxt,
+                              AsyncSnapshot<bool> snapshot) {
+                            return snapshot.data
+                                ? GestureDetector(
+                                    onTap: () {
+                                      double currentPage =
+                                          _pagesController.page;
+                                      setState(() {
+                                        index = currentPage + 2;
+                                      });
+
+                                      if (currentPage ==
+                                          _formsRepot.length - 1) {
+                                        navigateOtherReport();
+                                      } else if (currentPage == 2 &&
+                                          addMosquito) {
+                                        Utils.addOtherReport('adult');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AdultReportPage()),
+                                        );
+                                      } else {
+                                        _pagesController
+                                            .nextPage(
+                                                duration:
+                                                    Duration(microseconds: 300),
+                                                curve: Curves.ease)
+                                            .then((value) => setValid(
+                                                widget.editReport != null));
+                                      }
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Style.colorPrimary,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Style.body(
+                                          _pagesController.page ==
+                                                      _formsRepot.length - 1 &&
+                                                  otherReport == 'none'
+                                              ? MyLocalizations.of(
+                                                  context, "finish")
+                                              : MyLocalizations.of(
+                                                  context, "continue_txt"),
+                                          // MyLocalizations.of(context, "continue_txt"),
+                                          textAlign: TextAlign.center,
+                                          color: Colors.white),
+                                    ),
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 15),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Style.body(
+                                        MyLocalizations.of(
+                                            context, "complete_all_txt"),
+                                        textAlign: TextAlign.center,
+                                        color: Colors.white),
+                                  );
+                          }))
+                  : Container(),
             ],
           ),
         ),
