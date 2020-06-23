@@ -32,6 +32,7 @@ class MyLocalizations {
       "login_btn2": "Acceder con Gmail",
       "login_btn3": "Acceder con tu AppleID",
       "login_btn4": "Acceder con mi correo electrónico",
+      "login_btn5": "Acceder con Twitter",
       "terms_and_conditions_txt1":
           "Entrando en Mosquito Alert, aceptas nuestros",
       "terms_and_conditions_txt2": "términos y condiciones",
@@ -139,6 +140,13 @@ class MyLocalizations {
       "more_info_app_txt": "Más información acerca de Mosquito Alert",
       "our_partners_txt": "Nuestros partners y colaboradores",
       "logout_txt": "Cerrar sesión",
+      "logout_alert_txt": "¿Estás segurx que quieres cerrar sesión?",
+      "select_language_txt": "Selecciona el idioma",
+      "info_scores_txt": "Infromación scoring",
+      "consent_form_txt": "Consent form",
+      "tutorial_txt": "Tutorial",
+      "mosquito_gallery_txt": "Galería de mosquitos (cómo identificar especies)", 
+      "privacy_policy_txt": "Política de privacidad",
 
       //My reports page
       "map_txt": "Mapa",

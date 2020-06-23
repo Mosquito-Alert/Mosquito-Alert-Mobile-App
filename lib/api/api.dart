@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:mosquito_alert_app/models/report.dart';
@@ -46,6 +47,7 @@ class ApiSingleton {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final facebookLogin = FacebookLogin();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final ApiSingleton _singleton = new ApiSingleton._internal();
@@ -160,6 +162,27 @@ class ApiSingleton {
       case FacebookLoginStatus.error:
         print(result.errorMessage);
         break;
+    }
+  }
+
+  Future<FirebaseUser> singInWithTwitter() async {
+
+    final AuthCredential credential =
+        TwitterAuthProvider.getCredential(authTokenSecret: 'dgasrgga', authToken: 'fasdgasg');
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+    if (user != null) {
+      return user;
+    } else {
+      return null;
     }
   }
 
@@ -314,7 +337,6 @@ class ApiSingleton {
         return ApiResponse.fromJson(json.decode(response.body));
       }
 
-      
       var body = json.decode(response.body);
       return body['id'];
     } catch (e) {
@@ -452,12 +474,12 @@ class ApiSingleton {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=50&radius=1000' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=100&radius=1000' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
-      // print(response);
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");

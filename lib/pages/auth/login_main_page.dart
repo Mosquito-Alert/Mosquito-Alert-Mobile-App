@@ -92,6 +92,20 @@ class _LoginMainPageState extends State<LoginMainPage> {
                   ),
                   Style.loginButton(
                       SvgPicture.asset(
+                        'assets/img/ic_facebook.svg',
+                        height: 21,
+                        fit: BoxFit.fitHeight,
+                      ),
+                      MyLocalizations.of(context, "login_btn5"),
+                      Color(0XFF08a0e9),
+                      Colors.white, () {
+                    _twitterSignIn();
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Style.loginButton(
+                      SvgPicture.asset(
                         'assets/img/ic_google.svg',
                         height: 21,
                         fit: BoxFit.fitHeight,
@@ -190,6 +204,21 @@ class _LoginMainPageState extends State<LoginMainPage> {
   _facebookSignIn() async {
     loadingStream.add(true);
     ApiSingleton().singInWithFacebook().then((FirebaseUser user) {
+      loadingStream.add(false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainVC()),
+      );
+    }).catchError((e) {
+      loadingStream.add(false);
+      _showSocialError();
+      print(e);
+    });
+  }
+
+   _twitterSignIn() async {
+    loadingStream.add(true);
+    ApiSingleton().singInWithTwitter().then((FirebaseUser user) {
       loadingStream.add(false);
       Navigator.push(
         context,

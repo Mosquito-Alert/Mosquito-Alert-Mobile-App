@@ -37,7 +37,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   UserManager.user != null
                       ? SettingsMenuWidget(
                           MyLocalizations.of(context, "logout_txt"), () {
-                          Utils.showAlertYesNo("Cerrar sesión", "¿Estás segurx que quieres cerrar sesión?", () {
+                          Utils.showAlertYesNo(
+                              MyLocalizations.of(context, "logout_txt"),
+                              MyLocalizations.of(context, "logout_alert_txt"),
+                              () {
                             _signOut();
                           }, context);
                         })
@@ -73,15 +76,47 @@ class _SettingsPageState extends State<SettingsPage> {
                     height: 10,
                   ),
                   SettingsMenuWidget(
+                      MyLocalizations.of(context, "select_language_txt"),
+                      () {}),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
+                      MyLocalizations.of(context, "info_scores_txt"), () {}),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
+                      MyLocalizations.of(context, "consent_form_txt"), () {}),
+                      SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
+                      MyLocalizations.of(context, "tutorial_txt"), () {}),
+                      SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
+                      MyLocalizations.of(context, "mosquito_gallery_txt"), () {}),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
                       MyLocalizations.of(context, "open_web_txt"), () {}),
                   SizedBox(
                     height: 10,
                   ),
                   SettingsMenuWidget(
                       MyLocalizations.of(context, "more_info_app_txt"), () {}),
+                      SizedBox(
+                    height: 10,
+                  ),
+                  SettingsMenuWidget(
+                      MyLocalizations.of(context, "privacy_policy_txt"), () {}),
                   SizedBox(
                     height: 10,
                   ),
+                  
                   SettingsMenuWidget(
                       MyLocalizations.of(context, "our_partners_txt"), () {}),
                   SizedBox(
