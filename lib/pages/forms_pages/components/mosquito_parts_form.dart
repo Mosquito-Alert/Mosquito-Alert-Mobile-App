@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
+import 'package:mosquito_alert_app/pages/info_pages/points_info_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -45,11 +47,23 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
+              AddPhotoButton(),
               Style.title(widget.displayQuestion['question']['text'][language]),
+               SizedBox(
+                height: 5,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PointsInfo()),
+                  );
+                },
+                child: Style.bodySmall("mas ifno de eto", color: Style.colorPrimary),
+              ),
               SizedBox(
                 height: 20,
               ),
-
               Container(
                 height: 200,
                 child: ListView.builder(
@@ -60,6 +74,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                           widget.displayQuestion['answers'][0][index]['id'];
                       String txt = widget.displayQuestion['answers'][0][index]
                           ['text'][language];
+
                       return GestureDetector(
                         onTap: () {
                           onSelect(txt, id, 710);
@@ -140,7 +155,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                       );
                     }),
               ),
-
               SizedBox(
                 height: 15,
               ),
@@ -158,7 +172,11 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
     var list = Utils.report.responses
         .where((q) => q.question_id == widget.displayQuestion['question']['id'])
         .toList();
-    if (list.length == 3) widget.setValid(true);
+    if (list.length == 3) {
+      widget.setValid(true);
+    } else {
+      widget.setValid(false);
+    }
 
     setState(() {
       questions = Utils.report.responses;

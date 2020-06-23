@@ -31,6 +31,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   bool validContent = false;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
+  double percentUploaded = 0.0;
 
   List<Map> displayQuestions = [
     {
@@ -121,7 +122,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     },
     {
       "question": {
-        "id": 5,
+        "id": 55,
         "text": {
           "en": "When were you bitten?",
           "ca": "Quan t'han picat?",
@@ -130,7 +131,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       },
       "answers": [
         {
-          "id": 51,
+          "id": 551,
           "text": {
             "en": "Now",
             "ca": "Ara",
@@ -138,7 +139,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           }
         },
         {
-          "id": 52,
+          "id": 552,
           "text": {
             "en": "Last 24h",
             "ca": "Darreres 24h",
@@ -282,14 +283,30 @@ class _BitingReportPageState extends State<BitingReportPage> {
         );
         break;
       default:
-        loadingStream.add(true);
-        bool res = await Utils.createReport();
-        !res ? _showAlertKo() : _showAlertOk();
-        if (widget.editReport != null) {
-          widget.loadData();
-        }
-
         break;
+    }
+  }
+
+  _saveData() async {
+    setState(() {
+      percentUploaded = 0.8;
+    });
+    loadingStream.add(true);
+    bool res = await Utils.createReport();
+
+    if (widget.editReport != null) {
+      widget.loadData();
+    }
+    if (!res) {
+      _showAlertKo();
+      setState(() {
+        percentUploaded = 1.0;
+      });
+    } else {
+      _showAlertOk();
+      setState(() {
+        percentUploaded = 1.0;
+      });
     }
   }
 
@@ -316,12 +333,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
         [
           displayQuestions.elementAt(1),
           displayQuestions.elementAt(2),
+          displayQuestions.elementAt(3),
         ],
         setValid,
       ),
       BitingLocationForm(setValid),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(3), setValid),
-      AddOtherReportPage(addOtherReport, setValid),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(4), setValid),
+      AddOtherReportPage(_saveData, setValid, percentUploaded),
     ];
 
     return Stack(
@@ -442,7 +460,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                         .then((value) => setValid(
                                             widget.editReport != null));
                                   }
-                                  print(currentPage);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 20),

@@ -169,7 +169,7 @@ class Utils {
       if (currentIndex == -1) {
         _questions.add(Question(
           question: question.toString(),
-          answer: answer.toString(),
+          answer: ' ',
           answer_id: answer_id,
           question_id: question_id,
           answer_value: '1',
@@ -254,8 +254,12 @@ class Utils {
     int index =
         _questions.indexWhere((q) => q.answer_id > i && q.answer_id < i + 10);
     if (index != -1) {
-      _questions[index].answer_id = answerId;
-      _questions[index].answer = answer;
+      if (_questions[index].answer_id == answerId) {
+        _questions.removeAt(index);
+      } else {
+        _questions[index].answer_id = answerId;
+        _questions[index].answer = answer;
+      }
     } else {
       Question newQuestion = new Question(
         question: '¿Como era el mosquito?',

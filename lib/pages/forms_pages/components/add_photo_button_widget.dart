@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:photo_view/photo_view.dart';
 
 class AddPhotoButton extends StatefulWidget {
   @override
@@ -15,6 +16,15 @@ class AddPhotoButton extends StatefulWidget {
 
 class _AddPhotoButtonState extends State<AddPhotoButton> {
   List<File> images = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // _chooseTypeImage();
+    Utils.imagePath.forEach((element) {
+      images.add(element['image']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,34 +112,58 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                                 ),
                               ),
                             ),
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.black54,
-                                    Colors.transparent,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.center,
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                _deleteImage(images[index], index);
+                            GestureDetector(
+                              onTap: () {
+                                print('image');
+                                _showImage(images[index].path);
+                                // return Container(
+                                //   child: PhotoView(
+                                //     imageProvider:
+                                //         AssetImage(images[index].path),
+                                //   ),
+                                // );
                               },
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.white,
+                              child: Container(
+                                height: double.infinity,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.black54,
+                                      Colors.transparent,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.center,
+                                  ),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      _deleteImage(images[index], index);
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         );
                 }),
           );
+  }
+
+  _showImage(image) {
+    return Container(
+        height: 700,
+        width: 700,
+        child: PhotoView(
+          imageProvider: AssetImage(image),
+        ));
   }
 
   _chooseTypeImage() {
@@ -212,13 +246,25 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                   SizedBox(
                     height: 15,
                   ),
-                  Style.noBgButton(
-                    MyLocalizations.of(context, "ok_next_txt"),
-                    () {
-                      Navigator.of(context).pop();
-                      getImage(ImageSource.camera);
-                    },
-                    textColor: Style.colorPrimary,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Style.noBgButton(
+                        MyLocalizations.of(context, "ok_next_txt"),
+                        () {
+                          Navigator.of(context).pop();
+                          getImage(ImageSource.camera);
+                        },
+                        textColor: Style.colorPrimary,
+                      ),
+                      Style.noBgButton(
+                        MyLocalizations.of(context, "close"),
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                        // textColor: Style.colorPrimary,
+                      ),
+                    ],
                   )
                 ],
               ),

@@ -194,7 +194,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
       BitingLocationForm(setValid),
       CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
-      AddOtherReportPage(addOtherReport, setValid),
+      AddOtherReportPage(addOtherReport, setValid, 0.0),
     ];
 
     return Stack(

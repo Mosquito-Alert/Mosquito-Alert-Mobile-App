@@ -113,12 +113,12 @@ class _MainVCState extends State<MainVC> {
                                               fontSize: 16),
                                           // InkWell(
                                           // onTap: () {
-                                          //   Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             PointsInfo()),
-                                          //   );
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //       builder: (context) =>
+                                            //           PointsInfo()),
+                                            // );
                                           // },
                                           //   child: Padding(
                                           //     padding:

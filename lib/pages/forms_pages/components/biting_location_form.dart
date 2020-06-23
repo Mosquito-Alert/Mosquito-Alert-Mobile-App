@@ -320,13 +320,15 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                               ),
                             ),
                           ),
-                          // SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Style.noBgButton(
-                          //     MyLocalizations.of(context, "not_sure_txt"), () {
-                          //   getPosition(LocationType.missing);
-                          // }, textColor: Colors.grey)
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Style.button(
+                            MyLocalizations.of(context, "reset"),
+                            () {
+                              resetLocations();
+                            },
+                          )
                         ],
                       );
                     },
@@ -338,5 +340,24 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         ),
       ),
     );
+  }
+
+  resetLocations() {
+    Utils.report.selected_location_lat = null;
+    Utils.report.selected_location_lon = null;
+    Utils.report.current_location_lat = null;
+    Utils.report.current_location_lon = null;
+
+    if (Utils.report.type == 'bite') {
+      Utils.report.responses
+          .removeWhere((question) => question.question_id == 5);
+    }
+    print(Utils.report.responses);
+
+    widget.setValid(false);
+
+    setState(() {
+      markers = [];
+    });
   }
 }

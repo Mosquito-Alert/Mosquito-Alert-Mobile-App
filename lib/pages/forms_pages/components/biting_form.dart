@@ -21,6 +21,8 @@ class _BitingFormState extends State<BitingForm> {
   String language;
   int bites = 0;
 
+  bool showDaytime = false;
+
   TextEditingController _textController = TextEditingController();
 
   @override
@@ -80,23 +82,23 @@ class _BitingFormState extends State<BitingForm> {
                   Style.button(
                     '-',
                     () {
-                      bites = bites - 1;
-                      _textController.text = bites.toString();
                       addToList("numero de picadas", "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
+                      bites = bites - 1;
+                      _textController.text = bites.toString();
                     },
                   ),
                   Style.button(
                     '+',
                     () {
-                      bites = bites + 1;
-                      _textController.text = bites.toString();
                       addToList("numero de picadas", "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
+                      bites = bites + 1;
+                      _textController.text = bites.toString();
                     },
                   ),
                 ],
@@ -331,7 +333,9 @@ class _BitingFormState extends State<BitingForm> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: widget.displayQuestions.length,
+                itemCount: showDaytime
+                    ? widget.displayQuestions.length
+                    : widget.displayQuestions.length - 1,
                 itemBuilder: (context, i) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,6 +376,15 @@ class _BitingFormState extends State<BitingForm> {
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(
                                   onTap: () {
+                                    if (answerId == 552) {
+                                      setState(() {
+                                        showDaytime = true;
+                                      });
+                                    } else if (answerId == 551) {
+                                      setState(() {
+                                        showDaytime = false;
+                                      });
+                                    }
                                     addToList(questionTxt, answerTxt,
                                         question_id: questionId,
                                         answer_id: answerId);
@@ -481,66 +494,48 @@ class _BitingFormState extends State<BitingForm> {
 
   addToList(String question, String answer,
       {question_id, answer_id, answer_value}) {
-    Utils.addBiteResponse(
-      question,
-      answer,
-      question_id: question_id,
-      answer_id: answer_id,
-      answer_value: answer_value,
-    );
+    if (question_id != 1 && int.parse(_textController.text) > 0) {
+      Utils.addBiteResponse(
+        question,
+        answer,
+        question_id: question_id,
+        answer_id: answer_id,
+        answer_value: answer_value,
+      );
 
-    setState(() {
-      questions = Utils.report.responses;
-    });
-    bool isValid = canContinue();
-    widget.setValid(isValid);
+      setState(() {
+        questions = Utils.report.responses;
+      });
+      bool isValid = canContinue();
+      widget.setValid(isValid);
+    }
   }
 
   bool canContinue() {
     if (questions.length > 1 && questions.isNotEmpty) {
-      int totalIndex = questions.indexWhere((q) => q.question_id == 1);
       int totalValues = 0;
-      if (totalIndex != -1) {
-        totalValues = int.parse(questions[totalIndex].answer_value);
-      }
-
       int totalParts = 0;
       int totalQ3 = 0;
       int totalQ4 = 0;
 
       questions.forEach((q) {
+        if (q.question_id == 1) {
+          totalValues = totalValues + int.parse(q.answer_value);
+        }
         if (q.question_id == 2) {
           totalParts = totalParts + int.parse(q.answer_value);
         }
         if (q.question_id == 4) totalQ3++;
-        if (q.question_id == 5) totalQ4++;
+        if (q.question_id == 55) totalQ4++;
       });
 
-      if (totalParts > 0 && totalQ3 == 1 && totalQ4 == 1) return true;
+      if (totalValues == totalParts &&
+          totalParts > 0 &&
+          totalQ3 == 1 &&
+          totalQ4 == 1) return true;
 
       return false;
-
-      //   for (int j = 2; j <= 3; j++) {
-      //     int questionValue = 0;
-      //     int total3 = 0;
-      //     for (int i = 0; i < questions.length; i++) {
-      //       // 2 = first questions on screen; 3 = only 3 questions in this screen (2 shown + 1 auto)
-      //       if (questions[i].question_id == 2) {
-      //         questionValue =
-      //             questionValue + int.parse(questions[i].answer_value);
-      //       } else if (questions[i].question_id == 3) {
-      //         total3++;
-      //       }
-      //     }
-      //     if (questionValue == totalValues || total3 == totalValues) {
-      //       canContinue = true;
-      //     } else {
-      //       canContinue = false;
-      //     }
-      //   }
-      //   return canContinue;
     }
     return false;
-    // }
   }
 }

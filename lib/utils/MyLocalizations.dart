@@ -23,6 +23,7 @@ class MyLocalizations {
       "url_politics": "https://www.google.cat",
       "url_legal": "https://www.google.cat",
       "reset": "Reset",
+      'close': "Cerrar",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -122,6 +123,7 @@ class MyLocalizations {
       "send_photo_title": "Mándanos una foto",
       "adult_report_title": "Reportar un adulto",
       "breeding_report_title": "Reportar un nido",
+      "not_a_mosquito": "No es un mosquito",
 
       //Notifications page
       "notifications_title": "Notificaciones",

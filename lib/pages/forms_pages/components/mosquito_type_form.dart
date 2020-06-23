@@ -10,9 +10,10 @@ import 'image_question_option_widget.dart';
 class MosquitoTypeForm extends StatefulWidget {
   final Function setSkip3;
   final Map displayQuestion;
-  final Function setValid;
+  final Function setValid, showCamera;
 
-  MosquitoTypeForm(this.setSkip3, this.displayQuestion, this.setValid);
+  MosquitoTypeForm(
+      this.setSkip3, this.displayQuestion, this.setValid, this.showCamera);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
@@ -78,6 +79,11 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                       ['id']);
 
                               widget.displayQuestion['answers'][index]['id'] ==
+                                      63
+                                  ? widget.showCamera(false)
+                                  : widget.showCamera(true);
+
+                              widget.displayQuestion['answers'][index]['id'] ==
                                       62
                                   ? widget.setSkip3(true)
                                   : widget.setSkip3(false);
@@ -90,7 +96,12 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   : false,
                               widget.displayQuestion['answers'][index]['text']
                                   [language],
-                              MyLocalizations.of(context, "recognize_it_txt"),
+                              widget.displayQuestion['answers'][index]['id'] ==
+                                      63
+                                  ? MyLocalizations.of(
+                                      context, "not_a_mosquito")
+                                  : MyLocalizations.of(
+                                      context, "recognize_it_txt"),
                               widget.displayQuestion['answers'][index]['img'],
                               disabled: question.answer_id != null &&
                                   widget.displayQuestion['answers'][index]
@@ -102,11 +113,11 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Divider(),
-              ),
-              AddPhotoButton(),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //   child: Divider(),
+              // ),
+              // AddPhotoButton(),
             ],
           ),
         ),

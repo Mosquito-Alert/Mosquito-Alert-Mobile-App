@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../utils/MyLocalizations.dart';
 
 class AddOtherReportPage extends StatefulWidget {
   final Function addReport;
   final Function setValid;
+  final double percent;
 
-  AddOtherReportPage(this.addReport, this.setValid);
+  AddOtherReportPage(this.addReport, this.setValid, this.percent);
 
   @override
   _AddOtherReportPageState createState() => _AddOtherReportPageState();
@@ -39,11 +42,27 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
             SizedBox(
               height: 35,
             ),
-
             Container(
               width: double.infinity,
-              child:
-                  Style.button(MyLocalizations.of(context, "send_data"), () {}),
+              child: LinearPercentIndicator(
+                // width: MediaQuery.of(context).size.width * 0.9,
+                lineHeight: 15.0,
+                percent: widget.percent,
+                animateFromLastPercent: true,
+                animation: true,
+                backgroundColor: Colors.grey.withOpacity(0.3),
+                progressColor: Style.colorPrimary,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: double.infinity,
+              child: Style.button(MyLocalizations.of(context, "send_data"), () {
+                widget.addReport();
+                widget.setValid(true);
+              }),
             ),
             // Style.title('¿Quieres reportar otro elemento?'),
             // SizedBox(

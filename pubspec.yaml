@@ -37,6 +37,8 @@ dependencies:
   package_info: ^0.4.1
   flutter_launcher_icons: ^0.7.5
   url_launcher: ^5.2.5
+  photo_view: ^0.9.2
+  percent_indicator: ^2.1.5
 
 dev_dependencies:
   flutter_test:

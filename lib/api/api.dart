@@ -314,10 +314,8 @@ class ApiSingleton {
         return ApiResponse.fromJson(json.decode(response.body));
       }
 
-      // Todo: Save id
-      // Utils.session.id = response.body['id']
+      
       var body = json.decode(response.body);
-      // print(body);
       return body['id'];
     } catch (e) {
       print(e);
