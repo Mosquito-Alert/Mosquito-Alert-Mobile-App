@@ -123,28 +123,28 @@ class _BitingReportPageState extends State<BitingReportPage> {
     },
     {
       "question": {
-        "id": 55,
+        "id": 13,
         "text": {
-          "en": "When were you bitten?",
-          "ca": "Quan t'han picat?",
-          "es": "¿Cuando te han picado?"
+          "en": "When did the mosquiti bite you?",
+          "ca": "Quan et va picar el mosquit?",
+          "es": "¿Cuando te picó el mosquito?"
         }
       },
       "answers": [
         {
-          "id": 551,
+          "id": 131,
           "text": {
-            "en": "Now",
-            "ca": "Ara",
-            "es": "Ahora",
+            "en": "Just now",
+            "ca": "Ara mateix",
+            "es": "Ahora mismo",
           }
         },
         {
-          "id": 552,
+          "id": 132,
           "text": {
-            "en": "Last 24h",
-            "ca": "Darreres 24h",
-            "es": "Ultimas 24h",
+            "en": "in the last 24h",
+            "ca": "Les darreres 24h",
+            "es": "Las ultimas 24h",
           }
         },
       ]
@@ -240,8 +240,27 @@ class _BitingReportPageState extends State<BitingReportPage> {
     super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
+    } else {
+      Utils.createNewReport('bite');
     }
     _pagesController = PageController();
+    _formsRepot = [
+      BitingForm(
+        [
+          displayQuestions.elementAt(1),
+          displayQuestions.elementAt(2),
+          displayQuestions.elementAt(3),
+        ],
+        setValid,
+      ),
+      BitingLocationForm(setValid),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(4), setValid),
+      AddOtherReportPage(_saveData, setValid, percentUploaded),
+    ];
+
+    if (Utils.reportsList.isEmpty && Utils.reportsList.length == 1) {
+      _formsRepot.removeAt(2);
+    }
   }
 
   addOtherReport(String reportType) {
@@ -262,13 +281,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   navigateOtherReport() async {
     switch (otherReport) {
-      case "bite":
-        Utils.addOtherReport('bite');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BitingReportPage()),
-        );
-        break;
+      // case "bite":
+      //   Utils.addOtherReport('bite');
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => BitingReportPage()),
+      //   );
+      //   break;
       case "site":
         Utils.addOtherReport('site');
         Navigator.push(
@@ -329,20 +348,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    _formsRepot = [
-      BitingForm(
-        [
-          displayQuestions.elementAt(1),
-          displayQuestions.elementAt(2),
-          displayQuestions.elementAt(3),
-        ],
-        setValid,
-      ),
-      BitingLocationForm(setValid),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(4), setValid),
-      AddOtherReportPage(_saveData, setValid, percentUploaded),
-    ];
-
     return Stack(
       children: <Widget>[
         Scaffold(

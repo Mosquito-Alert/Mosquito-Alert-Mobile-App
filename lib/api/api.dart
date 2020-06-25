@@ -166,9 +166,8 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> singInWithTwitter() async {
-
-    final AuthCredential credential =
-        TwitterAuthProvider.getCredential(authTokenSecret: 'dgasrgga', authToken: 'fasdgasg');
+    final AuthCredential credential = TwitterAuthProvider.getCredential(
+        authTokenSecret: 'dgasrgga', authToken: 'fasdgasg');
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
@@ -464,17 +463,21 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> getReportsList(lat, lon,
-      {int page,
-      List<Report> allReports,
-      bool show_hidden,
-      int radius,
-      bool show_verions}) async {
+  Future<dynamic> getReportsList(
+    lat,
+    lon, {
+    int page,
+    List<Report> allReports,
+    bool show_hidden,
+    int radius,
+    bool show_verions,
+    callback,
+  }) async {
     try {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=100&radius=1000' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=75&radius=1000' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
@@ -486,6 +489,7 @@ class ApiSingleton {
         return ApiResponse.fromJson(json.decode(response.body));
       } else {
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
+        List<Report> list = [];
         page = jsonAnswer['next'];
 
         if (allReports == null) {
@@ -493,11 +497,12 @@ class ApiSingleton {
           UserManager.profileUUIDs = jsonAnswer['user_uuids'];
         }
         for (var item in jsonAnswer['results']) {
-          allReports.add(Report.fromJson(item));
+          list.add(Report.fromJson(item));
+          allReports = [...allReports, ...list];
         }
-
+        callback(list);
         if (jsonAnswer['next'] == null) {
-          return allReports;
+          return true;
         }
       }
 

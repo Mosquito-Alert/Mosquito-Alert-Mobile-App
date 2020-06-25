@@ -188,9 +188,23 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
       validContent = true;
+    } else {
+      Utils.createNewReport('adult');
     }
     _pagesController = PageController();
     index = 0.0;
+    _formsRepot = [
+      MosquitoTypeForm(
+          setSkip3, displayQuestions.elementAt(0), setValid, setShowCamera),
+      MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
+      BitingLocationForm(setValid),
+      CouldSeeForm(addBitingReport, displayQuestions.elementAt(2), setValid),
+      AddOtherReportPage(_createReport, setValid, percentUploaded),
+    ];
+
+    if (Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
+      _formsRepot.removeAt(3);
+    }
   }
 
   setSkip3(skip) {
@@ -240,13 +254,13 @@ class _AdultReportPageState extends State<AdultReportPage> {
           MaterialPageRoute(builder: (context) => BreedingReportPage()),
         );
         break;
-      case "adult":
-        Utils.addOtherReport("adult");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdultReportPage()),
-        );
-        break;
+      // case "adult":
+      //   Utils.addOtherReport("adult");
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => AdultReportPage()),
+      //   );
+      //   break;
       default:
         break;
     }
@@ -280,15 +294,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    _formsRepot = [
-      MosquitoTypeForm(
-          setSkip3, displayQuestions.elementAt(0), setValid, setShowCamera),
-      // AddPhotoButton(),
-      MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
-      BitingLocationForm(setValid),
-      CouldSeeForm(addBitingReport, displayQuestions.elementAt(2), setValid),
-      AddOtherReportPage(_createReport, setValid, percentUploaded),
-    ];
+    
 
     return Stack(
       children: <Widget>[
@@ -398,7 +404,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 //   AddOtherReportPage(addOtherReport, setValid),
                 // ],
               ),
-              index != _formsRepot.length.toDouble() 
+              index != _formsRepot.length.toDouble()
                   ? Align(
                       alignment: Alignment.bottomCenter,
                       child: StreamBuilder<bool>(
@@ -428,25 +434,27 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               builder: (context) =>
                                                   BitingReportPage()),
                                         );
-                                      } else if (currentPage == 0.0 && skip3) {
-                                        _pagesController
-                                            .animateToPage(2,
-                                                duration:
-                                                    Duration(microseconds: 300),
-                                                curve: Curves.ease)
-                                            .then((value) => setValid(
-                                                widget.editReport != null));
                                       } else {
                                         if (showCamera) {
                                           _chooseTypeImage();
                                         } else {
-                                          _pagesController
-                                              .nextPage(
-                                                  duration: Duration(
-                                                      microseconds: 300),
-                                                  curve: Curves.ease)
-                                              .then((value) => setValid(
-                                                  widget.editReport != null));
+                                          if (currentPage == 0.0 && skip3) {
+                                            _pagesController
+                                                .animateToPage(2,
+                                                    duration: Duration(
+                                                        microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(
+                                                    widget.editReport != null));
+                                          } else {
+                                            _pagesController
+                                                .nextPage(
+                                                    duration: Duration(
+                                                        microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(
+                                                    widget.editReport != null));
+                                          }
                                         }
                                       }
                                     },
@@ -572,9 +580,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     if (files != null) {
       setShowCamera(false);
-      _pagesController
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-          .then((value) => setValid(widget.editReport != null));
+      if (skip3) {
+        _pagesController
+            .animateToPage(2,
+                duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+      } else {
+        _pagesController
+            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+      }
     }
 
     if (files != null) {
@@ -638,9 +653,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (image != null) {
       Utils.saveImgPath(image);
       setShowCamera(false);
-      _pagesController
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-          .then((value) => setValid(widget.editReport != null));
+      if (skip3) {
+        _pagesController
+            .animateToPage(2,
+                duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+      } else {
+        _pagesController
+            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+      }
     }
   }
 

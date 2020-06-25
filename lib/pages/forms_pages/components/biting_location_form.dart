@@ -199,11 +199,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
             }
           });
         }
-
-        //get selected position
-        //update report
-        //update marker
-        //setvalid true
         break;
       default:
         streamType.add(LocationType.missing);

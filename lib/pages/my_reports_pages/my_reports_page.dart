@@ -31,7 +31,6 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-
   Position location = Position(
       latitude: Utils.defaultLocation.latitude,
       longitude: Utils.defaultLocation.longitude);
@@ -57,6 +56,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   GoogleMapController mapController;
   GoogleMapController miniMapController;
+  List<Report> data = [];
 
   @override
   initState() {
@@ -74,18 +74,23 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void _initMarkers() async {
     int width = 125;
 
-    iconAdultYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
-    iconBitesYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
-    iconBreedingYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
-    iconAdultOthers = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_adult_other.png', width));
-    iconBitesOthers = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_bites_other.png', width));
-    iconBreedingOthers = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
+    // iconAdultYours = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
+    // iconBitesYours = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
+    // iconBreedingYours = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
+    // iconAdultOthers = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_adult_other.png', width));
+    // iconBitesOthers = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_bites_other.png', width));
+    // iconBreedingOthers = BitmapDescriptor.fromBytes(
+    //     await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
+
+    iconAdultYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    iconBitesYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    iconBreedingYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+    iconAdultOthers = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -142,6 +147,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         UserManager.profileUUIDs.any((id) => id == user)) {
       switch (type) {
         case "adult":
+          // return
           return iconAdultYours;
           break;
         case "bite":
@@ -154,19 +160,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
           break;
       }
     } else {
-      switch (type) {
-        case "adult":
-          return iconAdultOthers;
-          break;
-        case "bite":
-          return iconBitesOthers;
-          break;
-        case "site":
-          return iconBreedingOthers;
-          break;
-        default:
-          break;
-      }
+      return iconAdultOthers; 
+      // switch (type) {
+      //   case "adult":
+      //     return iconAdultOthers;
+      //     break;
+      //   case "bite":
+      //     return iconBitesOthers;
+      //     break;
+      //   case "site":
+      //     return iconBreedingOthers;
+      //     break;
+      //   default:
+      //     break;
+      // }
     }
   }
 
@@ -177,7 +184,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _getLocation() async {
     LatLng loc = Utils.defaultLocation;
-    if (location.latitude == Utils.defaultLocation.latitude && location.longitude == Utils.defaultLocation.longitude) {
+    if (location.latitude == Utils.defaultLocation.latitude &&
+        location.longitude == Utils.defaultLocation.longitude) {
       await Utils.getLocation();
       if (Utils.location != null) {
         location = Utils.location;
@@ -273,6 +281,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
                     return StreamBuilder<List<Report>>(
                       stream: dataStream.stream,
+                      initialData: data,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Report>> snapshot) {
                         return ReportsList(
@@ -786,27 +795,30 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _getData() async {
     loadingStream.add(true);
-
-    List<Report> list = await ApiSingleton()
-        .getReportsList(location.latitude, location.longitude, page: 1);
+    List<Report> list = [];
+    bool res = await ApiSingleton().getReportsList(location.latitude, location.longitude,
+        page: 1, callback: (List<Report> reports) {
+      list = [...list, ...reports];
+      dataMarkersStream.add(list);
+    });
 
     if (list == null) {
       list = [];
     }
 
-    List<Report> data = [];
+    
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice != "missing" &&
-          list[i].current_location_lat != null &&
-          list[i].current_location_lon != null ||
+              list[i].current_location_lat != null &&
+              list[i].current_location_lon != null ||
           list[i].selected_location_lat != null &&
               list[i].selected_location_lon != null) {
         data.add(list[i]);
       }
     }
 
-    dataMarkersStream.add(list);
     dataStream.add(data);
+    
     loadingStream.add(false);
   }
 

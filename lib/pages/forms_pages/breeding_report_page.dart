@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
@@ -35,7 +39,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "text": {
           "en": "It's a public or a private location?",
           "ca": "Estàs a un lloc públic o propietat privada?",
-          "es": "¿Estas en un sitio público o es propiedad privada?",
+          "es": "Estàs a un lloc públic o propietat privada?"
         }
       },
       "answers": [
@@ -44,7 +48,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           "text": {
             "en": "Public place",
             "ca": "Lloc públic",
-            "es": "Sitio público"
+            "es": "Lloc públic",
           }
         },
         {
@@ -52,7 +56,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           "text": {
             "en": "Private location",
             "ca": "Propietat privada",
-            "es": "Propiedad privada"
+            "es": "Propietat privada",
           }
         }
       ]
@@ -63,13 +67,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "text": {
           "en": "Does it have water?",
           "ca": "Hi ha aigua?",
-          "es": "¿Hay agua?"
-        },
+          "es": "Hi ha aigua?",
+        }
       },
       "answers": [
         {
           "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
         },
         {
           "id": 81,
@@ -88,26 +92,61 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       },
       "answers": [
         {
-          "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+          "id": 111,
+          "text": {"en": "Mosquito", "ca": "Mosquit", "es": "Mosquito"}
+        },
+        {
+          "id": 112,
+          "text": {"en": "Bite", "ca": "Picada", "es": "Picadura"}
         },
         {
           "id": 81,
           "text": {"en": "No", "ca": "No", "es": "No"}
+        },
+      ]
+    },
+    {
+      "question": {
+        "id": 12,
+        "text": {
+          "en": "Is it a storm drain or other type of breeding site?",
+          "ca": "És un embornal o un altre tipus de lloc de cria?",
+          "es": "És un embornal o un altre tipus de lloc de cria?"
+        }
+      },
+      "answers": [
+        {
+          "id": 121,
+          "text": {
+            "en": "Storm drain",
+            "ca": "Embornal",
+            "es": "Embornal",
+          }
+        },
+        {
+          "id": 122,
+          "text": {
+            "en": "Other breeding site",
+            "ca": "Altres llocs de cria",
+            "es": "Altres llocs de cria"
+          }
         }
       ]
-    }
+    },
   ];
 
   bool skipReport = false;
   bool addMosquito = false;
   bool validContent = false;
+  bool showCamera = false;
   String otherReport;
 
+  double percentUploaded = 0.0;
   double index = 1.0;
 
   @override
   void initState() {
+    super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
       validContent = true;
@@ -115,7 +154,25 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       Utils.createNewReport('site');
     }
     _pagesController = PageController();
-    super.initState();
+
+    _formsRepot = [
+      // PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0), setValid,
+      //     widget.editReport != null),
+      QuestionsBreedingForm(displayQuestions.elementAt(3), setValid),
+      QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
+      BitingLocationForm(setValid),
+      CouldSeeForm(
+        addAdultReport,
+        displayQuestions.elementAt(2),
+        setValid,
+        addOtherReport: addOtherReport,
+      ),
+      AddOtherReportPage(_createReport, setValid, percentUploaded),
+    ];
+
+    if (Utils.reportsList.isEmpty && Utils.reportsList.length == 1) {
+      _formsRepot.removeAt(3);
+    }
   }
 
   setSkipReport(skip) {
@@ -136,6 +193,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     });
   }
 
+  setShowCamera(data) {
+    setState(() {
+      showCamera = data;
+    });
+  }
+
   setValid(isValid) {
     validStream.add(isValid);
   }
@@ -149,13 +212,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           MaterialPageRoute(builder: (context) => BitingReportPage()),
         );
         break;
-      case "site":
-        Utils.addOtherReport('site');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BreedingReportPage()),
-        );
-        break;
+      // case "site":
+      //   Utils.addOtherReport('site');
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => BreedingReportPage()),
+      //   );
+      //   break;
       case "adult":
         Utils.addOtherReport('adult');
         Navigator.push(
@@ -164,14 +227,27 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         );
         break;
       default:
-        loadingStream.add(true);
-        bool res = await Utils.createReport();
-
-        !res ? _showAlertKo() : _showAlertOk();
-        if (widget.editReport != null) {
-          widget.loadData();
-        }
         break;
+    }
+  }
+
+  _createReport() async {
+    loadingStream.add(true);
+    bool res = await Utils.createReport();
+
+    if (widget.editReport != null) {
+      widget.loadData();
+    }
+    if (!res) {
+      _showAlertKo();
+      setState(() {
+        percentUploaded = 1.0;
+      });
+    } else {
+      _showAlertOk();
+      setState(() {
+        percentUploaded = 1.0;
+      });
     }
   }
 
@@ -190,15 +266,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    _formsRepot = [
-      PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0), setValid,
-          widget.editReport != null),
-      QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
-      BitingLocationForm(setValid),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(2), setValid),
-      AddOtherReportPage(addOtherReport, setValid, 0.0),
-    ];
-
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -232,21 +299,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
             title: Style.title(
                 MyLocalizations.of(context, "breeding_report_title"),
                 fontSize: 16),
-            // actions: <Widget>[
-            //   StreamBuilder<bool>(
-            //       stream: validStream.stream,
-            //       initialData: false,
-            //       builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-            //         return Style.noBgButton(
-            //             _pagesController.hasClients &&
-            //                     _pagesController.page ==
-            //                         _formsRepot.length - 1 &&
-            //                     otherReport == 'none'
-            //                 ? MyLocalizations.of(context, "finish")
-            //                 : MyLocalizations.of(context, "next"),
-            //             snapshot.data ? () {} : null);
-            //       })
-            // ],
           ),
           body: Stack(
             children: <Widget>[
@@ -278,18 +330,19 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                       if (skipReport) {
                                         _saveReports();
                                       } else {
-                                        if (currentPage ==
-                                            _formsRepot.length - 1) {
-                                          navigateOtherReport();
+                                        if (currentPage == 0.0) {
+                                          _chooseTypeImage();
                                         } else if (currentPage == 3.0 &&
-                                            addMosquito) {
-                                          Utils.addOtherReport('adult');
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdultReportPage()),
-                                          );
+                                                otherReport == 'adult' ||
+                                            otherReport == 'bite') {
+                                          navigateOtherReport();
+                                          // Utils.addOtherReport(otherReport);
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           AdultReportPage()),
+                                          // );
                                         } else {
                                           _pagesController
                                               .nextPage(
@@ -353,6 +406,146 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         )
       ],
     );
+  }
+
+  _chooseTypeImage() {
+    List<Widget> listForiOS = <Widget>[
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          getGalleryImages();
+        },
+        child: Text(
+          MyLocalizations.of(context, 'gallery'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          _showInfoImage();
+        },
+        child: Text(
+          MyLocalizations.of(context, 'camara'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+    ];
+    List<Widget> listForAndroid = <Widget>[
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          _showInfoImage();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'camara'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
+      Divider(height: 1.0),
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          getGalleryImages();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'gallery'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
+    ];
+
+    Utils.modalDetailTrackingforPlatform(
+        Theme.of(context).platform == TargetPlatform.iOS
+            ? listForiOS
+            : listForAndroid,
+        Theme.of(context).platform,
+        context, () {
+      Navigator.pop(context);
+    });
+  }
+
+  getGalleryImages() async {
+    List<File> files = await FilePicker.getMultiFile(
+      type: FileType.image,
+    );
+
+    if (files != null) {
+      setShowCamera(false);
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+    }
+
+    if (files != null) {
+      files.forEach((image) {
+        Utils.saveImgPath(image);
+      });
+    }
+  }
+
+  _showInfoImage() {
+    return showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            content: Container(
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Style.body(
+                    " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently",
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Style.noBgButton(
+                        MyLocalizations.of(context, "ok_next_txt"),
+                        () {
+                          Navigator.of(context).pop();
+                          getImage(ImageSource.camera);
+                        },
+                        textColor: Style.colorPrimary,
+                      ),
+                      Style.noBgButton(
+                        MyLocalizations.of(context, "close"),
+                        () {
+                          Navigator.of(context).pop();
+                        },
+                        // textColor: Style.colorPrimary,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future getImage(source) async {
+    var image = await ImagePicker.pickImage(
+      source: source,
+    );
+
+    if (image != null) {
+      Utils.saveImgPath(image);
+      setShowCamera(false);
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+    }
   }
 
   _showAlertOk() {

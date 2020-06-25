@@ -37,8 +37,6 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
         question.answer_id = Utils.report.responses[index].answer_id;
         widget.setValid(true);
       }
-    } else {
-      Utils.createNewReport('adult');
     }
   }
 
@@ -83,8 +81,8 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   ? widget.showCamera(false)
                                   : widget.showCamera(true);
 
-                              widget.displayQuestion['answers'][index]['id'] ==
-                                      62
+                              widget.displayQuestion['answers'][index]['id'] >
+                                          61 
                                   ? widget.setSkip3(true)
                                   : widget.setSkip3(false);
                             },

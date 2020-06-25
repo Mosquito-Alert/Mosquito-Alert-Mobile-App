@@ -15,6 +15,7 @@ class ReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(reports);
     if (reports.isEmpty ||
         !reports.any((report) =>
             UserManager.profileUUIDs.any((id) => id == report.user))) {
@@ -35,7 +36,7 @@ class ReportsList extends StatelessWidget {
                     return snapshot.hasData
                         ? GestureDetector(
                             onTap: () {
-                              onTap(context, reports[index]);
+                              onTap(reports[index]);
                             },
                             child: Card(
                               margin: EdgeInsets.symmetric(

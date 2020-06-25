@@ -48,7 +48,7 @@ class Utils {
     ApiSingleton().closeSession(session);
   }
 
-  static createNewReport(String type) async {
+  static createNewReport(String type, {lat, lon, locationType}) async {
     if (session == null) {
       reportsList = [];
 
@@ -96,6 +96,18 @@ class Utils {
       report.os_version = buildData.systemVersion;
       report.app_language = getLanguage();
     }
+
+    if (lat != null && lon != null) {
+      if (locationType == 'selected') {
+        report.location_choice = 'selected';
+        report.selected_location_lat = lat;
+        report.selected_location_lon = lon;
+      } else {
+        report.location_choice = 'current';
+        report.current_location_lat = lat;
+        report.current_location_lon = lon;
+      }
+    }
   }
 
   static resetReport() {
@@ -114,9 +126,20 @@ class Utils {
     report.version_time = DateTime.now().toIso8601String();
     report.creation_time = DateTime.now().toIso8601String();
     report.phone_upload_time = DateTime.now().toIso8601String();
+
     reportsList.add(report);
     report = null;
-    createNewReport(type);
+    if (reportsList.last.location_choice == 'selected') {
+      createNewReport(type,
+          lat: reportsList.last.selected_location_lat,
+          lon: reportsList.last.selected_location_lon,
+          locationType: 'selected');
+    } else {
+      createNewReport(type,
+          lat: reportsList.last.current_location_lat,
+          lon: reportsList.last.current_location_lon,
+          locationType: 'current');
+    }
   }
 
   static deleteLastReport() {
@@ -315,6 +338,7 @@ class Utils {
 
       closeSession();
       resetReport();
+      imagePath = [];
       return isCreated;
     }
   }

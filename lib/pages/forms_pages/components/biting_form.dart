@@ -32,12 +32,10 @@ class _BitingFormState extends State<BitingForm> {
     _textController.text = bites.toString();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
-        if (q.question_id <= 4) {
+        if (q.question_id <= 4 || q.question_id == 13) {
           questions.add(q);
         }
       }
-    } else {
-      Utils.createNewReport('bite');
     }
     language = Utils.getLanguage();
   }
@@ -376,11 +374,11 @@ class _BitingFormState extends State<BitingForm> {
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(
                                   onTap: () {
-                                    if (answerId == 552) {
+                                    if (answerId == 132) {
                                       setState(() {
                                         showDaytime = true;
                                       });
-                                    } else if (answerId == 551) {
+                                    } else if (answerId == 131) {
                                       setState(() {
                                         showDaytime = false;
                                       });
@@ -509,7 +507,7 @@ class _BitingFormState extends State<BitingForm> {
       });
       bool isValid = canContinue();
       widget.setValid(isValid);
-    } 
+    }
   }
 
   bool canContinue() {
