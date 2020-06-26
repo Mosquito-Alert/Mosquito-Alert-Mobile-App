@@ -49,7 +49,7 @@ class ImageQuestionOption extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Style.title(title, color: Colors.white),
+                        Style.title(title, color: Colors.white, textAlign: TextAlign.center),
                         Style.bodySmall(
                           text,
                           color: Colors.white,

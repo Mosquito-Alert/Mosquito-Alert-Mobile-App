@@ -168,6 +168,7 @@ class MyLocalizations {
       "other_reports_bites_txt": "Reportes de picadas",
       "other_reports_breeding_txt": "Reportes de lugares de cría",
       "other_reports_adults_txt": "Reportes de adultos",
+      "other_reports_txt": "Otros reportes",
       "no_reports_yet_txt": "No hay reportes registrados",
       "near_from_txt": "Cerca de",
     },

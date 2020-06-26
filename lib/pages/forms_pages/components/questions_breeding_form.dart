@@ -88,6 +88,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
             //   child: Divider(),
             // ),
             // AddPhotoButton(),
+            Style.bottomOffset,
           ],
         ),
       ),

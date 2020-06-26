@@ -23,7 +23,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
 
   setSelected(String type) {
     // if (type != 'none') {
-    widget.addReport(type);
+    // widget.addReport(type);
     // }
 
     setState(() {
@@ -139,6 +139,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
             //     ),
             // ],
             // ),
+            Style.bottomOffset,
           ],
         ),
       ),

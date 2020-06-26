@@ -82,7 +82,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   : widget.showCamera(true);
 
                               widget.displayQuestion['answers'][index]['id'] >
-                                          61 
+                                      61
                                   ? widget.setSkip3(true)
                                   : widget.setSkip3(false);
                             },
@@ -116,6 +116,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
               //   child: Divider(),
               // ),
               // AddPhotoButton(),
+              Style.bottomOffset,
             ],
           ),
         ),

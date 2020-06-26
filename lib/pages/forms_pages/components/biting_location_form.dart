@@ -329,6 +329,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                     },
                   ),
                 ),
+                Style.bottomOffset,
               ],
             ),
           ),

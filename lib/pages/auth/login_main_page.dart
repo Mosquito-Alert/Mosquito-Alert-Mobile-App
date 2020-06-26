@@ -92,9 +92,10 @@ class _LoginMainPageState extends State<LoginMainPage> {
                   ),
                   Style.loginButton(
                       SvgPicture.asset(
-                        'assets/img/ic_facebook.svg',
+                        'assets/img/ic_twitter.svg',
                         height: 21,
                         fit: BoxFit.fitHeight,
+                        color: Colors.white,
                       ),
                       MyLocalizations.of(context, "login_btn5"),
                       Color(0XFF08a0e9),

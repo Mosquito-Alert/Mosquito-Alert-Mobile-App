@@ -377,7 +377,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       Expanded(
                         child: Column(
                           children: <Widget>[
-                            SvgPicture.asset('assets/img/ic_bites_yours.svg'),
+                            // SvgPicture.asset('assets/img/ic_bites_yours.svg'),
+                            Icon(Icons.location_on, color: Colors.green, size: 60),
+
                             SizedBox(
                               height: 5,
                             ),
@@ -394,8 +396,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       Expanded(
                         child: Column(
                           children: <Widget>[
-                            SvgPicture.asset(
-                                'assets/img/ic_breeding_yours.svg'),
+                            // SvgPicture.asset(
+                            //     'assets/img/ic_breeding_yours.svg'),
+                             Icon(Icons.location_on, color: Colors.cyanAccent, size: 60),
                             SizedBox(
                               height: 5,
                             ),
@@ -406,13 +409,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                     
+                    ]),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(children: <Widget>[
+                       SizedBox(
                         width: 10,
                       ),
                       Expanded(
                         child: Column(
                           children: <Widget>[
-                            SvgPicture.asset('assets/img/ic_adults_yours.svg'),
+                            // SvgPicture.asset('assets/img/ic_adults_yours.svg'),
+                            Icon(Icons.location_on, color: Colors.red, size: 60),
                             Style.body(
                                 MyLocalizations.of(
                                     context, "your_reports_adults_txt"),
@@ -420,57 +430,53 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ],
                         ),
                       ),
-                    ]),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(children: <Widget>[
                       Expanded(
                         child: Column(
                           children: <Widget>[
-                            SvgPicture.asset('assets/img/ic_bites_other.svg'),
+                            // SvgPicture.asset('assets/img/ic_bites_other.svg'),
+                            Icon(Icons.location_on, color: Colors.orangeAccent, size: 60),
                             SizedBox(
                               height: 5,
                             ),
                             Style.body(
                                 MyLocalizations.of(
-                                    context, "other_reports_bites_txt"),
+                                    context, "other_reports_txt"),
                                 textAlign: TextAlign.center)
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            SvgPicture.asset(
-                                'assets/img/ic_breeding_other.svg'),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "other_reports_breeding_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            SvgPicture.asset('assets/img/ic_adults_other.svg'),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "other_reports_adults_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
-                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      // Expanded(
+                      //   child: Column(
+                      //     children: <Widget>[
+                      //       SvgPicture.asset(
+                      //           'assets/img/ic_breeding_other.svg'),
+                      //       SizedBox(
+                      //         height: 5,
+                      //       ),
+                      //       Style.body(
+                      //           MyLocalizations.of(
+                      //               context, "other_reports_breeding_txt"),
+                      //           textAlign: TextAlign.center)
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      // Expanded(
+                      //   child: Column(
+                      //     children: <Widget>[
+                      //       SvgPicture.asset('assets/img/ic_adults_other.svg'),
+                      //       Style.body(
+                      //           MyLocalizations.of(
+                      //               context, "other_reports_adults_txt"),
+                      //           textAlign: TextAlign.center)
+                      //     ],
+                      //   ),
+                      // ),
                     ]),
                     SizedBox(
                       height: 30,

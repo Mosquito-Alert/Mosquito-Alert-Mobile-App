@@ -266,4 +266,8 @@ class Style {
         ),
         alignLabelWithHint: true);
   }
+
+    static Widget get bottomOffset => SizedBox(
+        height: 75,
+      );
 }

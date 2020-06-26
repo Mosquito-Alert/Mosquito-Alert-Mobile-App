@@ -75,7 +75,7 @@ class _BitingFormState extends State<BitingForm> {
                         enabled: false,
                       )),
                   SizedBox(
-                    width: 20,
+                    width: 30,
                   ),
                   Style.button(
                     '-',
@@ -87,6 +87,9 @@ class _BitingFormState extends State<BitingForm> {
                       bites = bites - 1;
                       _textController.text = bites.toString();
                     },
+                  ),
+                   SizedBox(
+                    width: 10,
                   ),
                   Style.button(
                     '+',
@@ -440,6 +443,7 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 15,
               ),
+              Style.bottomOffset,
             ],
           ),
         ),
@@ -525,7 +529,7 @@ class _BitingFormState extends State<BitingForm> {
           totalParts = totalParts + int.parse(q.answer_value);
         }
         if (q.question_id == 4) totalQ3++;
-        if (q.question_id == 55) totalQ4++;
+        if (q.question_id == 13) totalQ4++;
       });
 
       if (totalValues == totalParts &&
