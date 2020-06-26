@@ -40,6 +40,8 @@ dependencies:
   photo_view: ^0.9.2
   percent_indicator: ^2.1.5
   flutter_twitter_login: ^1.1.0
+  flutter_html: ^1.0.0
+  flutter_widget_from_html_core: ^0.4.1
 
 dev_dependencies:
   flutter_test:

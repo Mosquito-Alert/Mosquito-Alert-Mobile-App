@@ -5,6 +5,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
@@ -258,9 +259,18 @@ class ApiSingleton {
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return ApiResponse.fromJson(json.decode(response.body));
       }
-      Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      List data = jsonAnswer['body'].toList();
+      // print(json.decode(response.body));
+      // Map<String, dynamic> jsonAnswer = json.decode(response.body);
+
+      // print(json.decode(response.body));
+
+      // List data = jsonAnswer['body'].toList();
+      // return data;
+
+      var list = json.decode(response.body) as List;
+      List<MyNotification> data =
+          list.map((i) => MyNotification.fromJson(i)).toList();
       return data;
     } catch (e) {
       return false;
@@ -269,14 +279,13 @@ class ApiSingleton {
 
   Future<dynamic> updateNotification(id, aknowlaged) async {
     try {
-      String userUUID = await UserManager.getUUID();
 
       final response = await http.post(
-        '$serverUrl$notifications?id=$id&aknowlaged=$aknowlaged',
+        '$serverUrl$notifications?id=$id&acknowledged=$aknowlaged',
         headers: headers,
       );
 
-      // print(response);
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -284,7 +293,8 @@ class ApiSingleton {
       }
       Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      return jsonAnswer['score'];
+      print(jsonAnswer);
+      return true;
     } catch (e) {
       return false;
     }
