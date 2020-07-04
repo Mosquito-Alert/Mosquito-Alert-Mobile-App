@@ -14,15 +14,15 @@ class CustomCard extends StatelessWidget {
       opacity: disabled == true ? 0.5 : 1,
           child: Card(
         color: selected == true ? Style.colorPrimary : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation:  disabled == true ? 0 : 3,
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(12),
           child: Column(
             children: <Widget>[
               img != null
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Image.asset(
                         img,
                         height: 100,
@@ -32,14 +32,14 @@ class CustomCard extends StatelessWidget {
                   : SizedBox(
                       height: 120,
                     ),
-              Style.titleMedium(title, fontSize: 16, textAlign: TextAlign.center),
+              Style.titleMedium(title, fontSize: 18, textAlign: TextAlign.center),
               SizedBox(
-                height: 5,
+                height: 4,
               ),
               SizedBox(
                 height: 30,
                 child: Style.bodySmall(subtitle,
-                    textAlign: TextAlign.center, fontSize: 10),
+                    textAlign: TextAlign.center, fontSize: 12, color: Colors.black.withOpacity(0.8)),
               ),
             ],
           ),

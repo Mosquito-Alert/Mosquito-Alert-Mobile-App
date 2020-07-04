@@ -24,8 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Style.title(MyLocalizations.of(context, "settings_title"),
             fontSize: 16),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.all(15),
             child: Column(
@@ -134,10 +133,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 60,
+                  ),
                 ]),
           ),
         ),
-      ),
+
     );
   }
 

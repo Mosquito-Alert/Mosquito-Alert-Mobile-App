@@ -403,7 +403,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 // ],
               ),
               index != _formsRepot.length.toDouble()
-                  ? Align(
+                  ? SafeArea(child: Align(
                       alignment: Alignment.bottomCenter,
                       child: StreamBuilder<bool>(
                           stream: validStream.stream,
@@ -413,8 +413,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                             return snapshot.data
                                 ? Container(
                                     width: double.infinity,
+                                    height: 54,
                                     margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
+                                        vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"), () {
@@ -464,15 +465,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                   )
                                 : Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"),
                                         null),
                                   );
                           }),
-                    )
+                    ))
                   : Container()
             ],
           ),

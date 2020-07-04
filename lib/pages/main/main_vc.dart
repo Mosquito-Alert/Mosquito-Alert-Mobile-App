@@ -47,7 +47,7 @@ class _MainVCState extends State<MainVC> {
           backgroundColor: Colors.white,
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings,),
             onPressed: () {
               Navigator.push(
                 context,
@@ -57,7 +57,7 @@ class _MainVCState extends State<MainVC> {
           ),
           title: Image.asset(
             'assets/img/ic_logo.png',
-            height: 45,
+            height: 40,
           ),
           actions: <Widget>[
             IconButton(
@@ -83,11 +83,11 @@ class _MainVCState extends State<MainVC> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Column(
                           children: <Widget>[
                             SizedBox(
-                              height: 30,
+                              height: 24,
                             ),
                             Row(
                                 mainAxisAlignment:
@@ -103,38 +103,18 @@ class _MainVCState extends State<MainVC> {
                                               userName != null
                                                   ? " ${MyLocalizations.of(context, "welcome_text")}, $userName."
                                                   : " ${MyLocalizations.of(context, "welcome_text")}",
-                                              fontSize: 18),
+                                              fontSize: 20),
                                           SizedBox(
-                                            height: 5,
+                                            height: 4,
                                           ),
                                           Style.body(
                                               MyLocalizations.of(
                                                   context, "what_to_do_txt"),
-                                              fontSize: 16),
-                                          // InkWell(
-                                          // onTap: () {
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           PointsInfo()),
-                                            // );
-                                          // },
-                                          //   child: Padding(
-                                          //     padding:
-                                          //         const EdgeInsets.symmetric(
-                                          //             vertical: 5.0),
-                                          //     child: Style.body(
-                                          //         MyLocalizations.of(context,
-                                          //             "more_info_points_txt"),
-                                          //         color: Color(0XFFC96F00),
-                                          //         fontSize: 10),
-                                          //   ),
-                                          // )
+                                              fontSize: 14),
                                         ]),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 12,
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -145,8 +125,8 @@ class _MainVCState extends State<MainVC> {
                                       );
                                     },
                                     child: Container(
-                                      height: 80,
-                                      width: 80,
+                                      height: 60,
+                                      width: 60,
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: AssetImage(
@@ -163,15 +143,15 @@ class _MainVCState extends State<MainVC> {
                                         minFontSize: 16,
                                         style: TextStyle(
                                             color: Color(0xFF4B3D04),
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 30),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 24),
                                       )),
                                     ),
                                   ),
                                 ]),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 5.0),
+                                  const EdgeInsets.symmetric(vertical: 6.0),
                               child: Divider(),
                             ),
                             Row(

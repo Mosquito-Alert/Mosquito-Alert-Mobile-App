@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
@@ -51,21 +53,31 @@ class _BitingFormState extends State<BitingForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                height: 35,
+                height: 24,
               ),
-              // Style.title(
-              //     MyLocalizations.of(context, "need_more_information_txt")),
-              // Style.bodySmall(MyLocalizations.of(context, "lets_go_txt")),
-              // SizedBox(
-              //   height: 25,
-              // ),
               Style.titleMedium('¿Cuántas picaduras quieres reportar y dónde?',
                   fontSize: 16),
               SizedBox(
-                height: 25,
+                height: 12,
               ),
               Row(
                 children: <Widget>[
+                  Style.button(
+                    '-',
+                        () {
+                      addToList("numero de picadas", "",
+                          question_id: 1,
+                          answer_id: 11,
+                          answer_value: _textController.text);
+                      bites = max(bites - 1, 0);
+                      _textController.text = bites.toString();
+                    },
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+
+
                   Expanded(
                       flex: 1,
                       child: Style.textField(
@@ -74,22 +86,10 @@ class _BitingFormState extends State<BitingForm> {
                         context,
                         enabled: false,
                       )),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Style.button(
-                    '-',
-                    () {
-                      addToList("numero de picadas", "",
-                          question_id: 1,
-                          answer_id: 11,
-                          answer_value: _textController.text);
-                      bites = bites - 1;
-                      _textController.text = bites.toString();
-                    },
-                  ),
+
+
                    SizedBox(
-                    width: 10,
+                    width: 12,
                   ),
                   Style.button(
                     '+',
@@ -98,7 +98,8 @@ class _BitingFormState extends State<BitingForm> {
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
-                      bites = bites + 1;
+
+                      bites = min(bites = bites + 1, 20);
                       _textController.text = bites.toString();
                     },
                   ),
@@ -314,6 +315,16 @@ class _BitingFormState extends State<BitingForm> {
                 ),
               ),
               Center(
+                child: Style.body(
+                  MyLocalizations.of(context, 'tap_image_biting_txt'),
+                  color: Colors.grey,
+                  fontSize: 10,
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Center(
                 child: Style.button(MyLocalizations.of(context, 'reset'), () {
                   Utils.resetBitingQuestion();
                   setState(() {
@@ -322,15 +333,9 @@ class _BitingFormState extends State<BitingForm> {
                 }),
               ),
               SizedBox(
-                height: 10,
+                height: 24,
               ),
-              Center(
-                child: Style.body(
-                  MyLocalizations.of(context, 'tap_image_biting_txt'),
-                  color: Colors.grey,
-                  fontSize: 10,
-                ),
-              ),
+
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

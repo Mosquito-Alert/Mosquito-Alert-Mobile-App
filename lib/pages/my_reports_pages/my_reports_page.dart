@@ -62,7 +62,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   initState() {
     super.initState();
     _initLocation();
-    _initMarkers();
   }
 
   _initLocation() {
@@ -74,23 +73,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void _initMarkers() async {
     int width = 125;
 
-    // iconAdultYours = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_adults_yours.png', width));
-    // iconBitesYours = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_bites_yours.png', width));
-    // iconBreedingYours = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_breeding_yours.png', width));
-    // iconAdultOthers = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_adult_other.png', width));
-    // iconBitesOthers = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_bites_other.png', width));
-    // iconBreedingOthers = BitmapDescriptor.fromBytes(
-    //     await getBytesFromAsset('assets/img/ic_breeding_other.png', width));
-
-    iconAdultYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-    iconBitesYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-    iconBreedingYours = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
-    iconAdultOthers = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+    iconAdultYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/report_001.png', width));
+    iconBitesYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/report_003.png', width));
+    iconBreedingYours = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/report_004.png', width));
+    iconAdultOthers = BitmapDescriptor.fromBytes(
+        await getBytesFromAsset('assets/img/report_002.png', width));
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -160,24 +150,12 @@ class _MyReportsPageState extends State<MyReportsPage> {
           break;
       }
     } else {
-      return iconAdultOthers; 
-      // switch (type) {
-      //   case "adult":
-      //     return iconAdultOthers;
-      //     break;
-      //   case "bite":
-      //     return iconBitesOthers;
-      //     break;
-      //   case "site":
-      //     return iconBreedingOthers;
-      //     break;
-      //   default:
-      //     break;
-      // }
+      return iconAdultOthers;
     }
   }
 
   void _onMapCreated(GoogleMapController controller) {
+    _initMarkers();
     mapController = controller;
     _getLocation();
   }
@@ -269,11 +247,27 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ),
                           SafeArea(
                             child: Container(
-                              margin: EdgeInsets.only(left: 10),
-                              child: Style.button("Leyenda", () {
-                                _infoBottom(context);
-                              }),
-                            ),
+                                width: 50,
+                                height: 50,
+                                margin: EdgeInsets.only(left: 12, bottom: 12),
+                                child: RaisedButton(
+                                    onPressed: () {
+                                      _infoBottom(context);
+                                    },
+                                    elevation: 0,
+                                    highlightElevation: 0,
+                                    hoverElevation: 0,
+                                    highlightColor:
+                                        Style.colorPrimary.withOpacity(0.5),
+                                    padding: EdgeInsets.symmetric(vertical: 2),
+                                    color: Color(0xffffffff),
+                                    disabledColor:
+                                        Style.colorPrimary.withOpacity(0.3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                      side: BorderSide(color: Colors.black.withOpacity(0.2), width: 1.0)
+                                    ),
+                                    child: Icon(Icons.info_outline))),
                           )
                         ],
                       );
@@ -324,7 +318,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           icon: Style.iconBack,
                         ),
                         Style.title(
-                            MyLocalizations.of(context, "your_reports_txt")),
+                            MyLocalizations.of(context, "your_reports_txt"),
+                            fontSize: 16.0),
                         SizedBox(
                           width: 40,
                         )
@@ -373,111 +368,44 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    Row(children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            // SvgPicture.asset('assets/img/ic_bites_yours.svg'),
-                            Icon(Icons.location_on, color: Colors.green, size: 60),
-
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "your_reports_bites_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
+                    ListTile(
+                      leading: SvgPicture.asset(
+                        'assets/img/report_003.svg',
+                        height: 36,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            // SvgPicture.asset(
-                            //     'assets/img/ic_breeding_yours.svg'),
-                             Icon(Icons.location_on, color: Colors.cyanAccent, size: 60),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "your_reports_breeding_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
-                      ),
-                     
-                    ]),
-                    SizedBox(
-                      height: 20,
+                      title: Style.body(
+                          MyLocalizations.of(context, "your_reports_bites_txt"),
+                          textAlign: TextAlign.left),
                     ),
-                    Row(children: <Widget>[
-                       SizedBox(
-                        width: 10,
+                    ListTile(
+                      leading: SvgPicture.asset(
+                        'assets/img/report_004.svg',
+                        height: 36,
                       ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            // SvgPicture.asset('assets/img/ic_adults_yours.svg'),
-                            Icon(Icons.location_on, color: Colors.red, size: 60),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "your_reports_adults_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
+                      title: Style.body(
+                          MyLocalizations.of(
+                              context, "your_reports_breeding_txt"),
+                          textAlign: TextAlign.left),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset(
+                        'assets/img/report_001.svg',
+                        height: 36,
                       ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            // SvgPicture.asset('assets/img/ic_bites_other.svg'),
-                            Icon(Icons.location_on, color: Colors.orangeAccent, size: 60),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Style.body(
-                                MyLocalizations.of(
-                                    context, "other_reports_txt"),
-                                textAlign: TextAlign.center)
-                          ],
-                        ),
+                      title: Style.body(
+                          MyLocalizations.of(
+                              context, "your_reports_adults_txt"),
+                          textAlign: TextAlign.left),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset(
+                        'assets/img/report_002.svg',
+                        height: 36,
                       ),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
-                      // Expanded(
-                      //   child: Column(
-                      //     children: <Widget>[
-                      //       SvgPicture.asset(
-                      //           'assets/img/ic_breeding_other.svg'),
-                      //       SizedBox(
-                      //         height: 5,
-                      //       ),
-                      //       Style.body(
-                      //           MyLocalizations.of(
-                      //               context, "other_reports_breeding_txt"),
-                      //           textAlign: TextAlign.center)
-                      //     ],
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
-                      // Expanded(
-                      //   child: Column(
-                      //     children: <Widget>[
-                      //       SvgPicture.asset('assets/img/ic_adults_other.svg'),
-                      //       Style.body(
-                      //           MyLocalizations.of(
-                      //               context, "other_reports_adults_txt"),
-                      //           textAlign: TextAlign.center)
-                      //     ],
-                      //   ),
-                      // ),
-                    ]),
+                      title: Style.body(
+                          MyLocalizations.of(context, "other_reports_txt"),
+                          textAlign: TextAlign.left),
+                    ),
                     SizedBox(
                       height: 30,
                     ),
@@ -802,8 +730,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
   _getData() async {
     loadingStream.add(true);
     List<Report> list = [];
-    bool res = await ApiSingleton().getReportsList(location.latitude, location.longitude,
-        page: 1, callback: (List<Report> reports) {
+    bool res = await ApiSingleton()
+        .getReportsList(location.latitude, location.longitude, page: 1,
+            callback: (List<Report> reports) {
       list = [...list, ...reports];
       dataMarkersStream.add(list);
     });
@@ -812,7 +741,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       list = [];
     }
 
-    
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice != "missing" &&
               list[i].current_location_lat != null &&
@@ -824,7 +752,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
 
     dataStream.add(data);
-    
+
     loadingStream.add(false);
   }
 

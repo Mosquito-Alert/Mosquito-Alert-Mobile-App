@@ -312,7 +312,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 children: _formsRepot,
               ),
               index != _formsRepot.length.toDouble()
-                  ? Align(
+                  ? SafeArea(child: Align(
                       alignment: Alignment.bottomCenter,
                       child: StreamBuilder<bool>(
                           stream: validStream.stream,
@@ -322,8 +322,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                             return snapshot.data
                                 ? Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"), () {
@@ -362,15 +363,16 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                   )
                                 : Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"),
                                         null),
                                   );
                           }),
-                    )
+                    ))
                   : Container(),
             ],
           ),
