@@ -474,7 +474,7 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> getReportsList(
+  Future<List<Report>> getReportsList(
     lat,
     lon, {
     int page,
@@ -482,22 +482,21 @@ class ApiSingleton {
     bool show_hidden,
     int radius,
     bool show_verions,
-    callback,
   }) async {
     try {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=$page&user=$userUUID&page_size=75&radius=1000' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=${page != null ? page : '1'}&user=$userUUID&page_size=75&radius=${radius != null ? radius : 1000}' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
-      print(response);
+
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
-        return ApiResponse.fromJson(json.decode(response.body));
+        return null;
       } else {
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
         List<Report> list = [];
@@ -509,15 +508,15 @@ class ApiSingleton {
         }
         for (var item in jsonAnswer['results']) {
           list.add(Report.fromJson(item));
-          allReports = [...allReports, ...list];
         }
-        callback(list);
-        if (jsonAnswer['next'] == null) {
-          return true;
+        allReports.addAll(list);
+        //callback(list);
+        if (page == null) {
+          return allReports;
         }
       }
 
-      return getReportsList(lat, lon, allReports: allReports, page: page);
+      return getReportsList(lat, lon, page: page, allReports: allReports, radius: radius);
     } catch (e) {
       // print(e);
       return null;

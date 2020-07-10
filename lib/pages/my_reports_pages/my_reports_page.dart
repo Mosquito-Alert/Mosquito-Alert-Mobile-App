@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,6 +15,9 @@ import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/clustering/aggregation_setup.dart';
+import 'package:mosquito_alert_app/utils/clustering/clustering_helper.dart';
+import 'package:mosquito_alert_app/utils/clustering/report_geohash.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:intl/intl.dart';
@@ -35,12 +37,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
       latitude: Utils.defaultLocation.latitude,
       longitude: Utils.defaultLocation.longitude);
 
+  ClusteringHelper clusteringHelper;
+  List<ReportAndGeohash> _listMarkers = List();
+  Set<Marker> markers = Set();
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
   BitmapDescriptor iconBreedingYours;
   BitmapDescriptor iconAdultOthers;
   BitmapDescriptor iconBitesOthers;
   BitmapDescriptor iconBreedingOthers;
+
+  //Data
+  Position _locationData;
+  double _zoomData;
 
   final _pagesController = PageController();
 
@@ -62,6 +71,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   initState() {
     super.initState();
     _initLocation();
+    _initMemoryClustering();
   }
 
   _initLocation() {
@@ -70,17 +80,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
-  void _initMarkers() async {
-    int width = 125;
+  _initMemoryClustering() {
+    clusteringHelper = ClusteringHelper.forMemory(
+        list: _listMarkers,
+        updateMarkers: updateMarkers,
+        aggregationSetup: AggregationSetup(markerSize: 150),
+        onClick: ((index) {
+          _reportBottomSheet(_listMarkers[index].report);
+        }));
+  }
 
-    iconAdultYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/report_001.png', width));
-    iconBitesYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/report_003.png', width));
-    iconBreedingYours = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/report_004.png', width));
-    iconAdultOthers = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset('assets/img/report_002.png', width));
+  updateMarkers(Set<Marker> markers) {
+    setState(() {
+      this.markers = markers;
+    });
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -93,87 +106,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
         .asUint8List();
   }
 
-  _createMarkers(List<Report> reports) {
-    if (reports == null || reports.isEmpty) {
-      return;
-    }
-
-    var markers = <Marker>[];
-    for (int i = 0; i < reports.length; i++) {
-      var position;
-      // if (_reports[i].location_choice != 'missing') {
-      if (reports[i].location_choice == 'current' &&
-          reports[i].current_location_lat != null &&
-          reports[i].current_location_lon != null) {
-        position = LatLng(
-            reports[i].current_location_lat, reports[i].current_location_lon);
-      } else if (reports[i].location_choice == 'selected' &&
-          reports[i].selected_location_lat != null &&
-          reports[i].selected_location_lon != null) {
-        position = LatLng(
-            reports[i].selected_location_lat, reports[i].selected_location_lon);
-      }
-      var icon = setIconMarker(reports[i].type, reports[i].user);
-
-      if (position != null) {
-        markers.add(Marker(
-          markerId: MarkerId(reports[i].report_id),
-          position: position,
-          consumeTapEvents: true,
-          onTap: () {
-            _reportBottomSheet(reports[i]);
-          },
-          icon: icon,
-        ));
-      }
-      // }
-    }
-
-    return Set<Marker>.of(markers).toSet();
-  }
-
-  BitmapDescriptor setIconMarker(type, user) {
-    if (UserManager.profileUUIDs != null &&
-        UserManager.profileUUIDs.any((id) => id == user)) {
-      switch (type) {
-        case "adult":
-          // return
-          return iconAdultYours;
-          break;
-        case "bite":
-          return iconBitesYours;
-          break;
-        case "site":
-          return iconBreedingYours;
-          break;
-        default:
-          break;
-      }
-    } else {
-      return iconAdultOthers;
-    }
-  }
-
   void _onMapCreated(GoogleMapController controller) {
-    _initMarkers();
     mapController = controller;
-    _getLocation();
-  }
-
-  _getLocation() async {
-    LatLng loc = Utils.defaultLocation;
-    if (location.latitude == Utils.defaultLocation.latitude &&
-        location.longitude == Utils.defaultLocation.longitude) {
-      await Utils.getLocation();
-      if (Utils.location != null) {
-        location = Utils.location;
-        if (mapController != null) {
-          mapController.animateCamera(CameraUpdate.newLatLng(
-              LatLng(location.latitude, location.longitude)));
-          _getData();
-        }
-      }
-    }
+    clusteringHelper.mapController = controller;
+    clusteringHelper.updateMap();
   }
 
   void _onMiniMapCreated(GoogleMapController controller) async {
@@ -223,13 +159,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 onMapCreated: _onMapCreated,
                                 mapType: MapType.normal,
                                 mapToolbarEnabled: false,
-                                zoomControlsEnabled: false,
-                                zoomGesturesEnabled: false,
                                 myLocationButtonEnabled: false,
+                                minMaxZoomPreference:
+                                    MinMaxZoomPreference(14, 20),
                                 onCameraMove: (newPosition) {
                                   location = Position(
                                       latitude: newPosition.target.latitude,
                                       longitude: newPosition.target.longitude);
+                                  /*clusteringHelper.onCameraMove(newPosition,
+                                      forceUpdate: false)*/
                                 },
                                 onCameraIdle: () {
                                   _getData();
@@ -241,7 +179,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                       : Utils.defaultLocation,
                                   zoom: 15.7,
                                 ),
-                                markers: _createMarkers(snapshot.data),
+                                markers: markers,
                               );
                             },
                           ),
@@ -264,9 +202,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     disabledColor:
                                         Style.colorPrimary.withOpacity(0.3),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3),
-                                      side: BorderSide(color: Colors.black.withOpacity(0.2), width: 1.0)
-                                    ),
+                                        borderRadius: BorderRadius.circular(3),
+                                        side: BorderSide(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            width: 1.0)),
                                     child: Icon(Icons.info_outline))),
                           )
                         ],
@@ -369,8 +309,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       height: 30,
                     ),
                     ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/img/report_003.svg',
+                      leading: Image.asset(
+                        'assets/img/maps/report_003.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -378,8 +318,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           textAlign: TextAlign.left),
                     ),
                     ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/img/report_004.svg',
+                      leading: Image.asset(
+                        'assets/img/maps/report_004.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -388,8 +328,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           textAlign: TextAlign.left),
                     ),
                     ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/img/report_001.svg',
+                      leading: Image.asset(
+                        'assets/img/maps/report_001.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -398,8 +338,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           textAlign: TextAlign.left),
                     ),
                     ListTile(
-                      leading: SvgPicture.asset(
-                        'assets/img/report_002.svg',
+                      leading: Image.asset(
+                        'assets/img/maps/report_002.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -728,19 +668,39 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _getData() async {
+    double zoomLevel = await mapController.getZoomLevel();
+    if (_locationData != null && _zoomData != null) {
+      double distance = await Geolocator().distanceBetween(
+          _locationData.latitude,
+          _locationData.longitude,
+          location.latitude,
+          location.longitude);
+      if (distance < 750 && zoomLevel == _zoomData) {
+        return;
+      }
+    }
+
+    _locationData = location;
+    _zoomData = await mapController.getZoomLevel();
+
     loadingStream.add(true);
-    List<Report> list = [];
-    bool res = await ApiSingleton()
-        .getReportsList(location.latitude, location.longitude, page: 1,
-            callback: (List<Report> reports) {
-      list = [...list, ...reports];
-      dataMarkersStream.add(list);
-    });
+
+    LatLngBounds bounds = await mapController.getVisibleRegion();
+    double distance = await Geolocator().distanceBetween(
+        bounds.northeast.latitude,
+        bounds.northeast.longitude,
+        bounds.southwest.latitude,
+        bounds.southwest.longitude);
+
+    List<Report> list = await ApiSingleton().getReportsList(
+        location.latitude, location.longitude,
+        radius: (distance / 2).round());
 
     if (list == null) {
       list = [];
     }
 
+    List<ReportAndGeohash> listMarkers = List();
     for (int i = 0; i < list.length; i++) {
       if (list[i].location_choice != "missing" &&
               list[i].current_location_lat != null &&
@@ -748,10 +708,23 @@ class _MyReportsPageState extends State<MyReportsPage> {
           list[i].selected_location_lat != null &&
               list[i].selected_location_lon != null) {
         data.add(list[i]);
+        listMarkers.add(ReportAndGeohash(
+            list[i],
+            LatLng(
+                list[i].current_location_lat != null
+                    ? list[i].current_location_lat
+                    : list[i].selected_location_lat,
+                list[i].current_location_lon != null
+                    ? list[i].current_location_lon
+                    : list[i].selected_location_lon),
+            i));
       }
     }
 
     dataStream.add(data);
+
+    clusteringHelper.updateData(listMarkers);
+    _listMarkers = listMarkers;
 
     loadingStream.add(false);
   }
@@ -812,6 +785,28 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
 
     return <Marker>[marker].toSet();
+  }
+
+  BitmapDescriptor setIconMarker(type, user) {
+    if (UserManager.profileUUIDs != null &&
+        UserManager.profileUUIDs.any((id) => id == user)) {
+      switch (type) {
+        case "adult":
+          // return
+          return iconAdultYours;
+          break;
+        case "bite":
+          return iconBitesYours;
+          break;
+        case "site":
+          return iconBreedingYours;
+          break;
+        default:
+          break;
+      }
+    } else {
+      return iconAdultOthers;
+    }
   }
 
   _onItemTapped(index) {
