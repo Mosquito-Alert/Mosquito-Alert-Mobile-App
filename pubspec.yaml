@@ -1,7 +1,7 @@
 name: mosquito_alert_app
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 0.7+564
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -42,6 +42,7 @@ dependencies:
   flutter_twitter: ^1.1.3
   flutter_html: ^1.0.0
   flutter_widget_from_html_core: ^0.4.1
+  geohash: ^0.2.1
 
 dev_dependencies:
   flutter_test:
@@ -60,9 +61,10 @@ flutter:
 
   assets:
  
-   - assets/img/
    - assets/
- 
+   - assets/img/
+   - assets/img/maps/
+
   
   fonts:
     - family: Rubik
