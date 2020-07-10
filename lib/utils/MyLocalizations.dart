@@ -98,6 +98,8 @@ class MyLocalizations {
       "save_report_ok_txt": "Reporte guardado correctamente",
       "save_report_ko_txt": "Error, intentalo de nuevo más tarde",
       "send_data": "Enviar datos",
+      "bytes_and_place_report_txt":
+          "¿Cuántas picaduras quieres reportar y dónde?",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",
@@ -145,7 +147,8 @@ class MyLocalizations {
       "info_scores_txt": "Infromación scoring",
       "consent_form_txt": "Consent form",
       "tutorial_txt": "Tutorial",
-      "mosquito_gallery_txt": "Galería de mosquitos (cómo identificar especies)", 
+      "mosquito_gallery_txt":
+          "Galería de mosquitos (cómo identificar especies)",
       "privacy_policy_txt": "Política de privacidad",
 
       //My reports page

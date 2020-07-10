@@ -167,8 +167,16 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> singInWithTwitter() async {
+    TwitterLogin twitterInstance = new TwitterLogin(
+        consumerKey: '4mhrNfBnXQXaVntPFYdIfXtCz',
+        consumerSecret: 'Vi3SE7MgpTUyOBL6ouZHKfei6okzMElpwteN2gr3QyEyapZc3F');
+
+    final TwitterLoginResult result = await twitterInstance.authorize();
+
     final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authTokenSecret: 'dgasrgga', authToken: 'fasdgasg');
+      authTokenSecret: result.session.secret,
+      authToken: result.session.token,
+    );
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
@@ -224,10 +232,8 @@ class ApiSingleton {
     try {
       String userUUID = await UserManager.getUUID();
 
-      userUUID = 'D9E35B23-6A35-4E3F-84D7-C111F0BF87C4';
-
       final response = await http.get(
-        'http://madev.creaf.cat/api/stats/$userScore/?user_id=$userUUID', //TODO: change to staging URL
+        'http://madev.creaf.cat/api/stats/user_xp_data/?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4', //TODO: change to staging URL
         headers: headers,
       );
 
@@ -516,7 +522,8 @@ class ApiSingleton {
         }
       }
 
-      return getReportsList(lat, lon, page: page, allReports: allReports, radius: radius);
+      return getReportsList(lat, lon,
+          page: page, allReports: allReports, radius: radius);
     } catch (e) {
       // print(e);
       return null;

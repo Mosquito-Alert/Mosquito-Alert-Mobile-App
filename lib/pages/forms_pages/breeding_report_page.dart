@@ -11,7 +11,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_location_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/public_breeding_site_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';

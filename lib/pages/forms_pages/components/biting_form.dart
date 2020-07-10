@@ -55,7 +55,7 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 24,
               ),
-              Style.titleMedium('¿Cuántas picaduras quieres reportar y dónde?',
+              Style.titleMedium(MyLocalizations.of(context, 'bytes_and_place_report_txt'),
                   fontSize: 16),
               SizedBox(
                 height: 12,
@@ -521,15 +521,15 @@ class _BitingFormState extends State<BitingForm> {
 
   bool canContinue() {
     if (questions.length > 1 && questions.isNotEmpty) {
-      int totalValues = 0;
+      int totalValues = bites;
       int totalParts = 0;
       int totalQ3 = 0;
       int totalQ4 = 0;
 
       questions.forEach((q) {
-        if (q.question_id == 1) {
-          totalValues = totalValues + int.parse(q.answer_value);
-        }
+        // if (q.question_id == 1) {
+        //   totalValues = totalValues + int.parse(q.answer_value);
+        // }
         if (q.question_id == 2) {
           totalParts = totalParts + int.parse(q.answer_value);
         }
