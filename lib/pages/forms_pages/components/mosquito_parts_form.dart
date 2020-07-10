@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
-import 'package:mosquito_alert_app/pages/info_pages/points_info_page.dart';
+import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -56,7 +56,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PointsInfo()),
+                    MaterialPageRoute(builder: (context) => InfoPage('d')),
                   );
                 },
                 child: Style.bodySmall("mas ifno de eto", color: Style.colorPrimary),

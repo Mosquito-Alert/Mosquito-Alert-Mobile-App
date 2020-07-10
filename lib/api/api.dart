@@ -24,7 +24,7 @@ class ApiSingleton {
   static const users = '/users/';
   static const profile = '/profile/';
   static const newProfile = '/profile/new/';
-  static const userScore = '/user_score/';
+  static const userScore = '/user_xp_data/';
 
   //Reports
   static const reports = '/reports/';
@@ -224,12 +224,14 @@ class ApiSingleton {
     try {
       String userUUID = await UserManager.getUUID();
 
+      userUUID = 'D9E35B23-6A35-4E3F-84D7-C111F0BF87C4';
+
       final response = await http.get(
-        '$serverUrl$userScore?user_id=$userUUID',
+        'http://madev.creaf.cat/api/stats/$userScore/?user_id=$userUUID', //TODO: change to staging URL
         headers: headers,
       );
 
-      // print(response);
+      print(response);
       if (response.statusCode != 200) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
@@ -237,7 +239,7 @@ class ApiSingleton {
       }
       Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      return jsonAnswer['score'];
+      return jsonAnswer['total_score'];
     } catch (e) {
       return 1;
     }
@@ -279,7 +281,6 @@ class ApiSingleton {
 
   Future<dynamic> updateNotification(id, aknowlaged) async {
     try {
-
       final response = await http.post(
         '$serverUrl$notifications?id=$id&acknowledged=$aknowlaged',
         headers: headers,

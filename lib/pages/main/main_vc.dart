@@ -1,16 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
-import 'package:mosquito_alert_app/pages/info_pages/points_info_page.dart';
+import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MainVC extends StatefulWidget {
@@ -21,6 +23,8 @@ class MainVC extends StatefulWidget {
 class _MainVCState extends State<MainVC> {
   String userName;
   int userScore = 1;
+  String userUuid;
+  String language;
 
   @override
   void initState() {
@@ -31,13 +35,21 @@ class _MainVCState extends State<MainVC> {
 
   _getData() async {
     var user = await UserManager.fetchUser();
-    int points = await UserManager.getUserScores();
-    if (user != null && user.displayName != null && points != null) {
+    userUuid = await UserManager.getUUID();
+    language = Utils.getLanguage();
+    int points = UserManager.userScore;
+    if (points == null) {
+      points = await ApiSingleton().getUserScores();
+    }
+
+    if (user != null) {
       setState(() {
         userName = user.displayName;
-        userScore = points;
       });
     }
+    setState(() {
+      userScore = points;
+    });
   }
 
   @override
@@ -47,7 +59,9 @@ class _MainVCState extends State<MainVC> {
           backgroundColor: Colors.white,
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(Icons.settings,),
+            icon: Icon(
+              Icons.settings,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -121,7 +135,8 @@ class _MainVCState extends State<MainVC> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => PointsInfo()),
+                                            builder: (context) => InfoPage(
+                                                'http://madev.creaf.cat/$language/stats/user_ranking/1/$userUuid')),
                                       );
                                     },
                                     child: Container(

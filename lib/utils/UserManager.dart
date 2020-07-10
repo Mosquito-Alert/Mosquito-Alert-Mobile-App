@@ -8,6 +8,7 @@ class UserManager {
 
   static FirebaseUser user;
   static var profileUUIDs;
+  static int userScore; 
 
   static Future startFirstTime(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -21,8 +22,8 @@ class UserManager {
       setUserScores(1); 
     }
     fetchUser();
-    var scores = await ApiSingleton().getUserScores();
-    setUserScores(scores); 
+    userScore = await ApiSingleton().getUserScores();
+    setUserScores(userScore); 
   }
 
   static fetchUser() async {
