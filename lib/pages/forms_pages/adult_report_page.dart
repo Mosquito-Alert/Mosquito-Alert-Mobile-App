@@ -304,9 +304,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
               icon: Style.iconBack,
               onPressed: () {
                 double currentPage = _pagesController.page;
-                setState(() {
-                  index = currentPage + 2;
-                });
+
                 if (currentPage == 0.0) {
                   if (Utils.reportsList != null &&
                       Utils.reportsList.isNotEmpty) {
@@ -331,6 +329,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     addOtherReport(null);
                   });
                 }
+                setState(() {
+                  index = currentPage - 1;
+                });
               },
             ),
             title: Style.title(
@@ -383,6 +384,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
             // ],
           ),
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: <Widget>[
               PageView(
                 controller: _pagesController,
@@ -402,8 +404,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 //   AddOtherReportPage(addOtherReport, setValid),
                 // ],
               ),
-              index != _formsRepot.length.toDouble()
-                  ? SafeArea(child: Align(
+              index != _formsRepot.length.toDouble() - 1
+                  ? SafeArea(
+                      child: Align(
                       alignment: Alignment.bottomCenter,
                       child: StreamBuilder<bool>(
                           stream: validStream.stream,
@@ -421,16 +424,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                             context, "continue_txt"), () {
                                       double currentPage =
                                           _pagesController.page;
-                                      setState(() {
-                                        index = currentPage + 2;
-                                      });
 
-                                      if (currentPage ==
-                                              _formsRepot.length - 1 &&
-                                          !addBiting) {
-                                        navigateOtherReport();
-                                      } else if (currentPage == 3.0 &&
-                                          addBiting) {
+                                      if (currentPage == 3.0 && addBiting) {
                                         Utils.addOtherReport('bite');
                                         Navigator.push(
                                           context,
@@ -439,6 +434,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                   BitingReportPage()),
                                         );
                                       } else {
+                                        setState(() {
+                                          index = currentPage + 1;
+                                        });
                                         if (showCamera) {
                                           _chooseTypeImage();
                                         } else {
@@ -465,9 +463,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                   )
                                 : Container(
                                     width: double.infinity,
-                              height: 54,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 12),
+                                    height: 54,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"),
@@ -475,7 +473,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                   );
                           }),
                     ))
-                  : Container()
+                  : Container(
+                      width: double.infinity,
+                      height: 54,
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                      child: Style.button(
+                        MyLocalizations.of(context, "send_data"),
+                        () {
+                          _createReport();
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

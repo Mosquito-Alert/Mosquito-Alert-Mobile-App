@@ -275,9 +275,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               icon: Style.iconBack,
               onPressed: () {
                 double currentPage = _pagesController.page;
-                setState(() {
-                  index = currentPage + 2;
-                });
+
                 if (currentPage == 0.0) {
                   if (Utils.reportsList != null &&
                       Utils.reportsList.isNotEmpty) {
@@ -293,6 +291,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                           curve: Curves.ease)
                       .then((value) => addOtherReport(null));
                 }
+                setState(() {
+                  index = currentPage - 1;
+                });
               },
             ),
             title: Style.title(
@@ -300,6 +301,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 fontSize: 16),
           ),
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: <Widget>[
               PageView(
                 controller: _pagesController,
@@ -310,8 +312,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 // }),
                 children: _formsRepot,
               ),
-              index != _formsRepot.length.toDouble()
-                  ? SafeArea(child: Align(
+              index != _formsRepot.length.toDouble() - 1
+                  ? SafeArea(
+                      child: Align(
                       alignment: Alignment.bottomCenter,
                       child: StreamBuilder<bool>(
                           stream: validStream.stream,
@@ -321,34 +324,31 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                             return snapshot.data
                                 ? Container(
                                     width: double.infinity,
-                              height: 54,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 12),
+                                    height: 54,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"), () {
                                       double currentPage =
                                           _pagesController.page;
-                                      setState(() {
-                                        index = currentPage + 2;
-                                      });
+
                                       if (skipReport) {
                                         _saveReports();
                                       } else {
                                         if (currentPage == 0.0) {
                                           _chooseTypeImage();
+                                          setState(() {
+                                            index = currentPage + 1;
+                                          });
                                         } else if (currentPage == 3.0 &&
                                                 otherReport == 'adult' ||
                                             otherReport == 'bite') {
                                           navigateOtherReport();
-                                          // Utils.addOtherReport(otherReport);
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           AdultReportPage()),
-                                          // );
                                         } else {
+                                          setState(() {
+                                            index = currentPage + 1;
+                                          });
                                           _pagesController
                                               .nextPage(
                                                   duration: Duration(
@@ -362,9 +362,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                   )
                                 : Container(
                                     width: double.infinity,
-                              height: 54,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 12),
+                                    height: 54,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
                                     child: Style.button(
                                         MyLocalizations.of(
                                             context, "continue_txt"),
@@ -372,7 +372,17 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                   );
                           }),
                     ))
-                  : Container(),
+                  : Container(
+                      width: double.infinity,
+                      height: 54,
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                      child: Style.button(
+                        MyLocalizations.of(context, "send_data"),
+                        () {
+                          // _saveData();
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

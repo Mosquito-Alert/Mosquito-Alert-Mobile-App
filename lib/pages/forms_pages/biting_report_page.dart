@@ -32,7 +32,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
   double percentUploaded = 0.0;
-  double index = 1;
+  double index = 0;
 
   List<Map> displayQuestions = [
     {
@@ -358,9 +358,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
               icon: Style.iconBack,
               onPressed: () {
                 double currentPage = _pagesController.page;
-                setState(() {
-                  index = currentPage + 2;
-                });
 
                 if (currentPage == 0.0) {
                   if (Utils.reportsList != null &&
@@ -384,6 +381,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
                       duration: Duration(microseconds: 300),
                       curve: Curves.ease);
                 }
+                setState(() {
+                  index = currentPage - 1;
+                });
               },
             ),
             title: Style.title(MyLocalizations.of(context, "biting_report_txt"),
@@ -440,64 +440,72 @@ class _BitingReportPageState extends State<BitingReportPage> {
                 children: _formsRepot,
                 // },
               ),
-              index != _formsRepot.length.toDouble()
-                  ? SafeArea(child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: StreamBuilder<bool>(
-                      stream: validStream.stream,
-                      initialData: false,
-                      builder: (BuildContext ctxt,
-                          AsyncSnapshot<bool> snapshot) {
-                        return snapshot.data
-                            ? Container(
-                          width: double.infinity,
-                          height: 54,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 12),
-                          child: Style.button(
-                              MyLocalizations.of(
-                                  context, "continue_txt"), () {
-                            double currentPage =
-                                _pagesController.page;
-                            setState(() {
-                              index = currentPage + 2;
-                            });
+              index != _formsRepot.length.toDouble() - 1
+                  ? SafeArea(
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: StreamBuilder<bool>(
+                              stream: validStream.stream,
+                              initialData: false,
+                              builder: (BuildContext ctxt,
+                                  AsyncSnapshot<bool> snapshot) {
+                                return snapshot.data
+                                    ? Container(
+                                        width: double.infinity,
+                                        height: 54,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 6, horizontal: 12),
+                                        child: Style.button(
+                                            MyLocalizations.of(
+                                                context, "continue_txt"), () {
+                                          double currentPage =
+                                              _pagesController.page;
 
-                            if (currentPage ==
-                                _formsRepot.length - 1) {
-                              navigateOtherReport();
-                            } else if (currentPage == 2 &&
-                                addMosquito) {
-                              Utils.addOtherReport('adult');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AdultReportPage()),
-                              );
-                            } else {
-                              _pagesController
-                                  .nextPage(
-                                  duration:
-                                  Duration(microseconds: 300),
-                                  curve: Curves.ease)
-                                  .then((value) => setValid(
-                                  widget.editReport != null));
-                            }
-                          }),
-                        )
-                            : Container(
-                          width: double.infinity,
-                          height: 54,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 12),
-                          child: Style.button(
-                              MyLocalizations.of(
-                                  context, "continue_txt"),
-                              null),
-                        );
-                      })),)
-                  : Container(),
+                                          if (currentPage == 2 && addMosquito) {
+                                            Utils.addOtherReport('adult');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AdultReportPage()),
+                                            );
+                                          } else {
+                                            setState(() {
+                                              index = currentPage + 1;
+                                            });
+                                            _pagesController
+                                                .nextPage(
+                                                    duration: Duration(
+                                                        microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(
+                                                    widget.editReport != null));
+                                          }
+                                        }),
+                                      )
+                                    : Container(
+                                        width: double.infinity,
+                                        height: 54,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 6, horizontal: 12),
+                                        child: Style.button(
+                                            MyLocalizations.of(
+                                                context, "continue_txt"),
+                                            null),
+                                      );
+                              })),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 54,
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                      child: Style.button(
+                        MyLocalizations.of(context, "send_data"),
+                        () {
+                          _saveData();
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

@@ -57,13 +57,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: double.infinity,
-              child: Style.button(MyLocalizations.of(context, "send_data"), () {
-                widget.addReport();
-                widget.setValid(true);
-              }),
-            ),
+
             // Style.title('¿Quieres reportar otro elemento?'),
             // SizedBox(
             //   height: 15,

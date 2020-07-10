@@ -31,14 +31,23 @@ class _BitingFormState extends State<BitingForm> {
   void initState() {
     super.initState();
     questions = [];
-    _textController.text = bites.toString();
+
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
+        if (q.question_id == 1) {
+          bites = int.parse(q.answer_value);
+        }
         if (q.question_id <= 4 || q.question_id == 13) {
           questions.add(q);
         }
+        if(q.answer_id == 132) {
+          showDaytime = true;
+        }
       }
     }
+    bool isValid = canContinue();
+    widget.setValid(isValid);
+    _textController.text = bites.toString();
     language = Utils.getLanguage();
   }
 
@@ -55,7 +64,8 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 24,
               ),
-              Style.titleMedium(MyLocalizations.of(context, 'bytes_and_place_report_txt'),
+              Style.titleMedium(
+                  MyLocalizations.of(context, 'bytes_and_place_report_txt'),
                   fontSize: 16),
               SizedBox(
                 height: 12,
@@ -64,20 +74,20 @@ class _BitingFormState extends State<BitingForm> {
                 children: <Widget>[
                   Style.button(
                     '-',
-                        () {
+                    () {
+                      bites = max(bites - 1, 0);
+                      _textController.text = bites.toString();
                       addToList("numero de picadas", "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
-                      bites = max(bites - 1, 0);
-                      _textController.text = bites.toString();
+                      bool isValid = canContinue();
+                      widget.setValid(isValid);
                     },
                   ),
                   SizedBox(
                     width: 12,
                   ),
-
-
                   Expanded(
                       flex: 1,
                       child: Style.textField(
@@ -86,21 +96,20 @@ class _BitingFormState extends State<BitingForm> {
                         context,
                         enabled: false,
                       )),
-
-
-                   SizedBox(
+                  SizedBox(
                     width: 12,
                   ),
                   Style.button(
                     '+',
                     () {
+                      bites = min(bites = bites + 1, 20);
+                      _textController.text = bites.toString();
                       addToList("numero de picadas", "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
-
-                      bites = min(bites = bites + 1, 20);
-                      _textController.text = bites.toString();
+                      bool isValid = canContinue();
+                      widget.setValid(isValid);
                     },
                   ),
                 ],
@@ -225,10 +234,12 @@ class _BitingFormState extends State<BitingForm> {
                       children: <Widget>[
                         //HEAD
                         GestureDetector(
-                          onTap: () {
-                            addToList('donde pico', "head",
-                                question_id: 2, answer_id: 1);
-                          },
+                          onTap: _validateAddBite()
+                              ? () {
+                                  addToList('donde pico', "head",
+                                      question_id: 2, answer_id: 1);
+                                }
+                              : null,
                           child: Center(
                             child: Container(
                               margin: EdgeInsets.only(top: 40),
@@ -243,10 +254,12 @@ class _BitingFormState extends State<BitingForm> {
                           children: <Widget>[
                             //ARM
                             GestureDetector(
-                              onTap: () {
-                                addToList('donde pico', "right arm",
-                                    question_id: 2, answer_id: 3);
-                              },
+                              onTap: _validateAddBite()
+                                  ? () {
+                                      addToList('donde pico', "right arm",
+                                          question_id: 2, answer_id: 3);
+                                    }
+                                  : null,
                               child: Container(
                                 color: Colors.blue.withOpacity(0.0),
                                 height: mediaQuery.height * 0.1,
@@ -255,10 +268,12 @@ class _BitingFormState extends State<BitingForm> {
                             ),
                             //CHEST
                             GestureDetector(
-                              onTap: () {
-                                addToList('donde pico', "chest",
-                                    question_id: 2, answer_id: 2);
-                              },
+                              onTap: _validateAddBite()
+                                  ? () {
+                                      addToList('donde pico', "chest",
+                                          question_id: 2, answer_id: 2);
+                                    }
+                                  : null,
                               child: Container(
                                 // margin: EdgeInsets.only(top: 5),
                                 color: Colors.transparent,
@@ -268,10 +283,12 @@ class _BitingFormState extends State<BitingForm> {
                             ),
                             //ARM
                             GestureDetector(
-                              onTap: () {
-                                addToList('donde pico', "left arm",
-                                    question_id: 2, answer_id: 4);
-                              },
+                              onTap: _validateAddBite()
+                                  ? () {
+                                      addToList('donde pico', "left arm",
+                                          question_id: 2, answer_id: 4);
+                                    }
+                                  : null,
                               child: Container(
                                 color: Colors.transparent,
                                 height: mediaQuery.height * 0.1,
@@ -285,10 +302,12 @@ class _BitingFormState extends State<BitingForm> {
                           children: <Widget>[
                             //LEG
                             GestureDetector(
-                              onTap: () {
-                                addToList('donde pico', "right leg",
-                                    question_id: 2, answer_id: 5);
-                              },
+                              onTap: _validateAddBite()
+                                  ? () {
+                                      addToList('donde pico', "right leg",
+                                          question_id: 2, answer_id: 5);
+                                    }
+                                  : null,
                               child: Container(
                                 color: Colors.transparent,
                                 height: mediaQuery.height * 0.15,
@@ -297,10 +316,12 @@ class _BitingFormState extends State<BitingForm> {
                             ),
                             //LEG
                             GestureDetector(
-                              onTap: () {
-                                addToList('donde pico', "left leg",
-                                    question_id: 2, answer_id: 6);
-                              },
+                              onTap: _validateAddBite()
+                                  ? () {
+                                      addToList('donde pico', "left leg",
+                                          question_id: 2, answer_id: 6);
+                                    }
+                                  : null,
                               child: Container(
                                 color: Colors.transparent,
                                 height: mediaQuery.height * 0.15,
@@ -519,29 +540,42 @@ class _BitingFormState extends State<BitingForm> {
     }
   }
 
+  bool _validateAddBite() {
+    int totalParts = 0;
+    questions.forEach((q) {
+      if (q.question_id == 2) {
+        totalParts = totalParts + int.parse(q.answer_value);
+      }
+    });
+    return totalParts < bites;
+  }
+
   bool canContinue() {
     if (questions.length > 1 && questions.isNotEmpty) {
-      int totalValues = bites;
-      int totalParts = 0;
+      bool totalBites = _validateAddBite();
       int totalQ3 = 0;
       int totalQ4 = 0;
+      int totalQ5 = 0;
 
       questions.forEach((q) {
-        // if (q.question_id == 1) {
-        //   totalValues = totalValues + int.parse(q.answer_value);
-        // }
-        if (q.question_id == 2) {
-          totalParts = totalParts + int.parse(q.answer_value);
-        }
         if (q.question_id == 4) totalQ3++;
         if (q.question_id == 13) totalQ4++;
+        if (q.question_id == 3) totalQ5++;
       });
 
-      if (totalValues == totalParts &&
-          totalParts > 0 &&
-          totalQ3 == 1 &&
-          totalQ4 == 1) return true;
-
+      if (questions.any((q) => q.answer_id == 132)) {
+        if (bites > 0 &&
+            !totalBites &&
+            totalQ3 == 1 &&
+            totalQ4 == 1 &&
+            totalQ5 == 1) {
+          return true;
+        }
+      } else {
+        if (bites > 0 && !totalBites && totalQ3 == 1 && totalQ4 == 1) {
+          return true;
+        }
+      }
       return false;
     }
     return false;
