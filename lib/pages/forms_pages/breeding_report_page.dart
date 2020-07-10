@@ -231,6 +231,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _createReport() async {
+    setState(() {
+      percentUploaded = 0.8;
+    });
     loadingStream.add(true);
     bool res = await Utils.createReport();
 
@@ -239,9 +242,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     }
     if (!res) {
       _showAlertKo();
-      setState(() {
-        percentUploaded = 1.0;
-      });
     } else {
       _showAlertOk();
       setState(() {

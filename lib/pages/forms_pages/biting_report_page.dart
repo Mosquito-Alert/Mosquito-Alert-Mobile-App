@@ -319,9 +319,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
     if (!res) {
       _showAlertKo();
-      setState(() {
-        percentUploaded = 1.0;
-      });
     } else {
       _showAlertOk();
       setState(() {

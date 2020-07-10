@@ -268,19 +268,20 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   _createReport() async {
     loadingStream.add(true);
-    bool res = await Utils.createReport();
+    setState(() {
+      percentUploaded = 0.8;
+    });
+    // bool res = await Utils.createReport();
 
-    if (!res) {
+    if (false) {
       _showAlertKo();
-      setState(() {
-        percentUploaded = 1.0;
-      });
     } else {
-      _showAlertOk();
+      // _showAlertOk();
       setState(() {
         percentUploaded = 1.0;
       });
     }
+    loadingStream.add(false);
     if (widget.editReport != null) {
       widget.loadData();
     }

@@ -50,23 +50,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   MyLocalizations.of(context, "notifications_title"),
                   fontSize: 16),
             ),
-            body: SingleChildScrollView(
-                child: Container(
+            body: notifications.length == 0 || notifications.isEmpty
+                ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Style.body(MyLocalizations.of(
+                          context, "no_notifications_yet_txt")),
+                    ),
+                  ])
+                : Container(
                     margin: EdgeInsets.all(15),
                     child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        // shrinkWrap: true,
                         itemCount: notifications.length,
                         itemBuilder: (ctx, index) {
-                          if (notifications.length == 0) {
-                            return Center(
-                              child: Style.body(MyLocalizations.of(
-                                  context, "no_notifications_yet_txt")),
-                            );
-                          }
                           return Opacity(
-                            opacity:
-                                !notifications[index].acknowledged ? 1 : 0.5,
+                            opacity: !notifications[index].acknowledged
+                                ? 1
+                                : 0.5,
                             child: Card(
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -81,7 +84,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                       context, notifications[index]);
                                 },
                                 title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Style.titleMedium(
                                         notifications[index].expert_comment,
@@ -104,7 +108,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               ),
                             ),
                           );
-                        })))),
+                        }))),
         StreamBuilder<bool>(
             stream: loadingStream.stream,
             initialData: true,
