@@ -1,14 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Utils.cameras = await availableCameras();
+main() {
   runApp(MyApp());
 }
 

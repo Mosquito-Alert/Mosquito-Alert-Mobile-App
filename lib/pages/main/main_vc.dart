@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -14,6 +13,8 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 
 class MainVC extends StatefulWidget {
   @override
@@ -29,18 +30,20 @@ class _MainVCState extends State<MainVC> {
   @override
   void initState() {
     super.initState();
-    UserManager.startFirstTime(context);
+
     _getData();
+    _bgTracking();
   }
 
   _getData() async {
+    await UserManager.startFirstTime();
     var user = await UserManager.fetchUser();
     userUuid = await UserManager.getUUID();
     language = Utils.getLanguage();
     int points = UserManager.userScore;
-    if (points == null) {
-      points = await ApiSingleton().getUserScores();
-    }
+    // if (points == null) {
+    //   points = await ApiSingleton().getUserScores();
+    // }
 
     if (user != null) {
       setState(() {
@@ -50,6 +53,48 @@ class _MainVCState extends State<MainVC> {
     setState(() {
       userScore = points;
     });
+  }
+
+  _bgTracking() {
+    // 1.  Listen to events (See docs for all 12 available events).
+
+    // Fired whenever a location is recorded
+    bg.BackgroundGeolocation.onLocation(_onLocation);
+
+    ////
+    // 2.  Configure the plugin
+    //
+    bg.BackgroundGeolocation.ready(bg.Config(
+            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+            // distanceFilter: 1000.0,
+            stopOnTerminate: false,
+            startOnBoot: true,
+            debug: true,
+            // deferTime: 3600000, //1h
+            deferTime: 500,
+            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+        .then((bg.State state) {
+      if (!state.enabled) {
+        ////
+        // 3.  Start the plugin.
+        //
+        bg.BackgroundGeolocation.start().then((bg.State bgState) {
+          print('[start] success - ${bgState}');
+        });
+      }
+    });
+  }
+
+  void _onLocation(bg.Location location) {
+    print(location);
+
+    double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() +
+        Utils.maskCoordsValue;
+    double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() +
+        Utils.maskCoordsValue;
+
+    // ApiSingleton()
+    //     .sendFixes(lat, lon, location.timestamp, location.battery.level);
   }
 
   @override

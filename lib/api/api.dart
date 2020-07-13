@@ -40,6 +40,9 @@ class ApiSingleton {
   //Notifications
   static const notifications = '/user_notifications/';
 
+  //Fixes
+  static const fixes = '/fixes/';
+
   //Headders
   var headers = {
     "Content-Type": " application/json",
@@ -356,7 +359,7 @@ class ApiSingleton {
       var body = json.decode(response.body);
       return body['id'];
     } catch (e) {
-      print(e);
+      // print(e);
       return false;
     }
   }
@@ -553,6 +556,37 @@ class ApiSingleton {
       return response.statusCode == 200;
     } catch (c) {
       // print(c.message);
+      return false;
+    }
+  }
+
+  Future<dynamic> sendFixes(lat, lon, time, power) async {
+    try {
+      var userIdFix = await UserManager.getTrackingId();
+
+      var body = {
+        'user': userIdFix,
+        'fix_time': time,
+        'masked_lat': lat,
+        'masked_lon': lon,
+        'power': power,
+        'phone_upload_time': DateTime.now().toIso8601String(),
+      };
+
+      final response = await http.post(
+        '$serverUrl$fixes',
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode != 201) {
+        print(
+            "Request: ${response.request.toString()} -> Response: ${response.body}");
+        return false;
+      }
+
+      return true;
+    } catch (e) {
       return false;
     }
   }

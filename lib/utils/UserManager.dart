@@ -10,20 +10,23 @@ class UserManager {
   static var profileUUIDs;
   static int userScore; 
 
-  static Future startFirstTime(context) async {
+  static Future<bool> startFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('firstTime');
 
     if (firstTime == null || !firstTime) {
       prefs.setBool("firstTime", true);
       var uuid = new Uuid().v4();
+      var trackingUuid = new Uuid().v4();
       prefs.setString("uuid", uuid);
+      prefs.setString("trackingUUID", trackingUuid);
       await ApiSingleton().createUser(uuid);
       setUserScores(1); 
     }
     fetchUser();
     userScore = await ApiSingleton().getUserScores();
     setUserScores(userScore); 
+    return true;
   }
 
   static fetchUser() async {
@@ -51,6 +54,11 @@ class UserManager {
   static Future<String> getUUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.get("uuid");
+  }
+
+  static Future<String> getTrackingId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.get("trackingUUID");
   }
 
   static Future<String> getUserName() async {

@@ -25,6 +25,8 @@ class Utils {
 
   //images
   static List<Map> imagePath;
+  static double maskCoordsValue = 0.025;
+
 
   static void saveImgPath(File path) {
     if (imagePath == null) {
