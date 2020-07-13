@@ -30,6 +30,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
+   StreamController<double> percentStream = new StreamController<double>.broadcast();
 
   List<Map> displayQuestions = [
     {
@@ -140,7 +141,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   bool showCamera = false;
   String otherReport;
 
-  double percentUploaded = 0.0;
   double index = 1.0;
 
   @override
@@ -166,7 +166,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         setValid,
         addOtherReport: addOtherReport,
       ),
-      AddOtherReportPage(_createReport, setValid, percentUploaded),
+      AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
     if (Utils.reportsList.isEmpty && Utils.reportsList.length == 1) {
@@ -232,7 +232,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   _createReport() async {
     setState(() {
-      percentUploaded = 0.8;
+      percentStream.add(0.8);
     });
     loadingStream.add(true);
     bool res = await Utils.createReport();
@@ -245,7 +245,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     } else {
       _showAlertOk();
       setState(() {
-        percentUploaded = 1.0;
+        percentStream.add(1.0);
       });
     }
   }

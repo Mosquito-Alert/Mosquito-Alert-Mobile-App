@@ -215,7 +215,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
                     return StreamBuilder<List<Report>>(
                       stream: dataStream.stream,
-                      initialData: data,
+                      initialData: data
+                          .where((element) => UserManager.profileUUIDs
+                              .any((id) => id == element.user))
+                          .toList(),
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Report>> snapshot) {
                         return ReportsList(
@@ -373,9 +376,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
         dismissible: true,
         builder: (BuildContext bc) {
           return Container(
-            height: isMine
-                ? MediaQuery.of(context).size.height * 0.80
-                : MediaQuery.of(context).size.height * 0.45,
+            constraints: BoxConstraints(
+              maxHeight: isMine
+                  ? MediaQuery.of(context).size.height * 0.85
+                  : MediaQuery.of(context).size.height * 0.45,
+              minHeight: isMine
+                  ? MediaQuery.of(context).size.height * 0.55
+                  : MediaQuery.of(context).size.height * 0.45,
+            ),
             // color: Colors.white,
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -383,33 +391,36 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 )),
-            child: SafeArea(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: isMine
+                    ? MediaQuery.of(context).size.height * 0.9
+                    : MediaQuery.of(context).size.height * 0.45,
+              ),
+              // height: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 15),
+              child: SingleChildScrollView(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
                         height: 15,
                       ),
-                      Expanded(
-                        child: Stack(
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: GoogleMap(
-                                rotateGesturesEnabled: false,
-                                mapToolbarEnabled: false,
-                                scrollGesturesEnabled: false,
-                                zoomControlsEnabled: false,
-                                zoomGesturesEnabled: false,
-                                myLocationButtonEnabled: false,
-                                onMapCreated: _onMiniMapCreated,
-                                initialCameraPosition: _getPosition(report),
-                                markers: _getMarker(report),
-                              ),
-                            ),
-                          ],
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: GoogleMap(
+                            rotateGesturesEnabled: false,
+                            mapToolbarEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomControlsEnabled: false,
+                            zoomGesturesEnabled: false,
+                            myLocationButtonEnabled: false,
+                            onMapCreated: _onMiniMapCreated,
+                            initialCameraPosition: _getPosition(report),
+                            markers: _getMarker(report),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -484,181 +495,171 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         ],
                       ),
                       isMine
-                          ? Expanded(
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Divider(),
-                                  ),
-                                  report.photos.isNotEmpty
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Style.titleMedium(
-                                                MyLocalizations.of(context,
-                                                    "reported_images_txt"),
-                                                fontSize: 14),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Container(
-                                              height: 60,
-                                              child: ListView.builder(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemCount:
-                                                      report.photos.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Container(
-                                                      margin: EdgeInsets.only(
-                                                          right: 5),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        child: Image.network(
-                                                          'http://humboldt.ceab.csic.es/media/' +
-                                                              report
-                                                                  .photos[index]
-                                                                  .photo,
-                                                          height: 60,
-                                                          width: 60,
-                                                          fit: BoxFit.cover,
-                                                        ),
+                          ? Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: Divider(),
+                                ),
+                                report.photos.isNotEmpty
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Style.titleMedium(
+                                              MyLocalizations.of(context,
+                                                  "reported_images_txt"),
+                                              fontSize: 14),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            height: 60,
+                                            child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: report.photos.length,
+                                                itemBuilder: (context, index) {
+                                                  return Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: 5),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      child: Image.network(
+                                                        'http://humboldt.ceab.csic.es/media/' +
+                                                            report.photos[index]
+                                                                .photo,
+                                                        height: 60,
+                                                        width: 60,
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                    );
-                                                  }),
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                          ],
-                                        )
-                                      : Container(),
-                                  Expanded(
-                                    child: ListView.builder(
-                                        itemCount: report.responses.length,
-                                        itemBuilder: (context, index) {
-                                          return Column(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 20.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    report.responses[index]
-                                                                .question !=
-                                                            null
-                                                        ? Expanded(
-                                                            flex: 3,
-                                                            child: Style.titleMedium(
+                                                    ),
+                                                  );
+                                                }),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: report.responses.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                report.responses[index]
+                                                            .question !=
+                                                        null
+                                                    ? Expanded(
+                                                        flex: 3,
+                                                        child:
+                                                            Style.titleMedium(
                                                                 report
                                                                     .responses[
                                                                         index]
                                                                     .question,
                                                                 fontSize: 14),
-                                                          )
-                                                        : Container(),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: Style.body(
-                                                          report
-                                                                      .responses[
-                                                                          index]
-                                                                      .answer !=
-                                                                  ' '
-                                                              ? report
-                                                                  .responses[
-                                                                      index]
-                                                                  .answer
-                                                              : report
-                                                                  .responses[
-                                                                      index]
-                                                                  .answer_value,
-                                                          textAlign:
-                                                              TextAlign.end),
-                                                    ),
-                                                  ],
+                                                      )
+                                                    : Container(),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Style.body(
+                                                      report.responses[index]
+                                                                  .answer !=
+                                                              ' '
+                                                          ? report
+                                                              .responses[index]
+                                                              .answer
+                                                          : report
+                                                              .responses[index]
+                                                              .answer_value,
+                                                      textAlign: TextAlign.end),
                                                 ),
-                                              ),
-                                            ],
-                                          );
-                                        }),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                          child: Style.noBgButton(
-                                              MyLocalizations.of(
-                                                  context, "edit"), () {
-                                        if (report.type == "bite") {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BitingReportPage(
-                                                      editReport: report,
-                                                      loadData: _updateData,
-                                                    )),
-                                          );
-                                        } else if (report.type == "adult") {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AdultReportPage(
-                                                      editReport: report,
-                                                      loadData: _updateData,
-                                                    )),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BreedingReportPage(
-                                                      editReport: report,
-                                                      loadData: _updateData,
-                                                    )),
-                                          );
-                                        }
-                                      })),
-                                      Expanded(
-                                          child: Style.noBgButton(
-                                              MyLocalizations.of(
-                                                  context, "delete"), () {
-                                        Utils.showAlertYesNo(
-                                            MyLocalizations.of(
-                                                context, "delete_report_title"),
-                                            MyLocalizations.of(
-                                                context, "delete_report_txt"),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                        child: Style.noBgButton(
+                                            MyLocalizations.of(context, "edit"),
                                             () {
-                                          _deleteReport(report);
-                                        }, context);
-                                        //
-                                      }, textColor: Colors.red))
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ),
+                                      if (report.type == "bite") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BitingReportPage(
+                                                    editReport: report,
+                                                    loadData: _updateData,
+                                                  )),
+                                        );
+                                      } else if (report.type == "adult") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AdultReportPage(
+                                                    editReport: report,
+                                                    loadData: _updateData,
+                                                  )),
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BreedingReportPage(
+                                                    editReport: report,
+                                                    loadData: _updateData,
+                                                  )),
+                                        );
+                                      }
+                                    })),
+                                    Expanded(
+                                        child: Style.noBgButton(
+                                            MyLocalizations.of(
+                                                context, "delete"), () {
+                                      Utils.showAlertYesNo(
+                                          MyLocalizations.of(
+                                              context, "delete_report_title"),
+                                          MyLocalizations.of(
+                                              context, "delete_report_txt"),
+                                          () {
+                                        _deleteReport(report);
+                                      }, context);
+                                      //
+                                    }, textColor: Colors.red))
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
                             )
                           : Container(),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                     ]),
               ),
@@ -721,7 +722,12 @@ class _MyReportsPageState extends State<MyReportsPage> {
       }
     }
 
-    dataStream.add(data);
+    List<Report> myData = data
+        .where((element) =>
+            UserManager.profileUUIDs.any((id) => id == element.user))
+        .toList();
+    print(myData);
+    dataStream.add(myData);
 
     clusteringHelper.updateData(listMarkers);
     _listMarkers = listMarkers;

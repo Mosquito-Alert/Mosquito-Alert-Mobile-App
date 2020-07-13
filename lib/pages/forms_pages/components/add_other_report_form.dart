@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -10,7 +12,7 @@ import '../../../utils/MyLocalizations.dart';
 class AddOtherReportPage extends StatefulWidget {
   final Function addReport;
   final Function setValid;
-  final double percent;
+  final StreamController<double> percent;
 
   AddOtherReportPage(this.addReport, this.setValid, this.percent);
 
@@ -44,14 +46,20 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
             ),
             Container(
               width: double.infinity,
-              child: LinearPercentIndicator(
-                // width: MediaQuery.of(context).size.width * 0.9,
-                lineHeight: 15.0,
-                percent: widget.percent,
-                animateFromLastPercent: true,
-                animation: true,
-                backgroundColor: Colors.grey.withOpacity(0.3),
-                progressColor: Style.colorPrimary,
+              child: StreamBuilder(
+                stream: widget.percent.stream,
+                initialData: 0.0,
+                builder: (context, AsyncSnapshot<double> snapshot) {
+                  return LinearPercentIndicator(
+                    // width: MediaQuery.of(context).size.width * 0.9,
+                    lineHeight: 15.0,
+                    percent: snapshot.data,
+                    animateFromLastPercent: true,
+                    animation: true,
+                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    progressColor: Style.colorPrimary,
+                  );
+                },
               ),
             ),
             SizedBox(

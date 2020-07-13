@@ -31,7 +31,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
   bool validContent = false;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
-  double percentUploaded = 0.0;
+  StreamController<double> percentStream =
+      new StreamController<double>.broadcast();
   double index = 0;
 
   List<Map> displayQuestions = [
@@ -56,39 +57,39 @@ class _BitingReportPageState extends State<BitingReportPage> {
         }
       ]
     },
-    // {
-    //   "question": {
-    //     "id": 2,
-    //     "text": {"en": "Where have you been bitten?", "ca": "On t'han picat?"}
-    //   },
-    //   "answers": [
-    //     //Bites by body are - value equals number of bites in each area, must be = to total number of bites
-    //     {
-    //       "id": 21,
-    //       "text": {"en": "Head", "ca": "Cap"}
-    //     },
-    //     {
-    //       "id": 22,
-    //       "text": {"en": "Left arm", "ca": "Braç esquerre"}
-    //     },
-    //     {
-    //       "id": 23,
-    //       "text": {"en": "Right arm", "ca": "Braç dret"}
-    //     },
-    //     {
-    //       "id": 24,
-    //       "text": {"en": "Chest", "ca": "Tronc"}
-    //     },
-    //     {
-    //       "id": 25,
-    //       "text": {"en": "Left leg", "ca": "Cama esquerra"}
-    //     },
-    //     {
-    //       "id": 26,
-    //       "text": {"en": "Right leg", "ca": "Cama dreta"}
-    //     }
-    //   ]
-    // },
+    {
+      "question": {
+        "id": 2,
+        "text": {"en": "Where have you been bitten?", "ca": "On t'han picat?", "es": "¿Donde te han picado?"}
+      },
+      "answers": [
+        //Bites by body are - value equals number of bites in each area, must be = to total number of bites
+        {
+          "id": 21,
+          "text": {"en": "Head", "ca": "Cap", "es": "Cap"}
+        },
+        {
+          "id": 22,
+          "text": {"en": "Left arm", "ca": "Braç esquerre", "es": "Braç esquerre"}
+        },
+        {
+          "id": 23,
+          "text": {"en": "Right arm", "ca": "Braç dret", "es": "Braç dret"}
+        },
+        {
+          "id": 24,
+          "text": {"en": "Chest", "ca": "Tronc", "es": "Tronc"}
+        },
+        {
+          "id": 25,
+          "text": {"en": "Left leg", "ca": "Cama esquerra", "es": "Cama esquerra"}
+        },
+        {
+          "id": 26,
+          "text": {"en": "Right leg", "ca": "Cama dreta", "es": "Cama dreta"}
+        }
+      ]
+    },
     {
       "question": {
         "id": 4,
@@ -247,15 +248,17 @@ class _BitingReportPageState extends State<BitingReportPage> {
     _formsRepot = [
       BitingForm(
         [
+          displayQuestions.elementAt(0),
           displayQuestions.elementAt(1),
           displayQuestions.elementAt(2),
           displayQuestions.elementAt(3),
+          displayQuestions.elementAt(4),
         ],
         setValid,
       ),
       BitingLocationForm(setValid),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(4), setValid),
-      AddOtherReportPage(_saveData, setValid, percentUploaded),
+      CouldSeeForm(addAdultReport, displayQuestions.elementAt(5), setValid),
+      AddOtherReportPage(_saveData, setValid, percentStream),
     ];
 
     if (Utils.reportsList.isEmpty && Utils.reportsList.length == 1) {
@@ -309,7 +312,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   _saveData() async {
     setState(() {
-      percentUploaded = 0.8;
+      percentStream.add(0.8);
     });
     loadingStream.add(true);
     bool res = await Utils.createReport();
@@ -322,7 +325,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     } else {
       _showAlertOk();
       setState(() {
-        percentUploaded = 1.0;
+        percentStream.add(1.0);
       });
     }
   }

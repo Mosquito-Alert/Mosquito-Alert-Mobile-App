@@ -20,6 +20,8 @@ class BitingForm extends StatefulWidget {
 
 class _BitingFormState extends State<BitingForm> {
   List<Question> questions;
+  List<Map> displayQuestions = [];
+  Map bodyQuestion = {};
   String language;
   int bites = 0;
 
@@ -40,7 +42,7 @@ class _BitingFormState extends State<BitingForm> {
         if (q.question_id <= 4 || q.question_id == 13) {
           questions.add(q);
         }
-        if(q.answer_id == 132) {
+        if (q.answer_id == 132) {
           showDaytime = true;
         }
       }
@@ -49,6 +51,11 @@ class _BitingFormState extends State<BitingForm> {
     widget.setValid(isValid);
     _textController.text = bites.toString();
     language = Utils.getLanguage();
+    displayQuestions =
+        widget.displayQuestions.where((q) => q['question']['id'] > 2).toList();
+    bodyQuestion = widget.displayQuestions
+        .where((q) => q['question']['id'] == 2)
+        .toList()[0];
   }
 
   @override
@@ -77,7 +84,10 @@ class _BitingFormState extends State<BitingForm> {
                     () {
                       bites = max(bites - 1, 0);
                       _textController.text = bites.toString();
-                      addToList("numero de picadas", "",
+                      var question = widget.displayQuestions
+                          .where((q) => q['question']['id'] == 1)
+                          .toList();
+                      addToList(question[0]['question']['text'][language], "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
@@ -104,7 +114,10 @@ class _BitingFormState extends State<BitingForm> {
                     () {
                       bites = min(bites = bites + 1, 20);
                       _textController.text = bites.toString();
-                      addToList("numero de picadas", "",
+                      var question = widget.displayQuestions
+                          .where((q) => q['question']['id'] == 1)
+                          .toList();
+                      addToList(question[0]['question']['text'][language], "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
@@ -124,108 +137,88 @@ class _BitingFormState extends State<BitingForm> {
                           'assets/img/ic_full_body_off.png',
                           width: mediaQuery.width,
                         ),
-                        questions.any((question) => question.answer_id == 6)
-                            ? Image.asset(
-                                'assets/img/ic_left_leg_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                "assets/img/ic_left_leg_off.png",
-                                width: mediaQuery.width,
-                              ),
-                        questions.any((question) => question.answer_id == 5)
-                            ? Image.asset(
-                                'assets/img/ic_right_leg_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                'assets/img/ic_right_leg_off.png',
-                                width: mediaQuery.width,
-                              ),
-                        questions.any((question) => question.answer_id == 4)
-                            ? Image.asset(
-                                'assets/img/ic_left_hand_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                'assets/img/ic_left_hand_off.png',
-                                width: mediaQuery.width,
-                              ),
-                        questions.any((question) => question.answer_id == 3)
-                            ? Image.asset(
-                                'assets/img/ic_right_hand_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                'assets/img/ic_right_hand_off.png',
-                                width: mediaQuery.width,
-                              ),
-                        questions.any((question) => question.answer_id == 1)
-                            ? Image.asset(
-                                'assets/img/ic_head_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                'assets/img/ic_head_off.png',
-                                width: mediaQuery.width,
-                              ),
-                        questions.any((question) => question.answer_id == 2)
-                            ? Image.asset(
-                                'assets/img/ic_chest_on.png',
-                                width: mediaQuery.width,
-                              )
-                            : Image.asset(
-                                'assets/img/ic_chest_off.png',
-                                width: mediaQuery.width,
-                              ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 25)
+                              ? 'assets/img/ic_left_leg_on.png'
+                              : "assets/img/ic_left_leg_off.png",
+                          width: mediaQuery.width,
+                        ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 26)
+                              ? 'assets/img/ic_right_leg_on.png'
+                              : 'assets/img/ic_right_leg_off.png',
+                          width: mediaQuery.width,
+                        ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 22)
+                              ? 'assets/img/ic_left_hand_on.png'
+                              : 'assets/img/ic_left_hand_off.png',
+                          width: mediaQuery.width,
+                        ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 23)
+                              ? 'assets/img/ic_right_hand_on.png'
+                              : 'assets/img/ic_right_hand_off.png',
+                          width: mediaQuery.width,
+                        ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 21)
+                              ? 'assets/img/ic_head_on.png'
+                              : 'assets/img/ic_head_off.png',
+                          width: mediaQuery.width,
+                        ),
+                        Image.asset(
+                          questions.any((question) => question.answer_id == 24)
+                              ? 'assets/img/ic_chest_on.png'
+                              : 'assets/img/ic_chest_off.png',
+                          width: mediaQuery.width,
+                        ),
                         Positioned(
                           top: mediaQuery.height * 0.05,
                           left: mediaQuery.width * 0.37,
                           child: questions
-                                  .any((question) => question.answer_id == 1)
-                              ? Style.body(getIndexBody(1))
-                              : Container(
-                                  color: Colors.green.withOpacity(0.2),
-                                ),
+                                  .any((question) => question.answer_id == 21)
+                              ? Style.body(getIndexBody(21))
+                              : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.21,
                           child: questions
-                                  .any((question) => question.answer_id == 3)
-                              ? Style.body(getIndexBody(3))
+                                  .any((question) => question.answer_id == 23)
+                              ? Style.body(getIndexBody(23))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.70,
                           child: questions
-                                  .any((question) => question.answer_id == 4)
-                              ? Style.body(getIndexBody(4))
+                                  .any((question) => question.answer_id == 22)
+                              ? Style.body(getIndexBody(22))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.23,
                           left: mediaQuery.width * 0.56,
                           child: questions
-                                  .any((question) => question.answer_id == 2)
-                              ? Style.body(getIndexBody(2))
+                                  .any((question) => question.answer_id == 24)
+                              ? Style.body(getIndexBody(24))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.28,
                           child: questions
-                                  .any((question) => question.answer_id == 5)
-                              ? Style.body(getIndexBody(5))
+                                  .any((question) => question.answer_id == 26)
+                              ? Style.body(getIndexBody(26))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.63,
                           child: questions
-                                  .any((question) => question.answer_id == 6)
-                              ? Style.body(getIndexBody(6))
+                                  .any((question) => question.answer_id == 25)
+                              ? Style.body(getIndexBody(25))
                               : Container(),
                         ),
                       ],
@@ -236,8 +229,13 @@ class _BitingFormState extends State<BitingForm> {
                         GestureDetector(
                           onTap: _validateAddBite()
                               ? () {
-                                  addToList('donde pico', "head",
-                                      question_id: 2, answer_id: 1);
+                                  addToList(
+                                      bodyQuestion['question']['text']
+                                          [language],
+                                      bodyQuestion['answers'][0]['text']
+                                          [language],
+                                      question_id: 2,
+                                      answer_id: 21);
                                 }
                               : null,
                           child: Center(
@@ -256,8 +254,13 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: _validateAddBite()
                                   ? () {
-                                      addToList('donde pico', "right arm",
-                                          question_id: 2, answer_id: 3);
+                                      addToList(
+                                          bodyQuestion['question']['text']
+                                              [language],
+                                          bodyQuestion['answers'][2]['text']
+                                              [language],
+                                          question_id: 2,
+                                          answer_id: 23);
                                     }
                                   : null,
                               child: Container(
@@ -270,8 +273,13 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: _validateAddBite()
                                   ? () {
-                                      addToList('donde pico', "chest",
-                                          question_id: 2, answer_id: 2);
+                                      addToList(
+                                          bodyQuestion['question']['text']
+                                              [language],
+                                          bodyQuestion['answers'][3]['text']
+                                              [language],
+                                          question_id: 2,
+                                          answer_id: 24);
                                     }
                                   : null,
                               child: Container(
@@ -285,8 +293,13 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: _validateAddBite()
                                   ? () {
-                                      addToList('donde pico', "left arm",
-                                          question_id: 2, answer_id: 4);
+                                      addToList(
+                                          bodyQuestion['question']['text']
+                                              [language],
+                                          bodyQuestion['answers'][1]['text']
+                                              [language],
+                                          question_id: 2,
+                                          answer_id: 22);
                                     }
                                   : null,
                               child: Container(
@@ -304,8 +317,13 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: _validateAddBite()
                                   ? () {
-                                      addToList('donde pico', "right leg",
-                                          question_id: 2, answer_id: 5);
+                                      addToList(
+                                          bodyQuestion['question']['text']
+                                              [language],
+                                          bodyQuestion['answers'][5]['text']
+                                              [language],
+                                          question_id: 2,
+                                          answer_id: 26);
                                     }
                                   : null,
                               child: Container(
@@ -318,8 +336,13 @@ class _BitingFormState extends State<BitingForm> {
                             GestureDetector(
                               onTap: _validateAddBite()
                                   ? () {
-                                      addToList('donde pico', "left leg",
-                                          question_id: 2, answer_id: 6);
+                                      addToList(
+                                          bodyQuestion['question']['text']
+                                              [language],
+                                          bodyQuestion['answers'][4]['text']
+                                              [language],
+                                          question_id: 2,
+                                          answer_id: 25);
                                     }
                                   : null,
                               child: Container(
@@ -361,8 +384,8 @@ class _BitingFormState extends State<BitingForm> {
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: showDaytime
-                    ? widget.displayQuestions.length
-                    : widget.displayQuestions.length - 1,
+                    ? displayQuestions.length
+                    : displayQuestions.length - 1,
                 itemBuilder: (context, i) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,8 +394,7 @@ class _BitingFormState extends State<BitingForm> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                          widget.displayQuestions[i]['question']['text']
-                              [language],
+                          displayQuestions[i]['question']['text'][language],
                           fontSize: 16),
                       SizedBox(
                         height: 10,
@@ -382,8 +404,7 @@ class _BitingFormState extends State<BitingForm> {
                         child: GridView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount:
-                                widget.displayQuestions[i]['answers'].length,
+                            itemCount: displayQuestions[i]['answers'].length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -391,14 +412,14 @@ class _BitingFormState extends State<BitingForm> {
                               // crossAxisSpacing: 10,
                             ),
                             itemBuilder: (context, index) {
-                              String answerTxt = widget.displayQuestions[i]
-                                  ['answers'][index]['text'][language];
-                              String questionTxt = widget.displayQuestions[i]
+                              String answerTxt = displayQuestions[i]['answers']
+                                  [index]['text'][language];
+                              String questionTxt = displayQuestions[i]
                                   ['question']['text'][language];
                               int questionId =
-                                  widget.displayQuestions[i]['question']['id'];
-                              int answerId = widget.displayQuestions[i]
-                                  ['answers'][index]['id'];
+                                  displayQuestions[i]['question']['id'];
+                              int answerId =
+                                  displayQuestions[i]['answers'][index]['id'];
                               return Container(
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(

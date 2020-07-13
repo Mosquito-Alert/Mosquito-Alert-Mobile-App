@@ -33,7 +33,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
-  double percentUploaded = 0.0;
+  StreamController<double> percentStream = new StreamController<double>.broadcast();
   double index;
 
   List<Map> displayQuestions = [
@@ -199,7 +199,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
       BitingLocationForm(setValid),
       CouldSeeForm(addBitingReport, displayQuestions.elementAt(2), setValid),
-      AddOtherReportPage(_createReport, setValid, percentUploaded),
+      AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
     if (Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
@@ -269,16 +269,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
   _createReport() async {
     loadingStream.add(true);
     setState(() {
-      percentUploaded = 0.8;
+      percentStream.add(0.8);
     });
-    // bool res = await Utils.createReport();
+    bool res = await Utils.createReport();
 
-    if (false) {
+    if (!res) {
       _showAlertKo();
     } else {
-      // _showAlertOk();
+      _showAlertOk();
       setState(() {
-        percentUploaded = 1.0;
+        percentStream.add(1.0);
       });
     }
     loadingStream.add(false);

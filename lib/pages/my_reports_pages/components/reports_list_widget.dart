@@ -15,7 +15,6 @@ class ReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(reports);
     if (reports.isEmpty ||
         !reports.any((report) =>
             UserManager.profileUUIDs.any((id) => id == report.user))) {
@@ -24,12 +23,10 @@ class ReportsList extends StatelessWidget {
       );
     } else {
       return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 25),
         child: ListView.builder(
-          itemCount: reports.length,
-          itemBuilder: (context, index) {
-            if (UserManager.profileUUIDs
-                .any((id) => id == reports[index].user)) {
+            itemCount: reports.length,
+            itemBuilder: (context, index) {
               return FutureBuilder(
                   future: getCity(reports[index]),
                   builder: (context, AsyncSnapshot snapshot) {
@@ -111,9 +108,7 @@ class ReportsList extends StatelessWidget {
                           )
                         : Container();
                   });
-            }
-          },
-        ),
+            }),
       );
     }
   }
