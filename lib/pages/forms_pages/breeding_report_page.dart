@@ -406,7 +406,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                         child: Style.button(
                           MyLocalizations.of(context, "send_data"),
                           () {
-                            // _saveData();
+                            _createReport();
                           },
                         ),
                       ),

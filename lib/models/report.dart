@@ -26,6 +26,7 @@ class Report {
   String os_version;
   String os_language;
   String app_language;
+  String displayCity;
 
   Report({
     this.version_UUID,
@@ -53,6 +54,7 @@ class Report {
     this.os_language,
     this.os_version,
     this.app_language,
+    this.displayCity,
   });
 
   Report.fromJson(Map<dynamic, dynamic> json) {

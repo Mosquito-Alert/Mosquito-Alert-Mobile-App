@@ -1,13 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/main/components/custom_card_wodget.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../../../utils/MyLocalizations.dart';
 
 class AddOtherReportPage extends StatefulWidget {
   final Function addReport;

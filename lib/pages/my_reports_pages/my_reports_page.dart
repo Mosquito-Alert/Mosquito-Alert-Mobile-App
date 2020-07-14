@@ -709,6 +709,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
           list[i].selected_location_lat != null &&
               list[i].selected_location_lon != null) {
         data.add(list[i]);
+
         listMarkers.add(ReportAndGeohash(
             list[i],
             LatLng(
@@ -727,12 +728,29 @@ class _MyReportsPageState extends State<MyReportsPage> {
             UserManager.profileUUIDs.any((id) => id == element.user))
         .toList();
 
+    myData
+        .map((element) async => element.displayCity = await getCity(element))
+        .toList();
+
     dataStream.add(myData);
 
     clusteringHelper.updateData(listMarkers);
     _listMarkers = listMarkers;
 
     loadingStream.add(false);
+  }
+
+  Future<String> getCity(report) async {
+    Coordinates coord;
+    if (report.location_choice == "current") {
+      coord =
+          Coordinates(report.current_location_lat, report.current_location_lon);
+    } else if (report.location_choice == 'selected') {
+      coord = Coordinates(
+          report.selected_location_lat, report.selected_location_lon);
+    }
+    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
+    return address[0].locality;
   }
 
   _deleteReport(report) async {

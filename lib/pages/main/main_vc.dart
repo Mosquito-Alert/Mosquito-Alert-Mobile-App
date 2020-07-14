@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -32,7 +33,6 @@ class _MainVCState extends State<MainVC> {
     super.initState();
 
     _getData();
-    _bgTracking();
   }
 
   _getData() async {
@@ -50,11 +50,11 @@ class _MainVCState extends State<MainVC> {
     setState(() {
       userScore = points;
     });
+    _bgTracking();
   }
 
   _bgTracking() async {
     bool trackingDisabled = await UserManager.getTracking();
-    print(trackingDisabled);
     if (!trackingDisabled || trackingDisabled == null) {
       // 1.  Listen to events (See docs for all 12 available events).
 
@@ -94,8 +94,8 @@ class _MainVCState extends State<MainVC> {
     double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() +
         Utils.maskCoordsValue;
 
-    // ApiSingleton()
-    //     .sendFixes(lat, lon, location.timestamp, location.battery.level);
+    ApiSingleton()
+        .sendFixes(lat, lon, location.timestamp, location.battery.level);
   }
 
   @override
