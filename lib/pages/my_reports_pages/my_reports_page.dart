@@ -726,7 +726,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         .where((element) =>
             UserManager.profileUUIDs.any((id) => id == element.user))
         .toList();
-    print(myData);
+
     dataStream.add(myData);
 
     clusteringHelper.updateData(listMarkers);

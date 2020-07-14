@@ -8,7 +8,7 @@ class UserManager {
 
   static FirebaseUser user;
   static var profileUUIDs;
-  static int userScore; 
+  static int userScore;
 
   static Future<bool> startFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -20,12 +20,13 @@ class UserManager {
       var trackingUuid = new Uuid().v4();
       prefs.setString("uuid", uuid);
       prefs.setString("trackingUUID", trackingUuid);
+      prefs.setBool("trackingDisabled", false);
       await ApiSingleton().createUser(uuid);
-      setUserScores(1); 
+      setUserScores(1);
     }
     fetchUser();
     userScore = await ApiSingleton().getUserScores();
-    setUserScores(userScore); 
+    setUserScores(userScore);
     return true;
   }
 
@@ -45,9 +46,14 @@ class UserManager {
     prefs.setString("firebaseId", id);
   }
 
-   static Future<void> setUserScores(scores) async {
+  static Future<void> setUserScores(scores) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("userScores", scores);
+  }
+
+  static Future<void> setTracking(enabled) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("trackingDisabled", enabled);
   }
 
   //get
@@ -71,9 +77,14 @@ class UserManager {
     return prefs.getString("firebaseId");
   }
 
-   static Future<int> getUserScores() async {
+  static Future<int> getUserScores() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt("userScores");
+  }
+
+  static Future<bool> getTracking() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("trackingDisabled");
   }
 
   static signOut() async {

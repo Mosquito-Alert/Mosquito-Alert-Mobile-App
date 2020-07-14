@@ -100,6 +100,8 @@ class MyLocalizations {
       "send_data": "Enviar datos",
       "bytes_and_place_report_txt":
           "¿Cuántas picaduras quieres reportar y dónde?",
+      "close_report_no_save_txt":
+          "Se perderan los datos introducidos. ¿Estas seguro de salir sin guardar?",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",
@@ -150,6 +152,7 @@ class MyLocalizations {
       "mosquito_gallery_txt":
           "Galería de mosquitos (cómo identificar especies)",
       "privacy_policy_txt": "Política de privacidad",
+      "disable_background_tracking": "Deshabilitar background tracking",
 
       //My reports page
       "map_txt": "Mapa",

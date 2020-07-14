@@ -30,7 +30,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
-   StreamController<double> percentStream = new StreamController<double>.broadcast();
+  StreamController<double> percentStream =
+      new StreamController<double>.broadcast();
 
   List<Map> displayQuestions = [
     {
@@ -133,6 +134,22 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         }
       ]
     },
+    {
+      "question": {
+        "id": 6,
+        "text": {
+          "en": "Where were you when you saw the breeding site?",
+          "ca": "On estaves quan vas veure el niu?",
+          "es": "¿Donde estaabas cuando viste el nido?"
+        }
+      },
+      "answers": [
+        {
+          "id": 61, //Location - value equals WKT of point
+          "text": {"en": "", "ca": ""}
+        }
+      ]
+    },
   ];
 
   bool skipReport = false;
@@ -159,7 +176,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       //     widget.editReport != null),
       QuestionsBreedingForm(displayQuestions.elementAt(3), setValid),
       QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
-      BitingLocationForm(setValid),
+      BitingLocationForm(
+          setValid,
+          displayQuestions.elementAt(4)['question']['text']
+              [Utils.getLanguage()]),
       CouldSeeForm(
         addAdultReport,
         displayQuestions.elementAt(2),
@@ -169,7 +189,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
-    if (Utils.reportsList.isEmpty && Utils.reportsList.length == 1) {
+    if (widget.editReport != null ||
+        Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
       _formsRepot.removeAt(3);
     }
   }
@@ -265,140 +286,147 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            centerTitle: true,
-            leading: IconButton(
-              icon: Style.iconBack,
-              onPressed: () {
-                double currentPage = _pagesController.page;
+    return WillPopScope(
+      onWillPop: () async {
+        _onWillPop();
+        return false;
+      },
+      child: Stack(
+        children: <Widget>[
+          Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Style.iconBack,
+                onPressed: () {
+                  double currentPage = _pagesController.page;
 
-                if (currentPage == 0.0) {
-                  if (Utils.reportsList != null &&
-                      Utils.reportsList.isNotEmpty) {
-                    Utils.deleteLastReport();
+                  if (currentPage == 0.0) {
+                    if (Utils.reportsList != null &&
+                        Utils.reportsList.isNotEmpty) {
+                      Utils.deleteLastReport();
+                    } else {
+                      Utils.resetReport();
+                    }
+                    Navigator.pop(context);
                   } else {
-                    Utils.resetReport();
+                    _pagesController
+                        .previousPage(
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease)
+                        .then((value) => addOtherReport(null));
                   }
-                  Navigator.pop(context);
-                } else {
-                  _pagesController
-                      .previousPage(
-                          duration: Duration(microseconds: 300),
-                          curve: Curves.ease)
-                      .then((value) => addOtherReport(null));
-                }
-                setState(() {
-                  index = currentPage - 1;
-                });
-              },
-            ),
-            title: Style.title(
-                MyLocalizations.of(context, "breeding_report_title"),
-                fontSize: 16),
-          ),
-          body: Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              PageView(
-                controller: _pagesController,
-                // itemCount: _formsRepot.length,
-                physics: NeverScrollableScrollPhysics(),
-                // itemBuilder: (BuildContext context, int index) {
-                //   return _formsRepot[index];
-                // }),
-                children: _formsRepot,
+                  setState(() {
+                    index = currentPage - 1;
+                  });
+                },
               ),
-              index != _formsRepot.length.toDouble() - 1
-                  ? SafeArea(
-                      child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: StreamBuilder<bool>(
-                          stream: validStream.stream,
-                          initialData: false,
-                          builder: (BuildContext ctxt,
-                              AsyncSnapshot<bool> snapshot) {
-                            return snapshot.data
-                                ? Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                        MyLocalizations.of(
-                                            context, "continue_txt"), () {
-                                      double currentPage =
-                                          _pagesController.page;
+              title: Style.title(
+                  MyLocalizations.of(context, "breeding_report_title"),
+                  fontSize: 16),
+            ),
+            body: Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                PageView(
+                  controller: _pagesController,
+                  // itemCount: _formsRepot.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  // itemBuilder: (BuildContext context, int index) {
+                  //   return _formsRepot[index];
+                  // }),
+                  children: _formsRepot,
+                ),
+                index != _formsRepot.length.toDouble() - 1
+                    ? SafeArea(
+                        child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: StreamBuilder<bool>(
+                            stream: validStream.stream,
+                            initialData: false,
+                            builder: (BuildContext ctxt,
+                                AsyncSnapshot<bool> snapshot) {
+                              return snapshot.data
+                                  ? Container(
+                                      width: double.infinity,
+                                      height: 54,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 6, horizontal: 12),
+                                      child: Style.button(
+                                          MyLocalizations.of(
+                                              context, "continue_txt"), () {
+                                        double currentPage =
+                                            _pagesController.page;
 
-                                      if (skipReport) {
-                                        _saveReports();
-                                      } else {
-                                        if (currentPage == 0.0) {
-                                          _chooseTypeImage();
-                                          setState(() {
-                                            index = currentPage + 1;
-                                          });
-                                        } else if (currentPage == 3.0 &&
-                                                otherReport == 'adult' ||
-                                            otherReport == 'bite') {
-                                          navigateOtherReport();
+                                        if (skipReport) {
+                                          _saveReports();
                                         } else {
-                                          setState(() {
-                                            index = currentPage + 1;
-                                          });
-                                          _pagesController
-                                              .nextPage(
-                                                  duration: Duration(
-                                                      microseconds: 300),
-                                                  curve: Curves.ease)
-                                              .then((value) => setValid(
-                                                  widget.editReport != null));
+                                          if (currentPage == 0.0) {
+                                            _chooseTypeImage();
+                                            setState(() {
+                                              index = currentPage + 1;
+                                            });
+                                          } else if (currentPage == 3.0 &&
+                                                  otherReport == 'adult' ||
+                                              otherReport == 'bite') {
+                                            navigateOtherReport();
+                                          } else {
+                                            setState(() {
+                                              index = currentPage + 1;
+                                            });
+                                            _pagesController
+                                                .nextPage(
+                                                    duration: Duration(
+                                                        microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(
+                                                    widget.editReport != null));
+                                          }
                                         }
-                                      }
-                                    }),
-                                  )
-                                : Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                        MyLocalizations.of(
-                                            context, "continue_txt"),
-                                        null),
-                                  );
-                          }),
-                    ))
-                  : Container(
-                      width: double.infinity,
-                      height: 54,
-                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                      child: Style.button(
-                        MyLocalizations.of(context, "send_data"),
-                        () {
-                          // _saveData();
-                        },
+                                      }),
+                                    )
+                                  : Container(
+                                      width: double.infinity,
+                                      height: 54,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 6, horizontal: 12),
+                                      child: Style.button(
+                                          MyLocalizations.of(
+                                              context, "continue_txt"),
+                                          null),
+                                    );
+                            }),
+                      ))
+                    : Container(
+                        width: double.infinity,
+                        height: 54,
+                        margin:
+                            EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                        child: Style.button(
+                          MyLocalizations.of(context, "send_data"),
+                          () {
+                            // _saveData();
+                          },
+                        ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
-        ),
-        StreamBuilder<bool>(
-          stream: loadingStream.stream,
-          initialData: false,
-          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.hasData == false || snapshot.data == false) {
-              return Container();
-            }
-            return Utils.loading(
-              snapshot.data,
-            );
-          },
-        )
-      ],
+          StreamBuilder<bool>(
+            stream: loadingStream.stream,
+            initialData: false,
+            builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData == false || snapshot.data == false) {
+                return Container();
+              }
+              return Utils.loading(
+                snapshot.data,
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -576,5 +604,18 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       },
       barrierDismissible: false,
     );
+  }
+
+  _onWillPop() {
+    Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'close_report_no_save_txt'), () {
+      if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
+        Utils.deleteLastReport();
+      } else {
+        Utils.resetReport();
+        Utils.imagePath = null;
+      }
+      Navigator.pop(context);
+    }, context);
   }
 }

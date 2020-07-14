@@ -119,20 +119,20 @@ class _LoginMainPageState extends State<LoginMainPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Style.loginButton(
-                      SvgPicture.asset(
-                        'assets/img/ic_apple.svg',
-                        height: 21,
-                        fit: BoxFit.fitHeight,
-                      ),
-                      MyLocalizations.of(context, "login_btn3"),
-                      Colors.black,
-                      Colors.white,
-                      () {},
-                      colorBorder: Colors.black.withOpacity(0.1)),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  // Style.loginButton(
+                  //     SvgPicture.asset(
+                  //       'assets/img/ic_apple.svg',
+                  //       height: 21,
+                  //       fit: BoxFit.fitHeight,
+                  //     ),
+                  //     MyLocalizations.of(context, "login_btn3"),
+                  //     Colors.black,
+                  //     Colors.white,
+                  //     () {},
+                  //     colorBorder: Colors.black.withOpacity(0.1)),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   Divider(),
                   SizedBox(
                     height: 10,

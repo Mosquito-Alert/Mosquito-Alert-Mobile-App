@@ -41,9 +41,6 @@ class _MainVCState extends State<MainVC> {
     userUuid = await UserManager.getUUID();
     language = Utils.getLanguage();
     int points = UserManager.userScore;
-    // if (points == null) {
-    //   points = await ApiSingleton().getUserScores();
-    // }
 
     if (user != null) {
       setState(() {
@@ -55,34 +52,38 @@ class _MainVCState extends State<MainVC> {
     });
   }
 
-  _bgTracking() {
-    // 1.  Listen to events (See docs for all 12 available events).
+  _bgTracking() async {
+    bool trackingDisabled = await UserManager.getTracking();
+    print(trackingDisabled);
+    if (!trackingDisabled || trackingDisabled == null) {
+      // 1.  Listen to events (See docs for all 12 available events).
 
-    // Fired whenever a location is recorded
-    bg.BackgroundGeolocation.onLocation(_onLocation);
+      // Fired whenever a location is recorded
+      bg.BackgroundGeolocation.onLocation(_onLocation);
 
-    ////
-    // 2.  Configure the plugin
-    //
-    bg.BackgroundGeolocation.ready(bg.Config(
-            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-            // distanceFilter: 1000.0,
-            stopOnTerminate: false,
-            startOnBoot: true,
-            debug: true,
-            // deferTime: 3600000, //1h
-            deferTime: 500,
-            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
-        .then((bg.State state) {
-      if (!state.enabled) {
-        ////
-        // 3.  Start the plugin.
-        //
-        bg.BackgroundGeolocation.start().then((bg.State bgState) {
-          print('[start] success - ${bgState}');
-        });
-      }
-    });
+      ////
+      // 2.  Configure the plugin
+      //
+      bg.BackgroundGeolocation.ready(bg.Config(
+              desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+              // distanceFilter: 1000.0,
+              stopOnTerminate: false,
+              startOnBoot: true,
+              debug: true,
+              // deferTime: 3600000, //1h
+              deferTime: 5000,
+              logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+          .then((bg.State state) {
+        if (!state.enabled) {
+          ////
+          // 3.  Start the plugin.
+          //
+          bg.BackgroundGeolocation.start().then((bg.State bgState) {
+            print('[start] success - ${bgState}');
+          });
+        }
+      });
+    }
   }
 
   void _onLocation(bg.Location location) {

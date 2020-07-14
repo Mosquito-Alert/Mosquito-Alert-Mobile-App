@@ -9,6 +9,8 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:share/share.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -106,15 +108,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 // SizedBox(
                 //   height: 10,
                 // ),
-                SettingsMenuWidget(
-                    MyLocalizations.of(context, "open_web_txt"), () {
-                       Navigator.push(
+                SettingsMenuWidget(MyLocalizations.of(context, "open_web_txt"),
+                    () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => InfoPage(
-                            'http://www.mosquitoalert.com')),
+                        builder: (context) =>
+                            InfoPage('http://www.mosquitoalert.com')),
                   );
-                    }),
+                }),
                 SizedBox(
                   height: 10,
                 ),
@@ -125,21 +127,30 @@ class _SettingsPageState extends State<SettingsPage> {
                 // ),
                 SettingsMenuWidget(
                     MyLocalizations.of(context, "privacy_policy_txt"), () {
-                        Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => InfoPage(
                             'http://webserver.mosquitoalert.com/es/privacy/')),
                   );
-                    }),
+                }),
                 SizedBox(
                   height: 10,
                 ),
                 // SettingsMenuWidget(
                 //     MyLocalizations.of(context, "our_partners_txt"), () {}),
                 // SizedBox(
-                //   height: 60,
+                //   height: 10,
                 // ),
+
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, "disable_background_tracking"),
+                    () {
+                  _disableBgTracking();
+                }),
+                SizedBox(
+                  height: 60,
+                ),
                 Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -169,5 +180,11 @@ class _SettingsPageState extends State<SettingsPage> {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  _disableBgTracking() {
+    UserManager.setTracking(false);
+    bg.BackgroundGeolocation.stop();
+    bg.BackgroundGeolocation.stopSchedule();
   }
 }

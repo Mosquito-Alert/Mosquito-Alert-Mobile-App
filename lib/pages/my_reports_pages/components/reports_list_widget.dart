@@ -45,12 +45,12 @@ class ReportsList extends StatelessWidget {
                                 padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   children: <Widget>[
-                                    SvgPicture.asset(
+                                    Image.asset(
                                       reports[index].type == 'adult'
-                                          ? 'assets/img/ic_adults_yours.svg'
+                                          ? 'assets/img/maps/report_001.png'
                                           : reports[index].type == 'site'
-                                              ? 'assets/img/ic_breeding_yours.svg'
-                                              : 'assets/img/ic_bites_yours.svg',
+                                              ? 'assets/img/maps/report_004.png'
+                                              : 'assets/img/maps/report_003.png',
                                       width: 40,
                                     ),
                                     Container(

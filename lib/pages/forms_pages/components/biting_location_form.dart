@@ -10,8 +10,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class BitingLocationForm extends StatefulWidget {
   final Function setValid;
+  final String displayQuestion; 
 
-  BitingLocationForm(this.setValid);
+  BitingLocationForm(this.setValid, this.displayQuestion);
 
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
@@ -227,7 +228,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                 SizedBox(
                   height: 35,
                 ),
-                Style.title(MyLocalizations.of(context, "location_bited_txt")),
+                Style.title(widget.displayQuestion),
                 Style.body(MyLocalizations.of(context, "chose_option_txt")),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
