@@ -37,6 +37,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       latitude: Utils.defaultLocation.latitude,
       longitude: Utils.defaultLocation.longitude);
 
+  //Map
   ClusteringHelper clusteringHelper;
   List<ReportAndGeohash> _listMarkers = List();
   Set<Marker> markers = Set();
@@ -46,6 +47,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
   BitmapDescriptor iconAdultOthers;
   BitmapDescriptor iconBitesOthers;
   BitmapDescriptor iconBreedingOthers;
+
+  //My reports
+  List<Report> _myData = [];
 
   //Data
   Position _locationData;
@@ -733,6 +737,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         .toList();
 
     dataStream.add(myData);
+    _myData = myData;
 
     clusteringHelper.updateData(listMarkers);
     _listMarkers = listMarkers;
@@ -753,13 +758,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
     return address[0].locality;
   }
 
-  _deleteReport(report) async {
+  _deleteReport(Report report) async {
     Navigator.pop(context);
     loadingStream.add(true);
     bool res = await Utils.deleteReport(report);
     if (res) {
       loadingStream.add(false);
-      _getData();
+      _myData.removeWhere((element) => element.report_id == report.report_id);
+      dataStream.add(_myData);
+
+      _listMarkers.removeWhere((element) => element.report.report_id == report.report_id);
+      clusteringHelper.updateData(_listMarkers);
+
     } else {
       loadingStream.add(false);
       Utils.showAlert(
