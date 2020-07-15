@@ -66,12 +66,12 @@ class _MainVCState extends State<MainVC> {
       //
       bg.BackgroundGeolocation.ready(bg.Config(
               desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-              // distanceFilter: 1000.0,
+              distanceFilter: 1000.0,
               stopOnTerminate: false,
               startOnBoot: true,
               debug: true,
-              // deferTime: 3600000, //1h
-              deferTime: 5000,
+              deferTime: 3600000, //1h
+              // deferTime: 5000,
               logLevel: bg.Config.LOG_LEVEL_VERBOSE))
           .then((bg.State state) {
         if (!state.enabled) {
