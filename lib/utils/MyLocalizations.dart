@@ -50,8 +50,8 @@ class MyLocalizations {
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",
-      "user_password_txt": "Contrseña de usuario",
-      "forgot_password_txt": "¿Has olvidado tu contrseña?",
+      "user_password_txt": "Contraseña de usuario",
+      "forgot_password_txt": "¿Has olvidado tu contraseña?",
       "social_login_ko_txt": "Ocurrió un error, intentalo de nuevo por favor.",
       "login_alert_ko_text":
           "Los datos de acceso no son correctos. Por favor, revísalos e inténtalo de nuevo.",
