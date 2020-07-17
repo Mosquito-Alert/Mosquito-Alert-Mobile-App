@@ -56,15 +56,13 @@ class _MainVCState extends State<MainVC> {
 
   _bgTracking() async {
     bool trackingDisabled = await UserManager.getTracking();
-    if ( trackingDisabled == null || !trackingDisabled ) {
+    if (trackingDisabled == null || !trackingDisabled) {
       // 1.  Listen to events (See docs for all 12 available events).
 
       // Fired whenever a location is recorded
       bg.BackgroundGeolocation.onLocation(_onLocation);
 
-      ////
       // 2.  Configure the plugin
-      //
       bg.BackgroundGeolocation.ready(bg.Config(
               desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
               distanceFilter: 1000.0,
@@ -72,13 +70,10 @@ class _MainVCState extends State<MainVC> {
               startOnBoot: true,
               debug: false,
               deferTime: 3600000, //1h
-              // deferTime: 5000,
               logLevel: bg.Config.LOG_LEVEL_VERBOSE))
           .then((bg.State state) {
         if (!state.enabled) {
-          ////
           // 3.  Start the plugin.
-          //
           bg.BackgroundGeolocation.start().then((bg.State bgState) {
             print('[start] success - ${bgState}');
           });
@@ -88,7 +83,9 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _onLocation(bg.Location location) {
-    Utils.location = Position(latitude: location.coords.latitude, longitude: location.coords.longitude);
+    Utils.location = Position(
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude);
 
     double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() +
         Utils.maskCoordsValue;
@@ -112,7 +109,9 @@ class _MainVCState extends State<MainVC> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SettingsPage(enableTracking: _bgTracking)),
               );
             },
           ),
@@ -183,7 +182,7 @@ class _MainVCState extends State<MainVC> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => InfoPage(
-                                                'http://madev.creaf.cat/$language/stats/user_ranking/1/$userUuid')),
+                                                "${MyLocalizations.of(context, 'url_points_1')}$language${MyLocalizations.of(context, 'url_points_2')}$userUuid")),
                                       );
                                     },
                                     child: Container(
@@ -221,12 +220,7 @@ class _MainVCState extends State<MainVC> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BitingReportPage()),
-                                      );
+                                      _createBiteReport();
                                     },
                                     child: CustomCard(
                                       img: 'assets/img/ic_bite_report.png',
@@ -243,12 +237,7 @@ class _MainVCState extends State<MainVC> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AdultReportPage()),
-                                      );
+                                      _createAdultReport();
                                     },
                                     child: CustomCard(
                                       img: 'assets/img/ic_mosquito_report.png',
@@ -268,13 +257,8 @@ class _MainVCState extends State<MainVC> {
                               children: <Widget>[
                                 Expanded(
                                     child: GestureDetector(
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BreedingReportPage()),
-                                    );
+                                  onTap: () {
+                                    _createSiteReport();
                                   },
                                   child: CustomCard(
                                     img: 'assets/img/ic_breeding_report.png',
@@ -368,5 +352,44 @@ class _MainVCState extends State<MainVC> {
             );
           },
         ));
+  }
+
+  _createBiteReport() async {
+    bool createReport = await Utils.createNewReport('bite');
+    if (createReport) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BitingReportPage()),
+      );
+    } else {
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'save_report_ko_txt'), context);
+    }
+  }
+
+  _createAdultReport() async {
+    bool createReport = await Utils.createNewReport('adult');
+    if (createReport) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AdultReportPage()),
+      );
+    } else {
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'save_report_ko_txt'), context);
+    }
+  }
+
+  _createSiteReport() async {
+    bool createReport = await Utils.createNewReport('site');
+    if (createReport) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BreedingReportPage()),
+      );
+    } else {
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'save_report_ko_txt'), context);
+    }
   }
 }

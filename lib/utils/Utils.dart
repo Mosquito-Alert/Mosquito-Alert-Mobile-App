@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
 import 'package:device_info/device_info.dart';
@@ -27,7 +28,6 @@ class Utils {
   static List<Map> imagePath;
   static double maskCoordsValue = 0.025;
 
-
   static void saveImgPath(File path) {
     if (imagePath == null) {
       imagePath = [];
@@ -50,7 +50,7 @@ class Utils {
     ApiSingleton().closeSession(session);
   }
 
-  static createNewReport(String type, {lat, lon, locationType}) async {
+  static Future<bool> createNewReport(String type, {lat, lon, locationType}) async {
     if (session == null) {
       reportsList = [];
 
@@ -67,49 +67,53 @@ class Utils {
       session.id = await ApiSingleton().createSession(session);
     }
 
-    var userUUID = await UserManager.getUUID();
-    report = new Report(
-        type: type,
-        report_id: randomAlphaNumeric(4).toString(),
-        version_number: 0,
-        version_UUID: new Uuid().v4(),
-        user: userUUID,
-        session: session.id,
-        responses: []);
+    if (session.id != null) {
+      var userUUID = await UserManager.getUUID();
+      report = new Report(
+          type: type,
+          report_id: randomAlphaNumeric(4).toString(),
+          version_number: 0,
+          version_UUID: new Uuid().v4(),
+          user: userUUID,
+          session: session.id,
+          responses: []);
 
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    report.package_name = packageInfo.packageName;
-    report.package_version = 1; //TODO: fix this
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      report.package_name = packageInfo.packageName;
+      report.package_version = packageInfo.version;
 
-    if (Platform.isAndroid) {
-      var buildData = await DeviceInfoPlugin().androidInfo;
-      report.device_manufacturer = buildData.manufacturer;
-      report.device_model = buildData.model;
-      report.os = 'Android';
-      report.os_language = getLanguage();
-      report.os_version = buildData.version.sdkInt.toString();
-      report.app_language = getLanguage(); //TODO: fix get app language
-    } else if (Platform.isIOS) {
-      var buildData = await DeviceInfoPlugin().iosInfo;
-      report.device_manufacturer = 'Apple';
-      report.device_model = buildData.model;
-      report.os = buildData.systemName;
-      report.os_language = getLanguage();
-      report.os_version = buildData.systemVersion;
-      report.app_language = getLanguage();
-    }
-
-    if (lat != null && lon != null) {
-      if (locationType == 'selected') {
-        report.location_choice = 'selected';
-        report.selected_location_lat = lat;
-        report.selected_location_lon = lon;
-      } else {
-        report.location_choice = 'current';
-        report.current_location_lat = lat;
-        report.current_location_lon = lon;
+      if (Platform.isAndroid) {
+        var buildData = await DeviceInfoPlugin().androidInfo;
+        report.device_manufacturer = buildData.manufacturer;
+        report.device_model = buildData.model;
+        report.os = 'Android';
+        report.os_language = getLanguage();
+        report.os_version = buildData.version.sdkInt.toString();
+        report.app_language = getLanguage();
+      } else if (Platform.isIOS) {
+        var buildData = await DeviceInfoPlugin().iosInfo;
+        report.device_manufacturer = 'Apple';
+        report.device_model = buildData.model;
+        report.os = buildData.systemName;
+        report.os_language = getLanguage();
+        report.os_version = buildData.systemVersion;
+        report.app_language = getLanguage();
       }
+
+      if (lat != null && lon != null) {
+        if (locationType == 'selected') {
+          report.location_choice = 'selected';
+          report.selected_location_lat = lat;
+          report.selected_location_lon = lon;
+        } else {
+          report.location_choice = 'current';
+          report.current_location_lat = lat;
+          report.current_location_lon = lon;
+        }
+      }
+      return true;
     }
+    return false; 
   }
 
   static resetReport() {
@@ -618,7 +622,14 @@ class Utils {
   static LatLng defaultLocation = LatLng(41.3874, 2.1688);
 
   static String getLanguage() {
-    return 'es';
+    String language = ui.window.locale.languageCode;
+    if (language == 'es') {
+      return 'es';
+    } else if (language == 'ca') {
+      return 'ca';
+    } else {
+      return 'en';
+    }
   }
 
   static launchUrl(url) async {

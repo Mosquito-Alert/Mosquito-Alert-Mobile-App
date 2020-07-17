@@ -16,7 +16,7 @@ class Report {
   double selected_location_lat;
   String note;
   String package_name;
-  int package_version;
+  String package_version;
   int session;
   List<Photo> photos;
   List<Question> responses;

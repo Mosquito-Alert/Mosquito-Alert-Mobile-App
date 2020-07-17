@@ -204,9 +204,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
       validContent = true;
-    } else {
-      Utils.createNewReport('adult');
-    }
+    } 
     _pagesController = PageController();
     index = 0.0;
     _formsRepot = [

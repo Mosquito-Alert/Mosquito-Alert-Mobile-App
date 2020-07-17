@@ -253,8 +253,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
-    } else {
-      Utils.createNewReport('bite');
     }
     _pagesController = PageController();
     _formsRepot = [

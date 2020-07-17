@@ -166,8 +166,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
       validContent = true;
-    } else {
-      Utils.createNewReport('site');
     }
     _pagesController = PageController();
 

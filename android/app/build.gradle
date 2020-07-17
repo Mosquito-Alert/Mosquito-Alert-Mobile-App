@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "ceab.movelab.tigabib"
+        applicationId "ceab.movelab.tigatrapp"
         minSdkVersion 21
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

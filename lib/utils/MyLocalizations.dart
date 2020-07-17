@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
@@ -20,10 +19,16 @@ class MyLocalizations {
       "delete": "Eliminar",
       "edit": "Editar",
       "exit": "Salir",
-      "url_politics": "https://www.google.cat",
-      "url_legal": "https://www.google.cat",
       "reset": "Reset",
       'close': "Cerrar",
+
+      //LINKS
+      "url_politics": "http://webserver.mosquitoalert.com/es/privacy/",
+      "url_legal": "https://www.google.cat",
+      "url_point_1": "http://madev.creaf.cat/",
+      "url_point_2": "/stats/user_ranking/1/",
+      "url_consent_form": "http://webserver.mosquitoalert.com/es/terms/",
+      "url_web": "http://www.mosquitoalert.com",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -153,6 +158,11 @@ class MyLocalizations {
           "Galería de mosquitos (cómo identificar especies)",
       "privacy_policy_txt": "Política de privacidad",
       "disable_background_tracking": "Deshabilitar background tracking",
+      "enable_background_tracking": "Habilitar background tracking",
+      "disable_tracking_question_text":
+          "Se va a desabilitar el background tracking. ¿Esta seguro?",
+      "enable_tracking_question_text":
+          "Se va a habilitar el background tracking. ¿Esta seguro?",
 
       //My reports page
       "map_txt": "Mapa",
