@@ -55,7 +55,7 @@ class _MainVCState extends State<MainVC> {
 
   _bgTracking() async {
     bool trackingDisabled = await UserManager.getTracking();
-    if (!trackingDisabled || trackingDisabled == null) {
+    if ( trackingDisabled == null || !trackingDisabled ) {
       // 1.  Listen to events (See docs for all 12 available events).
 
       // Fired whenever a location is recorded
@@ -69,7 +69,7 @@ class _MainVCState extends State<MainVC> {
               distanceFilter: 1000.0,
               stopOnTerminate: false,
               startOnBoot: true,
-              debug: true,
+              debug: false,
               deferTime: 3600000, //1h
               // deferTime: 5000,
               logLevel: bg.Config.LOG_LEVEL_VERBOSE))
