@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -82,7 +81,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   : widget.showCamera(true);
 
                               widget.displayQuestion['answers'][index]['id'] >
-                                      61
+                                      62
                                   ? widget.setSkip3(true)
                                   : widget.setSkip3(false);
                             },

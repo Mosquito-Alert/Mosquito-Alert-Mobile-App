@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -32,6 +33,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   List<Widget> _formsRepot;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
+  StreamController<bool> skipParts = new StreamController<bool>.broadcast();
   StreamController<double> percentStream =
       new StreamController<double>.broadcast();
   double index;
@@ -64,6 +66,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
             "ca": "Mosquit comú",
             "es": "Mosquito común"
           }
+        },
+        {
+          "id": 64,
+          "img": "assets/img/ic_cluex.png",
+          "text": {"en": "I don't know", "ca": "No ho sé", "es": "No lo sé"}
         },
         {
           "id": 63,
@@ -189,10 +196,46 @@ class _AdultReportPageState extends State<AdultReportPage> {
           "text": {"en": "No", "ca": "No", "es": "No"}
         },
       ]
+    },
+    {
+      "question": {
+        "id": 13,
+        "text": {
+          "en": "Where did you find the mosquito?",
+          "ca": "On has trobat el mosquit?",
+          "es": "¿Dónde has encontrado el mosquito?"
+        }
+      },
+      "answers": [
+        {
+          "id": 131,
+          "text": {
+            "en": "Inside a car",
+            "ca": "Dins d'un cotxe",
+            "es": "Dentro de un coche"
+          }
+        },
+        {
+          "id": 132,
+          "text": {
+            "en": "Inside a building",
+            "ca": "Dins d'un edifici",
+            "es": "Dentro de un edificio"
+          }
+        },
+        {
+          "id": 133,
+          "text": {
+            "en": "Outdoors",
+            "ca": "A l'exterior",
+            "es": "En el exterior"
+          }
+        },
+      ]
     }
   ];
 
-  bool skip3 = false;
+  // bool skip3 = false;
   bool addBiting = false;
   bool validContent = false;
   bool showCamera = false;
@@ -204,17 +247,18 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
       validContent = true;
-    } 
+    }
     _pagesController = PageController();
     index = 0.0;
     _formsRepot = [
       MosquitoTypeForm(
           setSkip3, displayQuestions.elementAt(0), setValid, setShowCamera),
-      MosquitoPartsForm(displayQuestions.elementAt(1), setValid),
+      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts),
       BitingLocationForm(
           setValid,
           displayQuestions.elementAt(2)['question']['text']
               [Utils.getLanguage()]),
+      QuestionsBreedingForm(displayQuestions.elementAt(4), setValid),
       CouldSeeForm(addBitingReport, displayQuestions.elementAt(3), setValid),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
@@ -226,9 +270,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   setSkip3(skip) {
-    setState(() {
-      skip3 = skip;
-    });
+    print(skip);
+    skipParts.add(skip);
   }
 
   setShowCamera(data) {
@@ -337,12 +380,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       Utils.resetReport();
                     }
                     Navigator.pop(context);
-                  } else if (currentPage == 2.0 && skip3) {
-                    _pagesController
-                        .animateToPage(0,
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease)
-                        .then((value) => setValid(true));
+                    // } else if (currentPage == 2.0 && skip3) {
+                    //   _pagesController
+                    //       .animateToPage(0,
+                    //           duration: Duration(microseconds: 300),
+                    //           curve: Curves.ease)
+                    //       .then((value) => setValid(true));
                   } else {
                     _pagesController
                         .previousPage(
@@ -464,25 +507,24 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                           if (showCamera) {
                                             _chooseTypeImage();
                                           } else {
-                                            if (currentPage == 0.0 && skip3) {
-                                              _pagesController
-                                                  .animateToPage(2,
-                                                      duration: Duration(
-                                                          microseconds: 300),
-                                                      curve: Curves.ease)
-                                                  .then((value) => setValid(
-                                                      widget.editReport !=
-                                                          null));
-                                            } else {
-                                              _pagesController
-                                                  .nextPage(
-                                                      duration: Duration(
-                                                          microseconds: 300),
-                                                      curve: Curves.ease)
-                                                  .then((value) => setValid(
-                                                      widget.editReport !=
-                                                          null));
-                                            }
+                                            // if (currentPage == 0.0 && skip3) {
+                                            //   _pagesController
+                                            //       .animateToPage(2,
+                                            //           duration: Duration(
+                                            //               microseconds: 300),
+                                            //           curve: Curves.ease)
+                                            //       .then((value) => setValid(
+                                            //           widget.editReport !=
+                                            //               null));
+                                            // } else {
+                                            _pagesController
+                                                .nextPage(
+                                                    duration: Duration(
+                                                        microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(
+                                                    widget.editReport != null));
+                                            // }
                                           }
                                         }
                                       }),
@@ -553,6 +595,26 @@ class _AdultReportPageState extends State<AdultReportPage> {
           style: TextStyle(color: Colors.blue),
         ),
       ),
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          // if (skip3) {
+          //   _pagesController
+          //       .animateToPage(2,
+          //           duration: Duration(microseconds: 300), curve: Curves.ease)
+          //       .then((value) => setValid(widget.editReport != null));
+          // } else {
+          _pagesController
+              .nextPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease)
+              .then((value) => setValid(widget.editReport != null));
+          // }
+        },
+        child: Text(
+          MyLocalizations.of(context, 'continue_without_photo'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
     ];
     List<Widget> listForAndroid = <Widget>[
       InkWell(
@@ -580,6 +642,30 @@ class _AdultReportPageState extends State<AdultReportPage> {
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
+      Divider(height: 1.0),
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          setShowCamera(false);
+          // if (skip3) {
+          //   _pagesController
+          //       .animateToPage(2,
+          //           duration: Duration(microseconds: 300), curve: Curves.ease)
+          //       .then((value) => setValid(widget.editReport != null));
+          // } else {
+          _pagesController
+              .nextPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease)
+              .then((value) => setValid(widget.editReport != null));
+          // }
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
     ];
 
     Utils.modalDetailTrackingforPlatform(
@@ -599,16 +685,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     if (files != null) {
       setShowCamera(false);
-      if (skip3) {
-        _pagesController
-            .animateToPage(2,
-                duration: Duration(microseconds: 300), curve: Curves.ease)
-            .then((value) => setValid(widget.editReport != null));
-      } else {
-        _pagesController
-            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-            .then((value) => setValid(widget.editReport != null));
-      }
+      // if (skip3) {
+      //   _pagesController
+      //       .animateToPage(2,
+      //           duration: Duration(microseconds: 300), curve: Curves.ease)
+      //       .then((value) => setValid(widget.editReport != null));
+      // } else {
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+      // }
     }
 
     if (files != null) {
@@ -632,7 +718,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Style.body(
-                    " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently",
+                    MyLocalizations.of(context, 'camera_info_txt'),
                   ),
                   SizedBox(
                     height: 15,
@@ -672,16 +758,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (image != null) {
       Utils.saveImgPath(image);
       setShowCamera(false);
-      if (skip3) {
-        _pagesController
-            .animateToPage(2,
-                duration: Duration(microseconds: 300), curve: Curves.ease)
-            .then((value) => setValid(widget.editReport != null));
-      } else {
-        _pagesController
-            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-            .then((value) => setValid(widget.editReport != null));
-      }
+      // if (skip3) {
+      //   _pagesController
+      //       .animateToPage(2,
+      //           duration: Duration(microseconds: 300), curve: Curves.ease)
+      //       .then((value) => setValid(widget.editReport != null));
+      // } else {
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+      // }
     }
   }
 

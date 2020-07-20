@@ -32,7 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   getTracking() async {
     enableTracking = await UserManager.getTracking();
-    print(enableTracking);
   }
 
   @override

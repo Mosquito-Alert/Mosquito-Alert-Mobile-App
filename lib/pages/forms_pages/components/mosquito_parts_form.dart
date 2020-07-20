@@ -1,16 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
-import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class MosquitoPartsForm extends StatefulWidget {
   final Map displayQuestion;
   final Function setValid;
+  final StreamController<bool> showParts;
 
-  MosquitoPartsForm(this.displayQuestion, this.setValid);
+  MosquitoPartsForm(this.displayQuestion, this.setValid, this.showParts);
   @override
   _MosquitoPartsFormState createState() => _MosquitoPartsFormState();
 }
@@ -23,12 +25,12 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   void initState() {
     super.initState();
 
+    widget.setValid(true);
     language = Utils.getLanguage();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
         if (q.question_id == widget.displayQuestion['question']['id']) {
           questions.add(q);
-          widget.setValid(true);
         }
       }
     }
@@ -48,113 +50,133 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                 height: 40,
               ),
               AddPhotoButton(),
-              Style.title(widget.displayQuestion['question']['text'][language]),
-               SizedBox(
-                height: 5,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => InfoPage('d')),
+
+              StreamBuilder(
+                stream: widget.showParts.stream,
+                initialData: false,
+                builder: (context, AsyncSnapshot<bool> snapshot) {
+                  if (!snapshot.data) {
+                    return Container();
+                  }
+                  return Column(
+                    children: <Widget>[
+                      Style.title(
+                          widget.displayQuestion['question']['text'][language]),
+                      // SizedBox(
+                      //   height: 5,
+                      // ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(builder: (context) => InfoPage('d')),
+                      //     );
+                      //   },
+                      //   child: Style.bodySmall("mas info de eto",
+                      //       color: Style.colorPrimary),
+                      // ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 200,
+                        child: ListView.builder(
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              int id = widget.displayQuestion['answers'][0]
+                                  [index]['id'];
+                              String txt = widget.displayQuestion['answers'][0]
+                                  [index]['text'][language];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelect(txt, id, 710);
+                                },
+                                child: Container(
+                                  width: sizeWidth * 0.22,
+                                  margin: EdgeInsets.only(right: 5),
+                                  child: ImageQuestionOption(
+                                    questions.any((q) => q.answer_id == id),
+                                    '',
+                                    '',
+                                    widget.displayQuestion['answers'][0][index]
+                                        ['img'],
+                                    disabled: questions.length != null
+                                        ? isDisabled(710, id)
+                                        : false,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                      Container(
+                        height: 200,
+                        child: ListView.builder(
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              int id = widget.displayQuestion['answers'][1]
+                                  [index]['id'];
+                              String txt = widget.displayQuestion['answers'][1]
+                                  [index]['text'][language];
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelect(txt, id, 720);
+                                },
+                                child: Container(
+                                  width: sizeWidth * 0.22,
+                                  margin: EdgeInsets.only(right: 5),
+                                  child: ImageQuestionOption(
+                                    questions.any((q) => q.answer_id == id),
+                                    '',
+                                    '',
+                                    widget.displayQuestion['answers'][1][index]
+                                        ['img'],
+                                    disabled: questions.length != null
+                                        ? isDisabled(720, id)
+                                        : false,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                      Container(
+                        height: 200,
+                        child: ListView.builder(
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              int id = widget.displayQuestion['answers'][2]
+                                  [index]['id'];
+                              String txt = widget.displayQuestion['answers'][2]
+                                  [index]['text'][language];
+                              return GestureDetector(
+                                onTap: () {
+                                  onSelect(txt, id, 730);
+                                },
+                                child: Container(
+                                  width: sizeWidth * 0.22,
+                                  margin: EdgeInsets.only(right: 5),
+                                  child: ImageQuestionOption(
+                                    questions.any((q) => q.answer_id == id),
+                                    '',
+                                    '',
+                                    widget.displayQuestion['answers'][2][index]
+                                        ['img'],
+                                    disabled: questions.length != null
+                                        ? isDisabled(730, id)
+                                        : false,
+                                  ),
+                                ),
+                              );
+                            }),
+                      )
+                    ],
                   );
                 },
-                child: Style.bodySmall("mas ifno de eto", color: Style.colorPrimary),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 200,
-                child: ListView.builder(
-                    itemCount: 4,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      int id =
-                          widget.displayQuestion['answers'][0][index]['id'];
-                      String txt = widget.displayQuestion['answers'][0][index]
-                          ['text'][language];
 
-                      return GestureDetector(
-                        onTap: () {
-                          onSelect(txt, id, 710);
-                        },
-                        child: Container(
-                          width: sizeWidth * 0.22,
-                          margin: EdgeInsets.only(right: 5),
-                          child: ImageQuestionOption(
-                            questions.any((q) => q.answer_id == id),
-                            '',
-                            '',
-                            widget.displayQuestion['answers'][0][index]['img'],
-                            disabled: questions.length != null
-                                ? isDisabled(710, id)
-                                : false,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              Container(
-                height: 200,
-                child: ListView.builder(
-                    itemCount: 4,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      int id =
-                          widget.displayQuestion['answers'][1][index]['id'];
-                      String txt = widget.displayQuestion['answers'][1][index]
-                          ['text'][language];
-                      return GestureDetector(
-                        onTap: () {
-                          onSelect(txt, id, 720);
-                        },
-                        child: Container(
-                          width: sizeWidth * 0.22,
-                          margin: EdgeInsets.only(right: 5),
-                          child: ImageQuestionOption(
-                            questions.any((q) => q.answer_id == id),
-                            '',
-                            '',
-                            widget.displayQuestion['answers'][1][index]['img'],
-                            disabled: questions.length != null
-                                ? isDisabled(720, id)
-                                : false,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              Container(
-                height: 200,
-                child: ListView.builder(
-                    itemCount: 4,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      int id =
-                          widget.displayQuestion['answers'][2][index]['id'];
-                      String txt = widget.displayQuestion['answers'][2][index]
-                          ['text'][language];
-                      return GestureDetector(
-                        onTap: () {
-                          onSelect(txt, id, 730);
-                        },
-                        child: Container(
-                          width: sizeWidth * 0.22,
-                          margin: EdgeInsets.only(right: 5),
-                          child: ImageQuestionOption(
-                            questions.any((q) => q.answer_id == id),
-                            '',
-                            '',
-                            widget.displayQuestion['answers'][2][index]['img'],
-                            disabled: questions.length != null
-                                ? isDisabled(730, id)
-                                : false,
-                          ),
-                        ),
-                      );
-                    }),
-              ),
               SizedBox(
                 height: 15,
               ),

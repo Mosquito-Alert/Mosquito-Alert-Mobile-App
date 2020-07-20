@@ -21,11 +21,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   void initState() {
     super.initState();
     // _chooseTypeImage();
-    Utils.imagePath.forEach((element) {
-      if (element['id'] == Utils.report.version_UUID) {
-        images.add(element['image']);
-      }
-    });
+    if (Utils.imagePath != null && Utils.imagePath.isNotEmpty) {
+      Utils.imagePath.forEach((element) {
+        if (element['id'] == Utils.report.version_UUID) {
+          images.add(element['image']);
+        }
+      });
+    }
   }
 
   @override
