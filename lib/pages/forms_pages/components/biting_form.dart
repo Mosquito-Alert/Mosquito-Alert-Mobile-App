@@ -11,9 +11,9 @@ import '../../../utils/Utils.dart';
 
 class BitingForm extends StatefulWidget {
   final List<Map> displayQuestions;
-  final Function setValid;
+  final Function setValid, nextPage;
 
-  BitingForm(this.displayQuestions, this.setValid);
+  BitingForm(this.displayQuestions, this.setValid, this.nextPage);
   @override
   _BitingFormState createState() => _BitingFormState();
 }
@@ -26,6 +26,7 @@ class _BitingFormState extends State<BitingForm> {
   int bites = 0;
 
   bool showDaytime = false;
+  bool valid = false;
 
   TextEditingController _textController = TextEditingController();
 
@@ -48,7 +49,10 @@ class _BitingFormState extends State<BitingForm> {
       }
     }
     bool isValid = canContinue();
-    widget.setValid(isValid);
+    // widget.setValid(isValid);
+    setState(() {
+      valid = isValid;
+    });
     _textController.text = bites.toString();
     language = Utils.getLanguage();
     displayQuestions =
@@ -97,7 +101,10 @@ class _BitingFormState extends State<BitingForm> {
                           answer_value: _textController.text);
 
                       bool isValid = canContinue();
-                      widget.setValid(isValid);
+                      // widget.setValid(isValid);
+                      setState(() {
+                        valid = isValid;
+                      });
                     },
                   ),
                   SizedBox(
@@ -127,7 +134,10 @@ class _BitingFormState extends State<BitingForm> {
                           answer_id: 11,
                           answer_value: _textController.text);
                       bool isValid = canContinue();
-                      widget.setValid(isValid);
+                      // widget.setValid(isValid);
+                      setState(() {
+                        valid = isValid;
+                      });
                     },
                   ),
                 ],
@@ -458,7 +468,24 @@ class _BitingFormState extends State<BitingForm> {
                   );
                 },
               ),
-              Style.bottomOffset,
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: double.infinity,
+                height: 54,
+                child: Style.button(
+                    MyLocalizations.of(context, 'continue_txt'),
+                    valid
+                        ? () {
+                            widget.nextPage();
+                          }
+                        : null),
+              ),
+              // Style.bottomOffset,
+              SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),
@@ -525,7 +552,10 @@ class _BitingFormState extends State<BitingForm> {
         questions = Utils.report.responses;
       });
       bool isValid = canContinue();
-      widget.setValid(isValid);
+      setState(() {
+        valid = isValid;
+      });
+      // widget.setValid(isValid);
     }
   }
 

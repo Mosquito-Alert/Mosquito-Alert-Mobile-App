@@ -8,7 +8,6 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'adult_report_page.dart';
-import 'breeding_report_page.dart';
 import 'components/biting_form.dart';
 import 'components/biting_location_form.dart';
 
@@ -255,16 +254,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
     _pagesController = PageController();
     _formsRepot = [
-      BitingForm(
-        [
-          displayQuestions.elementAt(0),
-          displayQuestions.elementAt(1),
-          displayQuestions.elementAt(2),
-          displayQuestions.elementAt(3),
-          displayQuestions.elementAt(4),
-        ],
-        setValid,
-      ),
+      BitingForm([
+        displayQuestions.elementAt(0),
+        displayQuestions.elementAt(1),
+        displayQuestions.elementAt(2),
+        displayQuestions.elementAt(3),
+        displayQuestions.elementAt(4),
+      ], setValid, goNextPage),
       BitingLocationForm(
         setValid,
         displayQuestions.elementAt(5)['question']['text'][Utils.getLanguage()],
@@ -295,34 +291,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     validStream.add(isValid);
   }
 
-  navigateOtherReport() async {
-    switch (otherReport) {
-      // case "bite":
-      //   Utils.addOtherReport('bite');
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => BitingReportPage()),
-      //   );
-      //   break;
-      case "site":
-        Utils.addOtherReport('site');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BreedingReportPage()),
-        );
-        break;
-      case "adult":
-        Utils.addOtherReport('adult');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdultReportPage()),
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
   _saveData() async {
     setState(() {
       percentStream.add(0.8);
@@ -350,6 +318,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
       setState(() {
         seeButton = true;
       });
+    });
+    setState(() {
+      index = _pagesController.page + 1;
     });
   }
 
@@ -407,127 +378,89 @@ class _BitingReportPageState extends State<BitingReportPage> {
               title: Style.title(
                   MyLocalizations.of(context, "biting_report_txt"),
                   fontSize: 16),
-              actions: <Widget>[
-                // seeButton
-                //     ? StreamBuilder<bool>(
-                //         stream: validStream.stream,
-                //         initialData: false,
-                //         builder:
-                //             (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-                //           return Style.noBgButton(
-                //               _pagesController.page == _formsRepot.length - 1 &&
-                //                       otherReport == 'none'
-                //                   ? MyLocalizations.of(context, "finish")
-                //                   : MyLocalizations.of(context, "next"),
-                //               snapshot.data
-                //                   ? () {
-                //                       double currentPage = _pagesController.page;
-                //                       if (currentPage == _formsRepot.length - 1) {
-                //                         navigateOtherReport();
-                //                       } else if (currentPage == 2 &&
-                //                           addMosquito) {
-                //                         Utils.addOtherReport('adult');
-                //                         Navigator.push(
-                //                           context,
-                //                           MaterialPageRoute(
-                //                               builder: (context) =>
-                //                                   AdultReportPage()),
-                //                         );
-                //                       } else {
-                //                         _pagesController
-                //                             .nextPage(
-                //                                 duration:
-                //                                     Duration(microseconds: 300),
-                //                                 curve: Curves.ease)
-                //                             .then((value) => setValid(
-                //                                 widget.editReport != null));
-                //                       }
-                //                     }
-                //                   : null);
-                //         })
-                //     : Container(),
-              ],
+              actions: <Widget>[],
             ),
             body: Stack(
               alignment: Alignment.bottomCenter,
               children: <Widget>[
                 PageView(
                   controller: _pagesController,
-                  // itemCount: _formsRepot.length,
                   physics: NeverScrollableScrollPhysics(),
-                  // itemBuilder: (BuildContext context, int index) {
                   children: _formsRepot,
-                  // },
                 ),
-                index != _formsRepot.length.toDouble() - 1
-                    ? SafeArea(
-                        child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: StreamBuilder<bool>(
-                                stream: validStream.stream,
-                                initialData: false,
-                                builder: (BuildContext ctxt,
-                                    AsyncSnapshot<bool> snapshot) {
-                                  return snapshot.data
-                                      ? Container(
-                                          width: double.infinity,
-                                          height: 54,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
-                                          child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, "continue_txt"), () {
-                                            double currentPage =
-                                                _pagesController.page;
+                index == 0.0
+                    ? Container()
+                    : index != _formsRepot.length.toDouble() - 1
+                        ? SafeArea(
+                            child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: StreamBuilder<bool>(
+                                    stream: validStream.stream,
+                                    initialData: false,
+                                    builder: (BuildContext ctxt,
+                                        AsyncSnapshot<bool> snapshot) {
+                                      return snapshot.data
+                                          ? Container(
+                                              width: double.infinity,
+                                              height: 54,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 6, horizontal: 12),
+                                              child: Style.button(
+                                                  MyLocalizations.of(
+                                                      context, "continue_txt"),
+                                                  () {
+                                                double currentPage =
+                                                    _pagesController.page;
 
-                                            if (currentPage == 2 &&
-                                                addMosquito) {
-                                              Utils.addOtherReport('adult');
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AdultReportPage()),
-                                              );
-                                            } else {
-                                              setState(() {
-                                                index = currentPage + 1;
-                                              });
-                                              _pagesController
-                                                  .nextPage(
-                                                      duration: Duration(
-                                                          microseconds: 300),
-                                                      curve: Curves.ease)
-                                                  .then((value) => setValid(
-                                                      widget.editReport !=
-                                                          null));
-                                            }
-                                          }),
-                                        )
-                                      : Container(
-                                          width: double.infinity,
-                                          height: 54,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
-                                          child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, "continue_txt"),
-                                              null),
-                                        );
-                                })),
-                      )
-                    : Container(
-                        width: double.infinity,
-                        height: 54,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                        child: Style.button(
-                          MyLocalizations.of(context, "send_data"),
-                          () {
-                            _saveData();
-                          },
-                        ),
-                      ),
+                                                if (currentPage == 2 &&
+                                                    addMosquito) {
+                                                  Utils.addOtherReport('adult');
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AdultReportPage()),
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    index = currentPage + 1;
+                                                  });
+                                                  _pagesController
+                                                      .nextPage(
+                                                          duration: Duration(
+                                                              microseconds:
+                                                                  300),
+                                                          curve: Curves.ease)
+                                                      .then((value) => setValid(
+                                                          widget.editReport !=
+                                                              null));
+                                                }
+                                              }),
+                                            )
+                                          : Container(
+                                              width: double.infinity,
+                                              height: 54,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 6, horizontal: 12),
+                                              child: Style.button(
+                                                  MyLocalizations.of(
+                                                      context, "continue_txt"),
+                                                  null),
+                                            );
+                                    })),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            height: 54,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 12),
+                            child: Style.button(
+                              MyLocalizations.of(context, "send_data"),
+                              () {
+                                _saveData();
+                              },
+                            ),
+                          ),
               ],
             ),
           ),

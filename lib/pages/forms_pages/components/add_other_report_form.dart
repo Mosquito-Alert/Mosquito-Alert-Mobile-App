@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -57,19 +58,15 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
             SizedBox(
               height: 40,
             ),
-            Style.title('Quieres añadir un comentario?'),
+            Style.title(MyLocalizations.of(context, "add_comments_question")),
             SizedBox(
               height: 30,
             ),
-            Style.textField(
-              "Comentarios",
-              _commentsController,
-              context,
-              keyboardType: TextInputType.multiline,
-              handleChange: (text) {
-                Utils.report.note = text;
-              }
-            ),
+            Style.textField(MyLocalizations.of(context, "comments_txt"),
+                _commentsController, context,
+                keyboardType: TextInputType.multiline, handleChange: (text) {
+              Utils.report.note = text;
+            }),
             Style.bottomOffset,
           ],
         ),

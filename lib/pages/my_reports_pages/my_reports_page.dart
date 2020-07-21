@@ -609,7 +609,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                 vertical: 10.0),
                                             child: Divider(),
                                           ),
-                                          Style.titleMedium('Cometarios',
+                                          Style.titleMedium(
+                                              MyLocalizations.of(
+                                                  context, "comments_txt"),
                                               fontSize: 14),
                                           Style.body(
                                             report.note,

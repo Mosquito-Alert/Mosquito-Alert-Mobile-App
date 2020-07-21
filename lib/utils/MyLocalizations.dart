@@ -107,6 +107,8 @@ class MyLocalizations {
           "¿Cuántas picaduras quieres reportar y dónde?",
       "close_report_no_save_txt":
           "Se perderan los datos introducidos. ¿Estas seguro de salir sin guardar?",
+      "add_comments_question": "Quieres añadir un comentario?",
+      "comments_txt": "Comentarios",
 
       //Location - report
       "location_bited_txt": "¿En qué ubicación te ha picado?",
