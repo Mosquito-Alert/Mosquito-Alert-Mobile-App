@@ -573,12 +573,20 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             content: Container(
-              height: 300,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.30,
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Style.body(
-                    MyLocalizations.of(context, 'camera_info_txt'),
+                    MyLocalizations.of(context, 'camera_info_breeding_txt_01'),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Style.body(
+                    MyLocalizations.of(context, 'camera_info_breeding_txt_02'),
                   ),
                   SizedBox(
                     height: 15,
@@ -586,20 +594,24 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "ok_next_txt"),
-                        () {
-                          Navigator.of(context).pop();
-                          getImage(ImageSource.camera);
-                        },
-                        textColor: Style.colorPrimary,
+                      Expanded(
+                        child: Style.noBgButton(
+                          MyLocalizations.of(context, "ok_next_txt"),
+                          () {
+                            Navigator.of(context).pop();
+                            getImage(ImageSource.camera);
+                          },
+                          textColor: Style.colorPrimary,
+                        ),
                       ),
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "close"),
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                        // textColor: Style.colorPrimary,
+                      Expanded(
+                        child: Style.noBgButton(
+                          MyLocalizations.of(context, "no_show_again"),
+                          () {
+                            Navigator.of(context).pop();
+                          },
+                          // textColor: Style.colorPrimary,
+                        ),
                       ),
                     ],
                   )

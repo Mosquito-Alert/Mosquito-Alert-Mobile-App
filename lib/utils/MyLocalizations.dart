@@ -100,7 +100,8 @@ class MyLocalizations {
           "Haz click encima de la imagen para reportar una nueva picada.",
       "continue_txt": "Continuar",
       "complete_all_txt": "Complete todos los campos para continuar",
-      "save_report_ok_txt": "Reporte guardado correctamente",
+      "save_report_ok_txt":
+          "Tus datos se han enviado correctamente. Muchas gracias por participar. En breve recibirás una notificación experta al respecto. Si necesitas editar tus datos, puedes hacerlo desde el menú principal.",
       "save_report_ko_txt": "Error, intentalo de nuevo más tarde",
       "send_data": "Enviar datos",
       "bytes_and_place_report_txt":
@@ -137,8 +138,15 @@ class MyLocalizations {
       "breeding_report_title": "Reportar un nido",
       "not_a_mosquito": "No es un mosquito",
       "continue_without_photo": "Continuar sin foto",
-      "camera_info_txt":
-          "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently",
+      "camera_info_adult_txt_01":
+          "Añade una foto para que podamos validar la observación del mosquito. Intenta fotografiarlo mosquito de manera que se vea el diseño del tórax así como las patas.",
+      "camera_info_adult_txt_02":
+          "No compartas información personal, como imágenes de personas reconocibles o datos personales.",
+      "camera_info_breeding_txt_01":
+          "Añade una foto para que podamos identificar el lugar de cría. Si puedes, haz una foto general del lugar y otra de detalle.",
+      "camera_info_breeding_txt_02":
+          "No compartas fotografías que puedan contener información personal, como imágenes de personas reconocibles o datos personales. Si tienes dudas, consulta la política de privacidad en los ajustes de la app.",
+      "no_show_again": "No volver a mostrar",
 
       //Notifications page
       "notifications_title": "Notificaciones",
@@ -224,7 +232,7 @@ class MyLocalizations {
           "En el menú podrás cambiar el idioma y acceder a contenidos extra. Encontrarás también una guía de identificación de especies y el tutorial de la app.",
       "tutorial_title_13": "El esfuerzo de muestreo, esencial para la ciencia",
       "tutorial_info_13":
-          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que envíes. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opción en el menú (ajustes).",
+          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que env��es. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opción en el menú (ajustes).",
       "tutorial_title_14": "Conserva tus datos y mantén tu anonimato",
       "tutorial_info_14":
           "Tu participación es anónima. Aún así, hemos desarrollado un sistema que te permite, si quieres, iniciar sesión en Mosquito Alert con cuentas externas y conservar tus datos y puntuación. Así, puedes sincronizar varios dispositivos y recuperar datos si tienes que desinstalar la app. Más información en el menú y en la Política de Privacidad de la app.",

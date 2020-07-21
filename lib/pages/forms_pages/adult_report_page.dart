@@ -258,7 +258,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
           setValid,
           displayQuestions.elementAt(2)['question']['text']
               [Utils.getLanguage()]),
-      QuestionsBreedingForm(displayQuestions.elementAt(4), setValid, false, null),
+      QuestionsBreedingForm(
+          displayQuestions.elementAt(4), setValid, false, null),
       CouldSeeForm(
           addBitingReport, displayQuestions.elementAt(3), setValid, goNextPage),
       AddOtherReportPage(_createReport, setValid, percentStream),
@@ -654,36 +655,61 @@ class _AdultReportPageState extends State<AdultReportPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            contentPadding: EdgeInsets.all(0),
+            backgroundColor: Colors.transparent,
             content: Container(
-              height: 300,
+              padding: EdgeInsets.all(20),
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.45,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    image: AssetImage(
+                      'assets/img/bg_alert_camera_adult.png',
+                    ),
+                    fit: BoxFit.cover),
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
+                  SizedBox(
+                    height: 45,
+                  ),
                   Style.body(
-                    MyLocalizations.of(context, 'camera_info_txt'),
+                    MyLocalizations.of(context, 'camera_info_adult_txt_01'),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 5,
+                  ),
+                  Style.body(
+                    MyLocalizations.of(context, 'camera_info_adult_txt_02'),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "ok_next_txt"),
-                        () {
-                          Navigator.of(context).pop();
-                          getImage(ImageSource.camera);
-                        },
-                        textColor: Style.colorPrimary,
+                      Expanded(
+                        child: Style.noBgButton(
+                          MyLocalizations.of(context, "ok_next_txt"),
+                          () {
+                            Navigator.of(context).pop();
+                            getImage(ImageSource.camera);
+                          },
+                          textColor: Style.colorPrimary,
+                        ),
                       ),
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "close"),
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                        // textColor: Style.colorPrimary,
+                      Expanded(
+                        child: Style.noBgButton(
+                          MyLocalizations.of(context, "no_show_again"),
+                          () {
+                            Navigator.of(context).pop();
+                          },
+                          // textColor: Style.colorPrimary,
+                        ),
                       ),
                     ],
                   )
