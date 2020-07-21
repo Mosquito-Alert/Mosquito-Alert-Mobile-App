@@ -28,7 +28,7 @@ class ImageQuestionOption extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
                   image: AssetImage(
-                      img != null ? img : "assets/img/torax_711.png"),
+                      img != null ? img : ""),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -206,6 +206,8 @@ class Style {
     expands,
     textAlignVertical,
     enabled = true,
+    maxLines,
+    handleChange,
   }) {
     return TextField(
       keyboardType: keyboardType == null ? TextInputType.text : keyboardType,
@@ -222,13 +224,17 @@ class Style {
       focusNode: focusNode,
       obscureText: obscure == null ? false : obscure,
       decoration: textFieldDecoration(hint, suffixIcon),
-      maxLines: expands != null && expands ? null : 1,
+      maxLines:
+          expands != null && expands || keyboardType == TextInputType.multiline
+              ? null
+              : 1,
       expands: expands != null ? expands : false,
       textAlignVertical: textAlignVertical != null
           ? textAlignVertical
           : TextAlignVertical.center,
       textAlign: TextAlign.start,
       enabled: enabled != null ? enabled : true,
+      onChanged: handleChange != null ? handleChange : null,
     );
   }
 
@@ -267,7 +273,7 @@ class Style {
         alignLabelWithHint: true);
   }
 
-    static Widget get bottomOffset => SizedBox(
+  static Widget get bottomOffset => SizedBox(
         height: 75,
       );
 }

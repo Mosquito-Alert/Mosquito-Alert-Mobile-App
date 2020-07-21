@@ -87,10 +87,15 @@ class _BitingFormState extends State<BitingForm> {
                       var question = widget.displayQuestions
                           .where((q) => q['question']['id'] == 1)
                           .toList();
+                      Utils.report.responses.removeLast();
+                      setState(() {
+                        questions = Utils.report.responses;
+                      });
                       addToList(question[0]['question']['text'][language], "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
+
                       bool isValid = canContinue();
                       widget.setValid(isValid);
                     },
@@ -362,7 +367,8 @@ class _BitingFormState extends State<BitingForm> {
                 child: Style.body(
                   MyLocalizations.of(context, 'tap_image_biting_txt'),
                   color: Colors.grey,
-                  fontSize: 10,
+                  textAlign: TextAlign.center,
+                  fontSize: 12,
                 ),
               ),
               SizedBox(
@@ -379,7 +385,6 @@ class _BitingFormState extends State<BitingForm> {
               SizedBox(
                 height: 24,
               ),
-
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -452,43 +457,6 @@ class _BitingFormState extends State<BitingForm> {
                     ],
                   );
                 },
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              // canContinue()
-              // true
-              // ? GestureDetector(
-              //     onTap: () {
-              //       widget.nextPage();
-              //     },
-              //     child: Container(
-              //       padding: EdgeInsets.symmetric(vertical: 20),
-              //       width: double.infinity,
-              //       decoration: BoxDecoration(
-              //         color: Style.colorPrimary,
-              //         borderRadius: BorderRadius.circular(15),
-              //       ),
-              //       child: Style.body(
-              //           MyLocalizations.of(context, "continue_txt"),
-              //           textAlign: TextAlign.center,
-              //           color: Colors.white),
-              //     ),
-              //   )
-              // : Container(
-              //     padding: EdgeInsets.symmetric(vertical: 20),
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       color: Colors.grey,
-              //       borderRadius: BorderRadius.circular(15),
-              //     ),
-              //     child: Style.body(
-              //         MyLocalizations.of(context, "complete_all_txt"),
-              //         textAlign: TextAlign.center,
-              //         color: Colors.white),
-              //   ),
-              SizedBox(
-                height: 15,
               ),
               Style.bottomOffset,
             ],

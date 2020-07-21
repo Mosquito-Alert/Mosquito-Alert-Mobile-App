@@ -9,10 +9,10 @@ import 'image_question_option_widget.dart';
 class MosquitoTypeForm extends StatefulWidget {
   final Function setSkip3;
   final Map displayQuestion;
-  final Function setValid, showCamera;
+  final Function setValid, showCamera, nextPage;
 
-  MosquitoTypeForm(
-      this.setSkip3, this.displayQuestion, this.setValid, this.showCamera);
+  MosquitoTypeForm(this.setSkip3, this.displayQuestion, this.setValid,
+      this.showCamera, this.nextPage);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
@@ -75,15 +75,16 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   widget.displayQuestion['answers'][index]
                                       ['id']);
 
-                              widget.displayQuestion['answers'][index]['id'] ==
+                              widget.displayQuestion['answers'][index]['id'] !=
                                       63
                                   ? widget.showCamera(false)
                                   : widget.showCamera(true);
 
-                              widget.displayQuestion['answers'][index]['id'] >
-                                      62
+                              widget.displayQuestion['answers'][index]['id'] ==
+                                      61
                                   ? widget.setSkip3(true)
                                   : widget.setSkip3(false);
+                              widget.nextPage();
                             },
                             child: ImageQuestionOption(
                               question.answer_id ==
@@ -128,7 +129,7 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
       question.answer = answer;
       question.answer_id = answerId;
     });
-    widget.setValid(true);
+    // widget.setValid(true);
     Utils.addResponse(question);
   }
 }

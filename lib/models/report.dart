@@ -16,7 +16,7 @@ class Report {
   double selected_location_lat;
   String note;
   String package_name;
-  String package_version;
+  int package_version;
   int session;
   List<Photo> photos;
   List<Question> responses;
@@ -46,7 +46,6 @@ class Report {
     this.package_name,
     this.package_version,
     this.session,
-    // this.photos,
     this.responses,
     this.device_manufacturer,
     this.device_model,
@@ -77,8 +76,6 @@ class Report {
     session = json['session'];
 
     if (json['photos'] != null) {
-      var jj = json['photos'];
-      // print(jj);
       photos = <Photo>[];
       json['photos'].forEach((p) {
         var ph = new Photo.fromJson(p);
@@ -120,7 +117,6 @@ class Report {
     data['package_name'] = this.package_name;
     data['package_version'] = this.package_version;
     data['session'] = this.session;
-    // data['photos'] = t
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }

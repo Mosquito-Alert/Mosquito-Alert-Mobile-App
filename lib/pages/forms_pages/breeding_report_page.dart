@@ -117,6 +117,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       },
       "answers": [
         {
+          'img': "assets/img/ic_imbornal.png",
           "id": 121,
           "text": {
             "en": "Storm drain",
@@ -125,6 +126,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           }
         },
         {
+          'img': "assets/img/ic_other_site.png",
           "id": 122,
           "text": {
             "en": "Other breeding site",
@@ -172,18 +174,20 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _formsRepot = [
       // PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0), setValid,
       //     widget.editReport != null),
-      QuestionsBreedingForm(displayQuestions.elementAt(3), setValid),
-      QuestionsBreedingForm(displayQuestions.elementAt(1), setValid),
+      QuestionsBreedingForm(
+          displayQuestions.elementAt(3), setValid, true, _chooseTypeImage),
+      QuestionsBreedingForm(
+          displayQuestions.elementAt(1), setValid, false, goNextPage),
       BitingLocationForm(
           setValid,
           displayQuestions.elementAt(4)['question']['text']
               [Utils.getLanguage()]),
-      CouldSeeForm(
-        addAdultReport,
-        displayQuestions.elementAt(2),
-        setValid,
-        addOtherReport: addOtherReport,
-      ),
+      // CouldSeeForm(
+      //   addAdultReport,
+      //   displayQuestions.elementAt(2),
+      //   setValid,
+      //   addOtherReport: addOtherReport,
+      // ),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
@@ -219,6 +223,15 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   setValid(isValid) {
     validStream.add(isValid);
+  }
+
+  goNextPage() {
+    _pagesController
+        .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+        .then((value) => setValid(widget.editReport != null));
+    setState(() {
+      index = _pagesController.page + 1;
+    });
   }
 
   navigateOtherReport() async {
@@ -336,78 +349,81 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   // }),
                   children: _formsRepot,
                 ),
-                index != _formsRepot.length.toDouble() - 1
-                    ? SafeArea(
-                        child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: StreamBuilder<bool>(
-                            stream: validStream.stream,
-                            initialData: false,
-                            builder: (BuildContext ctxt,
-                                AsyncSnapshot<bool> snapshot) {
-                              return snapshot.data
-                                  ? Container(
-                                      width: double.infinity,
-                                      height: 54,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 6, horizontal: 12),
-                                      child: Style.button(
-                                          MyLocalizations.of(
-                                              context, "continue_txt"), () {
-                                        double currentPage =
-                                            _pagesController.page;
+                index <= 1.0
+                    ? Container()
+                    : index != _formsRepot.length.toDouble() - 1
+                        ? SafeArea(
+                            child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: StreamBuilder<bool>(
+                                stream: validStream.stream,
+                                initialData: false,
+                                builder: (BuildContext ctxt,
+                                    AsyncSnapshot<bool> snapshot) {
+                                  return snapshot.data
+                                      ? Container(
+                                          width: double.infinity,
+                                          height: 54,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 12),
+                                          child: Style.button(
+                                              MyLocalizations.of(
+                                                  context, "continue_txt"), () {
+                                            double currentPage =
+                                                _pagesController.page;
 
-                                        if (skipReport) {
-                                          _saveReports();
-                                        } else {
-                                          if (currentPage == 0.0) {
-                                            _chooseTypeImage();
-                                            setState(() {
-                                              index = currentPage + 1;
-                                            });
-                                          } else if (currentPage == 3.0 &&
-                                                  otherReport == 'adult' ||
-                                              otherReport == 'bite') {
-                                            navigateOtherReport();
-                                          } else {
-                                            setState(() {
-                                              index = currentPage + 1;
-                                            });
-                                            _pagesController
-                                                .nextPage(
-                                                    duration: Duration(
-                                                        microseconds: 300),
-                                                    curve: Curves.ease)
-                                                .then((value) => setValid(
-                                                    widget.editReport != null));
-                                          }
-                                        }
-                                      }),
-                                    )
-                                  : Container(
-                                      width: double.infinity,
-                                      height: 54,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 6, horizontal: 12),
-                                      child: Style.button(
-                                          MyLocalizations.of(
-                                              context, "continue_txt"),
-                                          null),
-                                    );
-                            }),
-                      ))
-                    : Container(
-                        width: double.infinity,
-                        height: 54,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                        child: Style.button(
-                          MyLocalizations.of(context, "send_data"),
-                          () {
-                            _createReport();
-                          },
-                        ),
-                      ),
+                                            if (skipReport) {
+                                              _saveReports();
+                                            } else {
+                                              if (currentPage == 0.0) {
+                                                _chooseTypeImage();
+                                                setState(() {
+                                                  index = currentPage + 1;
+                                                });
+                                              } else if (currentPage == 3.0 &&
+                                                      otherReport == 'adult' ||
+                                                  otherReport == 'bite') {
+                                                navigateOtherReport();
+                                              } else {
+                                                setState(() {
+                                                  index = currentPage + 1;
+                                                });
+                                                _pagesController
+                                                    .nextPage(
+                                                        duration: Duration(
+                                                            microseconds: 300),
+                                                        curve: Curves.ease)
+                                                    .then((value) => setValid(
+                                                        widget.editReport !=
+                                                            null));
+                                              }
+                                            }
+                                          }),
+                                        )
+                                      : Container(
+                                          width: double.infinity,
+                                          height: 54,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 12),
+                                          child: Style.button(
+                                              MyLocalizations.of(
+                                                  context, "continue_txt"),
+                                              null),
+                                        );
+                                }),
+                          ))
+                        : Container(
+                            width: double.infinity,
+                            height: 54,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 12),
+                            child: Style.button(
+                              MyLocalizations.of(context, "send_data"),
+                              () {
+                                _createReport();
+                              },
+                            ),
+                          ),
               ],
             ),
           ),
@@ -450,6 +466,23 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           style: TextStyle(color: Colors.blue),
         ),
       ),
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+          setShowCamera(false);
+          _pagesController
+              .nextPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease)
+              .then((value) => setValid(widget.editReport != null));
+          setState(() {
+            index = _pagesController.page + 1;
+          });
+        },
+        child: Text(
+          MyLocalizations.of(context, 'continue_without_photo'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
     ];
     List<Widget> listForAndroid = <Widget>[
       InkWell(
@@ -477,6 +510,26 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
+      Divider(height: 1.0),
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          setShowCamera(false);
+          _pagesController
+              .nextPage(
+                  duration: Duration(microseconds: 300), curve: Curves.ease)
+              .then((value) => setValid(widget.editReport != null));
+          setState(() {
+            index = _pagesController.page + 1;
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
     ];
 
     Utils.modalDetailTrackingforPlatform(
@@ -499,6 +552,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
+      setState(() {
+        index = _pagesController.page + 1;
+      });
     }
 
     if (files != null) {
@@ -522,7 +578,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Style.body(
-                    " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently",
+                    MyLocalizations.of(context, 'camera_info_txt'),
                   ),
                   SizedBox(
                     height: 15,
@@ -565,6 +621,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
+      setState(() {
+        index = _pagesController.page + 1;
+      });
     }
   }
 

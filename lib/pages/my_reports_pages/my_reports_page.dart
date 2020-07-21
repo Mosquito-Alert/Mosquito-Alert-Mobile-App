@@ -599,6 +599,24 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         ],
                                       );
                                     }),
+                                report.note != ''
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Divider(),
+                                          ),
+                                          Style.titleMedium('Cometarios',
+                                              fontSize: 14),
+                                          Style.body(
+                                            report.note,
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -767,9 +785,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
       _myData.removeWhere((element) => element.report_id == report.report_id);
       dataStream.add(_myData);
 
-      _listMarkers.removeWhere((element) => element.report.report_id == report.report_id);
+      _listMarkers.removeWhere(
+          (element) => element.report.report_id == report.report_id);
       clusteringHelper.updateData(_listMarkers);
-
     } else {
       loadingStream.add(false);
       Utils.showAlert(

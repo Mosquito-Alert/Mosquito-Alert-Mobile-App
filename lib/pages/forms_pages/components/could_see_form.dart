@@ -8,8 +8,9 @@ class CouldSeeForm extends StatefulWidget {
   final Map displayQuestion;
   final Function setValid;
   final Function addOtherReport;
+  final Function nextPage;
 
-  CouldSeeForm(this.addReport, this.displayQuestion, this.setValid,
+  CouldSeeForm(this.addReport, this.displayQuestion, this.setValid, this.nextPage,
       {this.addOtherReport});
   @override
   _CouldSeeFormState createState() => _CouldSeeFormState();
@@ -67,6 +68,7 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
                             ? widget.addOtherReport('adult')
                             : id == 112 ? widget.addOtherReport('bite') : null;
                         widget.setValid(true);
+                        widget.nextPage();
                       },
                       child: SmallQuestionOption(
                         text,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -270,14 +269,14 @@ class _BitingReportPageState extends State<BitingReportPage> {
         setValid,
         displayQuestions.elementAt(5)['question']['text'][Utils.getLanguage()],
       ),
-      CouldSeeForm(addAdultReport, displayQuestions.elementAt(6), setValid),
+      // CouldSeeForm(addAdultReport, displayQuestions.elementAt(6), setValid),
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
 
-    if (widget.editReport != null ||
-        Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
-      _formsRepot.removeAt(2);
-    }
+    // if (widget.editReport != null ||
+    //     Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
+    //   _formsRepot.removeAt(2);
+    // }
   }
 
   addOtherReport(String reportType) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -8,8 +9,11 @@ import 'package:mosquito_alert_app/utils/style.dart';
 class QuestionsBreedingForm extends StatefulWidget {
   final Map displayQuestion;
   final Function setValid;
+  final bool hasImage;
+  final Function nextPage;
 
-  QuestionsBreedingForm(this.displayQuestion, this.setValid);
+  QuestionsBreedingForm(
+      this.displayQuestion, this.setValid, this.hasImage, this.nextPage);
 
   @override
   _QuestionsBreedingFormState createState() => _QuestionsBreedingFormState();
@@ -62,19 +66,37 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
               itemCount: widget.displayQuestion['answers'].length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 5 / 2,
-                // crossAxisSpacing: 10,
+                childAspectRatio: widget.hasImage ? 1 : 5 / 2,
+                crossAxisSpacing: widget.hasImage ? 10 : 0,
               ),
               itemBuilder: (context, index) {
                 String text =
                     widget.displayQuestion['answers'][index]['text'][language];
                 int id = widget.displayQuestion['answers'][index]['id'];
+                if (widget.hasImage) {
+                  return Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        addQuestion(text, id);
+                        widget.setValid(true);
+                        widget.nextPage();
+                      },
+                      child: ImageQuestionOption(
+                        question.answer_id == id ? true : false,
+                        text,
+                        "",
+                        widget.displayQuestion['answers'][index]['img'],
+                      ),
+                    ),
+                  );
+                }
                 return Container(
                   padding: EdgeInsets.all(5),
                   child: GestureDetector(
                       onTap: () {
                         addQuestion(text, id);
                         widget.setValid(true);
+                        widget.nextPage();
                       },
                       child: SmallQuestionOption(
                         text,
@@ -83,11 +105,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                 );
               },
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-            //   child: Divider(),
-            // ),
-            // AddPhotoButton(),
+           
             Style.bottomOffset,
           ],
         ),

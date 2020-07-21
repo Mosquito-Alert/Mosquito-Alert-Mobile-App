@@ -432,7 +432,7 @@ class ApiSingleton {
         body.addAll({'package_name': report.package_name});
       }
       if (report.package_version != null) {
-        body.addAll({'package_version': report.package_version});
+        // body.addAll({'package_version': report.package_version});
       }
       if (report.responses != null && report.responses.isNotEmpty) {
         body.addAll(
@@ -455,6 +455,9 @@ class ApiSingleton {
       }
       if (report.app_language != null) {
         body.addAll({'app_language': report.app_language});
+      }
+      if (report.note != null) {
+        body.addAll({'note': report.note});
       }
 
       final response = await http.post(
