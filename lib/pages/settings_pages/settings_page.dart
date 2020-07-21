@@ -4,11 +4,12 @@ import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:share/share.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 
@@ -25,7 +26,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getTracking();
   }
@@ -82,48 +82,49 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
             SizedBox(
-              height: 35,
+              height: 10,
             ),
-            SettingsMenuWidget(MyLocalizations.of(context, "share_app_txt"),
-                () {
-              Share.share('https://www.google.es'); //TODO: fix url
-            }),
+            SettingsMenuWidget(
+                MyLocalizations.of(context, "select_language_txt"), () {}),
             SizedBox(
               height: 10,
             ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "select_language_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "info_scores_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            SettingsMenuWidget(MyLocalizations.of(context, "consent_form_txt"),
-                () {
+            SettingsMenuWidget(
+                enableTracking
+                    ? MyLocalizations.of(context, "enable_background_tracking")
+                    : MyLocalizations.of(
+                        context, "disable_background_tracking"), () {
+              _disableBgTracking();
+            }),
+            SizedBox(
+              height: 35,
+            ),
+            SettingsMenuWidget(
+                MyLocalizations.of(context, "mosquitos_gallery_txt"), () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                        MyLocalizations.of(context, "url_consent_form"))),
+                MaterialPageRoute(builder: (context) => GalleryPage()),
               );
             }),
             SizedBox(
               height: 10,
             ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "tutorial_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "mosquito_gallery_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            SettingsMenuWidget(MyLocalizations.of(context, "open_web_txt"), () {
+            SettingsMenuWidget(MyLocalizations.of(context, "tutorial_txt"), () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TutorialPage()),
+              );
+            }),
+            SizedBox(
+              height: 10,
+            ),
+            SettingsMenuWidget(
+                MyLocalizations.of(context, "info_scores_txt"), () {}),
+            SizedBox(
+              height: 10,
+            ),
+            SettingsMenuWidget(
+                MyLocalizations.of(context, "about_the_project_txt"), () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -134,13 +135,13 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "more_info_app_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
             SettingsMenuWidget(
-                MyLocalizations.of(context, "privacy_policy_txt"), () {
+                MyLocalizations.of(context, "about_us_txt"), () {}),
+            SizedBox(
+              height: 10,
+            ),
+            SettingsMenuWidget(MyLocalizations.of(context, "terms_of_use_txt"),
+                () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -151,19 +152,6 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            // SettingsMenuWidget(
-            //     MyLocalizations.of(context, "our_partners_txt"), () {}),
-            // SizedBox(
-            //   height: 10,
-            // ),
-
-            SettingsMenuWidget(
-                enableTracking
-                    ? MyLocalizations.of(context, "enable_background_tracking")
-                    : MyLocalizations.of(
-                        context, "disable_background_tracking"), () {
-              _disableBgTracking();
-            }),
             SizedBox(
               height: 60,
             ),

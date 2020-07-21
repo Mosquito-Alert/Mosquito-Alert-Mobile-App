@@ -149,25 +149,87 @@ class MyLocalizations {
       "login_with_your_account_txt": "Accede con tu cuenta de usuario",
       "use_your_acount_details_txt":
           "Si accedes a la app con tus credenciales, podrás guardar y sincronizar tus datos entre distintos dispositivos.",
-      "share_app_txt": "Comparte esta app",
-      "open_web_txt": "Abrir página web...",
-      "more_info_app_txt": "Más información acerca de Mosquito Alert",
-      "our_partners_txt": "Nuestros partners y colaboradores",
       "logout_txt": "Cerrar sesión",
       "logout_alert_txt": "¿Estás segurx que quieres cerrar sesión?",
       "select_language_txt": "Selecciona el idioma",
       "info_scores_txt": "Infromación scoring",
-      "consent_form_txt": "Consent form",
       "tutorial_txt": "Tutorial",
-      "mosquito_gallery_txt":
-          "Galería de mosquitos (cómo identificar especies)",
-      "privacy_policy_txt": "Política de privacidad",
       "disable_background_tracking": "Deshabilitar background tracking",
       "enable_background_tracking": "Habilitar background tracking",
       "disable_tracking_question_text":
           "Se va a desabilitar el background tracking. ¿Esta seguro?",
       "enable_tracking_question_text":
           "Se va a habilitar el background tracking. ¿Esta seguro?",
+      "mosquitos_gallery_txt": "Guía de mosquitos",
+      "about_the_project_txt": "Sobre el proyecto",
+      "about_us_txt": "Sobre nostros",
+      "terms_of_use_txt": "Licencia y términos de uso",
+      "gallery_info_01":
+          "Buscamos 5 especies de mosquito: el (1) Mosquito tigre (Ae. albopictus), el (2) Mosquito de la fiebre amarilla (Ae. aegypti), el (3) Mosquito del Japón (Ae. japonicus), el (4) Mosquito de Corea (Ae. koreicus) y el (5) Mosquito común (C. pipiens). Con esta guía aprenderás a identificarlos.",
+      "gallery_info_02":
+          "Para identificar especies de mosquito, necesitas saber que su cuerpo se divide en 3 partes: (A) cabeza, (B) tórax y (C) abdomen. El tórax, que es como la espalda del mosquito, tiene un dibujo que nos permite distinguir varias especies. También el patrón de manchas de las patas, especialmente el del tercer par (3) y, en menor ",
+      "gallery_info_03":
+          "El mosquito común (Culex pipiens): el que nos pica principalmente de noche. Es de color amarillento/marrón pálido.",
+      "gallery_info_04":
+          "Los otros 4 mosquitos que buscamos son del género Aedes (Ae.): son oscuros o negros con manchas blancas y acostumbran a picar de día, también al amanecer y atardecer. Dos especies tienen el dibujo del tórax blanco, mientras que las otras dos, dorado. Sigue aprendiendo a separar estas 4 especies.",
+      "gallery_info_05":
+          "Mosquito tigre (Ae. albopictus): es negro; tiene una sola línea blanca en cabeza y tórax. Mosquito de la fiebre amarilla (Ae. aegypti): es de color marrón oscuro; tiene un dibujo en forma de lira. En ambos casos el dibujo del tórax es blanco.",
+      "gallery_info_06":
+          "Ae. japonicus y Ae. koreicus tienen el dibujo del tórax dorado y son muy parecidos. Para diferenciarlos tienes que fijarte en sus patas, concretamente en las manchas del tercer par de patas. Ae. koreicus tiene en su parte final un par de manchas blancas que no existen en Ae. japonicus.",
+      "gallery_info_07":
+          "Los mosquitos tienen un ciclo de vida complejo, con 4 etapas: (1) las hembras de adulto ponen (2) huevos en recipientes con agua estancada; en unos días, nacen (3) las larvas y (4) las pupas, que son acuáticas. Las pupas crecen y hacen la metamorfosis al adulto. Una hembra puede llegar a poner centenares de huevos. Recuerda: sin agua estancada no hay mosquitos.",
+      "gallery_info_08":
+          "Puesta de huevos de mosquitos del género Aedes. Las hembras ponen los huevos en seco sobre las paredes de recipientes pequeños, cercanos al agua estancada. Los huevos son tan pequeños que son difíciles de ver a simple vista. Abajo, larvas (alargadas) y pupas (redondeadas) de mosquitos Aedes.",
+      "gallery_info_09":
+          "Las larvas son acuáticas y en poco tiempo se transforman en pupas y luego en mosquitos adultos mediante el proceso que se conoce como metamorfosis. En la fase adulta, los machos y hembras de Aedes pueden diferenciarse por los penachos en la cabeza. Mosquito tigre macho a la izquierda, y hembra a la derecha.",
+      "gallery_info_10":
+          "En los espacios públicos los mosquitos pueden reproducirse allí donde se acumule agua. En las zonas urbanas los imbornales son un importante lugar de cría para muchos de estos mosquitos. También agujeros de árboles, la base de árboles, estanques o espacios donde se puedan producir charcos.",
+      "gallery_info_11":
+          "En los espacios privados los Aedes pueden aprovechar cualquier pequeño contenedor con agua para desarrollarse. Eso incluye los platos de las macetas que recogen el exceso de agua, cubos o juguetes en el jardín que se llenen de agua con la lluvia. Para prevenir los mosquitos en casa hay que vigilar los espacios y objetos donde se pueda acumular agua.",
+
+      "tutorial_info_01":
+          "Te damos la bienvenida a Mosquito Alert, una plataforma de ciencia ciudadana para investigar y controlar mosquitos transmisores de enfermedades como el dengue, el Zika, la chikungunya o la fiebre del Nilo Occidental. ",
+      "tutorial_info_01_1":
+          "Antes de empezar a participar, familiarízate con la app y aprende trucos para enviar datos útiles para la ciencia.",
+      "tutorial_info_02":
+          "Buscamos 5 especies de mosquito: el (1) Mosquito tigre (Ae. albopictus), el (2) Mosquito de la fiebre amarilla (Ae. aegypti), el (3) Mosquito del Japón (Ae. japonicus), el (4) Mosquito de Corea (Ae. koreicus) y el (5) Mosquito común (C. pipiens).",
+      "tutorial_info_03":
+          "No necesitas experiencia en mosquitos, pero sí saber un par de cosas: el tórax es el segmento que está detrás de la cabeza del mosquito. Es como una espalda. Cada especie tiene su propio dibujo en cabeza y tórax (1) y eso nos permite identificarlas.",
+      "tutorial_info_04":
+          "Estos mosquitos crían en pequeños recipientes con agua estancada, como imbornales, macetas, bocas de riego, agujeros... Allí ponen sus huevos y crecen sus larvas acuáticas. Recuerda: sin agua no hay mosquitos.",
+      "tutorial_title_05": "Para empezar a participar, notifica mosquit",
+      "tutorial_info_05":
+          "Si crees que has encontrado una de las 5 especies, comparte tu información con el botón amarillo. Intenta fotografiar su tórax y cuerpo entero.",
+      "tutorial_title_06": "También puedes notificar picaduras",
+      "tutorial_info_06":
+          "Si crees que te ha picado alguno de estos mosquitos, puedes compartirlo con el botón rojo. Indica dónde y cuándo te han picado. Puedes hacerlo tantas veces como haga falta. ",
+      "tutorial_title_07":
+          "También puedes notificar lugares de cría en la vía pública",
+      "tutorial_info_07":
+          "Utiliza el botón azul. Añade una foto para que lo podamos identificar.",
+      "tutorial_title_08": "Consulta y edita tus datos",
+      "tutorial_info_08":
+          "Podrás ver tu historial de participación, modificar datos enviados y consultar información reciente de otros participantes en tu zona.",
+      "tutorial_title_09": "Valida fotos de otras personas.",
+      "tutorial_info_09":
+          "Anímate a clasificar fotos y a determinar la especie. No te preocupes si tienes dudas, será la opinión de muchas personas juntas la que contará.",
+      "tutorial_title_10": "Consigue puntos",
+      "tutorial_info_10":
+          "Cuantos más y mejores datos envíes, y más fotos de otros valides, más puntos conseguirás. Incluso puedes subir de nivel.",
+      "tutorial_title_11": "Mantente informado",
+      "tutorial_info_11":
+          "Recibirás respuestas de expertos sobre tus observaciones y estarás al día de las últimas noticias.",
+      "tutorial_title_12": "Configura Mosquito Alert",
+      "tutorial_info_12":
+          "En el menú podrás cambiar el idioma y acceder a contenidos extra. Encontrarás también una guía de identificación de especies y el tutorial de la app.",
+      "tutorial_title_13": "El esfuerzo de muestreo, esencial para la ciencia",
+      "tutorial_info_13":
+          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que envíes. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opción en el menú (ajustes).",
+      "tutorial_title_14": "Conserva tus datos y mantén tu anonimato",
+      "tutorial_info_14":
+          "Tu participación es anónima. Aún así, hemos desarrollado un sistema que te permite, si quieres, iniciar sesión en Mosquito Alert con cuentas externas y conservar tus datos y puntuación. Así, puedes sincronizar varios dispositivos y recuperar datos si tienes que desinstalar la app. Más información en el menú y en la Política de Privacidad de la app.",
+      "tutorial_info_15":
+          "¡Ya puedes empezar! Tus observaciones contribuirán al estudio de los mosquitos transmisores de enfermedades. Encontrarás información muy detallada y recomendaciones de cómo hacer buenas fotos en: www.mosquitoalert.com.",
 
       //My reports page
       "map_txt": "Mapa",
