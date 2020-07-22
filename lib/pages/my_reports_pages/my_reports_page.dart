@@ -473,7 +473,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Style.titleMedium(
                                     MyLocalizations.of(

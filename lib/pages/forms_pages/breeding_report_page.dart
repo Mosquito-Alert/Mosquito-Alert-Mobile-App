@@ -459,7 +459,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       CupertinoActionSheetAction(
         onPressed: () {
           Navigator.pop(context);
-          _showInfoImage();
+          Utils.infoBreedingCamera(context, getImage);
         },
         child: Text(
           MyLocalizations.of(context, 'camara'),
@@ -488,7 +488,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       InkWell(
         onTap: () {
           Navigator.pop(context);
-          _showInfoImage();
+          Utils.infoBreedingCamera(context, getImage);
+          // _showInfoImage();
         },
         child: Container(
           width: double.infinity,
@@ -562,64 +563,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         Utils.saveImgPath(image);
       });
     }
-  }
-
-  _showInfoImage() {
-    return showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            content: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.30,
-              ),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Style.body(
-                    MyLocalizations.of(context, 'camera_info_breeding_txt_01'),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Style.body(
-                    MyLocalizations.of(context, 'camera_info_breeding_txt_02'),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Style.noBgButton(
-                          MyLocalizations.of(context, "ok_next_txt"),
-                          () {
-                            Navigator.of(context).pop();
-                            getImage(ImageSource.camera);
-                          },
-                          textColor: Style.colorPrimary,
-                        ),
-                      ),
-                      Expanded(
-                        child: Style.noBgButton(
-                          MyLocalizations.of(context, "no_show_again"),
-                          () {
-                            Navigator.of(context).pop();
-                          },
-                          // textColor: Style.colorPrimary,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   Future getImage(source) async {

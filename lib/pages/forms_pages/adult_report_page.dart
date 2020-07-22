@@ -522,7 +522,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       CupertinoActionSheetAction(
         onPressed: () {
           Navigator.pop(context);
-          _showInfoImage();
+          Utils.infoAdultCamera(context, getImage);
         },
         child: Text(
           MyLocalizations.of(context, 'camara'),
@@ -559,7 +559,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       InkWell(
         onTap: () {
           Navigator.pop(context);
-          _showInfoImage();
+          Utils.infoAdultCamera(context, getImage);
         },
         child: Container(
           width: double.infinity,
@@ -647,77 +647,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
         Utils.saveImgPath(image);
       });
     }
-  }
-
-  _showInfoImage() {
-    return showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
-            backgroundColor: Colors.transparent,
-            content: Container(
-              padding: EdgeInsets.all(20),
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.45,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                    alignment: Alignment.topCenter,
-                    image: AssetImage(
-                      'assets/img/bg_alert_camera_adult.png',
-                    ),
-                    fit: BoxFit.cover),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(
-                    height: 45,
-                  ),
-                  Style.body(
-                    MyLocalizations.of(context, 'camera_info_adult_txt_01'),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Style.body(
-                    MyLocalizations.of(context, 'camera_info_adult_txt_02'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Style.noBgButton(
-                          MyLocalizations.of(context, "ok_next_txt"),
-                          () {
-                            Navigator.of(context).pop();
-                            getImage(ImageSource.camera);
-                          },
-                          textColor: Style.colorPrimary,
-                        ),
-                      ),
-                      Expanded(
-                        child: Style.noBgButton(
-                          MyLocalizations.of(context, "no_show_again"),
-                          () {
-                            Navigator.of(context).pop();
-                          },
-                          // textColor: Style.colorPrimary,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   Future getImage(source) async {

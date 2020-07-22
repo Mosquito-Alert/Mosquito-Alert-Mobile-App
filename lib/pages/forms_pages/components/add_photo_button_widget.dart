@@ -118,14 +118,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                print('image');
                                 _showImage(images[index].path);
-                                // return Container(
-                                //   child: PhotoView(
-                                //     imageProvider:
-                                //         AssetImage(images[index].path),
-                                //   ),
-                                // );
                               },
                               child: Container(
                                 height: double.infinity,
@@ -184,11 +177,24 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       ),
       CupertinoActionSheetAction(
         onPressed: () {
+          if (Utils.report.type == 'adult') {
+            Utils.infoAdultCamera(context, getImage);
+          } else if (Utils.report.type == 'site') {
+            Utils.infoBreedingCamera(context, getImage);
+          }
           Navigator.pop(context);
-          _showInfoImage();
         },
         child: Text(
           MyLocalizations.of(context, 'camara'),
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+      CupertinoActionSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text(
+          MyLocalizations.of(context, 'continue_without_photo'),
           style: TextStyle(color: Colors.blue),
         ),
       ),
@@ -196,8 +202,12 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     List<Widget> listForAndroid = <Widget>[
       InkWell(
         onTap: () {
+          if (Utils.report.type == 'adult') {
+            Utils.infoAdultCamera(context, getImage);
+          } else if (Utils.report.type == 'site') {
+            Utils.infoBreedingCamera(context, getImage);
+          }
           Navigator.pop(context);
-          _showInfoImage();
         },
         child: Container(
           width: double.infinity,
@@ -219,6 +229,18 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
+      Divider(height: 1.0),
+      InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
+              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        ),
+      ),
     ];
 
     Utils.modalDetailTrackingforPlatform(
@@ -229,52 +251,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         context, () {
       Navigator.pop(context);
     });
-  }
-
-  _showInfoImage() {
-    return showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            content: Container(
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Style.body(
-                    " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently",
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "ok_next_txt"),
-                        () {
-                          Navigator.of(context).pop();
-                          getImage(ImageSource.camera);
-                        },
-                        textColor: Style.colorPrimary,
-                      ),
-                      Style.noBgButton(
-                        MyLocalizations.of(context, "close"),
-                        () {
-                          Navigator.of(context).pop();
-                        },
-                        // textColor: Style.colorPrimary,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   _deleteImage(File img, int index) {

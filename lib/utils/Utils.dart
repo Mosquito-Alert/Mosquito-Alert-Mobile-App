@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -37,10 +38,9 @@ class Utils {
 
   static void deleteImage(File image) {
     imagePath.removeWhere((element) => element['image'] == image);
-    // print(imagePath);
   }
 
-  //REPORTS form
+  //REPORTS
   static Report report;
   static Session session;
   static List<Report> reportsList;
@@ -50,7 +50,8 @@ class Utils {
     ApiSingleton().closeSession(session);
   }
 
-  static Future<bool> createNewReport(String type, {lat, lon, locationType}) async {
+  static Future<bool> createNewReport(String type,
+      {lat, lon, locationType}) async {
     if (session == null) {
       reportsList = [];
 
@@ -113,7 +114,7 @@ class Utils {
       }
       return true;
     }
-    return false; 
+    return false;
   }
 
   static resetReport() {
@@ -617,9 +618,151 @@ class Utils {
         : new Container();
   }
 
-  //Manage Data
-  static Position location;
-  static LatLng defaultLocation = LatLng(41.3874, 2.1688);
+  static infoAdultCamera(context, getImage) async {
+    bool showInfo = await UserManager.getShowInfoAdult();
+    if (showInfo == null || !showInfo) {
+      return showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              backgroundColor: Colors.transparent,
+              content: Container(
+                padding: EdgeInsets.all(20),
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.45,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                      alignment: Alignment.topCenter,
+                      image: AssetImage(
+                        'assets/img/bg_alert_camera_adult.png',
+                      ),
+                      fit: BoxFit.cover),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 45,
+                    ),
+                    Style.body(
+                      MyLocalizations.of(context, 'camera_info_adult_txt_01'),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Style.body(
+                      MyLocalizations.of(context, 'camera_info_adult_txt_02'),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Style.noBgButton(
+                            MyLocalizations.of(context, "ok_next_txt"),
+                            () {
+                              Navigator.of(context).pop();
+                              getImage(ImageSource.camera);
+                            },
+                            textColor: Style.colorPrimary,
+                          ),
+                        ),
+                        Expanded(
+                          child: Style.noBgButton(
+                            MyLocalizations.of(context, "no_show_again"),
+                            () {
+                              getImage(ImageSource.camera);
+                              UserManager.setSowInfoAdult(true);
+                              Navigator.of(context).pop();
+                            },
+                            // textColor: Style.colorPrimary,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    } else {
+      getImage(ImageSource.camera);
+    }
+  }
+
+  static infoBreedingCamera(context, getImage) async {
+    bool showInfo = await UserManager.getShowInfoBreeding();
+
+    if (showInfo == null || !showInfo) {
+      return showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              content: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.30,
+                ),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Style.body(
+                      MyLocalizations.of(
+                          context, 'camera_info_breeding_txt_01'),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Style.body(
+                      MyLocalizations.of(
+                          context, 'camera_info_breeding_txt_02'),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Style.noBgButton(
+                            MyLocalizations.of(context, "ok_next_txt"),
+                            () {
+                              Navigator.of(context).pop();
+                              getImage(ImageSource.camera);
+                            },
+                            textColor: Style.colorPrimary,
+                          ),
+                        ),
+                        Expanded(
+                          child: Style.noBgButton(
+                            MyLocalizations.of(context, "no_show_again"),
+                            () {
+                              UserManager.setSowInfoBreeding(true);
+                              Navigator.of(context).pop();
+                              getImage(ImageSource.camera);
+                            },
+                            // textColor: Style.colorPrimary,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    } else {
+      getImage(ImageSource.camera);
+    }
+  }
 
   static String getLanguage() {
     String language = ui.window.locale.languageCode;
@@ -638,4 +781,8 @@ class Utils {
     else
       throw 'Could not launch';
   }
+
+  //Manage Data
+  static Position location;
+  static LatLng defaultLocation = LatLng(41.3874, 2.1688);
 }

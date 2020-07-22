@@ -56,6 +56,16 @@ class UserManager {
     prefs.setBool("trackingDisabled", enabled);
   }
 
+  static Future<void> setSowInfoAdult(show) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("infoCameraAdult", show);
+  }
+
+  static Future<void> setSowInfoBreeding(show) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("infoCameraBreeding", show);
+  }
+
   //get
   static Future<String> getUUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,6 +95,16 @@ class UserManager {
   static Future<bool> getTracking() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool("trackingDisabled");
+  }
+
+  static Future<bool> getShowInfoAdult() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("infoCameraAdult");
+  }
+
+  static Future<bool> getShowInfoBreeding() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("infoCameraBreeding");
   }
 
   static signOut() async {
