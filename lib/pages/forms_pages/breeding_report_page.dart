@@ -172,8 +172,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _pagesController = PageController();
 
     _formsRepot = [
-      // PublicBreedingForm(setSkipReport, displayQuestions.elementAt(0), setValid,
-      //     widget.editReport != null),
       QuestionsBreedingForm(
           displayQuestions.elementAt(3), setValid, true, _chooseTypeImage),
       QuestionsBreedingForm(
@@ -182,19 +180,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           setValid,
           displayQuestions.elementAt(4)['question']['text']
               [Utils.getLanguage()]),
-      // CouldSeeForm(
-      //   addAdultReport,
-      //   displayQuestions.elementAt(2),
-      //   setValid,
-      //   addOtherReport: addOtherReport,
-      // ),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
-    if (widget.editReport != null ||
-        Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
-      _formsRepot.removeAt(3);
-    }
   }
 
   setSkipReport(skip) {

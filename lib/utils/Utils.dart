@@ -81,7 +81,7 @@ class Utils {
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       report.package_name = packageInfo.packageName;
-      // report.package_version = packageInfo.version;
+      report.package_version = 32;
 
       if (Platform.isAndroid) {
         var buildData = await DeviceInfoPlugin().androidInfo;
@@ -227,22 +227,6 @@ class Utils {
         value = value + 1;
         _questions[currentIndex].answer_value = value.toString();
       }
-
-      // //increase total bites answer_value
-      // int bitesIndex =
-      //     _questions.indexWhere((question) => question.question_id == 1);
-
-      // if (bitesIndex == -1) {
-      //   _questions.add(Question(
-      //       question: 'Cuantas picads',
-      //       answer: ' ',
-      //       question_id: 1,
-      //       answer_value: '1'));
-      // } else {
-      // int value = int.parse(_questions[bitesIndex].answer_value);
-      // value = value + 1;
-      // _questions[bitesIndex].answer_value = value.toString();
-      // }
     }
 
     //add other questions without answer_value
@@ -267,6 +251,10 @@ class Utils {
           ));
         }
       }
+    }
+
+    if (answer_id == 131) {
+      _questions.removeWhere((q) => q.question_id == 3);
     }
     report.responses = _questions;
   }

@@ -555,7 +555,6 @@ class _BitingFormState extends State<BitingForm> {
       setState(() {
         valid = isValid;
       });
-      // widget.setValid(isValid);
     }
   }
 

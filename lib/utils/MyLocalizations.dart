@@ -9,18 +9,13 @@ class MyLocalizations {
   static Map<String, Map<String, String>> _localizedValues = {
     "es": {
       "app_name": "Mosquito Alert",
-      "next": "Siguiente",
-      "finish": "Finalizar",
-      "unknoun": "Desconocido",
       "ok": 'Aceptar',
       "cancel": "Cancelar",
       "yes": "Si",
       "no": "No",
       "delete": "Eliminar",
       "edit": "Editar",
-      "exit": "Salir",
       "reset": "Reset",
-      'close': "Cerrar",
 
       //LINKS
       "url_politics": "http://webserver.mosquitoalert.com/es/privacy/",
@@ -35,7 +30,6 @@ class MyLocalizations {
       "login_method_txt": "¿Cómo quieres acceder a la app?",
       "login_btn1": "Acceder con Facebook",
       "login_btn2": "Acceder con Gmail",
-      "login_btn3": "Acceder con tu AppleID",
       "login_btn4": "Acceder con mi correo electrónico",
       "login_btn5": "Acceder con Twitter",
       "terms_and_conditions_txt1":
@@ -77,8 +71,6 @@ class MyLocalizations {
       //Main page
       "welcome_text": "Bienvenido de nuevo",
       "what_to_do_txt": "¿Que quieres hacer?",
-      "more_info_points_txt":
-          "Haz click aquí para conocer más acerca esta puntuación.",
       "report_biting_txt": "Reportar picada",
       "bitten_by_mosquito_question_txt": "¿Te ha picado un mosquito?",
       "report_nest_txt": "Reportar nido",
@@ -94,12 +86,9 @@ class MyLocalizations {
 
       //Biting - report
       "biting_report_txt": "Reportar una picadura",
-      "need_more_information_txt": 'Nesecitamos un poco más de información.',
-      "lets_go_txt": "¡Vamos a por ello!",
       "tap_image_biting_txt":
           "Haz click encima de la imagen para reportar una nueva picada.",
       "continue_txt": "Continuar",
-      "complete_all_txt": "Complete todos los campos para continuar",
       "save_report_ok_txt":
           "Tus datos se han enviado correctamente. Muchas gracias por participar. En breve recibirás una notificación experta al respecto. Si necesitas editar tus datos, puedes hacerlo desde el menú principal.",
       "save_report_ko_txt": "Error, intentalo de nuevo más tarde",
@@ -112,22 +101,18 @@ class MyLocalizations {
       "comments_txt": "Comentarios",
 
       //Location - report
-      "location_bited_txt": "¿En qué ubicación te ha picado?",
       "chose_option_txt": "Escoge una opción.",
       "location_not_active_title": "Localización desactivada",
       "location_not_active_txt":
           "Para utilizar esta función, activa la localización del dispositivo",
       "current_location_txt": "Ubicación actual",
       "select_location_txt": "Seleccionar...",
-      "not_sure_txt": "No lo tengo claro",
+      
       "gallery": "Galería",
       "camara": "Cámara",
-      "add_image_txt": "Añadir foto",
-      "add_image_from_where_txt": "¿De dónde quieres subir la imagen?",
       "ok_next_txt": "De acuerdo, hacer foto!",
 
       //Moquito type - report
-      "could_see_txt": "¿Has podido ver el mosquito?",
       "could_recognise_txt":
           "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
       "recognize_it_txt": "¿Lo reconoces?",
@@ -248,17 +233,12 @@ class MyLocalizations {
       "registered_location_txt": "Ubicación registrada",
       "exact_time_register_txt": "Hora exacta del registro",
       "reported_images_txt": "Imagenes reportadas",
-      "reported_species_txt": "Especie reportada",
-      "when_biting_txt": "¿Cuando te ha picado?",
-      "which_situation_txt": "¿En qué situación?",
+
       "delete_report_title": "¿Seguro que quieres eliminar el reporte?",
       "delete_report_txt": "Esta acción no se puede deshacer.",
       "your_reports_bites_txt": "Tus reportes de picadas",
       "your_reports_breeding_txt": "Tus reportes de lugares de cría",
       "your_reports_adults_txt": "Tus reportes de adultos",
-      "other_reports_bites_txt": "Reportes de picadas",
-      "other_reports_breeding_txt": "Reportes de lugares de cría",
-      "other_reports_adults_txt": "Reportes de adultos",
       "other_reports_txt": "Otros reportes",
       "no_reports_yet_txt": "No hay reportes registrados",
       "near_from_txt": "Cerca de",

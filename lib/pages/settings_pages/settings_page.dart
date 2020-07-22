@@ -12,6 +12,7 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:package_info/package_info.dart';
 
 class SettingsPage extends StatefulWidget {
   final Function enableTracking;
@@ -23,6 +24,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool enableTracking = false;
+  var packageInfo;
 
   @override
   void initState() {
@@ -32,6 +34,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   getTracking() async {
     enableTracking = await UserManager.getTracking();
+    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      packageInfo = _packageInfo;
+    });
   }
 
   @override
@@ -85,7 +91,9 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                MyLocalizations.of(context, "select_language_txt"), () {}),
+                MyLocalizations.of(context, "select_language_txt"), () {
+
+                }),
             SizedBox(
               height: 10,
             ),
@@ -119,7 +127,9 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                MyLocalizations.of(context, "info_scores_txt"), () {}),
+                MyLocalizations.of(context, "info_scores_txt"), () {
+
+                }),
             SizedBox(
               height: 10,
             ),
@@ -162,8 +172,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: <Widget>[
                   Style.title(MyLocalizations.of(context, "app_name"),
                       fontSize: 8, textAlign: TextAlign.center),
-                  Style.bodySmall('v2.0.0 (build 504)',
-                      fontSize: 8, textAlign: TextAlign.center),
+                  Style.bodySmall(
+                      packageInfo != null
+                          ? "${packageInfo.version} (build ${packageInfo.buildNumber})"
+                          : "",
+                      fontSize: 8,
+                      textAlign: TextAlign.center),
                 ],
               ),
             ),

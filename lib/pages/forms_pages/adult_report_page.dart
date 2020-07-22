@@ -16,7 +16,6 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'breeding_report_page.dart';
 import 'components/biting_location_form.dart';
 
 class AdultReportPage extends StatefulWidget {
@@ -235,7 +234,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
     }
   ];
 
-  // bool skip3 = false;
   bool addBiting = false;
   bool validContent = false;
   bool showCamera = false;
@@ -368,12 +366,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       Utils.resetReport();
                     }
                     Navigator.pop(context);
-                    // } else if (currentPage == 2.0 && skip3) {
-                    //   _pagesController
-                    //       .animateToPage(0,
-                    //           duration: Duration(microseconds: 300),
-                    //           curve: Curves.ease)
-                    //       .then((value) => setValid(true));
                   } else {
                     _pagesController
                         .previousPage(
@@ -440,16 +432,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               if (showCamera) {
                                                 _chooseTypeImage();
                                               } else {
-                                                // if (currentPage == 0.0 && skip3) {
-                                                //   _pagesController
-                                                //       .animateToPage(2,
-                                                //           duration: Duration(
-                                                //               microseconds: 300),
-                                                //           curve: Curves.ease)
-                                                //       .then((value) => setValid(
-                                                //           widget.editReport !=
-                                                //               null));
-                                                // } else {
+                                                
                                                 _pagesController
                                                     .nextPage(
                                                         duration: Duration(
@@ -458,7 +441,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                     .then((value) => setValid(
                                                         widget.editReport !=
                                                             null));
-                                                // }
                                               }
                                             }
                                           }),
@@ -534,12 +516,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           Navigator.pop(context);
           setShowCamera(false);
 
-          // if (skip3) {
-          //   _pagesController
-          //       .animateToPage(2,
-          //           duration: Duration(microseconds: 300), curve: Curves.ease)
-          //       .then((value) => setValid(widget.editReport != null));
-          // } else {
+        
           setState(() {
             index = _pagesController.page + 1;
           });
@@ -547,7 +524,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
               .nextPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease)
               .then((value) => setValid(widget.editReport != null));
-          // }
         },
         child: Text(
           MyLocalizations.of(context, 'continue_without_photo'),
@@ -586,12 +562,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         onTap: () {
           Navigator.pop(context);
           setShowCamera(false);
-          // if (skip3) {
-          //   _pagesController
-          //       .animateToPage(2,
-          //           duration: Duration(microseconds: 300), curve: Curves.ease)
-          //       .then((value) => setValid(widget.editReport != null));
-          // } else {
+          
           setState(() {
             index = _pagesController.page + 1;
           });
@@ -599,7 +570,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
               .nextPage(
                   duration: Duration(microseconds: 300), curve: Curves.ease)
               .then((value) => setValid(widget.editReport != null));
-          // }
         },
         child: Container(
           width: double.infinity,
@@ -627,19 +597,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     if (files != null) {
       setShowCamera(false);
-      // if (skip3) {
-      //   _pagesController
-      //       .animateToPage(2,
-      //           duration: Duration(microseconds: 300), curve: Curves.ease)
-      //       .then((value) => setValid(widget.editReport != null));
-      // } else {
       setState(() {
         index = _pagesController.page + 1;
       });
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
-      // }
     }
 
     if (files != null) {
@@ -657,16 +620,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (image != null) {
       Utils.saveImgPath(image);
       setShowCamera(false);
-      // if (skip3) {
-      //   _pagesController
-      //       .animateToPage(2,
-      //           duration: Duration(microseconds: 300), curve: Curves.ease)
-      //       .then((value) => setValid(widget.editReport != null));
-      // } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
-      // }
     }
   }
 

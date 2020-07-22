@@ -265,14 +265,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
         setValid,
         displayQuestions.elementAt(5)['question']['text'][Utils.getLanguage()],
       ),
-      // CouldSeeForm(addAdultReport, displayQuestions.elementAt(6), setValid),
+     
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
-
-    // if (widget.editReport != null ||
-    //     Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
-    //   _formsRepot.removeAt(2);
-    // }
   }
 
   addOtherReport(String reportType) {
