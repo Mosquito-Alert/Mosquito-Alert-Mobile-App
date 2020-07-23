@@ -24,6 +24,10 @@ class MyLocalizations {
       "url_point_2": "/stats/user_ranking/1/",
       "url_consent_form": "http://webserver.mosquitoalert.com/es/terms/",
       "url_web": "http://www.mosquitoalert.com",
+      "url_scoring_1": "http://webserver.mosquitoalert.com/",
+      "url_scoring_2": "/scoring/",
+      "url_about_us": "http://tigaserver2.ceab.csic.es/en/about_us/",
+      "url_about_project": "http://tigaserver2.ceab.csic.es/en/project_about/",
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -107,7 +111,7 @@ class MyLocalizations {
           "Para utilizar esta función, activa la localización del dispositivo",
       "current_location_txt": "Ubicación actual",
       "select_location_txt": "Seleccionar...",
-      
+
       "gallery": "Galería",
       "camara": "Cámara",
       "ok_next_txt": "De acuerdo, hacer foto!",

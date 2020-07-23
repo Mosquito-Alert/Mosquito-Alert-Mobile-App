@@ -91,9 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                MyLocalizations.of(context, "select_language_txt"), () {
-
-                }),
+                MyLocalizations.of(context, "select_language_txt"), () {}),
             SizedBox(
               height: 10,
             ),
@@ -126,10 +124,17 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, "info_scores_txt"), () {
-
-                }),
+            SettingsMenuWidget(MyLocalizations.of(context, "info_scores_txt"),
+                () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => InfoPage(
+                        MyLocalizations.of(context, "url_scoring_1") +
+                            Utils.getLanguage() +
+                            MyLocalizations.of(context, "url_scoring_2"))),
+              );
+            }),
             SizedBox(
               height: 10,
             ),
@@ -138,15 +143,21 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, "url_web"))),
+                    builder: (context) => InfoPage(
+                        MyLocalizations.of(context, "url_about_project"))),
               );
             }),
             SizedBox(
               height: 10,
             ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, "about_us_txt"), () {}),
+            SettingsMenuWidget(MyLocalizations.of(context, "about_us_txt"), () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        InfoPage(MyLocalizations.of(context, "url_about_us"))),
+              );
+            }),
             SizedBox(
               height: 10,
             ),
