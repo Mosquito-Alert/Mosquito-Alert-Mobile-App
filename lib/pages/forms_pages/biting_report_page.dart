@@ -39,8 +39,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "id": 1,
         "text": {
           "en": "How many bites did you get?",
-          "ca": "Quantes vegades t'han picat?",
-          "es": "¿Cuantas veces te han picado?"
+          "ca": "Quantes picades tens i en quina part del cos?",
+          "es": "¿Cuántas picaduras tienes y en qué parte del cuerpo?"
         }
       },
       "answers": [
@@ -60,43 +60,35 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "id": 2,
         "text": {
           "en": "Where have you been bitten?",
-          "ca": "On t'han picat?",
-          "es": "¿Donde te han picado?"
+          "ca": "Digues on t'han picat?",
+          "es": "Señala dónde te han picado"
         }
       },
       "answers": [
         //Bites by body are - value equals number of bites in each area, must be = to total number of bites
         {
           "id": 21,
-          "text": {"en": "Head", "ca": "Cap", "es": "Cap"}
+          "text": {"en": "Head", "ca": "Cap"}
         },
         {
           "id": 22,
-          "text": {
-            "en": "Left arm",
-            "ca": "Braç esquerre",
-            "es": "Braç esquerre"
-          }
+          "text": {"en": "Left arm", "ca": "Braç esquerre"}
         },
         {
           "id": 23,
-          "text": {"en": "Right arm", "ca": "Braç dret", "es": "Braç dret"}
+          "text": {"en": "Right arm", "ca": "Braç dret"}
         },
         {
           "id": 24,
-          "text": {"en": "Chest", "ca": "Tronc", "es": "Tronc"}
+          "text": {"en": "Chest", "ca": "Tronc"}
         },
         {
           "id": 25,
-          "text": {
-            "en": "Left leg",
-            "ca": "Cama esquerra",
-            "es": "Cama esquerra"
-          }
+          "text": {"en": "Left leg", "ca": "Cama esquerra"}
         },
         {
           "id": 26,
-          "text": {"en": "Right leg", "ca": "Cama dreta", "es": "Cama dreta"}
+          "text": {"en": "Right leg", "ca": "Cama dreta"}
         }
       ]
     },
@@ -105,8 +97,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "id": 4,
         "text": {
           "en": "Were you indoors or outdoors when you were bitten?",
-          "ca": "Estaves a dins o a fora quan et van picar?",
-          "es": "¿Estabas en el interior o en el exterior cuando te picaron?"
+          "ca": "T'han picar en un espai interior o exterior?",
+          "es": "¿Te han picado en un espacio interior o exterior?"
         }
       },
       "answers": [
@@ -114,7 +106,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           "id": 41,
           "text": {
             "en": "Indoors",
-            "ca": "A dins",
+            "ca": "Interior",
             "es": "Interior",
           }
         },
@@ -122,14 +114,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
           "id": 42,
           "text": {
             "en": "Outdoors",
-            "ca": "A fora",
+            "ca": "Exterior",
             "es": "Exterior",
           }
         },
-        // {
-        //   "id": 35,
-        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
-        // }
       ]
     },
     {
@@ -137,8 +125,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "id": 13,
         "text": {
           "en": "When did the mosquiti bite you?",
-          "ca": "Quan et va picar el mosquit?",
-          "es": "¿Cuando te picó el mosquito?"
+          "ca": "Quan t'ha picat?",
+          "es": "¿Cuando te han picado?"
         }
       },
       "answers": [
@@ -154,8 +142,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
           "id": 132,
           "text": {
             "en": "in the last 24h",
-            "ca": "Les darreres 24h",
-            "es": "Las ultimas 24h",
+            "ca": "A les darreres 24h",
+            "es": "En las ultimas 24h",
           }
         },
       ]
@@ -165,8 +153,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "id": 3,
         "text": {
           "en": "At what time of the day were you bitten?",
-          "ca": "A quina hora et van picar?",
-          "es": "¿A que hora te picaron?"
+          "ca": "En quin moment ha estat?",
+          "es": "¿En qué momento ha sido?"
         }
       },
       "answers": [
@@ -174,8 +162,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
           "id": 31,
           "text": {
             "en": "Sunrise",
-            "ca": "Sortida de sol",
-            "es": "Salida del sol",
+            "ca": "Matí",
+            "es": "Mañana",
           }
         },
         {
@@ -190,8 +178,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
           "id": 33,
           "text": {
             "en": "Sunset",
-            "ca": "Posta de sol",
-            "es": 'Puesta de sol',
+            "ca": "Tarda",
+            "es": 'Tarde',
           }
         },
         {
@@ -202,10 +190,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
             "es": "Noche",
           }
         },
-        // {
-        //   "id": 35,
-        //   "text": {"en": "Not sure", "ca": "No ho tinc clar"}
-        // }
       ]
     },
     {
@@ -214,13 +198,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
         "text": {
           "en": "Where were you when you were bitten?",
           "ca": "On estaves quan et van picar?",
-          "es": "On estaves quan et van picar?"
+          "es": "¿Dónde te encontrabas cuando te han picado?"
         }
       },
       "answers": [
         {
           "id": 61, //Location - value equals WKT of point
-          "text": {"en": "", "ca": ""}
+          "text": {"en": "", "ca": "", "es": ""}
         }
       ]
     },
@@ -236,7 +220,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       "answers": [
         {
           "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
         },
         {
           "id": 81,
@@ -265,7 +249,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
         setValid,
         displayQuestions.elementAt(5)['question']['text'][Utils.getLanguage()],
       ),
-     
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
   }

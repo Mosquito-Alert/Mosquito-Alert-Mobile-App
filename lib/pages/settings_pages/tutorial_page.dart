@@ -140,7 +140,7 @@ class _TutorialPageState extends State<TutorialPage> {
     return Icon(
       Icons.navigate_next,
       color: Style.colorPrimary,
-      size: 35.0,
+      size: 25.0,
     );
   }
 
@@ -232,7 +232,7 @@ class _TutorialPageState extends State<TutorialPage> {
 
         // Dot indicator
         colorDot: Style.colorPrimary.withOpacity(0.4),
-        sizeDot: 6.0,
+        sizeDot: 5.0,
         colorActiveDot: Style.colorPrimary,
         // typeDotAnimation: dotSliderAnimation.SIZE_TRANSITION,
 

@@ -10,7 +10,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_location_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -40,7 +39,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "text": {
           "en": "It's a public or a private location?",
           "ca": "Estàs a un lloc públic o propietat privada?",
-          "es": "Estàs a un lloc públic o propietat privada?"
+          "es": "Estás en un lugar público o propiedad privada?"
         }
       },
       "answers": [
@@ -68,7 +67,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "text": {
           "en": "Does it have water?",
           "ca": "Hi ha aigua?",
-          "es": "Hi ha aigua?",
+          "es": "¿Tiene agua?",
         }
       },
       "answers": [
@@ -111,8 +110,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         "id": 12,
         "text": {
           "en": "Is it a storm drain or other type of breeding site?",
-          "ca": "És un embornal o un altre tipus de lloc de cria?",
-          "es": "És un embornal o un altre tipus de lloc de cria?"
+          "ca": "Com és el lloc de cria detectat a la via pública?",
+          "es": "¿Cómo es el lugar de cría detectado en la vía pública?"
         }
       },
       "answers": [
@@ -122,7 +121,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           "text": {
             "en": "Storm drain",
             "ca": "Embornal",
-            "es": "Embornal",
+            "es": "Imbornal",
           }
         },
         {
@@ -130,8 +129,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           "id": 122,
           "text": {
             "en": "Other breeding site",
-            "ca": "Altres llocs de cria",
-            "es": "Altres llocs de cria"
+            "ca": "Altres tipus",
+            "es": "Otro tipo"
           }
         }
       ]
@@ -140,9 +139,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       "question": {
         "id": 6,
         "text": {
-          "en": "Where were you when you saw the breeding site?",
-          "ca": "On estaves quan vas veure el niu?",
-          "es": "¿Donde estaabas cuando viste el nido?"
+          "en": "Where is the breeding site?",
+          "ca": "On es troba el lloc de cria?",
+          "es": " ¿Dónde se encuentra el lugar de cría?"
         }
       },
       "answers": [
@@ -182,7 +181,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               [Utils.getLanguage()]),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
-
   }
 
   setSkipReport(skip) {
@@ -454,23 +452,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           style: TextStyle(color: Colors.blue),
         ),
       ),
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          setShowCamera(false);
-          _pagesController
-              .nextPage(
-                  duration: Duration(microseconds: 300), curve: Curves.ease)
-              .then((value) => setValid(widget.editReport != null));
-          setState(() {
-            index = _pagesController.page + 1;
-          });
-        },
-        child: Text(
-          MyLocalizations.of(context, 'continue_without_photo'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
     ];
     List<Widget> listForAndroid = <Widget>[
       InkWell(
@@ -496,26 +477,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           width: double.infinity,
           padding: EdgeInsets.all(20),
           child: Text(MyLocalizations.of(context, 'gallery'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          setShowCamera(false);
-          _pagesController
-              .nextPage(
-                  duration: Duration(microseconds: 300), curve: Curves.ease)
-              .then((value) => setValid(widget.editReport != null));
-          setState(() {
-            index = _pagesController.page + 1;
-          });
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),

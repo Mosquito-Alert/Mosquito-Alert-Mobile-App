@@ -53,7 +53,8 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
 
               StreamBuilder(
                 stream: widget.showParts.stream,
-                initialData: false,
+                initialData:
+                    Utils.report.responses.any((q) => q.answer_id == 61),
                 builder: (context, AsyncSnapshot<bool> snapshot) {
                   if (!snapshot.data) {
                     return Container();

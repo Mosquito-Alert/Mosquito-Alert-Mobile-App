@@ -44,7 +44,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         "text": {
           "en": "What kind of mosquito do you think it is?",
           "ca": "Quin tipus de mosquit creus que és?",
-          "es": "¿Que tipo de mosquito crees que es?"
+          "es": "¿Qué tipo de mosquito crees que es?"
         }
       },
       "answers": [
@@ -53,8 +53,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
           "img": "assets/img/ic_invasive_aedes.png",
           "text": {
             "en": "Invasive Aedes",
-            "ca": "Aedes Invasiu",
-            "es": "Invasive Aedes"
+            "ca": "Aedes invasor",
+            "es": "Aedes invasor"
           }
         },
         {
@@ -67,18 +67,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
           }
         },
         {
+          "id": 63,
+          "img": "assets/img/ic_other_mosquito.png",
+          "text": {"en": "Other", "ca": "Altres", "es": "Otro"}
+        },
+        {
           "id": 64,
           "img": "assets/img/ic_dont_know.png",
           "text": {"en": "I don't know", "ca": "No ho sé", "es": "No lo sé"}
-        },
-        {
-          "id": 63,
-          "img": "assets/img/ic_other_mosquito.png",
-          "text": {
-            "en": "Other",
-            "ca": "Altres",
-            "es": "Otro",
-          }
         }
       ]
     },
@@ -87,8 +83,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
         "id": 7,
         "text": {
           "en": "How does your mosquito look?",
-          "ca": "Quin aspecte té el teu mosquit?",
-          "es": "¿Que aspecto tiene tu mosquito?"
+          "ca": "Com és el mosquit?",
+          "es": "¿Cómo es el mosquito?"
         }
       },
       "answers": [
@@ -162,25 +158,45 @@ class _AdultReportPageState extends State<AdultReportPage> {
     },
     {
       "question": {
-        "id": 6,
+        "id": 13,
         "text": {
-          "en": "Where were you when you saw the mosquito?",
-          "ca": "On estaves quan vas veure al mosquit?",
-          "es": "¿Donde estabas cuando viste al mosquito?"
+          "en": "Where did you find the mosquito?",
+          "ca": "On has trobat el mosquit?",
+          "es": "¿Dónde has encontrado el mosquito?"
         }
       },
       "answers": [
         {
-          "id": 61, //Location - value equals WKT of point
-          "text": {"en": "", "ca": ""}
-        }
+          "id": 131,
+          "text": {
+            "en": "Inside a vehicle",
+            "ca": "Dins d'un vehicle",
+            "es": "Dentro de un vehículo"
+          }
+        },
+        {
+          "id": 132,
+          "text": {
+            "en": "Inside a building",
+            "ca": "Dins d'un edifici",
+            "es": "Dentro de un edificio"
+          }
+        },
+        {
+          "id": 133,
+          "text": {
+            "en": "Outdoors",
+            "ca": "A l'exterior",
+            "es": "En el exterior"
+          }
+        },
       ]
     },
     {
       "question": {
         "id": 8,
         "text": {
-          "en": "Did this mosquito bite you?",
+          "en": "Did mosquito bite you?",
           "ca": "T'ha picat el mosquit?",
           "es": "¿Te ha picado el mosquito?"
         }
@@ -188,7 +204,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       "answers": [
         {
           "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Si"}
+          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
         },
         {
           "id": 81,
@@ -432,7 +448,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               if (showCamera) {
                                                 _chooseTypeImage();
                                               } else {
-                                                
                                                 _pagesController
                                                     .nextPage(
                                                         duration: Duration(
@@ -516,7 +531,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
           Navigator.pop(context);
           setShowCamera(false);
 
-        
           setState(() {
             index = _pagesController.page + 1;
           });
@@ -562,7 +576,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         onTap: () {
           Navigator.pop(context);
           setShowCamera(false);
-          
+
           setState(() {
             index = _pagesController.page + 1;
           });
@@ -620,9 +634,13 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (image != null) {
       Utils.saveImgPath(image);
       setShowCamera(false);
+
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
+      setState(() {
+        index = _pagesController.page + 1;
+      });
     }
   }
 

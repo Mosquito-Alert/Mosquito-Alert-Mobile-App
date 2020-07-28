@@ -182,7 +182,7 @@ class _MainVCState extends State<MainVC> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => InfoPage(
-                                                "${MyLocalizations.of(context, 'url_points_1')}$language${MyLocalizations.of(context, 'url_points_2')}$userUuid")),
+                                                "${MyLocalizations.of(context, 'url_point_1')}$language${MyLocalizations.of(context, 'url_point_2')}$userUuid")),
                                       );
                                     },
                                     child: Container(

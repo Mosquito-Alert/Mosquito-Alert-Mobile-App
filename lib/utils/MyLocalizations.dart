@@ -11,10 +11,11 @@ class MyLocalizations {
       "app_name": "Mosquito Alert",
       "ok": 'Aceptar',
       "cancel": "Cancelar",
-      "yes": "Si",
+      "yes": "Sí",
       "no": "No",
       "delete": "Eliminar",
       "edit": "Editar",
+      "exit": "Salir",
       "reset": "Reset",
 
       //LINKS
@@ -47,15 +48,15 @@ class MyLocalizations {
       "email_txt": "Correo electrónico",
       "access_txt": "Acceder",
       "register_txt": "Darse de alta",
-      "invalid_mail_txt": "Correo electrónico no valido. Intentalo de nuevo.",
+      "invalid_mail_txt": "Correo electrónico no valido. Inténtalo de nuevo.",
       "email_error_txt":
-          "Error al revisar el correo electrónico. Intentalo de nuevo.",
+          "Error al revisar el correo electrónico. Inténtalo de nuevo.",
 
       // Login - password
       "enter_password_title": "Introduce tu contraseña",
       "user_password_txt": "Contraseña de usuario",
       "forgot_password_txt": "¿Has olvidado tu contraseña?",
-      "social_login_ko_txt": "Ocurrió un error, intentalo de nuevo por favor.",
+      "social_login_ko_txt": "Ocurrió un error, inténtalo de nuevo por favor",
       "login_alert_ko_text":
           "Los datos de acceso no son correctos. Por favor, revísalos e inténtalo de nuevo.",
 
@@ -63,7 +64,7 @@ class MyLocalizations {
       "recover_password_title": "Recupera tu contraseña",
       "recover_password_btn": "Recuperar contraseña",
       "recover_password_alert":
-          "Si ya tenemos tu e-mail en nuestra base de datos, recibirás un correo para recuperar tu contraseña.",
+          "Si ya tenemos tu e-mail en nuestra base de datos, recibirás un correo para recuperar tu contraseña",
 
       //Signup
       "signup_user_title": "Registro de usuario",
@@ -73,60 +74,65 @@ class MyLocalizations {
       "password_txt": "Contraseña",
 
       //Main page
-      "welcome_text": "Bienvenido de nuevo",
-      "what_to_do_txt": "¿Que quieres hacer?",
-      "report_biting_txt": "Reportar picada",
-      "bitten_by_mosquito_question_txt": "¿Te ha picado un mosquito?",
-      "report_nest_txt": "Reportar nido",
-      "found_breeding_place_question_txt": "¿Has encontrado un lugar de cría?",
-      "report_adults_txt": "Reportar adultos",
+      "welcome_text": "Hola",
+      "what_to_do_txt": "¿Qué quieres hacer?",
+
+      "report_biting_txt": "Notificar picadura",
+      "bitten_by_mosquito_question_txt": "",
+      "report_nest_txt": "Notificar lugar de cría",
+      "found_breeding_place_question_txt": "en la vía pública",
+      "report_adults_txt": "Notificar mosquito",
+
       "report_us_adult_mosquitos_txt":
-          "Repórtanos los mosquitos adultos que veas.",
-      "your_reports_txt": "Tus reportes",
-      "explore_your_reports_txt": "Explora los reportes que has realizado.",
+          "creo que es una de las especies buscadas",
+      "your_reports_txt": "Mis datos",
+      "explore_your_reports_txt": "ver o modificar los datos enviados",
       "help_validating_other_photos_txt":
-          "¿Nos ayudas a validar las fotografias de otros usuarios?",
+          "¿Nos ayudas a validar las fotografías de otros usuarios?",
       "we_need_help_txt": "¡Necesitamos tu ayuda! Colabora con Mosquito Alert",
 
       //Biting - report
-      "biting_report_txt": "Reportar una picadura",
-      "tap_image_biting_txt":
-          "Haz click encima de la imagen para reportar una nueva picada.",
+      "biting_report_txt": "Notificar picaduras",
+      "tap_image_biting_txt": "Señala dónde te han picado",
       "continue_txt": "Continuar",
-      "save_report_ok_txt":
-          "Tus datos se han enviado correctamente. Muchas gracias por participar. En breve recibirás una notificación experta al respecto. Si necesitas editar tus datos, puedes hacerlo desde el menú principal.",
-      "save_report_ko_txt": "Error, intentalo de nuevo más tarde",
+      "complete_all_txt": "Complete todos los campos para continuar",
+      "save_report_ok_txt": "Notificación guardada correctamente",
+      "save_report_ko_txt": "Error, inténtalo de nuevo más tarde",
       "send_data": "Enviar datos",
       "bytes_and_place_report_txt":
-          "¿Cuántas picaduras quieres reportar y dónde?",
+          "¿Cuántas picaduras tienes y en qué parte del cuerpo?",
+
       "close_report_no_save_txt":
           "Se perderan los datos introducidos. ¿Estas seguro de salir sin guardar?",
       "add_comments_question": "Quieres añadir un comentario?",
       "comments_txt": "Comentarios",
 
       //Location - report
-      "chose_option_txt": "Escoge una opción.",
+      "chose_option_txt": "Elige una opción.",
       "location_not_active_title": "Localización desactivada",
       "location_not_active_txt":
           "Para utilizar esta función, activa la localización del dispositivo",
       "current_location_txt": "Ubicación actual",
-      "select_location_txt": "Seleccionar...",
-
+      "select_location_txt": "Seleccionar ubicación",
+      "not_sure_txt": "No lo tengo claro",
       "gallery": "Galería",
       "camara": "Cámara",
       "ok_next_txt": "De acuerdo, hacer foto!",
 
       //Moquito type - report
+
       "could_recognise_txt":
           "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
       "recognize_it_txt": "¿Lo reconoces?",
       "have_foto_txt": "¿Tienes una foto del mosquito?",
       "click_to_add_txt": "Haz click aquí para añadirla",
       "send_photo_title": "Mándanos una foto",
-      "adult_report_title": "Reportar un adulto",
-      "breeding_report_title": "Reportar un nido",
+      "adult_report_title": "Notificar un mosquito",
+      "breeding_report_title": "Notificar un lugar de cría",
       "not_a_mosquito": "No es un mosquito",
+
       "continue_without_photo": "Continuar sin foto",
+
       "camera_info_adult_txt_01":
           "Añade una foto para que podamos validar la observación del mosquito. Intenta fotografiarlo mosquito de manera que se vea el diseño del tórax así como las patas.",
       "camera_info_adult_txt_02":
@@ -146,11 +152,16 @@ class MyLocalizations {
       "login_with_your_account_txt": "Accede con tu cuenta de usuario",
       "use_your_acount_details_txt":
           "Si accedes a la app con tus credenciales, podrás guardar y sincronizar tus datos entre distintos dispositivos.",
+      "more_info_app_txt": "Sobre nosotros",
+      "our_partners_txt": "Sobre el proyecto",
       "logout_txt": "Cerrar sesión",
-      "logout_alert_txt": "¿Estás segurx que quieres cerrar sesión?",
-      "select_language_txt": "Selecciona el idioma",
-      "info_scores_txt": "Infromación scoring",
+      "logout_alert_txt": "¿Estás seguro de querer cerrar la sesión?",
+      "select_language_txt": "Idioma",
+      "info_scores_txt": "Información puntuación",
       "tutorial_txt": "Tutorial",
+      "mosquito_gallery_txt": "Guía de mosquitos",
+      "privacy_policy_txt": "Política de privacidad",
+
       "disable_background_tracking": "Deshabilitar background tracking",
       "enable_background_tracking": "Habilitar background tracking",
       "disable_tracking_question_text":
@@ -231,20 +242,18 @@ class MyLocalizations {
       //My reports page
       "map_txt": "Mapa",
       "list_txt": "Lista",
-      "report_of_the_day_txt": "Reporte del día ",
+      "report_of_the_day_txt": "Notificación del día ",
       "location_txt": "Ubicación aproximada: ",
       "at_time_txt": "A las: ",
       "registered_location_txt": "Ubicación registrada",
       "exact_time_register_txt": "Hora exacta del registro",
-      "reported_images_txt": "Imagenes reportadas",
-
-      "delete_report_title": "¿Seguro que quieres eliminar el reporte?",
+      "reported_images_txt": "Imágenes enviadas",
+      "delete_report_title": "¿Seguro que quieres eliminar la notificación?",
       "delete_report_txt": "Esta acción no se puede deshacer.",
-      "your_reports_bites_txt": "Tus reportes de picadas",
-      "your_reports_breeding_txt": "Tus reportes de lugares de cría",
-      "your_reports_adults_txt": "Tus reportes de adultos",
-      "other_reports_txt": "Otros reportes",
-      "no_reports_yet_txt": "No hay reportes registrados",
+      "your_reports_bites_txt": "Tus notificaciones de picaduras",
+      "your_reports_breeding_txt": "Tus notificaciones de lugares de cría",
+      "your_reports_adults_txt": "Tus notificaciones de adultos",
+      "no_reports_yet_txt": "No hay notificaciones registradas",
       "near_from_txt": "Cerca de",
     },
   };

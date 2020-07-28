@@ -229,18 +229,25 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
+      Utils.report.type == 'adult'
+          ? Column(
+              children: <Widget>[
+                Divider(height: 1.0),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(20),
+                    child: Text(
+                        MyLocalizations.of(context, 'continue_without_photo'),
+                        style: TextStyle(color: Colors.blue, fontSize: 15)),
+                  ),
+                ),
+              ],
+            )
+          : Container(),
     ];
 
     Utils.modalDetailTrackingforPlatform(

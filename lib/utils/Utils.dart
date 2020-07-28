@@ -759,7 +759,7 @@ class Utils {
     } else if (language == 'ca') {
       return 'ca';
     } else {
-      return 'en';
+      return 'es';
     }
   }
 

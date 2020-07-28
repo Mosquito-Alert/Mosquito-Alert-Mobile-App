@@ -7,10 +7,12 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_o
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 
 class BitingLocationForm extends StatefulWidget {
   final Function setValid;
-  final String displayQuestion; 
+  final String displayQuestion;
 
   BitingLocationForm(this.setValid, this.displayQuestion);
 
@@ -106,12 +108,12 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     //     markers.add(mk);
     //   });
     // } else {
-      Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
-      widget.setValid(true);
+    Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
+    widget.setValid(true);
 
-      setState(() {
-        markers = [mk];
-      });
+    setState(() {
+      markers = [mk];
+    });
     // }
   }
 
@@ -219,118 +221,127 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 35,
-              ),
-              Style.title(widget.displayQuestion),
-              Style.body(MyLocalizations.of(context, "chose_option_txt")),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 30),
-                child: StreamBuilder(
-                  stream: streamType.stream,
-                  initialData: LocationType.selected,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<LocationType> snapshot) {
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.08,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        updateType(LocationType.current,
-                                            context: context);
-                                        // getPosition(LocationType.current,
-                                        //     context: context);
-                                      },
-                                      child: SmallQuestionOption(
-                                        MyLocalizations.of(
-                                            context, "current_location_txt"),
-                                        selected: snapshot.data ==
-                                            LocationType.current,
-                                      ))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  widget.setValid(false);
-                                  updateType(LocationType.selected);
-                                },
-                                child: SmallQuestionOption(
-                                  MyLocalizations.of(
-                                      context, "select_location_txt"),
-                                  selected:
-                                      snapshot.data == LocationType.selected,
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 35,
+                ),
+                Style.title(widget.displayQuestion),
+                Style.body(MyLocalizations.of(context, "chose_option_txt")),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30),
+                  child: StreamBuilder(
+                    stream: streamType.stream,
+                    initialData: LocationType.selected,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<LocationType> snapshot) {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          updateType(LocationType.current,
+                                              context: context);
+                                          // getPosition(LocationType.current,
+                                          //     context: context);
+                                        },
+                                        child: SmallQuestionOption(
+                                          MyLocalizations.of(
+                                              context, "current_location_txt"),
+                                          selected: snapshot.data ==
+                                              LocationType.current,
+                                        ))),
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              )),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          height: MediaQuery.of(context).size.height * 0.41,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: GoogleMap(
-                              onMapCreated: _onMapCreated,
-                              rotateGesturesEnabled: false,
-                              myLocationButtonEnabled: false,
-                              zoomControlsEnabled: false,
-                              minMaxZoomPreference:
-                                  MinMaxZoomPreference(6, 18),
-                              mapToolbarEnabled: false,
-                              onTap: (LatLng pos) {
-                                if (snapshot.data == LocationType.selected) {
-                                  updateMarker(pos);
-                                }
-                              },
-                              initialCameraPosition: CameraPosition(
-                                target: currentLocation != null
-                                    ? LatLng(currentLocation.latitude,
-                                        currentLocation.longitude)
-                                    : Utils.location != null
-                                        ? LatLng(Utils.location.latitude,
-                                            Utils.location.longitude)
-                                        : LatLng(
-                                            Utils.defaultLocation.latitude,
-                                            Utils.defaultLocation.longitude),
-                                zoom: 15.0,
-                              ),
-                              markers: markers.isNotEmpty
-                                  ? Set.from(markers)
-                                  : null,
+                                Expanded(
+                                    child: GestureDetector(
+                                  onTap: () {
+                                    widget.setValid(false);
+                                    updateType(LocationType.selected);
+                                  },
+                                  child: SmallQuestionOption(
+                                    MyLocalizations.of(
+                                        context, "select_location_txt"),
+                                    selected:
+                                        snapshot.data == LocationType.selected,
+                                  ),
+                                )),
+                              ],
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Style.button(
-                          MyLocalizations.of(context, "reset"),
-                          () {
-                            resetLocations();
-                          },
-                        )
-                      ],
-                    );
-                  },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: GoogleMap(
+                                  onMapCreated: _onMapCreated,
+                                  rotateGesturesEnabled: false,
+                                  myLocationButtonEnabled: false,
+                                  zoomControlsEnabled: false,
+                                  minMaxZoomPreference:
+                                      MinMaxZoomPreference(6, 18),
+                                  mapToolbarEnabled: false,
+                                  onTap: (LatLng pos) {
+                                    if (snapshot.data ==
+                                        LocationType.selected) {
+                                      updateMarker(pos);
+                                    }
+                                  },
+                                  initialCameraPosition: CameraPosition(
+                                    target: currentLocation != null
+                                        ? LatLng(currentLocation.latitude,
+                                            currentLocation.longitude)
+                                        : Utils.location != null
+                                            ? LatLng(Utils.location.latitude,
+                                                Utils.location.longitude)
+                                            : LatLng(
+                                                Utils.defaultLocation.latitude,
+                                                Utils
+                                                    .defaultLocation.longitude),
+                                    zoom: 15.0,
+                                  ),
+                                  markers: markers.isNotEmpty
+                                      ? Set.from(markers)
+                                      : null,
+                                  gestureRecognizers:
+                                      <Factory<OneSequenceGestureRecognizer>>[
+                                    new Factory<OneSequenceGestureRecognizer>(
+                                      () => new EagerGestureRecognizer(),
+                                    ),
+                                  ].toSet(),
+                                )),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Style.button(
+                            MyLocalizations.of(context, "reset"),
+                            () {
+                              resetLocations();
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Style.bottomOffset,
-            ],
+                Style.bottomOffset,
+              ],
+            ),
           ),
         ),
       ),

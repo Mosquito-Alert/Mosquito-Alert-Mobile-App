@@ -182,10 +182,9 @@ class ApiSingleton {
     );
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    // assert(user.displayName != null);
+    // assert(!user.isAnonymous);
+    // assert(await user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
