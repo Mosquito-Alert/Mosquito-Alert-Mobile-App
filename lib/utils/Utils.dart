@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -23,7 +24,7 @@ import '../models/question.dart';
 import 'MyLocalizations.dart';
 
 class Utils {
-  static List<CameraDescription> cameras;
+  static String language;
 
   //images
   static List<Map> imagePath;
@@ -752,15 +753,24 @@ class Utils {
     }
   }
 
+  static getSavedLanguage() async {
+    language = await UserManager.getLanguage();
+  }
+
   static String getLanguage() {
-    String language = ui.window.locale.languageCode;
-    if (language == 'es') {
-      return 'es';
-    } else if (language == 'ca') {
-      return 'ca';
-    } else {
-      return 'es';
+    getSavedLanguage();
+    if (language == null) {
+      String lan = ui.window.locale.languageCode;
+      if (lan == 'es') {
+        language = 'es';
+      } else if (lan == 'ca') {
+        language = 'ca';
+      } else {
+        language = 'es';
+      }
     }
+
+    return language;
   }
 
   static launchUrl(url) async {

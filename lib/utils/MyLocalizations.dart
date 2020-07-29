@@ -4,7 +4,7 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 class MyLocalizations {
   MyLocalizations(this.locale);
 
-  Locale locale = Locale(Utils.getLanguage());
+  final Locale locale ;
 
   static Map<String, Map<String, String>> _localizedValues = {
     "es": {
@@ -17,6 +17,10 @@ class MyLocalizations {
       "edit": "Editar",
       "exit": "Salir",
       "reset": "Reset",
+
+      "es": "Español", 
+      "ca": "Catalán",
+      "en": "Inglés",
 
       //LINKS
       "url_politics": "http://webserver.mosquitoalert.com/es/privacy/",
@@ -257,6 +261,8 @@ class MyLocalizations {
       "near_from_txt": "Cerca de",
     },
   };
+
+
   String translate(key) {
     return _localizedValues[locale.languageCode][key];
   }

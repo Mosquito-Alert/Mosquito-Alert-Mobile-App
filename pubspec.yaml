@@ -43,6 +43,7 @@ dependencies:
   geohash: ^0.2.1
   flutter_background_geolocation: ^1.9.2
   intro_slider: ^2.3.1
+  flutter_material_pickers: ^1.7.1
 
 dev_dependencies:
   flutter_test:

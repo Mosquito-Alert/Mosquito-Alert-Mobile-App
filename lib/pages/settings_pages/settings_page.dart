@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/main.dart';
 import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -26,10 +28,15 @@ class _SettingsPageState extends State<SettingsPage> {
   bool enableTracking = false;
   var packageInfo;
 
+  List<String> languageCodes = <String>["es", "ca", "en"];
+
+  String selectedLanguage;
+
   @override
   void initState() {
     super.initState();
     getTracking();
+    selectedLanguage = Utils.getLanguage();
   }
 
   getTracking() async {
@@ -38,6 +45,11 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       packageInfo = _packageInfo;
     });
+  }
+
+  getLanguageString() {
+    return List.generate(languageCodes.length,
+        (index) => MyLocalizations.of(context, languageCodes[index]));
   }
 
   @override
@@ -91,7 +103,40 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                MyLocalizations.of(context, "select_language_txt"), () {}),
+                MyLocalizations.of(context, "select_language_txt"), () {
+              showMaterialScrollPicker(
+                  context: context,
+                  title: "Escoja idioma",
+                  items: getLanguageString(),
+                  selectedItem: selectedLanguage,
+                  headerColor: Colors.white,
+                  buttonTextColor: Style.colorPrimary,
+                  maxLongSide: MediaQuery.of(context).size.height * 0.55,
+                  onChanged: (value) =>
+                      setState(() => selectedLanguage = value),
+                  onConfirmed: () {
+                    switch (selectedLanguage) {
+                      case "Español":
+                      case "Spanish":
+                      case "Espanyol":
+                        Utils.language = 'es';
+                        break;
+                      case "Catalán":
+                      case "Catalá":
+                      case "Catalan":
+                        Utils.language = 'ca';
+                        break;
+                      case "Inglés":
+                      case "Anglès":
+                      case "English":
+                        Utils.language = 'en';
+                        break;
+                    }
+                    MyApp.setLocale(context, Utils.language);
+                    UserManager.setLanguage(Utils.language);
+                    print(selectedLanguage);
+                  });
+            }),
             SizedBox(
               height: 10,
             ),

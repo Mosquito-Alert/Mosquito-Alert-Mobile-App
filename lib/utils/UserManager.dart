@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,15 +19,19 @@ class UserManager {
       prefs.setBool("firstTime", true);
       var uuid = new Uuid().v4();
       var trackingUuid = new Uuid().v4();
+      String language = Utils.getLanguage();
       prefs.setString("uuid", uuid);
       prefs.setString("trackingUUID", trackingUuid);
       prefs.setBool("trackingDisabled", false);
+
       await ApiSingleton().createUser(uuid);
       setUserScores(1);
+      setLanguage(language);
     }
     fetchUser();
     userScore = await ApiSingleton().getUserScores();
     setUserScores(userScore);
+    Utils.language = await getLanguage();
     return true;
   }
 
@@ -64,6 +69,11 @@ class UserManager {
   static Future<void> setSowInfoBreeding(show) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("infoCameraBreeding", show);
+  }
+
+  static Future<void> setLanguage(language) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("language", language);
   }
 
   //get
@@ -105,6 +115,11 @@ class UserManager {
   static Future<bool> getShowInfoBreeding() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool("infoCameraBreeding");
+  }
+
+  static Future<String> getLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("language");
   }
 
   static signOut() async {

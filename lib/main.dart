@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 
 main() {
   runApp(MyApp());
@@ -11,10 +13,20 @@ main() {
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
+
+  static void setLocale(BuildContext context, String newLocale) {
+    _MyAppState state = context.ancestorStateOfType(TypeMatcher<_MyAppState>());
+
+    state.setState(() {
+      state.language = newLocale;
+    });
+  }
 }
 
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  String language = 'es';
 
   @override
   void initState() {
@@ -38,6 +50,22 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
     });
+
+    this._fetchLocale().then((language) {
+      setState(() {
+        this.language = language;
+      });
+    });
+  }
+
+  Future<String> _fetchLocale() async {
+    String language = await UserManager.getLanguage();
+
+    if (language == null) {
+      language = Utils.getLanguage();
+    }
+
+    return language;
   }
 
   @override
@@ -50,6 +78,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.orange,
       ),
       home: MainVC(),
+      locale: Locale(language),
       localizationsDelegates: [
         const MyLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -58,7 +87,8 @@ class _MyAppState extends State<MyApp> {
       ],
       supportedLocales: [
         const Locale('es'),
-        // const Locale('en'),
+        const Locale('en'),
+        const Locale('ca'),
       ],
     );
   }

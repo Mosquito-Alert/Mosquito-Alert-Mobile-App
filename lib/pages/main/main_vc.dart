@@ -32,7 +32,6 @@ class _MainVCState extends State<MainVC> {
   @override
   void initState() {
     super.initState();
-
     _getData();
   }
 
