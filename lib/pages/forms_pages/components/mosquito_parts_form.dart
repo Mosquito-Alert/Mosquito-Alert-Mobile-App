@@ -60,6 +60,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                     return Container();
                   }
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Style.title(
                           widget.displayQuestion['question']['text'][language]),
