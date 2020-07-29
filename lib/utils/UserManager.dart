@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -11,7 +13,7 @@ class UserManager {
   static var profileUUIDs;
   static int userScore;
 
-  static Future<bool> startFirstTime() async {
+  static Future<bool> startFirstTime(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('firstTime');
 
@@ -27,7 +29,14 @@ class UserManager {
       await ApiSingleton().createUser(uuid);
       setUserScores(1);
       setLanguage(language);
+      
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TutorialPage(),
+        ),
+      );
     }
+
     fetchUser();
     userScore = await ApiSingleton().getUserScores();
     setUserScores(userScore);

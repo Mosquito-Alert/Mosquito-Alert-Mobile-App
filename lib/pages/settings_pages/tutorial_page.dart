@@ -151,13 +151,6 @@ class _TutorialPageState extends State<TutorialPage> {
     );
   }
 
-  Widget renderSkipBtn() {
-    return Icon(
-      Icons.skip_next,
-      color: Style.colorPrimary,
-    );
-  }
-
   List<Widget> renderListCustomTabs() {
     List<Widget> tabs = new List();
     for (int i = 0; i < slides.length; i++) {
@@ -209,17 +202,12 @@ class _TutorialPageState extends State<TutorialPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Style.title(MyLocalizations.of(context, 'mosquitos_gallery_txt'),
+        title: Style.title(MyLocalizations.of(context, 'tutorial_txt'),
             fontSize: 16),
       ),
       body: new IntroSlider(
         // List slides
         slides: initSlides(),
-
-        // // Skip button
-        // renderSkipBtn: this.renderSkipBtn(),
-        // colorSkipBtn: Color(0x33ffcc5c),
-        // highlightColorSkipBtn: Color(0xffffcc5c),
 
         // Next button
         renderNextBtn: this.renderNextBtn(),
