@@ -15,7 +15,7 @@ class AddPhotoButton extends StatefulWidget {
 }
 
 class _AddPhotoButtonState extends State<AddPhotoButton> {
-  List<File> images = [];
+  List<String> images = [];
 
   @override
   void initState() {
@@ -108,7 +108,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.file(
+                                child: Image.network(
                                   images[index],
                                   fit: BoxFit.cover,
                                   height: 100,
@@ -118,7 +118,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                _showImage(images[index].path);
+                                _showImage(images[index]);
                               },
                               child: Container(
                                 height: double.infinity,
@@ -260,7 +260,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     });
   }
 
-  _deleteImage(File img, int index) {
+  _deleteImage(String img, int index) {
     Utils.deleteImage(img);
     setState(() {
       images.removeAt(index);
@@ -271,14 +271,16 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     List<File> files = await FilePicker.getMultiFile(
       type: FileType.image,
     );
+    List<String> paths = []; 
 
     if (files != null) {
       files.forEach((image) {
         Utils.saveImgPath(image);
+        paths.add(image.path);
       });
 
       setState(() {
-        images = [...images, ...files];
+        images = [...images, ...paths];   
       });
     }
   }
@@ -292,7 +294,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       Utils.saveImgPath(image);
 
       setState(() {
-        images.add(image);
+        images.add(image.path);
       });
     }
   }

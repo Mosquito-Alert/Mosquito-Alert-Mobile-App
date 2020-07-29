@@ -150,6 +150,7 @@ class Style {
           // color: textColor != null ? textColor : Colors.black,
           fontSize: 14,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }

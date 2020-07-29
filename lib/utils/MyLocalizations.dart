@@ -124,7 +124,6 @@ class MyLocalizations {
       "ok_next_txt": "De acuerdo, hacer foto!",
 
       //Moquito type - report
-
       "could_recognise_txt":
           "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
       "recognize_it_txt": "¿Lo reconoces?",
@@ -134,9 +133,7 @@ class MyLocalizations {
       "adult_report_title": "Notificar un mosquito",
       "breeding_report_title": "Notificar un lugar de cría",
       "not_a_mosquito": "No es un mosquito",
-
       "continue_without_photo": "Continuar sin foto",
-
       "camera_info_adult_txt_01":
           "Añade una foto para que podamos validar la observación del mosquito. Intenta fotografiarlo mosquito de manera que se vea el diseño del tórax así como las patas.",
       "camera_info_adult_txt_02":
@@ -146,6 +143,7 @@ class MyLocalizations {
       "camera_info_breeding_txt_02":
           "No compartas fotografías que puedan contener información personal, como imágenes de personas reconocibles o datos personales. Si tienes dudas, consulta la política de privacidad en los ajustes de la app.",
       "no_show_again": "No volver a mostrar",
+      "no_photos_added_txt": "No has añadido fotos al report",
 
       //Notifications page
       "notifications_title": "Notificaciones",

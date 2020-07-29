@@ -35,10 +35,10 @@ class UserManager {
           builder: (context) => TutorialPage(),
         ),
       );
+      userScore = await ApiSingleton().getUserScores();
     }
 
     fetchUser();
-    userScore = await ApiSingleton().getUserScores();
     setUserScores(userScore);
     Utils.language = await getLanguage();
     return true;

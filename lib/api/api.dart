@@ -247,7 +247,8 @@ class ApiSingleton {
       }
       Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
-      return jsonAnswer['total_score'];
+      UserManager.userScore = jsonAnswer['total_score'];
+      return UserManager.userScore;
     } catch (e) {
       return 1;
     }

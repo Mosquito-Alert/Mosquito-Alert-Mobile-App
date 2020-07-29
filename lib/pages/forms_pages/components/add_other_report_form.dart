@@ -19,12 +19,13 @@ class AddOtherReportPage extends StatefulWidget {
 
 class _AddOtherReportPageState extends State<AddOtherReportPage> {
   TextEditingController _commentsController = TextEditingController();
-  String selectedType;
 
-  setSelected(String type) {
-    setState(() {
-      selectedType = type;
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (Utils.report.note != null || Utils.report.note != '') {
+      _commentsController.text = Utils.report.note;
+    }
   }
 
   @override

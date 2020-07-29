@@ -30,14 +30,14 @@ class Utils {
   static List<Map> imagePath;
   static double maskCoordsValue = 0.025;
 
-  static void saveImgPath(File path) {
+  static void saveImgPath(File img) {
     if (imagePath == null) {
       imagePath = [];
     }
-    imagePath.add({'image': path, 'id': report.version_UUID});
+    imagePath.add({'image': img.path, 'id': report.version_UUID});
   }
 
-  static void deleteImage(File image) {
+  static void deleteImage(String image) {
     imagePath.removeWhere((element) => element['image'] == image);
   }
 
@@ -128,6 +128,13 @@ class Utils {
     report = editReport;
     report.version_number = report.version_number + 1;
     report.version_UUID = new Uuid().v4();
+
+    if (editReport.photos != null || editReport.photos.isNotEmpty) {
+      imagePath = [];
+      editReport.photos.forEach((element) {
+        imagePath.add({'image': 'http://humboldt.ceab.csic.es/media/${element.photo}', 'id': editReport.version_UUID});
+      });
+    }
   }
 
   static addOtherReport(String type) {
@@ -620,7 +627,7 @@ class Utils {
               content: Container(
                 padding: EdgeInsets.all(20),
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.45,
+                  maxHeight: MediaQuery.of(context).size.height * 0.55,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
@@ -697,8 +704,9 @@ class Utils {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               content: Container(
+                height: double.infinity,
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.30,
+                  maxHeight: MediaQuery.of(context).size.height * 0.45,
                 ),
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -715,7 +723,7 @@ class Utils {
                           context, 'camera_info_breeding_txt_02'),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

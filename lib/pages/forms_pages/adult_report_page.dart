@@ -281,7 +281,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     if (widget.editReport != null ||
         Utils.reportsList.isNotEmpty && Utils.reportsList.length == 1) {
-      _formsRepot.removeAt(3);
+      _formsRepot.removeAt(4);
     }
   }
 
@@ -409,7 +409,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   physics: NeverScrollableScrollPhysics(),
                   children: _formsRepot,
                 ),
-                index < 1.0 || index == 4.0
+                index < 1.0 || (index == 4.0 && _formsRepot.length == 6)
                     ? Container()
                     : index != _formsRepot.length.toDouble() - 1
                         ? SafeArea(

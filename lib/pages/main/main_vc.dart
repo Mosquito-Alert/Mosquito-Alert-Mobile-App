@@ -39,7 +39,7 @@ class _MainVCState extends State<MainVC> {
     var user = await UserManager.fetchUser();
     userUuid = await UserManager.getUUID();
     language = Utils.getLanguage();
-    int points = UserManager.userScore;
+    int points = await ApiSingleton().getUserScores();
 
     if (user != null) {
       setState(() {
@@ -216,8 +216,13 @@ class _MainVCState extends State<MainVC> {
                               child: Divider(),
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Expanded(
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.47,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.5,
                                   child: GestureDetector(
                                     onTap: () {
                                       _createBiteReport();
@@ -231,10 +236,14 @@ class _MainVCState extends State<MainVC> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
+                                // SizedBox(
+                                //   width: 5,
+                                // ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.47,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.5,
                                   child: GestureDetector(
                                     onTap: () {
                                       _createAdultReport();
@@ -255,23 +264,28 @@ class _MainVCState extends State<MainVC> {
                             ),
                             Row(
                               children: <Widget>[
-                                Expanded(
+                                Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.47,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.5,
                                     child: GestureDetector(
-                                  onTap: () {
-                                    _createSiteReport();
-                                  },
-                                  child: CustomCard(
-                                    img: 'assets/img/ic_breeding_report.png',
-                                    title: MyLocalizations.of(
-                                        context, 'report_nest_txt'),
-                                    subtitle: MyLocalizations.of(context,
-                                        'found_breeding_place_question_txt'),
-                                  ),
-                                )),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
+                                      onTap: () {
+                                        _createSiteReport();
+                                      },
+                                      child: CustomCard(
+                                        img:
+                                            'assets/img/ic_breeding_report.png',
+                                        title: MyLocalizations.of(
+                                            context, 'report_nest_txt'),
+                                        subtitle: MyLocalizations.of(context,
+                                            'found_breeding_place_question_txt'),
+                                      ),
+                                    )),
+                                
+                                Container(
+                                   width: MediaQuery.of(context).size.width * 0.47,
+                                  height:MediaQuery.of(context).size.width * 0.5,
                                     child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(

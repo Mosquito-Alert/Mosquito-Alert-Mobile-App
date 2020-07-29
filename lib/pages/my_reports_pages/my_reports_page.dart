@@ -45,8 +45,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   BitmapDescriptor iconBitesYours;
   BitmapDescriptor iconBreedingYours;
   BitmapDescriptor iconAdultOthers;
-  BitmapDescriptor iconBitesOthers;
-  BitmapDescriptor iconBreedingOthers;
 
   //My reports
   List<Report> _myData = [];
@@ -219,10 +217,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
                     return StreamBuilder<List<Report>>(
                       stream: dataStream.stream,
-                      initialData: data
-                          .where((element) => UserManager.profileUUIDs
-                              .any((id) => id == element.user))
-                          .toList(),
+                      initialData: _myData,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Report>> snapshot) {
                         return ReportsList(
@@ -747,7 +742,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       }
     }
 
-    List<Report> myData = data
+    List<Report> myData = list
         .where((element) =>
             UserManager.profileUUIDs.any((id) => id == element.user))
         .toList();
