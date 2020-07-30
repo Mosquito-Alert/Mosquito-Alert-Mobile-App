@@ -431,65 +431,71 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _chooseTypeImage() {
-    List<Widget> listForiOS = <Widget>[
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Text(
-          MyLocalizations.of(context, 'gallery'),
-          style: TextStyle(color: Colors.blue),
+    if (widget.editReport == null) {
+      List<Widget> listForiOS = <Widget>[
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            getGalleryImages();
+          },
+          child: Text(
+            MyLocalizations.of(context, 'gallery'),
+            style: TextStyle(color: Colors.blue),
+          ),
         ),
-      ),
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          Utils.infoBreedingCamera(context, getImage);
-        },
-        child: Text(
-          MyLocalizations.of(context, 'camara'),
-          style: TextStyle(color: Colors.blue),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            Utils.infoBreedingCamera(context, getImage);
+          },
+          child: Text(
+            MyLocalizations.of(context, 'camara'),
+            style: TextStyle(color: Colors.blue),
+          ),
         ),
-      ),
-    ];
-    List<Widget> listForAndroid = <Widget>[
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          Utils.infoBreedingCamera(context, getImage);
-          // _showInfoImage();
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'camara'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
+      ];
+      List<Widget> listForAndroid = <Widget>[
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            Utils.infoBreedingCamera(context, getImage);
+            // _showInfoImage();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: Text(MyLocalizations.of(context, 'camara'),
+                style: TextStyle(color: Colors.blue, fontSize: 15)),
+          ),
         ),
-      ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'gallery'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
+        Divider(height: 1.0),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            getGalleryImages();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: Text(MyLocalizations.of(context, 'gallery'),
+                style: TextStyle(color: Colors.blue, fontSize: 15)),
+          ),
         ),
-      ),
-    ];
+      ];
 
-    Utils.modalDetailTrackingforPlatform(
-        Theme.of(context).platform == TargetPlatform.iOS
-            ? listForiOS
-            : listForAndroid,
-        Theme.of(context).platform,
-        context, () {
-      Navigator.pop(context);
-    });
+      Utils.modalDetailTrackingforPlatform(
+          Theme.of(context).platform == TargetPlatform.iOS
+              ? listForiOS
+              : listForAndroid,
+          Theme.of(context).platform,
+          context, () {
+        Navigator.pop(context);
+      });
+    } else {
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+    }
   }
 
   getGalleryImages() async {

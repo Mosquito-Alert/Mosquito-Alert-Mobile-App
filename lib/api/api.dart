@@ -337,7 +337,7 @@ class ApiSingleton {
         return allSessions[0].session_ID;
       }
     } catch (e) {
-      // print(e.message);
+      print(e.message);
       return false;
     }
   }
@@ -568,7 +568,7 @@ class ApiSingleton {
       var userIdFix = await UserManager.getTrackingId();
 
       var body = {
-        'user': userIdFix,
+        'user_coverage_uuid': userIdFix,
         'fix_time': time,
         'masked_lat': lat,
         'masked_lon': lon,

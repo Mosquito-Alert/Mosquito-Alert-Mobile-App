@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/other_mosquito_info.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -30,6 +31,8 @@ class AdultReportPage extends StatefulWidget {
 class _AdultReportPageState extends State<AdultReportPage> {
   PageController _pagesController;
   List<Widget> _formsRepot;
+  List<Widget> _initialformsRepot;
+  List<Widget> _skipRepotForms;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
   StreamController<bool> skipParts = new StreamController<bool>.broadcast();
@@ -264,9 +267,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
     }
     _pagesController = PageController();
     index = 0.0;
-    _formsRepot = [
+    _initialformsRepot = [
       MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage),
+          setShowCamera, _chooseTypeImage, _skipReport),
       MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts),
       BitingLocationForm(
           setValid,
@@ -277,6 +280,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
       CouldSeeForm(
           addBitingReport, displayQuestions.elementAt(3), setValid, goNextPage),
       AddOtherReportPage(_createReport, setValid, percentStream),
+    ];
+
+    _formsRepot = _initialformsRepot;
+
+    _skipRepotForms = [
+      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
+          setShowCamera, _chooseTypeImage, _skipReport),
+      OtherMosquitoInfo(),
     ];
 
     if (widget.editReport != null ||
@@ -442,9 +453,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                         BitingReportPage()),
                                               );
                                             } else {
-                                              setState(() {
-                                                index = currentPage + 1;
-                                              });
                                               if (showCamera) {
                                                 _chooseTypeImage();
                                               } else {
@@ -457,6 +465,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                         widget.editReport !=
                                                             null));
                                               }
+                                              setState(() {
+                                                index = currentPage + 1;
+                                              });
                                             }
                                           }),
                                         )
@@ -472,18 +483,33 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                         );
                                 }),
                           ))
-                        : Container(
-                            width: double.infinity,
-                            height: 54,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 12),
-                            child: Style.button(
-                              MyLocalizations.of(context, "send_data"),
-                              () {
-                                _createReport();
-                              },
-                            ),
-                          ),
+                        : _formsRepot.length == 2
+                            ? Container(
+                                width: double.infinity,
+                                height: 54,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 12),
+                                child: Style.button(
+                                  MyLocalizations.of(context, "continue_txt"),
+                                  () {
+                                    Navigator.pop(context);
+                                    Utils.resetReport();
+                                    Utils.imagePath = null;
+                                  },
+                                ),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                height: 54,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 12),
+                                child: Style.button(
+                                  MyLocalizations.of(context, "send_data"),
+                                  () {
+                                    _createReport();
+                                  },
+                                ),
+                              ),
               ],
             ),
           ),
@@ -504,104 +530,124 @@ class _AdultReportPageState extends State<AdultReportPage> {
     );
   }
 
-  _chooseTypeImage() {
-    List<Widget> listForiOS = <Widget>[
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Text(
-          MyLocalizations.of(context, 'gallery'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          Utils.infoAdultCamera(context, getImage);
-        },
-        child: Text(
-          MyLocalizations.of(context, 'camara'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          setShowCamera(false);
-
-          setState(() {
-            index = _pagesController.page + 1;
-          });
-          _pagesController
-              .nextPage(
-                  duration: Duration(microseconds: 300), curve: Curves.ease)
-              .then((value) => setValid(widget.editReport != null));
-        },
-        child: Text(
-          MyLocalizations.of(context, 'continue_without_photo'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-    ];
-    List<Widget> listForAndroid = <Widget>[
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          Utils.infoAdultCamera(context, getImage);
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'camara'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'gallery'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          setShowCamera(false);
-
-          setState(() {
-            index = _pagesController.page + 1;
-          });
-          _pagesController
-              .nextPage(
-                  duration: Duration(microseconds: 300), curve: Curves.ease)
-              .then((value) => setValid(widget.editReport != null));
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'continue_without_photo'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-    ];
-
-    Utils.modalDetailTrackingforPlatform(
-        Theme.of(context).platform == TargetPlatform.iOS
-            ? listForiOS
-            : listForAndroid,
-        Theme.of(context).platform,
-        context, () {
-      Navigator.pop(context);
+  _skipReport(bool skip) {
+    setState(() {
+      _formsRepot = skip ? _skipRepotForms : _initialformsRepot;
+      index = _pagesController.page + 1;
     });
+
+    if (skip) {
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(true));
+    }
+  }
+
+  _chooseTypeImage() {
+    _skipReport(false);
+    if (widget.editReport == null) {
+      List<Widget> listForiOS = <Widget>[
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            getGalleryImages();
+          },
+          child: Text(
+            MyLocalizations.of(context, 'gallery'),
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            Utils.infoAdultCamera(context, getImage);
+          },
+          child: Text(
+            MyLocalizations.of(context, 'camara'),
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+        CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+            setShowCamera(false);
+
+            setState(() {
+              index = _pagesController.page + 1;
+            });
+            _pagesController
+                .nextPage(
+                    duration: Duration(microseconds: 300), curve: Curves.ease)
+                .then((value) => setValid(widget.editReport != null));
+          },
+          child: Text(
+            MyLocalizations.of(context, 'continue_without_photo'),
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+      ];
+      List<Widget> listForAndroid = <Widget>[
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            Utils.infoAdultCamera(context, getImage);
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: Text(MyLocalizations.of(context, 'camara'),
+                style: TextStyle(color: Colors.blue, fontSize: 15)),
+          ),
+        ),
+        Divider(height: 1.0),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            getGalleryImages();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: Text(MyLocalizations.of(context, 'gallery'),
+                style: TextStyle(color: Colors.blue, fontSize: 15)),
+          ),
+        ),
+        Divider(height: 1.0),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            setShowCamera(false);
+
+            setState(() {
+              index = _pagesController.page + 1;
+            });
+            _pagesController
+                .nextPage(
+                    duration: Duration(microseconds: 300), curve: Curves.ease)
+                .then((value) => setValid(widget.editReport != null));
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            child: Text(MyLocalizations.of(context, 'continue_without_photo'),
+                style: TextStyle(color: Colors.blue, fontSize: 15)),
+          ),
+        ),
+      ];
+
+      Utils.modalDetailTrackingforPlatform(
+          Theme.of(context).platform == TargetPlatform.iOS
+              ? listForiOS
+              : listForAndroid,
+          Theme.of(context).platform,
+          context, () {
+        Navigator.pop(context);
+      });
+    } else {
+      _pagesController
+          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+          .then((value) => setValid(widget.editReport != null));
+    }
   }
 
   getGalleryImages() async {

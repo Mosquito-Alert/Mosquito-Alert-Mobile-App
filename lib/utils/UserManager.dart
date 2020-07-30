@@ -18,6 +18,12 @@ class UserManager {
     bool firstTime = prefs.getBool('firstTime');
 
     if (firstTime == null || !firstTime) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TutorialPage(),
+        ),
+      );
+      
       prefs.setBool("firstTime", true);
       var uuid = new Uuid().v4();
       var trackingUuid = new Uuid().v4();
@@ -30,11 +36,7 @@ class UserManager {
       setUserScores(1);
       setLanguage(language);
       
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => TutorialPage(),
-        ),
-      );
+      
       userScore = await ApiSingleton().getUserScores();
     }
 

@@ -4,7 +4,7 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 class MyLocalizations {
   MyLocalizations(this.locale);
 
-  final Locale locale ;
+  final Locale locale;
 
   static Map<String, Map<String, String>> _localizedValues = {
     "es": {
@@ -18,7 +18,7 @@ class MyLocalizations {
       "exit": "Salir",
       "reset": "Reset",
 
-      "es": "Español", 
+      "es": "Español",
       "ca": "Catalán",
       "en": "Inglés",
 
@@ -33,6 +33,7 @@ class MyLocalizations {
       "url_scoring_2": "/scoring/",
       "url_about_us": "http://tigaserver2.ceab.csic.es/en/about_us/",
       "url_about_project": "http://tigaserver2.ceab.csic.es/en/project_about/",
+      
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -144,6 +145,8 @@ class MyLocalizations {
           "No compartas fotografías que puedan contener información personal, como imágenes de personas reconocibles o datos personales. Si tienes dudas, consulta la política de privacidad en los ajustes de la app.",
       "no_show_again": "No volver a mostrar",
       "no_photos_added_txt": "No has añadido fotos al report",
+      "more_info_in_txt": "Más información en ",
+      "other_type_info_txt": "Mosquito Alert no recopila datos de otras especies.",
 
       //Notifications page
       "notifications_title": "Notificaciones",
@@ -234,7 +237,7 @@ class MyLocalizations {
           "En el menú podrás cambiar el idioma y acceder a contenidos extra. Encontrarás también una guía de identificación de especies y el tutorial de la app.",
       "tutorial_title_13": "El esfuerzo de muestreo, esencial para la ciencia",
       "tutorial_info_13":
-          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que env��es. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opción en el menú (ajustes).",
+          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que env��es. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opci��n en el menú (ajustes).",
       "tutorial_title_14": "Conserva tus datos y mantén tu anonimato",
       "tutorial_info_14":
           "Tu participación es anónima. Aún así, hemos desarrollado un sistema que te permite, si quieres, iniciar sesión en Mosquito Alert con cuentas externas y conservar tus datos y puntuación. Así, puedes sincronizar varios dispositivos y recuperar datos si tienes que desinstalar la app. Más información en el menú y en la Política de Privacidad de la app.",
@@ -259,7 +262,6 @@ class MyLocalizations {
       "near_from_txt": "Cerca de",
     },
   };
-
 
   String translate(key) {
     return _localizedValues[locale.languageCode][key];
