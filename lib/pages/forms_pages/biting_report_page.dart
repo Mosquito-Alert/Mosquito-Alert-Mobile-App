@@ -55,40 +55,48 @@ class _BitingReportPageState extends State<BitingReportPage> {
         }
       ]
     },
-    {
+     {
       "question": {
         "id": 2,
         "text": {
           "en": "Where have you been bitten?",
-          "ca": "Digues on t'han picat?",
-          "es": "Señala dónde te han picado"
+          "ca": "On t'han picat?",
+          "es": "¿Donde te han picado?"
         }
       },
       "answers": [
         //Bites by body are - value equals number of bites in each area, must be = to total number of bites
         {
           "id": 21,
-          "text": {"en": "Head", "ca": "Cap"}
+          "text": {"en": "Head", "ca": "Cap", "es": "Cap"}
         },
         {
           "id": 22,
-          "text": {"en": "Left arm", "ca": "Braç esquerre"}
+          "text": {
+            "en": "Left arm",
+            "ca": "Braç esquerre",
+            "es": "Braç esquerre"
+          }
         },
         {
           "id": 23,
-          "text": {"en": "Right arm", "ca": "Braç dret"}
+          "text": {"en": "Right arm", "ca": "Braç dret", "es": "Braç dret"}
         },
         {
           "id": 24,
-          "text": {"en": "Chest", "ca": "Tronc"}
+          "text": {"en": "Chest", "ca": "Tronc", "es": "Tronc"}
         },
         {
           "id": 25,
-          "text": {"en": "Left leg", "ca": "Cama esquerra"}
+          "text": {
+            "en": "Left leg",
+            "ca": "Cama esquerra",
+            "es": "Cama esquerra"
+          }
         },
         {
           "id": 26,
-          "text": {"en": "Right leg", "ca": "Cama dreta"}
+          "text": {"en": "Right leg", "ca": "Cama dreta", "es": "Cama dreta"}
         }
       ]
     },
