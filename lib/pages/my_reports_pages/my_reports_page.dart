@@ -623,6 +623,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         child: Style.noBgButton(
                                             MyLocalizations.of(context, "edit"),
                                             () {
+                                      Navigator.pop(context);
                                       if (report.type == "bite") {
                                         Navigator.push(
                                           context,

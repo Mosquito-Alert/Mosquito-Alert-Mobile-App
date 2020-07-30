@@ -490,7 +490,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                 margin: EdgeInsets.symmetric(
                                     vertical: 6, horizontal: 12),
                                 child: Style.button(
-                                  MyLocalizations.of(context, "continue_txt"),
+                                  MyLocalizations.of(context, "understand_txt"),
                                   () {
                                     Navigator.pop(context);
                                     Utils.resetReport();

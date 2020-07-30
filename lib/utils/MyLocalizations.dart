@@ -17,10 +17,10 @@ class MyLocalizations {
       "edit": "Editar",
       "exit": "Salir",
       "reset": "Reset",
-
       "es": "Español",
       "ca": "Catalán",
       "en": "Inglés",
+      "understand_txt": "Entendido",
 
       //LINKS
       "url_politics": "http://webserver.mosquitoalert.com/es/privacy/",
@@ -33,7 +33,6 @@ class MyLocalizations {
       "url_scoring_2": "/scoring/",
       "url_about_us": "http://tigaserver2.ceab.csic.es/en/about_us/",
       "url_about_project": "http://tigaserver2.ceab.csic.es/en/project_about/",
-      
 
       //Login - main
       "welcome_app_title": "Bienvenido a Mosquito Alert",
@@ -146,7 +145,8 @@ class MyLocalizations {
       "no_show_again": "No volver a mostrar",
       "no_photos_added_txt": "No has añadido fotos al report",
       "more_info_in_txt": "Más información en ",
-      "other_type_info_txt": "Mosquito Alert no recopila datos de otras especies.",
+      "other_type_info_txt":
+          "Mosquito Alert no recopila datos de otras especies.",
 
       //Notifications page
       "notifications_title": "Notificaciones",
