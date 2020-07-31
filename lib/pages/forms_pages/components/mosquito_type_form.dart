@@ -12,7 +12,7 @@ class MosquitoTypeForm extends StatefulWidget {
   final Function setValid, showCamera, nextPage, skipReport;
 
   MosquitoTypeForm(this.setSkip3, this.displayQuestion, this.setValid,
-      this.showCamera, this.nextPage, this.skipReport);
+      this.showCamera, this.nextPage, this.skipReport,);
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }

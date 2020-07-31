@@ -10,6 +10,9 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:photo_view/photo_view.dart';
 
 class AddPhotoButton extends StatefulWidget {
+  final bool isEditing;
+
+  AddPhotoButton(this.isEditing);
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
 }
@@ -42,35 +45,35 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              child: Container(
-                // child: Row(
-                //   children: <Widget>[
-                //     Container(
-                //         padding:
-                //             EdgeInsets.symmetric(vertical: 25, horizontal: 10),
-                //         child: Icon(
-                //           Icons.camera_alt,
-                //           size: 40,
-                //         )),
-                //     Expanded(
-                //       flex: 2,
-                //       child: Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: <Widget>[
-                //           Style.titleMedium(
-                //               MyLocalizations.of(context, 'have_foto_txt'),
-                //               fontSize: 16),
-                //           SizedBox(
-                //             height: 5,
-                //           ),
-                //           Style.bodySmall(
-                //               MyLocalizations.of(context, 'click_to_add_txt'))
-                //         ],
-                //       ),
-                //     )
-                //   ],
-                // ),
-              ),
+              child: !widget.isEditing 
+                  ? Container()
+                  : Row(
+                      children: <Widget>[
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 25, horizontal: 10),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 40,
+                            )),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Style.titleMedium(
+                                  MyLocalizations.of(context, 'have_foto_txt'),
+                                  fontSize: 16),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Style.bodySmall(MyLocalizations.of(
+                                  context, 'click_to_add_txt'))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
             ),
           )
         : Container(
@@ -271,7 +274,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     List<File> files = await FilePicker.getMultiFile(
       type: FileType.image,
     );
-    List<String> paths = []; 
+    List<String> paths = [];
 
     if (files != null) {
       files.forEach((image) {
@@ -280,7 +283,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       });
 
       setState(() {
-        images = [...images, ...paths];   
+        images = [...images, ...paths];
       });
     }
   }

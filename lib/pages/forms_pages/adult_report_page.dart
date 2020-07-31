@@ -270,7 +270,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _initialformsRepot = [
       MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
           setShowCamera, _chooseTypeImage, _skipReport),
-      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts),
+      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
+          widget.editReport != null),
       BitingLocationForm(
           setValid,
           displayQuestions.elementAt(2)['question']['text']
@@ -531,15 +532,27 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   _skipReport(bool skip) {
-    setState(() {
-      _formsRepot = skip ? _skipRepotForms : _initialformsRepot;
-      index = _pagesController.page + 1;
-    });
+    if (widget.editReport != null) {
+      Utils.showAlertYesNo(
+          MyLocalizations.of(context, "app_name"),
+          MyLocalizations.of(context, "editing_adult_info_type_txt"),
+          () {
+            // Utils.deleteReport(widget.editReport);
+            widget.loadData(); 
+            Navigator.pop(context);
+          },
+          context);
+    } else {
+      setState(() {
+        _formsRepot = skip ? _skipRepotForms : _initialformsRepot;
+        index = _pagesController.page + 1;
+      });
 
-    if (skip) {
-      _pagesController
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-          .then((value) => setValid(true));
+      if (skip) {
+        _pagesController
+            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(true));
+      }
     }
   }
 

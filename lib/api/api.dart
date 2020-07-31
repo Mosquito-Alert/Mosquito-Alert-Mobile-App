@@ -480,6 +480,10 @@ class ApiSingleton {
           }
         });
       }
+
+      if (report.version_number > 0) {
+        Utils.report = json.decode(response.body);
+      }
       return true;
     } catch (e) {
       return false;

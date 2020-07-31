@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 
 class MyLocalizations {
   MyLocalizations(this.locale);
@@ -147,6 +146,8 @@ class MyLocalizations {
       "more_info_in_txt": "Más información en ",
       "other_type_info_txt":
           "Mosquito Alert no recopila datos de otras especies.",
+      "editing_adult_info_type_txt":
+          "Mosquito Alert no recopila datos de otras especies. Se perderán los datos de este report. ¿Seguro que quiere continuar?",
 
       //Notifications page
       "notifications_title": "Notificaciones",
@@ -272,21 +273,3 @@ class MyLocalizations {
         .translate(key);
   }
 }
-
-// class MyLocalizationsDelegate extends LocalizationsDelegate<MyLocalizations> {
-//   const MyLocalizationsDelegate();
-
-//   @override
-//   bool isSupported(Locale locale) => [
-//         'es',
-//         'en'
-//       ].contains(locale.languageCode);
-
-//   @override
-//   Future<MyLocalizations> load(Locale locale) {
-//     return SynchronousFuture<MyLocalizations>(MyLocalizations(locale));
-//   }
-
-//   @override
-//   bool shouldReload(MyLocalizationsDelegate old) => false;
-// }

@@ -11,8 +11,9 @@ class MosquitoPartsForm extends StatefulWidget {
   final Map displayQuestion;
   final Function setValid;
   final StreamController<bool> showParts;
+  final bool isEditing;
 
-  MosquitoPartsForm(this.displayQuestion, this.setValid, this.showParts);
+  MosquitoPartsForm(this.displayQuestion, this.setValid, this.showParts, this.isEditing);
   @override
   _MosquitoPartsFormState createState() => _MosquitoPartsFormState();
 }
@@ -49,7 +50,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
-              AddPhotoButton(),
+              AddPhotoButton(widget.isEditing),
 
               StreamBuilder(
                 stream: widget.showParts.stream,

@@ -118,11 +118,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
     miniMapController = controller;
   }
 
-  _updateData() {
-    loadingStream.add(true);
-    _getData();
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -631,7 +626,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                               builder: (context) =>
                                                   BitingReportPage(
                                                     editReport: report,
-                                                    loadData: _updateData,
+                                                    loadData: _updateReport,
                                                   )),
                                         );
                                       } else if (report.type == "adult") {
@@ -641,7 +636,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                               builder: (context) =>
                                                   AdultReportPage(
                                                     editReport: report,
-                                                    loadData: _updateData,
+                                                    loadData: _updateReport,
                                                   )),
                                         );
                                       } else {
@@ -651,7 +646,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                               builder: (context) =>
                                                   BreedingReportPage(
                                                     editReport: report,
-                                                    loadData: _updateData,
+                                                    loadData: _updateReport,
                                                   )),
                                         );
                                       }
@@ -794,6 +789,31 @@ class _MyReportsPageState extends State<MyReportsPage> {
         context,
       );
     }
+  }
+
+  _updateReport() {
+    loadingStream.add(true);
+    int index =
+        _myData.indexWhere((r) => r.report_id == Utils.report.report_id);
+    _myData[index] = Utils.report;
+
+    int indexMarker = _listMarkers
+        .indexWhere((r) => r.report.report_id == Utils.report.report_id);
+
+    _listMarkers[indexMarker] = (ReportAndGeohash(
+        Utils.report,
+        LatLng(
+            Utils.report.current_location_lat != null
+                ? Utils.report.current_location_lat
+                : Utils.report.selected_location_lat,
+            Utils.report.current_location_lon != null
+                ? Utils.report.current_location_lon
+                : Utils.report.selected_location_lon),
+        indexMarker));
+
+    clusteringHelper.updateData(_listMarkers);
+
+    loadingStream.add(false);
   }
 
   _getPosition(Report report) {
