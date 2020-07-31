@@ -393,17 +393,19 @@ class _MainVCState extends State<MainVC> {
                 );
               },
             )),
-        StreamBuilder<bool>(
-          stream: loadingStream.stream,
-          initialData: true,
-          builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.hasData == false || snapshot.data == false) {
-              return Container();
-            }
-            return Utils.loading(
-              snapshot.data,
-            );
-          },
+        Positioned.fill(
+          child: StreamBuilder<bool>(
+            stream: loadingStream.stream,
+            initialData: true,
+            builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData == false || snapshot.data == false) {
+                return Container();
+              }
+              return Utils.loading(
+                snapshot.data,
+              );
+            },
+          ),
         )
       ],
     );

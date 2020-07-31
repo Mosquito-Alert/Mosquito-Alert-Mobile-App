@@ -125,6 +125,8 @@ class MyLocalizations {
       //Moquito type - report
       "could_recognise_txt":
           "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
+      "mosquito_parts_helper_txt":
+          'Selecciona los dibujos que más se ajustan a tu mosquito. Si sólo has visto una parte o tienes dudas, deja el resto sin seleccionar.',
       "recognize_it_txt": "¿Lo reconoces?",
       "have_foto_txt": "¿Tienes una foto del mosquito?",
       "click_to_add_txt": "Haz click aquí para añadirla",
@@ -238,7 +240,7 @@ class MyLocalizations {
           "En el menú podrás cambiar el idioma y acceder a contenidos extra. Encontrarás también una guía de identificación de especies y el tutorial de la app.",
       "tutorial_title_13": "El esfuerzo de muestreo, esencial para la ciencia",
       "tutorial_info_13":
-          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que env��es. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opci��n en el menú (ajustes).",
+          "De manera aleatoria, y no más de 5 veces al día, si lo permites, Mosquito Alert recoge tu posición aproximada, en una cuadrícula de 2x2 km aproximadamente (250 campos de fútbol juntos). No sabremos en qué lugar concreto has estado, y así, mantenemos tu privacidad. Además, esta información está desvinculada de los datos de mosquitos que envíes. Obtener esta información es esencial para la ciencia: sin ella, no podemos saber si hay muchos mosquitos o si en realidad lo que hay es mucha participación. Si no deseas que la app recoja tu posición aproximada, desactiva esta opción en el menú (ajustes).",
       "tutorial_title_14": "Conserva tus datos y mantén tu anonimato",
       "tutorial_info_14":
           "Tu participación es anónima. Aún así, hemos desarrollado un sistema que te permite, si quieres, iniciar sesión en Mosquito Alert con cuentas externas y conservar tus datos y puntuación. Así, puedes sincronizar varios dispositivos y recuperar datos si tienes que desinstalar la app. Más información en el menú y en la Política de Privacidad de la app.",

@@ -45,35 +45,22 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
               elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              child: !widget.isEditing 
-                  ? Container()
-                  : Row(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 25, horizontal: 10),
-                            child: Icon(
-                              Icons.camera_alt,
-                              size: 40,
-                            )),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                  MyLocalizations.of(context, 'have_foto_txt'),
-                                  fontSize: 16),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Style.bodySmall(MyLocalizations.of(
-                                  context, 'click_to_add_txt'))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+              child: GestureDetector(
+                onTap: () {
+                  _chooseTypeImage();
+                },
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                ),
+              ),
             ),
           )
         : Container(
@@ -111,7 +98,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(
+                                child: Image.asset(
                                   images[index],
                                   fit: BoxFit.cover,
                                   height: 100,
@@ -119,34 +106,29 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                _showImage(images[index]);
-                              },
-                              child: Container(
-                                height: double.infinity,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black54,
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.center,
-                                  ),
+                            Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black54,
+                                    Colors.transparent,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.center,
                                 ),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      _deleteImage(images[index], index);
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                    ),
+                              ),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: IconButton(
+                                  onPressed: () {
+                                    _deleteImage(images[index], index);
+                                  },
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -155,15 +137,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                         );
                 }),
           );
-  }
-
-  _showImage(image) {
-    return Container(
-        height: 700,
-        width: 700,
-        child: PhotoView(
-          imageProvider: AssetImage(image),
-        ));
   }
 
   _chooseTypeImage() {

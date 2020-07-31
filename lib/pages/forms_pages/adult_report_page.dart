@@ -387,6 +387,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   double currentPage = _pagesController.page;
 
                   if (currentPage == 0.0) {
+                    setState(() {
+                      index = currentPage - 1;
+                    });
                     if (Utils.reportsList != null &&
                         Utils.reportsList.isNotEmpty) {
                       Utils.deleteLastReport();
@@ -395,18 +398,33 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     }
                     Navigator.pop(context);
                   } else {
-                    _pagesController
-                        .previousPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease)
-                        .then((value) {
-                      setValid(true);
-                      addOtherReport(null);
-                    });
+                    if (currentPage == 2.0 && Utils.imagePath == null ||
+                        Utils.imagePath.isEmpty) {
+                      setState(() {
+                        index = 0;
+                      });
+                      _pagesController
+                          .animateToPage(0,
+                              duration: Duration(microseconds: 300),
+                              curve: Curves.ease)
+                          .then((value) {
+                        setValid(true);
+                        addOtherReport(null);
+                      });
+                    } else {
+                      setState(() {
+                        index = currentPage - 1;
+                      });
+                      _pagesController
+                          .previousPage(
+                              duration: Duration(microseconds: 300),
+                              curve: Curves.ease)
+                          .then((value) {
+                        setValid(true);
+                        addOtherReport(null);
+                      });
+                    }
                   }
-                  setState(() {
-                    index = currentPage - 1;
-                  });
                 },
               ),
               title: Style.title(
@@ -457,6 +475,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               if (showCamera) {
                                                 _chooseTypeImage();
                                               } else {
+                                                setState(() {
+                                                  index = currentPage + 1;
+                                                });
                                                 _pagesController
                                                     .nextPage(
                                                         duration: Duration(
@@ -466,9 +487,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                         widget.editReport !=
                                                             null));
                                               }
-                                              setState(() {
-                                                index = currentPage + 1;
-                                              });
                                             }
                                           }),
                                         )
@@ -532,16 +550,13 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   _skipReport(bool skip) {
-    if (widget.editReport != null) {
-      Utils.showAlertYesNo(
-          MyLocalizations.of(context, "app_name"),
-          MyLocalizations.of(context, "editing_adult_info_type_txt"),
-          () {
-            // Utils.deleteReport(widget.editReport);
-            widget.loadData(); 
-            Navigator.pop(context);
-          },
-          context);
+    if (widget.editReport != null && skip) {
+      Utils.showAlertYesNo(MyLocalizations.of(context, "app_name"),
+          MyLocalizations.of(context, "editing_adult_info_type_txt"), () {
+        Utils.deleteReport(widget.editReport);
+        widget.loadData();
+        Navigator.pop(context);
+      }, context);
     } else {
       setState(() {
         _formsRepot = skip ? _skipRepotForms : _initialformsRepot;
@@ -586,10 +601,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
             setShowCamera(false);
 
             setState(() {
-              index = _pagesController.page + 1;
+              index = _pagesController.page + 2;
             });
             _pagesController
-                .nextPage(
+                .animateToPage(3,
                     duration: Duration(microseconds: 300), curve: Curves.ease)
                 .then((value) => setValid(widget.editReport != null));
           },
@@ -632,10 +647,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
             setShowCamera(false);
 
             setState(() {
-              index = _pagesController.page + 1;
+              index = _pagesController.page + 2;
             });
             _pagesController
-                .nextPage(
+                .animateToPage(2,
                     duration: Duration(microseconds: 300), curve: Curves.ease)
                 .then((value) => setValid(widget.editReport != null));
           },
@@ -656,6 +671,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           context, () {
         Navigator.pop(context);
       });
+
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)

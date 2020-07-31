@@ -5,6 +5,8 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class TutorialPage extends StatefulWidget {
+  bool goBack;
+  TutorialPage(this.goBack);
   @override
   _TutorialPageState createState() => _TutorialPageState();
 }
@@ -204,6 +206,14 @@ class _TutorialPageState extends State<TutorialPage> {
         centerTitle: true,
         title: Style.title(MyLocalizations.of(context, 'tutorial_txt'),
             fontSize: 16),
+            leading: widget.goBack
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : Container(),
       ),
       body: new IntroSlider(
         // List slides

@@ -562,7 +562,7 @@ class ApiSingleton {
 
       return response.statusCode == 200;
     } catch (c) {
-      // print(c.message);
+       print(c.message);
       return false;
     }
   }

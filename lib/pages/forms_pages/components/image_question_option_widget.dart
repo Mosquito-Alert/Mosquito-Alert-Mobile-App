@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -45,11 +46,14 @@ class ImageQuestionOption extends StatelessWidget {
               ),
             ),
             text != null
-                ? Center(
+                ? Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 3),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Style.title(title, color: Colors.white, textAlign: TextAlign.center),
+                        AutoSizeText(title, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),  textAlign: TextAlign.center),
                         Style.bodySmall(
                           text,
                           color: Colors.white,

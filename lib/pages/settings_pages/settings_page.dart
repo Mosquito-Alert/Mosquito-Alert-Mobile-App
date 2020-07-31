@@ -60,6 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
         centerTitle: true,
         title: Style.title(MyLocalizations.of(context, "settings_title"),
             fontSize: 16),
+        
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -163,7 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsMenuWidget(MyLocalizations.of(context, "tutorial_txt"), () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TutorialPage()),
+                MaterialPageRoute(builder: (context) => TutorialPage(true)),
               );
             }),
             SizedBox(

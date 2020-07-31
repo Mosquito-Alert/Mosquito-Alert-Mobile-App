@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_question_option_widget.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -13,7 +14,8 @@ class MosquitoPartsForm extends StatefulWidget {
   final StreamController<bool> showParts;
   final bool isEditing;
 
-  MosquitoPartsForm(this.displayQuestion, this.setValid, this.showParts, this.isEditing);
+  MosquitoPartsForm(
+      this.displayQuestion, this.setValid, this.showParts, this.isEditing);
   @override
   _MosquitoPartsFormState createState() => _MosquitoPartsFormState();
 }
@@ -78,6 +80,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                       //   child: Style.bodySmall("mas info de eto",
                       //       color: Style.colorPrimary),
                       // ),
+                       Style.body(MyLocalizations.of(context, "could_recognise_txt")),
                       SizedBox(
                         height: 20,
                       ),
@@ -195,15 +198,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   onSelect(answer, answerId, int i) {
     Utils.addAdultPartsResponse(answer, answerId, i);
 
-    var list = Utils.report.responses
-        .where((q) => q.question_id == widget.displayQuestion['question']['id'])
-        .toList();
-    if (list.length == 3) {
-      widget.setValid(true);
-    } else {
-      widget.setValid(false);
-    }
-
+    widget.setValid(true);
     setState(() {
       questions = Utils.report.responses;
     });
