@@ -264,6 +264,8 @@ class MyLocalizations {
       "your_reports_bites_txt": "Tus notificaciones de picaduras",
       "your_reports_breeding_txt": "Tus notificaciones de lugares de cría",
       "your_reports_adults_txt": "Tus notificaciones de adultos",
+      "other_reports_txt": "Otras notificaciones",
+
       "no_reports_yet_txt": "No hay notificaciones registradas",
       "near_from_txt": "Cerca de",
     },
