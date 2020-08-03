@@ -18,9 +18,9 @@ import 'package:package_info/package_info.dart';
 import 'package:random_string/random_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
-
 import '../models/question.dart';
 import 'MyLocalizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
   static String language;
@@ -38,6 +38,7 @@ class Utils {
 
   static void deleteImage(String image) {
     imagePath.removeWhere((element) => element['image'] == image);
+
   }
 
   //REPORTS

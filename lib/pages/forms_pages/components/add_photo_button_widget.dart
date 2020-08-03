@@ -1,18 +1,17 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
 
   AddPhotoButton(this.isEditing);
+
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
 }
@@ -22,6 +21,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   @override
   void initState() {
+    _permissionsPath();
     super.initState();
     // _chooseTypeImage();
     if (Utils.imagePath != null && Utils.imagePath.isNotEmpty) {
@@ -30,6 +30,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           images.add(element['image']);
         }
       });
+    }
+  }
+
+  _permissionsPath() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
     }
   }
 
@@ -98,8 +105,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.asset(
-                                  images[index],
+                                child: Image.file(
+                                  File(images[index]),
                                   fit: BoxFit.cover,
                                   height: 100,
                                   width: 100,
@@ -244,13 +251,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   getGalleryImages() async {
-    List<File> files = await FilePicker.getMultiFile(
+    List<File> newFiles = await FilePicker.getMultiFile(
       type: FileType.image,
     );
     List<String> paths = [];
 
-    if (files != null) {
-      files.forEach((image) {
+    if (newFiles != null) {
+      newFiles.forEach((image) {
         Utils.saveImgPath(image);
         paths.add(image.path);
       });
@@ -265,10 +272,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     var image = await ImagePicker.pickImage(
       source: source,
     );
-
     if (image != null) {
       Utils.saveImgPath(image);
-
       setState(() {
         images.add(image.path);
       });
