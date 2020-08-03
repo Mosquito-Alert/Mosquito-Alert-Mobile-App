@@ -490,7 +490,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           Theme.of(context).platform,
           context, () {
         Navigator.pop(context);
-      });
+      }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:',);
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)

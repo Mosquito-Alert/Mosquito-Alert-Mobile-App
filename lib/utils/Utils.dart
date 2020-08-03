@@ -131,7 +131,10 @@ class Utils {
     if (editReport.photos != null || editReport.photos.isNotEmpty) {
       imagePath = [];
       editReport.photos.forEach((element) {
-        imagePath.add({'image': 'http://humboldt.ceab.csic.es/media/${element.photo}', 'id': editReport.version_UUID});
+        imagePath.add({
+          'image': 'http://humboldt.ceab.csic.es/media/${element.photo}',
+          'id': editReport.version_UUID
+        });
       });
     }
   }
@@ -541,16 +544,18 @@ class Utils {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      title != null ? Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
-                        child: Text(
-                            '${MyLocalizations.of(context, 'bs_info_adult_title_optional')}:',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400)),
-                      ) : Container(),
+                      title != null
+                          ? Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.only(
+                                  top: 20, left: 20, right: 20, bottom: 0),
+                              child: Text(title,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400)),
+                            )
+                          : Container(),
                       Wrap(children: list),
                     ],
                   ),
