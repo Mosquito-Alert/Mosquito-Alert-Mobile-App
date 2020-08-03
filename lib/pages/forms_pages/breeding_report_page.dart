@@ -20,6 +20,7 @@ class BreedingReportPage extends StatefulWidget {
   final Function loadData;
 
   BreedingReportPage({this.editReport, this.loadData});
+
   @override
   _BreedingReportPageState createState() => _BreedingReportPageState();
 }
@@ -436,7 +437,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            getGalleryImages();
+            Utils.infoBreedingCamera(context, getGalleryImages, gallery: true);
           },
           child: Text(
             MyLocalizations.of(context, 'gallery'),
@@ -472,7 +473,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         InkWell(
           onTap: () {
             Navigator.pop(context);
-            getGalleryImages();
+            Utils.infoBreedingCamera(context, getGalleryImages, gallery: true);
           },
           child: Container(
             width: double.infinity,
@@ -484,13 +485,16 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       ];
 
       Utils.modalDetailTrackingforPlatform(
-          Theme.of(context).platform == TargetPlatform.iOS
-              ? listForiOS
-              : listForAndroid,
-          Theme.of(context).platform,
-          context, () {
-        Navigator.pop(context);
-      }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:',);
+        Theme.of(context).platform == TargetPlatform.iOS
+            ? listForiOS
+            : listForAndroid,
+        Theme.of(context).platform,
+        context,
+        () {
+          Navigator.pop(context);
+        },
+        title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:',
+      );
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)

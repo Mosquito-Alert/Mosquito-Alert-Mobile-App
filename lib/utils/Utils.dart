@@ -633,7 +633,7 @@ class Utils {
         : new Container();
   }
 
-  static infoAdultCamera(context, getImage) async {
+  static infoAdultCamera(context, getImage, {bool gallery = false}) async {
     bool showInfo = await UserManager.getShowInfoAdult();
     if (showInfo == null || !showInfo) {
       return showDialog(
@@ -683,7 +683,7 @@ class Utils {
                             MyLocalizations.of(context, "ok_next_txt"),
                             () {
                               Navigator.of(context).pop();
-                              getImage(ImageSource.camera);
+                              !gallery  ? getImage(ImageSource.camera) : getImage();
                             },
                             textColor: Style.colorPrimary,
                           ),
@@ -692,7 +692,7 @@ class Utils {
                           child: Style.noBgButton(
                             MyLocalizations.of(context, "no_show_again"),
                             () {
-                              getImage(ImageSource.camera);
+                              !gallery  ? getImage(ImageSource.camera) : getImage();
                               UserManager.setSowInfoAdult(true);
                               Navigator.of(context).pop();
                             },
@@ -707,11 +707,11 @@ class Utils {
             );
           });
     } else {
-      getImage(ImageSource.camera);
+      !gallery  ? getImage(ImageSource.camera) : getImage();
     }
   }
 
-  static infoBreedingCamera(context, getImage) async {
+  static infoBreedingCamera(context, getImage, {bool gallery = false}) async {
     bool showInfo = await UserManager.getShowInfoBreeding();
 
     if (showInfo == null || !showInfo) {
@@ -752,7 +752,7 @@ class Utils {
                             MyLocalizations.of(context, "ok_next_txt"),
                             () {
                               Navigator.of(context).pop();
-                              getImage(ImageSource.camera);
+                              !gallery  ? getImage(ImageSource.camera) : getImage();
                             },
                             textColor: Style.colorPrimary,
                           ),
@@ -763,7 +763,7 @@ class Utils {
                             () {
                               UserManager.setSowInfoBreeding(true);
                               Navigator.of(context).pop();
-                              getImage(ImageSource.camera);
+                              !gallery  ? getImage(ImageSource.camera) : getImage();
                             },
                             // textColor: Style.colorPrimary,
                           ),
@@ -776,7 +776,7 @@ class Utils {
             );
           });
     } else {
-      getImage(ImageSource.camera);
+      !gallery  ? getImage(ImageSource.camera) : getImage();
     }
   }
 

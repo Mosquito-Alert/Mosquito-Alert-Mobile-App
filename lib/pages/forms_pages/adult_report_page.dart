@@ -579,7 +579,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            getGalleryImages();
+            Utils.infoAdultCamera(context, getGalleryImages, gallery: true);
           },
           child: Text(
             MyLocalizations.of(context, 'gallery'),
@@ -632,7 +632,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         InkWell(
           onTap: () {
             Navigator.pop(context);
-            getGalleryImages();
+            Utils.infoAdultCamera(context, getGalleryImages, gallery: true);
           },
           child: Container(
             width: double.infinity,
