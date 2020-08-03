@@ -24,6 +24,7 @@ class AdultReportPage extends StatefulWidget {
   final Function loadData;
 
   AdultReportPage({this.editReport, this.loadData});
+
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
 }
@@ -670,8 +671,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
           Theme.of(context).platform,
           context, () {
         Navigator.pop(context);
-      });
-
+      },
+          title: '${MyLocalizations.of(context, 'bs_info_adult_title_optional')}:');
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)

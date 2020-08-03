@@ -134,6 +134,8 @@ class MyLocalizations {
       "adult_report_title": "Notificar un mosquito",
       "breeding_report_title": "Notificar un lugar de cría",
       "not_a_mosquito": "No es un mosquito",
+      "bs_info_adult_title": "Añade una foto",
+      "bs_info_adult_title_optional": "Si puedes, añade una foto",
       "continue_without_photo": "Continuar sin foto",
       "camera_info_adult_txt_01":
           "Añade una foto para que podamos validar la observación del mosquito. Intenta fotografiarlo mosquito de manera que se vea el diseño del tórax así como las patas.",

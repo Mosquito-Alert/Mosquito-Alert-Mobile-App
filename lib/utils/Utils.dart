@@ -538,7 +538,22 @@ class Utils {
               builder: (BuildContext context) {
                 return SafeArea(
                     child: Container(
-                  child: Wrap(children: list),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      title != null ? Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
+                        child: Text(
+                            '${MyLocalizations.of(context, 'bs_info_adult_title_optional')}:',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400)),
+                      ) : Container(),
+                      Wrap(children: list),
+                    ],
+                  ),
                 ));
               },
               onClosing: close,
