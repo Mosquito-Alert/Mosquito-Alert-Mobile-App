@@ -40,6 +40,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   _getData() async {
+    await UserManager.startFirstTime(context);
     var user = await UserManager.fetchUser();
     userUuid = await UserManager.getUUID();
     language = Utils.getLanguage();
@@ -54,8 +55,6 @@ class _MainVCState extends State<MainVC> {
       userScore = points;
     });
     _bgTracking();
-
-    await UserManager.startFirstTime(context);
     loadingStream.add(false);
   }
 
