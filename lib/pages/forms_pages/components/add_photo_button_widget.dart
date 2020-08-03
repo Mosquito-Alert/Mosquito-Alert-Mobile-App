@@ -9,8 +9,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
+  final bool photoRequired;
 
-  AddPhotoButton(this.isEditing);
+
+  AddPhotoButton(this.isEditing, this.photoRequired);
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -244,10 +246,15 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   _deleteImage(String img, int index) {
-    Utils.deleteImage(img);
-    setState(() {
-      images.removeAt(index);
-    });
+    if (widget.photoRequired && images.length == 1) {
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'), MyLocalizations.of(context, 'photo_required_alert'), context);
+    } else{
+      Utils.deleteImage(img);
+      setState(() {
+        images.removeAt(index);
+      });
+    }
+
   }
 
   getGalleryImages() async {

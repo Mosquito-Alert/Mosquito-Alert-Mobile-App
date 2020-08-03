@@ -38,7 +38,6 @@ class Utils {
 
   static void deleteImage(String image) {
     imagePath.removeWhere((element) => element['image'] == image);
-
   }
 
   //REPORTS
@@ -684,7 +683,9 @@ class Utils {
                             MyLocalizations.of(context, "ok_next_txt"),
                             () {
                               Navigator.of(context).pop();
-                              !gallery  ? getImage(ImageSource.camera) : getImage();
+                              !gallery
+                                  ? getImage(ImageSource.camera)
+                                  : getImage();
                             },
                             textColor: Style.colorPrimary,
                           ),
@@ -693,7 +694,9 @@ class Utils {
                           child: Style.noBgButton(
                             MyLocalizations.of(context, "no_show_again"),
                             () {
-                              !gallery  ? getImage(ImageSource.camera) : getImage();
+                              !gallery
+                                  ? getImage(ImageSource.camera)
+                                  : getImage();
                               UserManager.setSowInfoAdult(true);
                               Navigator.of(context).pop();
                             },
@@ -708,7 +711,7 @@ class Utils {
             );
           });
     } else {
-      !gallery  ? getImage(ImageSource.camera) : getImage();
+      !gallery ? getImage(ImageSource.camera) : getImage();
     }
   }
 
@@ -753,7 +756,9 @@ class Utils {
                             MyLocalizations.of(context, "ok_next_txt"),
                             () {
                               Navigator.of(context).pop();
-                              !gallery  ? getImage(ImageSource.camera) : getImage();
+                              !gallery
+                                  ? getImage(ImageSource.camera)
+                                  : getImage();
                             },
                             textColor: Style.colorPrimary,
                           ),
@@ -764,7 +769,9 @@ class Utils {
                             () {
                               UserManager.setSowInfoBreeding(true);
                               Navigator.of(context).pop();
-                              !gallery  ? getImage(ImageSource.camera) : getImage();
+                              !gallery
+                                  ? getImage(ImageSource.camera)
+                                  : getImage();
                             },
                             // textColor: Style.colorPrimary,
                           ),
@@ -777,7 +784,7 @@ class Utils {
             );
           });
     } else {
-      !gallery  ? getImage(ImageSource.camera) : getImage();
+      !gallery ? getImage(ImageSource.camera) : getImage();
     }
   }
 

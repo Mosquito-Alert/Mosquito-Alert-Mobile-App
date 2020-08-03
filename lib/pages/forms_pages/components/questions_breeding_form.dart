@@ -54,7 +54,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
               height: 35,
             ),
             widget.displayQuestion['question']['id'] == 10
-                ? AddPhotoButton(true)
+                ? AddPhotoButton(true, true)
                 : Container(),
             Style.title(widget.displayQuestion['question']['text'][language]),
             SizedBox(
