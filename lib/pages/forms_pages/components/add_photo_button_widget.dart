@@ -1,16 +1,18 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
-
 
   AddPhotoButton(this.isEditing, this.photoRequired);
 
@@ -26,13 +28,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     _permissionsPath();
     super.initState();
     // _chooseTypeImage();
-    if (Utils.imagePath != null && Utils.imagePath.isNotEmpty) {
-      Utils.imagePath.forEach((element) {
-        if (element['id'] == Utils.report.version_UUID) {
-          images.add(element['image']);
-        }
-      });
-    }
+    _initImages();
   }
 
   _permissionsPath() async {
@@ -41,6 +37,44 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       await Permission.storage.request();
     }
   }
+
+  _initImages ()  async {
+    if (Utils.imagePath != null && Utils.imagePath.isNotEmpty) {
+      Utils.imagePath.forEach((element) async {
+        if (element['id'] == Utils.report.version_UUID) {
+          if (element['image'].contains('http')) {
+            File file = await urlToFile(element['image']);
+            images.add(file.path);
+            element['image'] = file.path;
+          } else {
+            images.add(element['image']);
+          }
+        }
+        setState(() {});
+      });
+    }
+  }
+
+
+  Future<File> urlToFile(String imageUrl) async {
+    // generate random number.
+    var rng = new Random();
+    // get temporary directory of device.
+    Directory tempDir = await getTemporaryDirectory();
+    // get temporary path from temporary directory.
+    String tempPath = tempDir.path;
+    // create a new file in temporary path with random file name.
+    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+    // call http.get method and pass imageUrl into it to get response.
+    http.Response response = await http.get(imageUrl);
+    // write bodyBytes received in response to file.
+    await file.writeAsBytes(response.bodyBytes);
+    // now return the file which is created with random name in
+    // temporary directory and image bytes from response is written to // that file.
+    return file;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,14 +140,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               height: double.infinity,
                               width: double.infinity,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image.file(
-                                  File(images[index]),
-                                  fit: BoxFit.cover,
-                                  height: 100,
-                                  width: 100,
-                                ),
-                              ),
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.file(
+                                          File(images[index]),
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 100,
+                                        )),
                             ),
                             Container(
                               height: double.infinity,
@@ -247,14 +280,14 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   _deleteImage(String img, int index) {
     if (widget.photoRequired && images.length == 1) {
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'), MyLocalizations.of(context, 'photo_required_alert'), context);
-    } else{
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'photo_required_alert'), context);
+    } else {
       Utils.deleteImage(img);
       setState(() {
         images.removeAt(index);
       });
     }
-
   }
 
   getGalleryImages() async {

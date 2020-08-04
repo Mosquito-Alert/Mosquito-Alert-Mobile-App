@@ -476,13 +476,16 @@ class ApiSingleton {
       if (Utils.imagePath != null) {
         Utils.imagePath.forEach((img) {
           if (img['id'] == report.version_UUID) {
-            saveImage(img['image'], report.version_UUID);
+            if (!img['image'].contains('http')) saveImage(img['image'], report.version_UUID);
           }
         });
       }
 
       if (report.version_number > 0) {
-        Utils.report = json.decode(response.body);
+        var a = Report.fromJson(json.decode(response.body));
+        print(a);
+        //Utils.report = Report.fromJson(json.decode(response.body));
+
       }
       return true;
     } catch (e) {
