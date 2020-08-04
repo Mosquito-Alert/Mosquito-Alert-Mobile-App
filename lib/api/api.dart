@@ -476,7 +476,7 @@ class ApiSingleton {
       if (Utils.imagePath != null) {
         Utils.imagePath.forEach((img) {
           if (img['id'] == report.version_UUID) {
-            saveImage(img['image'].path, report.version_UUID);
+            saveImage(img['image'], report.version_UUID);
           }
         });
       }
