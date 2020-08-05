@@ -600,7 +600,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           onPressed: () {
             Navigator.pop(context);
             setShowCamera(false);
-
+            Utils.imagePath = null;
             setState(() {
               index = _pagesController.page + 2;
             });
@@ -646,7 +646,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           onTap: () {
             Navigator.pop(context);
             setShowCamera(false);
-
+            Utils.imagePath = null;
             setState(() {
               index = _pagesController.page + 2;
             });
@@ -672,7 +672,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
           context, () {
         Navigator.pop(context);
       },
-          title: '${MyLocalizations.of(context, 'bs_info_adult_title_optional')}:');
+          title:
+              '${MyLocalizations.of(context, 'bs_info_adult_title_optional')}:');
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
@@ -725,7 +726,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     Utils.showAlert(
       MyLocalizations.of(context, "app_name"),
-      widget.editReport == null ? MyLocalizations.of(context, 'save_report_ok_txt') :  MyLocalizations.of(context, 'edited_report_ok_txt'),
+      widget.editReport == null
+          ? MyLocalizations.of(context, 'save_report_ok_txt')
+          : MyLocalizations.of(context, 'edited_report_ok_txt'),
       context,
       onPressed: () {
         Navigator.pop(context);
@@ -737,8 +740,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
       },
       barrierDismissible: false,
     );
-
-
   }
 
   _showAlertKo() {

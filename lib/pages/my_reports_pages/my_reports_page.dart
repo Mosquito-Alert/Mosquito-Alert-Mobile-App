@@ -797,8 +797,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _updateReport() async {
     //loadingStream.add(true);
-    await _getData(letReturn: false);
     //refresh all markers because it has not get image object
+    await _getData(letReturn: false);
     /*
     int index =
         _myData.indexWhere((r) => r.report_id == Utils.report.report_id);
