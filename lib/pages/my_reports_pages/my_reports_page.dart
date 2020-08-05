@@ -683,77 +683,81 @@ class _MyReportsPageState extends State<MyReportsPage> {
         });
   }
 
-  _getData() async {
-    double zoomLevel = await mapController.getZoomLevel();
-    if (_locationData != null && _zoomData != null) {
+  _getData({bool letReturn = true}) async {
+    try {
+      double zoomLevel = await mapController.getZoomLevel();
+      if (_locationData != null && _zoomData != null) {
+        double distance = await Geolocator().distanceBetween(
+            _locationData.latitude,
+            _locationData.longitude,
+            location.latitude,
+            location.longitude);
+        if (distance < 750 && zoomLevel == _zoomData) {
+          if (letReturn) return;
+        }
+      }
+
+      _locationData = location;
+      _zoomData = await mapController.getZoomLevel();
+
+      loadingStream.add(true);
+
+      LatLngBounds bounds = await mapController.getVisibleRegion();
       double distance = await Geolocator().distanceBetween(
-          _locationData.latitude,
-          _locationData.longitude,
-          location.latitude,
-          location.longitude);
-      if (distance < 750 && zoomLevel == _zoomData) {
-        return;
+          bounds.northeast.latitude,
+          bounds.northeast.longitude,
+          bounds.southwest.latitude,
+          bounds.southwest.longitude);
+
+      List<Report> list = await ApiSingleton().getReportsList(
+          location.latitude, location.longitude,
+          radius: (distance / 2).round());
+
+      if (list == null) {
+        list = [];
       }
-    }
 
-    _locationData = location;
-    _zoomData = await mapController.getZoomLevel();
+      List<ReportAndGeohash> listMarkers = List();
+      for (int i = 0; i < list.length; i++) {
+        if (list[i].location_choice != "missing" &&
+                list[i].current_location_lat != null &&
+                list[i].current_location_lon != null ||
+            list[i].selected_location_lat != null &&
+                list[i].selected_location_lon != null) {
+          data.add(list[i]);
 
-    loadingStream.add(true);
-
-    LatLngBounds bounds = await mapController.getVisibleRegion();
-    double distance = await Geolocator().distanceBetween(
-        bounds.northeast.latitude,
-        bounds.northeast.longitude,
-        bounds.southwest.latitude,
-        bounds.southwest.longitude);
-
-    List<Report> list = await ApiSingleton().getReportsList(
-        location.latitude, location.longitude,
-        radius: (distance / 2).round());
-
-    if (list == null) {
-      list = [];
-    }
-
-    List<ReportAndGeohash> listMarkers = List();
-    for (int i = 0; i < list.length; i++) {
-      if (list[i].location_choice != "missing" &&
-              list[i].current_location_lat != null &&
-              list[i].current_location_lon != null ||
-          list[i].selected_location_lat != null &&
-              list[i].selected_location_lon != null) {
-        data.add(list[i]);
-
-        listMarkers.add(ReportAndGeohash(
-            list[i],
-            LatLng(
-                list[i].current_location_lat != null
-                    ? list[i].current_location_lat
-                    : list[i].selected_location_lat,
-                list[i].current_location_lon != null
-                    ? list[i].current_location_lon
-                    : list[i].selected_location_lon),
-            i));
+          listMarkers.add(ReportAndGeohash(
+              list[i],
+              LatLng(
+                  list[i].current_location_lat != null
+                      ? list[i].current_location_lat
+                      : list[i].selected_location_lat,
+                  list[i].current_location_lon != null
+                      ? list[i].current_location_lon
+                      : list[i].selected_location_lon),
+              i));
+        }
       }
+
+      List<Report> myData = list
+          .where((element) =>
+              UserManager.profileUUIDs.any((id) => id == element.user))
+          .toList();
+
+      myData
+          .map((element) async => element.displayCity = await getCity(element))
+          .toList();
+
+      dataStream.add(myData);
+      _myData = myData;
+
+      clusteringHelper.updateData(listMarkers);
+      _listMarkers = listMarkers;
+
+      loadingStream.add(false);
+    } catch (e) {
+      print(e);
     }
-
-    List<Report> myData = list
-        .where((element) =>
-            UserManager.profileUUIDs.any((id) => id == element.user))
-        .toList();
-
-    myData
-        .map((element) async => element.displayCity = await getCity(element))
-        .toList();
-
-    dataStream.add(myData);
-    _myData = myData;
-
-    clusteringHelper.updateData(listMarkers);
-    _listMarkers = listMarkers;
-
-    loadingStream.add(false);
   }
 
   Future<String> getCity(report) async {
@@ -791,8 +795,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
-  _updateReport() {
-    loadingStream.add(true);
+  _updateReport() async {
+    //loadingStream.add(true);
+    await _getData(letReturn: false);
+    //refresh all markers because it has not get image object
+    /*
     int index =
         _myData.indexWhere((r) => r.report_id == Utils.report.report_id);
     _myData[index] = Utils.report;
@@ -812,8 +819,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
         indexMarker));
 
     clusteringHelper.updateData(_listMarkers);
+*/
 
-    loadingStream.add(false);
+    //loadingStream.add(false);
   }
 
   _getPosition(Report report) {

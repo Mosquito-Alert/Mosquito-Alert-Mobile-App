@@ -235,7 +235,8 @@ class ApiSingleton {
       String userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        'http://madev.creaf.cat/api/stats/user_xp_data/?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4', //TODO: change to staging URL
+        'http://madev.creaf.cat/api/stats/user_xp_data/?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4',
+        //TODO: change to staging URL
         headers: headers,
       );
 
@@ -473,15 +474,11 @@ class ApiSingleton {
         return false;
       }
 
-      if (Utils.imagePath != null) {
-        Utils.imagePath.forEach((img) {
-          if (img['id'] == report.version_UUID) {
-            if (!img['image'].contains('http')) saveImage(img['image'], report.version_UUID);
-          }
-        });
-      }
+      await saveImages(report);
 
       if (report.version_number > 0) {
+        var b = json.decode(response.body);
+        print(b);
         var a = Report.fromJson(json.decode(response.body));
         print(a);
         //Utils.report = Report.fromJson(json.decode(response.body));
@@ -490,6 +487,17 @@ class ApiSingleton {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future saveImages(Report report) async {
+    if (Utils.imagePath != null) {
+      Utils.imagePath.forEach((img) async {
+        if (img['id'] == report.version_UUID) {
+          if (!img['image'].contains('http'))
+            await saveImage(img['image'], report.version_UUID);
+        }
+      });
     }
   }
 
@@ -562,11 +570,11 @@ class ApiSingleton {
           ));
 
       var a = response.data;
-       print(a);
+      print(a);
 
       return response.statusCode == 200;
     } catch (c) {
-       print(c.message);
+      print(c.message);
       return false;
     }
   }
