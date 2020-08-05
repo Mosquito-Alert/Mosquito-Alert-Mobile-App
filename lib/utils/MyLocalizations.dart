@@ -99,7 +99,8 @@ class MyLocalizations {
       "tap_image_biting_txt": "Señala dónde te han picado",
       "continue_txt": "Continuar",
       "complete_all_txt": "Complete todos los campos para continuar",
-      "save_report_ok_txt": "Notificación guardada correctamente",
+      "save_report_ok_txt": "Datos enviados correctamente. Gracias por participar.",
+      "edited_report_ok_txt": "Datos actualizados correctamente. Gracias por participar.",
       "save_report_ko_txt": "Error, inténtalo de nuevo más tarde",
       "send_data": "Enviar datos",
       "bytes_and_place_report_txt":

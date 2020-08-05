@@ -545,7 +545,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, "app_name"),
-      MyLocalizations.of(context, 'save_report_ok_txt'),
+      widget.editReport == null ? MyLocalizations.of(context, 'save_report_ok_txt') :  MyLocalizations.of(context, 'edited_report_ok_txt'),
       context,
       onPressed: () {
         Navigator.pop(context);

@@ -561,7 +561,8 @@ class ApiSingleton {
             contentType: 'multipart/form-data',
           ));
 
-      // print(response);
+      var a = response.data;
+       print(a);
 
       return response.statusCode == 200;
     } catch (c) {
