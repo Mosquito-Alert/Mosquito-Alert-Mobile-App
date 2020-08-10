@@ -64,19 +64,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         default:
           streamType.add(LocationType.missing);
       }
-      if (Utils.report.responses.any((r) => r.question_id == 5)) {
-        Utils.report.responses.forEach((q) {
-          if (q.question_id == 5) {
-            var res = q.answer_value
-                .substring(q.answer_value.indexOf('( ') + 2,
-                    q.answer_value.indexOf(')'))
-                .split(', ');
-            markers.add(new Marker(
-                markerId: MarkerId('mk_${markers.length}'),
-                position: LatLng(double.parse(res[0]), double.parse(res[1]))));
-          }
-        });
-      }
     } else {
       _getCurrentLocation();
     }
@@ -86,8 +73,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     if (Utils.location == null) {
       await Utils.getLocation();
       if (Utils.location != null && controller != null) {
+        updateType(LocationType.current);
         controller.animateCamera(CameraUpdate.newLatLng(
             LatLng(Utils.location.latitude, Utils.location.longitude)));
+      } else {
+        streamType.add(LocationType.selected);
       }
     }
   }
@@ -100,21 +90,12 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   updateMarker(LatLng markerPosition) {
     Marker mk = Marker(
         markerId: MarkerId('mk${markers.length}'), position: markerPosition);
-
-    // if (Utils.report.selected_location_lat != null &&
-    //     Utils.report.type == "bite") {
-    //   Utils.addLocationResponse(mk.position.latitude, mk.position.longitude);
-    //   setState(() {
-    //     markers.add(mk);
-    //   });
-    // } else {
     Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
     widget.setValid(true);
 
     setState(() {
       markers = [mk];
     });
-    // }
   }
 
   updateType(type, {context}) async {
@@ -236,7 +217,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                   margin: EdgeInsets.symmetric(vertical: 30),
                   child: StreamBuilder(
                     stream: streamType.stream,
-                    initialData: LocationType.selected,
+                    initialData: LocationType.current,
                     builder: (BuildContext context,
                         AsyncSnapshot<LocationType> snapshot) {
                       return Column(

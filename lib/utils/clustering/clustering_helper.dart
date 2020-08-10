@@ -139,13 +139,13 @@ class ClusteringHelper {
     ImageConfiguration imageConfig = ImageConfiguration(devicePixelRatio: 3.0);
 
     _iconAdultYours = await BitmapDescriptor.fromAssetImage(
-        imageConfig, 'assets/img/maps/report_001.png');
+        imageConfig, 'assets/img/maps/ic_yellow_marker.png');
     _iconAdultOthers = await BitmapDescriptor.fromAssetImage(
-        imageConfig, 'assets/img/maps/report_002.png');
+        imageConfig, 'assets/img/maps/ic_green_marker.png');
     _iconBitesYours = await BitmapDescriptor.fromAssetImage(
-        imageConfig, 'assets/img/maps/report_003.png');
+        imageConfig, 'assets/img/maps/ic_red_marker.png');
     _iconBreedingYours = await BitmapDescriptor.fromAssetImage(
-        imageConfig, 'assets/img/maps/report_004.png');
+        imageConfig, 'assets/img/maps/ic_blue_marker.png');
 
   }
 

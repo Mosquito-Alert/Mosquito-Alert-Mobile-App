@@ -238,7 +238,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.5,
+                                                0.55,
                                         child: CustomCard(
                                           img: 'assets/img/ic_bite_report.png',
                                           title: MyLocalizations.of(
@@ -262,7 +262,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.5,
+                                                0.55,
                                         child: CustomCard(
                                           img:
                                               'assets/img/ic_mosquito_report.png',
@@ -288,7 +288,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.5,
+                                                0.55,
                                         child: GestureDetector(
                                           onTap: () {
                                             loadingStream.add(true);
@@ -310,7 +310,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.5,
+                                                0.55,
                                         child: GestureDetector(
                                           onTap: () {
                                             Navigator.push(

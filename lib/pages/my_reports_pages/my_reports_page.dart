@@ -307,7 +307,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/img/maps/report_003.png',
+                        'assets/img/maps/ic_red_marker.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -316,17 +316,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/img/maps/report_004.png',
-                        height: 36,
-                      ),
-                      title: Style.body(
-                          MyLocalizations.of(
-                              context, "your_reports_breeding_txt"),
-                          textAlign: TextAlign.left),
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/img/maps/report_001.png',
+                        'assets/img/maps/ic_yellow_marker.png',
                         height: 36,
                       ),
                       title: Style.body(
@@ -336,7 +326,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     ),
                     ListTile(
                       leading: Image.asset(
-                        'assets/img/maps/report_002.png',
+                        'assets/img/maps/ic_blue_marker.png',
+                        height: 36,
+                      ),
+                      title: Style.body(
+                          MyLocalizations.of(
+                              context, "your_reports_breeding_txt"),
+                          textAlign: TextAlign.left),
+                    ),
+                    ListTile(
+                      leading: Image.asset(
+                        'assets/img/maps/ic_green_marker.png',
                         height: 36,
                       ),
                       title: Style.body(

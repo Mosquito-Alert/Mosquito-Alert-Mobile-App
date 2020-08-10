@@ -16,7 +16,8 @@ class CustomCard extends StatelessWidget {
         // height: double.infinity,
         child: Card(
           color: selected == true ? Style.colorPrimary : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: disabled == true ? 0 : 3,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
@@ -33,13 +34,16 @@ class CustomCard extends StatelessWidget {
                         ),
                       )
                     : SizedBox(
-                        height: 120,
+                        height: 140,
                       ),
-                Expanded(
-                  child: AutoSizeText(title,
-                       textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),),
+                SizedBox(
+                  height: 30,
+                  child: AutoSizeText(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
                 ),
-                
                 Expanded(
                   // height: 30,
                   child: Style.bodySmall(subtitle,

@@ -399,8 +399,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     }
                     Navigator.pop(context);
                   } else {
-                    if (currentPage == 2.0 && Utils.imagePath == null ||
-                        Utils.imagePath.isEmpty) {
+                    if (currentPage == 2.0 && !Utils.report.responses.any((element) => element.answer_id == 61)) {
                       setState(() {
                         index = 0;
                       });
@@ -600,12 +599,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
           onPressed: () {
             Navigator.pop(context);
             setShowCamera(false);
-            Utils.imagePath = null;
+            Utils.imagePath = [];
+            int page = 2;
+            if (Utils.report.responses
+                .any((element) => element.answer_id == 61)) {
+              page = 1;
+            }
             setState(() {
-              index = _pagesController.page + 2;
+              index = _pagesController.page + page;
             });
             _pagesController
-                .animateToPage(3,
+                .animateToPage(page,
                     duration: Duration(microseconds: 300), curve: Curves.ease)
                 .then((value) => setValid(widget.editReport != null));
           },
@@ -646,12 +650,18 @@ class _AdultReportPageState extends State<AdultReportPage> {
           onTap: () {
             Navigator.pop(context);
             setShowCamera(false);
-            Utils.imagePath = null;
+            Utils.imagePath = [];
+            int page = 2;
+            if (Utils.report.responses
+                .any((element) => element.answer_id == 61)) {
+              page = 1;
+            }
+
             setState(() {
-              index = _pagesController.page + 2;
+              index = _pagesController.page + page;
             });
             _pagesController
-                .animateToPage(2,
+                .animateToPage(page,
                     duration: Duration(microseconds: 300), curve: Curves.ease)
                 .then((value) => setValid(widget.editReport != null));
           },

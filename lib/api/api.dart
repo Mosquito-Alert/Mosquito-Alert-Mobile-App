@@ -75,7 +75,7 @@ class ApiSingleton {
             'user_UUID': uuid,
           }));
 
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return ApiResponse.fromJson(json.decode(response.body));

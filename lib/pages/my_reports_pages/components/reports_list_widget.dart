@@ -41,10 +41,10 @@ class ReportsList extends StatelessWidget {
                       children: <Widget>[
                         Image.asset(
                           reports[index].type == 'adult'
-                              ? 'assets/img/maps/report_001.png'
+                              ? 'assets/img/maps/ic_yellow_marker.png'
                               : reports[index].type == 'site'
-                                  ? 'assets/img/maps/report_004.png'
-                                  : 'assets/img/maps/report_003.png',
+                                  ? 'assets/img/maps/ic_blue_marker.png'
+                                  : 'assets/img/maps/ic_red_marker.png',
                           width: 40,
                         ),
                         Container(height: 60, child: VerticalDivider()),
