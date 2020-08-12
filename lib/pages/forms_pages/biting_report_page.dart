@@ -35,207 +35,50 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   List<Map> displayQuestions = [
     {
-      "question": {
-        "id": 1,
-        "text": {
-          "en": "How many bites did you get?",
-          "ca": "Quantes picades tens i en quina part del cos?",
-          "es": "¿Cuántas picaduras tienes y en qué parte del cuerpo?"
-        }
-      },
+      "question": {"id": 1, "text": "question_1"},
       "answers": [
         //Number of bites - value equals TOTAL number of bites
-        {
-          "id": 11,
-          "text": {
-            "en": "",
-            "ca": "",
-            "es": "",
-          }
-        }
+        {"id": 11, "text": "question_1_answer_11"}
       ]
     },
-     {
-      "question": {
-        "id": 2,
-        "text": {
-          "en": "Where have you been bitten?",
-          "ca": "On t'han picat?",
-          "es": "¿Donde te han picado?"
-        }
-      },
+    {
+      "question": {"id": 2, "text": "question_2"},
       "answers": [
         //Bites by body are - value equals number of bites in each area, must be = to total number of bites
-        {
-          "id": 21,
-          "text": {"en": "Head", "ca": "Cap", "es": "Cap"}
-        },
-        {
-          "id": 22,
-          "text": {
-            "en": "Left arm",
-            "ca": "Braç esquerre",
-            "es": "Braç esquerre"
-          }
-        },
-        {
-          "id": 23,
-          "text": {"en": "Right arm", "ca": "Braç dret", "es": "Braç dret"}
-        },
-        {
-          "id": 24,
-          "text": {"en": "Chest", "ca": "Tronc", "es": "Tronc"}
-        },
-        {
-          "id": 25,
-          "text": {
-            "en": "Left leg",
-            "ca": "Cama esquerra",
-            "es": "Cama esquerra"
-          }
-        },
-        {
-          "id": 26,
-          "text": {"en": "Right leg", "ca": "Cama dreta", "es": "Cama dreta"}
-        }
+        {"id": 21, "text": "question_2_answer_21"},
+        {"id": 22, "text": "question_2_answer_22"},
+        {"id": 23, "text": "question_2_answer_23"},
+        {"id": 24, "text": "question_2_answer_24"},
+        {"id": 25, "text": "question_2_answer_25"},
+        {"id": 26, "text": "question_2_answer_26"}
       ]
     },
     {
-      "question": {
-        "id": 4,
-        "text": {
-          "en": "Were you indoors or outdoors when you were bitten?",
-          "ca": "T'han picar en un espai interior o exterior?",
-          "es": "¿Te han picado en un espacio interior o exterior?"
-        }
-      },
+      "question": {"id": 4, "text": "question_4"},
       "answers": [
-        {
-          "id": 41,
-          "text": {
-            "en": "Indoors",
-            "ca": "Interior",
-            "es": "Interior",
-          }
-        },
-        {
-          "id": 42,
-          "text": {
-            "en": "Outdoors",
-            "ca": "Exterior",
-            "es": "Exterior",
-          }
-        },
+        {"id": 41, "text": "question_4_answer_41"},
+        {"id": 42, "text": "question_4_answer_42"},
       ]
     },
     {
-      "question": {
-        "id": 13,
-        "text": {
-          "en": "When did the mosquiti bite you?",
-          "ca": "Quan t'ha picat?",
-          "es": "¿Cuando te han picado?"
-        }
-      },
+      "question": {"id": 5, "text": "question_13"},
       "answers": [
-        {
-          "id": 131,
-          "text": {
-            "en": "Just now",
-            "ca": "Ara mateix",
-            "es": "Ahora mismo",
-          }
-        },
-        {
-          "id": 132,
-          "text": {
-            "en": "in the last 24h",
-            "ca": "A les darreres 24h",
-            "es": "En las ultimas 24h",
-          }
-        },
+        {"id": 51, "text": "question_13_answer_131"},
+        {"id": 52, "text": "question_13_answer_132"},
       ]
     },
     {
-      "question": {
-        "id": 3,
-        "text": {
-          "en": "At what time of the day were you bitten?",
-          "ca": "En quin moment ha estat?",
-          "es": "¿En qué momento ha sido?"
-        }
-      },
+      "question": {"id": 3, "text": "question_3"},
       "answers": [
-        {
-          "id": 31,
-          "text": {
-            "en": "Sunrise",
-            "ca": "Matí",
-            "es": "Mañana",
-          }
-        },
-        {
-          "id": 32,
-          "text": {
-            "en": "Mid-day",
-            "ca": "Migdia",
-            "es": "Mediodía",
-          }
-        },
-        {
-          "id": 33,
-          "text": {
-            "en": "Sunset",
-            "ca": "Tarda",
-            "es": 'Tarde',
-          }
-        },
-        {
-          "id": 34,
-          "text": {
-            "en": "Night",
-            "ca": "Nit",
-            "es": "Noche",
-          }
-        },
+        {"id": 31, "text": "question_3_answer_31"},
+        {"id": 32, "text": "question_3_answer_32"},
+        {"id": 33, "text": "question_3_answer_33"},
+        {"id": 34, "text": "question_3_answer_34"},
       ]
     },
     {
-      "question": {
-        "id": 6,
-        "text": {
-          "en": "Where were you when you were bitten?",
-          "ca": "On estaves quan et van picar?",
-          "es": "¿Dónde te encontrabas cuando te han picado?"
-        }
-      },
-      "answers": [
-        {
-          "id": 61, //Location - value equals WKT of point
-          "text": {"en": "", "ca": "", "es": ""}
-        }
-      ]
+      "question": {"id": 14, "text": "question_14"},
     },
-    {
-      "question": {
-        "id": 11,
-        "text": {
-          "en": "Did you see any of the mosquitoes that have bitten you?",
-          "ca": "Has vist algun dels mosquits que t'han picat?",
-          "es": "¿Has visto alguno de los mosquitos que te han picado?"
-        }
-      },
-      "answers": [
-        {
-          "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
-        },
-        {
-          "id": 81,
-          "text": {"en": "No", "ca": "No", "es": "No"}
-        }
-      ]
-    }
   ];
 
   @override
@@ -246,16 +89,20 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
     _pagesController = PageController();
     _formsRepot = [
-      BitingForm([
-        displayQuestions.elementAt(0),
-        displayQuestions.elementAt(1),
-        displayQuestions.elementAt(2),
-        displayQuestions.elementAt(3),
-        displayQuestions.elementAt(4),
-      ], setValid, goNextPage),
+      BitingForm(
+        [
+          displayQuestions.elementAt(0),
+          displayQuestions.elementAt(1),
+          displayQuestions.elementAt(2),
+          displayQuestions.elementAt(3),
+          displayQuestions.elementAt(4),
+        ],
+        setValid,
+        goNextPage,
+      ),
       BitingLocationForm(
         setValid,
-        displayQuestions.elementAt(5)['question']['text'][Utils.getLanguage()],
+        displayQuestions.elementAt(5)['question']['text'],
       ),
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
@@ -471,7 +318,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, "app_name"),
-      widget.editReport == null ? MyLocalizations.of(context, 'save_report_ok_txt') :  MyLocalizations.of(context, 'edited_report_ok_txt'),
+      widget.editReport == null
+          ? MyLocalizations.of(context, 'save_report_ok_txt')
+          : MyLocalizations.of(context, 'edited_report_ok_txt'),
       context,
       onPressed: () {
         Navigator.pop(context);

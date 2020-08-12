@@ -43,215 +43,119 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   List<Map> displayQuestions = [
     {
-      "question": {
-        "id": 6,
-        "text": {
-          "en": "What kind of mosquito do you think it is?",
-          "ca": "Quin tipus de mosquit creus que és?",
-          "es": "¿Qué tipo de mosquito crees que es?"
-        }
-      },
+      "question": {"id": 6, "text": "question_6"},
       "answers": [
         {
           "id": 61,
           "img": "assets/img/ic_invasive_aedes.png",
-          "text": {
-            "en": "Invasive Aedes",
-            "ca": "Aedes invasor",
-            "es": "Aedes invasor"
-          }
+          "text": "question_6_answer_61"
         },
         {
           "id": 62,
           "img": "assets/img/ic_common_mosquito.png",
-          "text": {
-            "en": "Common mosquito",
-            "ca": "Mosquit comú",
-            "es": "Mosquito común"
-          }
+          "text": "question_6_answer_62"
         },
         {
           "id": 63,
           "img": "assets/img/ic_other_mosquito.png",
-          "text": {"en": "Other", "ca": "Altres", "es": "Otro"}
+          "text": "question_6_answer_63"
         },
         {
           "id": 64,
           "img": "assets/img/ic_dont_know.png",
-          "text": {"en": "I don't know", "ca": "No ho sé", "es": "No lo sé"}
+          "text": "question_6_answer_64"
         }
       ]
     },
     {
-      "question": {
-        "id": 7,
-        "text": {
-          "en": "How does your mosquito look?",
-          "ca": "Com és el mosquit?",
-          "es": "¿Cómo es el mosquito?"
-        }
-      },
+      "question": {"id": 7, "text": "question_7"},
       "answers": [
         [
           {
             "id": 711,
             "img": "assets/img/torax_711.png",
-            "text": {"en": "Thorax 1", "ca": "Tòrax 1", "es": "Tórax 1"}
+            "text": "question_7_answer_711"
           },
           {
             "id": 712,
             "img": "assets/img/torax_712.png",
-            "text": {"en": "Thorax 2", "ca": "Tòrax 2", "es": "Tórax 21"}
+            "text": "question_7_answer_712"
           },
           {
             "id": 713,
             "img": "assets/img/torax_713.png",
-            "text": {"en": "Thorax 3", "ca": "Tòrax 3", "es": "Tórax 3"}
+            "text": "question_7_answer_713"
           },
           {
             "id": 714,
             "img": "assets/img/torax_714.png",
-            "text": {"en": "Thorax 4", "ca": "Tòrax 4", "es": "Tórax 1"}
+            "text": "question_7_answer_714"
           },
         ],
         [
           {
             "id": 721,
             "img": "assets/img/abdomen_721.png",
-            "text": {"en": "Abdomen 1", "ca": "Abdomen 1", "es": "Abdomen 1"}
+            "text": "question_7_answer_721"
           },
           {
             "id": 722,
             "img": "assets/img/abdomen_722.png",
-            "text": {"en": "Abdomen 2", "ca": "Abdomen 2", "es": "Abdomen 2"}
+            "text": "question_7_answer_722"
           },
           {
             "id": 723,
             "img": "assets/img/abdomen_723.png",
-            "text": {"en": "Abdomen 3", "ca": "Abdomen 3", "es": "Abdomen 3"}
+            "text": "question_7_answer_723"
           },
           {
             "id": 724,
             "img": "assets/img/abdomen_724.png",
-            "text": {"en": "Abdomen 4", "ca": "Abdomen 4", "es": "Abdomen 4"}
+            "text": "question_7_answer_724"
           },
         ],
         [
           {
             "id": 731,
             "img": "assets/img/leg_731.png",
-            "text": {"en": "3d leg 1", "ca": "3a cama 1", "es": "Pierna 1"}
+            "text": "question_7_answer_731"
           },
           {
             "id": 732,
             "img": "assets/img/leg_732.png",
-            "text": {"en": "3d leg 2", "ca": "3a cama 2", "es": "Pierna 2"}
+            "text": "question_7_answer_732"
           },
           {
             "id": 733,
             "img": "assets/img/leg_733.png",
-            "text": {"en": "3d leg 3", "ca": "3a cama 3", "es": "Pierna 3"}
+            "text": "question_7_answer_733"
           },
           {
             "id": 734,
             "img": "assets/img/leg_734.png",
-            "text": {"en": "3d leg 4", "ca": "3a cama 4", "es": "Pierna 4"}
+            "text": "question_7_answer_734"
           }
         ],
       ]
     },
     {
-      "question": {
-        "id": 13,
-        "text": {
-          "en": "Where did you find the mosquito?",
-          "ca": "On has trobat el mosquit?",
-          "es": "¿Dónde has encontrado el mosquito?"
-        }
-      },
+      "question": {"id": 13, "text": "question_13"},
       "answers": [
-        {
-          "id": 131,
-          "text": {
-            "en": "Inside a vehicle",
-            "ca": "Dins d'un vehicle",
-            "es": "Dentro de un vehículo"
-          }
-        },
-        {
-          "id": 132,
-          "text": {
-            "en": "Inside a building",
-            "ca": "Dins d'un edifici",
-            "es": "Dentro de un edificio"
-          }
-        },
-        {
-          "id": 133,
-          "text": {
-            "en": "Outdoors",
-            "ca": "A l'exterior",
-            "es": "En el exterior"
-          }
-        },
+        {"id": 131, "text": "question_13_answer_131"},
+        {"id": 132, "text": "question_13_answer_132"},
+        {"id": 133, "text": "question_13_answer_133"},
       ]
     },
     {
-      "question": {
-        "id": 8,
-        "text": {
-          "en": "Did mosquito bite you?",
-          "ca": "T'ha picat el mosquit?",
-          "es": "¿Te ha picado el mosquito?"
-        }
-      },
-      "answers": [
-        {
-          "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
-        },
-        {
-          "id": 81,
-          "text": {"en": "No", "ca": "No", "es": "No"}
-        },
-      ]
+      "question": {"id": 15, "text": "question_15"},
     },
     {
-      "question": {
-        "id": 13,
-        "text": {
-          "en": "Where did you find the mosquito?",
-          "ca": "On has trobat el mosquit?",
-          "es": "¿Dónde has encontrado el mosquito?"
-        }
-      },
+      "question": {"id": 8, "text": "question_8"},
       "answers": [
-        {
-          "id": 131,
-          "text": {
-            "en": "Inside a car",
-            "ca": "Dins d'un cotxe",
-            "es": "Dentro de un coche"
-          }
-        },
-        {
-          "id": 132,
-          "text": {
-            "en": "Inside a building",
-            "ca": "Dins d'un edifici",
-            "es": "Dentro de un edificio"
-          }
-        },
-        {
-          "id": 133,
-          "text": {
-            "en": "Outdoors",
-            "ca": "A l'exterior",
-            "es": "En el exterior"
-          }
-        },
+        {"id": 81, "text": "question_8_answer_81"},
+        {"id": 82, "text": "question_8_answer_82"},
       ]
-    }
+    },
   ];
 
   bool addBiting = false;
@@ -274,13 +178,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
       MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
           widget.editReport != null),
       BitingLocationForm(
-          setValid,
-          displayQuestions.elementAt(2)['question']['text']
-              [Utils.getLanguage()]),
+          setValid, displayQuestions.elementAt(3)['question']['text']),
       QuestionsBreedingForm(
-          displayQuestions.elementAt(4), setValid, false, null),
+          displayQuestions.elementAt(2), setValid, false, null),
       CouldSeeForm(
-          addBitingReport, displayQuestions.elementAt(3), setValid, goNextPage),
+          addBitingReport, displayQuestions.elementAt(4), setValid, goNextPage),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
@@ -399,7 +301,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     }
                     Navigator.pop(context);
                   } else {
-                    if (currentPage == 2.0 && !Utils.report.responses.any((element) => element.answer_id == 61)) {
+                    if (currentPage == 2.0 &&
+                        !Utils.report.responses
+                            .any((element) => element.answer_id == 61)) {
                       setState(() {
                         index = 0;
                       });

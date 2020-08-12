@@ -35,122 +35,29 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   List<Map> displayQuestions = [
     {
-      "question": {
-        "id": 9,
-        "text": {
-          "en": "It's a public or a private location?",
-          "ca": "Estàs a un lloc públic o propietat privada?",
-          "es": "Estás en un lugar público o propiedad privada?"
-        }
-      },
-      "answers": [
-        {
-          "id": 91,
-          "text": {
-            "en": "Public place",
-            "ca": "Lloc públic",
-            "es": "Lloc públic",
-          }
-        },
-        {
-          "id": 92,
-          "text": {
-            "en": "Private location",
-            "ca": "Propietat privada",
-            "es": "Propietat privada",
-          }
-        }
-      ]
-    },
-    {
-      "question": {
-        "id": 10,
-        "text": {
-          "en": "Does it have water?",
-          "ca": "Hi ha aigua?",
-          "es": "¿Tiene agua?",
-        }
-      },
-      "answers": [
-        {
-          "id": 101,
-          "text": {"en": "Yes", "ca": "Sí", "es": "Sí"}
-        },
-        {
-          "id": 81,
-          "text": {"en": "No", "ca": "No", "es": "No"}
-        }
-      ]
-    },
-    {
-      "question": {
-        "id": 11,
-        "text": {
-          "en": "Have you seen mosquitoes around?",
-          "ca": "Has vist mosquits a la vora?",
-          "es": "¿Has visto mosquitos alrededor?"
-        }
-      },
-      "answers": [
-        {
-          "id": 111,
-          "text": {"en": "Mosquito", "ca": "Mosquit", "es": "Mosquito"}
-        },
-        {
-          "id": 112,
-          "text": {"en": "Bite", "ca": "Picada", "es": "Picadura"}
-        },
-        {
-          "id": 81,
-          "text": {"en": "No", "ca": "No", "es": "No"}
-        },
-      ]
-    },
-    {
-      "question": {
-        "id": 12,
-        "text": {
-          "en": "Is it a storm drain or other type of breeding site?",
-          "ca": "Com és el lloc de cria detectat a la via pública?",
-          "es": "¿Cómo es el lugar de cría detectado en la vía pública?"
-        }
-      },
+      "question": {"id": 12, "text": "question_12"},
       "answers": [
         {
           'img': "assets/img/ic_imbornal.png",
           "id": 121,
-          "text": {
-            "en": "Storm drain",
-            "ca": "Embornal",
-            "es": "Imbornal",
-          }
+          "text": "question_12_answer_121"
         },
         {
           'img': "assets/img/ic_other_site.png",
           "id": 122,
-          "text": {
-            "en": "Other breeding site",
-            "ca": "Altres tipus",
-            "es": "Otro tipo"
-          }
+          "text": "question_12_answer_122"
         }
       ]
     },
     {
-      "question": {
-        "id": 6,
-        "text": {
-          "en": "Where is the breeding site?",
-          "ca": "On es troba el lloc de cria?",
-          "es": " ¿Dónde se encuentra el lugar de cría?"
-        }
-      },
+      "question": {"id": 10, "text": "question_10"},
       "answers": [
-        {
-          "id": 61, //Location - value equals WKT of point
-          "text": {"en": "", "ca": ""}
-        }
+        {"id": 101, "text": "question_10_answer_101"},
+        {"id": 81, "text": "question_10_answer_102"}
       ]
+    },
+    {
+      "question": {"id": 16, "text": "question_16"},
     },
   ];
 
@@ -173,13 +80,11 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
     _formsRepot = [
       QuestionsBreedingForm(
-          displayQuestions.elementAt(3), setValid, true, _chooseTypeImage),
+          displayQuestions.elementAt(0), setValid, true, _chooseTypeImage),
       QuestionsBreedingForm(
           displayQuestions.elementAt(1), setValid, false, goNextPage),
       BitingLocationForm(
-          setValid,
-          displayQuestions.elementAt(4)['question']['text']
-              [Utils.getLanguage()]),
+          setValid, displayQuestions.elementAt(2)['question']['text']),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
   }
@@ -545,7 +450,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, "app_name"),
-      widget.editReport == null ? MyLocalizations.of(context, 'save_report_ok_txt') :  MyLocalizations.of(context, 'edited_report_ok_txt'),
+      widget.editReport == null
+          ? MyLocalizations.of(context, 'save_report_ok_txt')
+          : MyLocalizations.of(context, 'edited_report_ok_txt'),
       context,
       onPressed: () {
         Navigator.pop(context);

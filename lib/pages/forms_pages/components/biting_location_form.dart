@@ -73,7 +73,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     // if (Utils.location == null) {
     //   await Utils.getLocation();
     //   if (Utils.location != null && controller != null) {
-        
+
     //     // controller.animateCamera(CameraUpdate.newLatLng(
     //     //     LatLng(Utils.location.latitude, Utils.location.longitude)));
     //   } else {
@@ -212,7 +212,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                 SizedBox(
                   height: 35,
                 ),
-                Style.title(widget.displayQuestion),
+                Style.title(
+                    MyLocalizations.of(context, widget.displayQuestion)),
                 Style.body(MyLocalizations.of(context, "chose_option_txt")),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
@@ -237,8 +238,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                           //     context: context);
                                         },
                                         child: SmallQuestionOption(
-                                          MyLocalizations.of(
-                                              context, "current_location_txt"),
+                                          "current_location_txt",
                                           selected: snapshot.data ==
                                               LocationType.current,
                                         ))),
@@ -252,8 +252,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                     updateType(LocationType.selected);
                                   },
                                   child: SmallQuestionOption(
-                                    MyLocalizations.of(
-                                        context, "select_location_txt"),
+                                    "select_location_txt",
                                     selected:
                                         snapshot.data == LocationType.selected,
                                   ),

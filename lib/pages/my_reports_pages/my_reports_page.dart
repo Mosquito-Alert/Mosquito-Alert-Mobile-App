@@ -560,13 +560,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                         null
                                                     ? Expanded(
                                                         flex: 3,
-                                                        child:
-                                                            Style.titleMedium(
+                                                        child: Style.titleMedium(
+                                                            MyLocalizations.of(
+                                                                context,
                                                                 report
                                                                     .responses[
                                                                         index]
-                                                                    .question,
-                                                                fontSize: 14),
+                                                                    .question),
+                                                            fontSize: 14),
                                                       )
                                                     : Container(),
                                                 Expanded(
@@ -575,9 +576,12 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                       report.responses[index]
                                                                   .answer !=
                                                               ' '
-                                                          ? report
-                                                              .responses[index]
-                                                              .answer
+                                                          ? MyLocalizations.of(
+                                                              context,
+                                                              report
+                                                                  .responses[
+                                                                      index]
+                                                                  .answer)
                                                           : report
                                                               .responses[index]
                                                               .answer_value,

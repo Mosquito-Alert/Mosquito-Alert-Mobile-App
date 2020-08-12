@@ -22,14 +22,12 @@ class MosquitoPartsForm extends StatefulWidget {
 
 class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   List<Question> questions = List();
-  String language;
 
   @override
   void initState() {
     super.initState();
 
     widget.setValid(true);
-    language = Utils.getLanguage();
     if (Utils.report != null) {
       for (Question q in Utils.report.responses) {
         if (q.question_id == widget.displayQuestion['question']['id']) {
@@ -64,8 +62,8 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Style.title(
-                          widget.displayQuestion['question']['text'][language]),
+                      Style.title(MyLocalizations.of(
+                          context, widget.displayQuestion['question']['text'])),
                       Style.body(
                           MyLocalizations.of(context, "could_recognise_txt")),
                       SizedBox(
@@ -80,7 +78,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                               int id = widget.displayQuestion['answers'][0]
                                   [index]['id'];
                               String txt = widget.displayQuestion['answers'][0]
-                                  [index]['text'][language];
+                                  [index]['text'];
 
                               return GestureDetector(
                                 onTap: () {
@@ -111,7 +109,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                               int id = widget.displayQuestion['answers'][1]
                                   [index]['id'];
                               String txt = widget.displayQuestion['answers'][1]
-                                  [index]['text'][language];
+                                  [index]['text'];
                               return GestureDetector(
                                 onTap: () {
                                   onSelect(txt, id, 720);
@@ -141,7 +139,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                               int id = widget.displayQuestion['answers'][2]
                                   [index]['id'];
                               String txt = widget.displayQuestion['answers'][2]
-                                  [index]['text'][language];
+                                  [index]['text'];
                               return GestureDetector(
                                 onTap: () {
                                   onSelect(txt, id, 730);

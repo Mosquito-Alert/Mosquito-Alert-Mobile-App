@@ -22,7 +22,6 @@ class _BitingFormState extends State<BitingForm> {
   List<Question> questions;
   List<Map> displayQuestions = [];
   Map bodyQuestion = {};
-  String language;
   int bites = 0;
 
   bool showDaytime = false;
@@ -40,10 +39,10 @@ class _BitingFormState extends State<BitingForm> {
         if (q.question_id == 1) {
           bites = int.parse(q.answer_value);
         }
-        if (q.question_id <= 4 || q.question_id == 13) {
+        if (q.question_id <= 4 || q.question_id == 5) {
           questions.add(q);
         }
-        if (q.answer_id == 132) {
+        if (q.answer_id == 52) {
           showDaytime = true;
         }
       }
@@ -54,7 +53,6 @@ class _BitingFormState extends State<BitingForm> {
       valid = isValid;
     });
     _textController.text = bites.toString();
-    language = Utils.getLanguage();
     displayQuestions =
         widget.displayQuestions.where((q) => q['question']['id'] > 2).toList();
     bodyQuestion = widget.displayQuestions
@@ -95,7 +93,7 @@ class _BitingFormState extends State<BitingForm> {
                       setState(() {
                         questions = Utils.report.responses;
                       });
-                      addToList(question[0]['question']['text'][language], "",
+                      addToList(question[0]['question']['text'], "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
@@ -129,7 +127,7 @@ class _BitingFormState extends State<BitingForm> {
                       var question = widget.displayQuestions
                           .where((q) => q['question']['id'] == 1)
                           .toList();
-                      addToList(question[0]['question']['text'][language], "",
+                      addToList(question[0]['question']['text'], "",
                           question_id: 1,
                           answer_id: 11,
                           answer_value: _textController.text);
@@ -244,13 +242,9 @@ class _BitingFormState extends State<BitingForm> {
                         GestureDetector(
                           onTap: _validateAddBite()
                               ? () {
-                                  addToList(
-                                      bodyQuestion['question']['text']
-                                          [language],
-                                      bodyQuestion['answers'][0]['text']
-                                          [language],
-                                      question_id: 2,
-                                      answer_id: 21);
+                                  addToList(bodyQuestion['question']['text'],
+                                      bodyQuestion['answers'][0]['text'],
+                                      question_id: 2, answer_id: 21);
                                 }
                               : null,
                           child: Center(
@@ -270,10 +264,8 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text']
-                                              [language],
-                                          bodyQuestion['answers'][2]['text']
-                                              [language],
+                                          bodyQuestion['question']['text'],
+                                          bodyQuestion['answers'][2]['text'],
                                           question_id: 2,
                                           answer_id: 23);
                                     }
@@ -289,10 +281,8 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text']
-                                              [language],
-                                          bodyQuestion['answers'][3]['text']
-                                              [language],
+                                          bodyQuestion['question']['text'],
+                                          bodyQuestion['answers'][3]['text'],
                                           question_id: 2,
                                           answer_id: 24);
                                     }
@@ -309,10 +299,8 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text']
-                                              [language],
-                                          bodyQuestion['answers'][1]['text']
-                                              [language],
+                                          bodyQuestion['question']['text'],
+                                          bodyQuestion['answers'][1]['text'],
                                           question_id: 2,
                                           answer_id: 22);
                                     }
@@ -333,10 +321,8 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text']
-                                              [language],
-                                          bodyQuestion['answers'][5]['text']
-                                              [language],
+                                          bodyQuestion['question']['text'],
+                                          bodyQuestion['answers'][5]['text'],
                                           question_id: 2,
                                           answer_id: 26);
                                     }
@@ -352,10 +338,8 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text']
-                                              [language],
-                                          bodyQuestion['answers'][4]['text']
-                                              [language],
+                                          bodyQuestion['question']['text'],
+                                          bodyQuestion['answers'][4]['text'],
                                           question_id: 2,
                                           answer_id: 25);
                                     }
@@ -409,7 +393,8 @@ class _BitingFormState extends State<BitingForm> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                          displayQuestions[i]['question']['text'][language],
+                          MyLocalizations.of(
+                              context, displayQuestions[i]['question']['text']),
                           fontSize: 16),
                       SizedBox(
                         height: 10,
@@ -427,10 +412,10 @@ class _BitingFormState extends State<BitingForm> {
                               // crossAxisSpacing: 10,
                             ),
                             itemBuilder: (context, index) {
-                              String answerTxt = displayQuestions[i]['answers']
-                                  [index]['text'][language];
-                              String questionTxt = displayQuestions[i]
-                                  ['question']['text'][language];
+                              String answerTxt =
+                                  displayQuestions[i]['answers'][index]['text'];
+                              String questionTxt =
+                                  displayQuestions[i]['question']['text'];
                               int questionId =
                                   displayQuestions[i]['question']['id'];
                               int answerId =
@@ -439,11 +424,11 @@ class _BitingFormState extends State<BitingForm> {
                                 padding: EdgeInsets.all(5),
                                 child: InkWell(
                                   onTap: () {
-                                    if (answerId == 132) {
+                                    if (answerId == 52) {
                                       setState(() {
                                         showDaytime = true;
                                       });
-                                    } else if (answerId == 131) {
+                                    } else if (answerId == 51) {
                                       setState(() {
                                         showDaytime = false;
                                       });
@@ -456,9 +441,6 @@ class _BitingFormState extends State<BitingForm> {
                                     answerTxt,
                                     selected: questions
                                         .any((q) => q.answer_id == answerId),
-                                    // index: getIndexAnswer(answerId),
-                                    // disabled:
-                                    //     _getDisabled(answerId, questionId),
                                   ),
                                 ),
                               );
@@ -577,11 +559,11 @@ class _BitingFormState extends State<BitingForm> {
 
       questions.forEach((q) {
         if (q.question_id == 4) totalQ3++;
-        if (q.question_id == 13) totalQ4++;
+        if (q.question_id == 5) totalQ4++;
         if (q.question_id == 3) totalQ5++;
       });
 
-      if (questions.any((q) => q.answer_id == 132)) {
+      if (questions.any((q) => q.answer_id == 52)) {
         if (bites > 0 &&
             !totalBites &&
             totalQ3 == 1 &&

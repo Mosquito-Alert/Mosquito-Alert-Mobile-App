@@ -79,17 +79,10 @@ class MyLocalizations {
       //Main page
       "welcome_text": "Hola",
       "what_to_do_txt": "¿Qué quieres hacer?",
-
       "report_biting_txt": "Notificar picadura",
-      "bitten_by_mosquito_question_txt": "",
       "report_nest_txt": "Notificar lugar de cría",
-      "found_breeding_place_question_txt": "en la vía pública",
       "report_adults_txt": "Notificar mosquito",
-
-      "report_us_adult_mosquitos_txt":
-          "creo que es una de las especies buscadas",
       "your_reports_txt": "Mis datos",
-      "explore_your_reports_txt": "ver o modificar los datos enviados",
       "help_validating_other_photos_txt":
           "¿Nos ayudas a validar las fotografías de otros usuarios?",
       "we_need_help_txt": "¡Necesitamos tu ayuda! Colabora con Mosquito Alert",
@@ -130,13 +123,11 @@ class MyLocalizations {
           "Si has visto al mosquito, ¿puedes reconocerlo a continuación?",
       "mosquito_parts_helper_txt":
           'Selecciona los dibujos que más se ajustan a tu mosquito. Si sólo has visto una parte o tienes dudas, deja el resto sin seleccionar.',
-      "recognize_it_txt": "¿Lo reconoces?",
       "have_foto_txt": "¿Tienes una foto del mosquito?",
       "click_to_add_txt": "Haz click aquí para añadirla",
       "send_photo_title": "Mándanos una foto",
       "adult_report_title": "Notificar un mosquito",
       "breeding_report_title": "Notificar un lugar de cría",
-      "not_a_mosquito": "No es un mosquito",
       "photo_required_alert": "Es obligatorio subir como mínimo una foto",
       "bs_info_adult_title": "Añade una foto",
       "bs_info_adult_title_optional": "Si puedes, añade una foto",
@@ -271,6 +262,73 @@ class MyLocalizations {
 
       "no_reports_yet_txt": "No hay notificaciones registradas",
       "near_from_txt": "Cerca de",
+
+      //questions
+      "question_1": "¿Cuántas picaduras tienes y en qué parte del cuerpo?",
+      "question_1_answer_11": "",
+
+      "question_2": "¿Donde te han picado?",
+      "question_2_answer_21": "Cabeza",
+      "question_2_answer_22": "Brazo izquierdo",
+      "question_2_answer_23": "Brazo derecho",
+      "question_2_answer_24": "Pecho",
+      "question_2_answer_25": "Pierna izquierda",
+      "question_2_answer_26": "Pierna derecha",
+
+      "question_3": "¿En qué momento ha sido?",
+      "question_3_answer_31": "Mañana",
+      "question_3_answer_32": "Mediodía",
+      "question_3_answer_33": "Tarde",
+      "question_3_answer_34": "Noche",
+
+      "question_4": "¿Te han picado en un espacio interior o exterior?",
+      "question_4_answer_41": "Interior",
+      "question_4_answer_42": "Exterior",
+
+      "question_5": "¿Cuando te han picado?",
+      "question_5_answer_51": "Ahora mismo",
+      "question_5_answer_52": "En las ultimas 24h",
+
+      "question_6": "¿Qué tipo de mosquito crees que es?",
+      "question_6_answer_61": "Aedes invasor",
+      "question_6_answer_62": "Mosquito común",
+      "question_6_answer_63": "Otro",
+      "question_6_answer_64": "No lo sé",
+
+      "question_7": "¿Cómo es el mosquito?",
+      "question_7_answer_711": "Tórax 1",
+      "question_7_answer_712": "Tórax 2",
+      "question_7_answer_713": "Tórax 3",
+      "question_7_answer_714": "Tórax 4",
+      "question_7_answer_721": "Abdomen 1",
+      "question_7_answer_722": "Abdomen 2",
+      "question_7_answer_723": "Abdomen 3",
+      "question_7_answer_724": "Abdomen 4",
+      "question_7_answer_731": "Pierna 1",
+      "question_7_answer_732": "Pierna 2",
+      "question_7_answer_733": "Pierna 3",
+      "question_7_answer_734": "Pierna 4",
+
+      "question_8": "¿Te ha picado el mosquito?",
+      "question_8_answer_81": "No",
+      "question_8_answer_82": "Si",
+
+      "question_10": "¿Tiene agua?",
+      "question_10_answer_101": "Sí",
+      "question_10_answer_102": "No",
+
+      "question_12": "¿Cómo es el lugar de cría detectado en la vía pública?",
+      "question_12_answer_121": "Imbornal",
+      "question_12_answer_122": "Otro tipo",
+
+      "question_13": "¿Dónde has encontrado el mosquito?",
+      "question_13_answer_131": "Dentro de un vehículo",
+      "question_13_answer_132": "Dentro de un edificio",
+      "question_13_answer_133": "En el exterior",
+
+      "question_14": "¿Dónde te encontrabas cuando te han picado?",
+      "question_15": "¿Dónde has encontrado el mosquito?",
+      "question_16": "¿Dónde se encuentra el lugar de cría?",
     },
   };
 
