@@ -48,6 +48,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+    
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.png"
@@ -67,6 +70,7 @@ flutter:
    - assets/img/maps/
    - assets/img/gallery/
    - assets/img/tutorial/
+   - assets/language/
 
   
   fonts:

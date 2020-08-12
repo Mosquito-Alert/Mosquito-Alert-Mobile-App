@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 
-  static void setLocale(BuildContext context, String newLocale) {
+  static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.ancestorStateOfType(TypeMatcher<_MyAppState>());
 
     state.setState(() {
@@ -26,7 +26,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  String language = 'es';
+  Locale language = Utils.language;
 
   @override
   void initState() {
@@ -58,38 +58,49 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<String> _fetchLocale() async {
-    String language = await UserManager.getLanguage();
+  Future<Locale> _fetchLocale() async {
+    String lang = await UserManager.getLanguage();
+    String country = await UserManager.getLanguageCountry();
 
-    if (language == null) {
-      language = Utils.getLanguage();
+    if (lang != null) {
+      return Utils.language;
     }
 
-    return language;
+    return Locale(lang, country);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mosquito alert',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Rubik',
-        primarySwatch: Colors.orange,
-      ),
-      home: MainVC(),
-      locale: Locale(language),
-      localizationsDelegates: [
-        const MyLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('es'),
-        const Locale('en'),
-        const Locale('ca'),
-      ],
-    );
+    return FutureBuilder(
+        future: Utils.loadTranslations(),
+        builder: (context, AsyncSnapshot snapshot) {
+          return MaterialApp(
+            title: 'Mosquito alert',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Rubik',
+              primarySwatch: Colors.orange,
+            ),
+            home: snapshot.hasData
+                ? MainVC()
+                : Scaffold(
+                    body: Container(
+                      color: Colors.green,
+                    ),
+                  ),
+            locale: Utils.language,
+            localizationsDelegates: [
+              const MyLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              const Locale('es'),
+              const Locale('en'),
+              const Locale('ca'),
+            ],
+          );
+        });
   }
 }

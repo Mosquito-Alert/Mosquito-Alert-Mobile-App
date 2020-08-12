@@ -60,7 +60,6 @@ class _SettingsPageState extends State<SettingsPage> {
         centerTitle: true,
         title: Style.title(MyLocalizations.of(context, "settings_title"),
             fontSize: 16),
-        
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -120,22 +119,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       case "Español":
                       case "Spanish":
                       case "Espanyol":
-                        Utils.language = 'es';
+                        Utils.language = Locale('es', 'ES');
                         break;
                       case "Catalán":
                       case "Catalá":
                       case "Catalan":
-                        Utils.language = 'ca';
+                        Utils.language = Locale('ca', "ES");
                         break;
                       case "Inglés":
                       case "Anglès":
                       case "English":
-                        Utils.language = 'en';
+                        Utils.language = Locale('en', "US");
                         break;
                     }
                     MyApp.setLocale(context, Utils.language);
-                    UserManager.setLanguage(Utils.language);
-                    print(selectedLanguage);
+                    UserManager.setLanguage(Utils.language.languageCode);
+                    UserManager.setLanguageCountry(Utils.language.countryCode);
                   });
             }),
             SizedBox(

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,10 +22,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import '../models/question.dart';
 import 'MyLocalizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
-  static String language;
+  static Locale language = Locale('es', 'ES');
 
   //images
   static List<Map> imagePath;
@@ -789,7 +790,10 @@ class Utils {
   }
 
   static getSavedLanguage() async {
-    language = await UserManager.getLanguage();
+    String lang = await UserManager.getLanguage();
+    String country = await UserManager.getLanguageCountry();
+
+    language = Locale(lang, country);
   }
 
   static String getLanguage() {
@@ -797,15 +801,15 @@ class Utils {
     if (language == null) {
       String lan = ui.window.locale.languageCode;
       if (lan == 'es') {
-        language = 'es';
+        language = ui.window.locale;
       } else if (lan == 'ca') {
-        language = 'ca';
+        language = ui.window.locale;
       } else {
-        language = 'es';
+        language = Locale('en', 'US');
       }
     }
 
-    return language;
+    return language.languageCode;
   }
 
   static launchUrl(url) async {
@@ -818,4 +822,21 @@ class Utils {
   //Manage Data
   static Position location;
   static LatLng defaultLocation = LatLng(41.3874, 2.1688);
+
+  //Load localizations data
+  static Map<String, String> localizedValues = {};
+
+  static Future<bool> loadTranslations() async {
+
+    getSavedLanguage();
+    // Load JSON file from the "language" folder
+
+    String jsonString = await rootBundle.loadString(
+        'assets/language/${language.languageCode}_${language.countryCode}.json');
+    Map<String, dynamic> jsonLanguageMap = json.decode(jsonString);
+    localizedValues = jsonLanguageMap.map((key, value) {
+      return MapEntry(key, value.toString());
+    });
+    return true;
+  }
 }

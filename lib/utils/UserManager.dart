@@ -27,21 +27,21 @@ class UserManager {
       prefs.setBool("firstTime", true);
       var uuid = new Uuid().v4();
       var trackingUuid = new Uuid().v4();
-      String language = Utils.getLanguage();
       prefs.setString("uuid", uuid);
       prefs.setString("trackingUUID", trackingUuid);
       prefs.setBool("trackingDisabled", false);
 
       await ApiSingleton().createUser(uuid);
       setUserScores(1);
-      setLanguage(language);
-
+      setLanguage(Utils.language.languageCode);
+      setLanguageCountry(Utils.language.countryCode);
       userScore = await ApiSingleton().getUserScores();
     }
 
     fetchUser();
     setUserScores(userScore);
-    Utils.language = await getLanguage();
+    Utils.language = await Utils.getSavedLanguage();
+    
     return true;
   }
 
@@ -84,6 +84,11 @@ class UserManager {
   static Future<void> setLanguage(language) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("language", language);
+  }
+
+  static Future<void> setLanguageCountry(lngCountry) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("languageCountry", lngCountry);
   }
 
   //get
@@ -130,6 +135,11 @@ class UserManager {
   static Future<String> getLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("language");
+  }
+
+   static Future<String> getLanguageCountry() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("languageCountry");
   }
 
   static signOut() async {
