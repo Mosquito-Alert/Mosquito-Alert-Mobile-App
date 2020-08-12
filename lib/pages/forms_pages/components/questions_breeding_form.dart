@@ -84,7 +84,6 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                       child: ImageQuestionOption(
                         question.answer_id == id ? true : false,
                         text,
-                        "",
                         widget.displayQuestion['answers'][index]['img'],
                       ),
                     ),

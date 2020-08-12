@@ -11,8 +11,14 @@ class MosquitoTypeForm extends StatefulWidget {
   final Map displayQuestion;
   final Function setValid, showCamera, nextPage, skipReport;
 
-  MosquitoTypeForm(this.setSkip3, this.displayQuestion, this.setValid,
-      this.showCamera, this.nextPage, this.skipReport,);
+  MosquitoTypeForm(
+    this.setSkip3,
+    this.displayQuestion,
+    this.setValid,
+    this.showCamera,
+    this.nextPage,
+    this.skipReport,
+  );
   @override
   _MosquitoTypeFormState createState() => _MosquitoTypeFormState();
 }
@@ -93,12 +99,6 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                   : false,
                               widget.displayQuestion['answers'][index]['text']
                                   [language],
-                              widget.displayQuestion['answers'][index]['id'] ==
-                                      63
-                                  ? MyLocalizations.of(
-                                      context, "not_a_mosquito")
-                                  : MyLocalizations.of(
-                                      context, "recognize_it_txt"),
                               widget.displayQuestion['answers'][index]['img'],
                               disabled: question.answer_id != null &&
                                   widget.displayQuestion['answers'][index]

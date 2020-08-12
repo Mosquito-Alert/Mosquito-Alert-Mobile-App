@@ -15,7 +15,6 @@ dependencies:
   webview_flutter: ^0.3.19+9
   google_maps_flutter: ^0.5.28+1
   material_segmented_control: ^2.0.10
-  camera: ^0.5.7+4
   path_provider: ^1.6.5
   path: ^1.6.4
   uuid: ^2.0.4

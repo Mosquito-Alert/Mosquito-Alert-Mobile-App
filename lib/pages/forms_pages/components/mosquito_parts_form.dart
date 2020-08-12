@@ -53,7 +53,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                 height: 40,
               ),
               AddPhotoButton(widget.isEditing, false),
-
               StreamBuilder(
                 stream: widget.showParts.stream,
                 initialData:
@@ -67,20 +66,8 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                     children: <Widget>[
                       Style.title(
                           widget.displayQuestion['question']['text'][language]),
-                      // SizedBox(
-                      //   height: 5,
-                      // ),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(builder: (context) => InfoPage('d')),
-                      //     );
-                      //   },
-                      //   child: Style.bodySmall("mas info de eto",
-                      //       color: Style.colorPrimary),
-                      // ),
-                       Style.body(MyLocalizations.of(context, "could_recognise_txt")),
+                      Style.body(
+                          MyLocalizations.of(context, "could_recognise_txt")),
                       SizedBox(
                         height: 20,
                       ),
@@ -104,7 +91,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                                   margin: EdgeInsets.only(right: 5),
                                   child: ImageQuestionOption(
                                     questions.any((q) => q.answer_id == id),
-                                    '',
                                     '',
                                     widget.displayQuestion['answers'][0][index]
                                         ['img'],
@@ -136,7 +122,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                                   child: ImageQuestionOption(
                                     questions.any((q) => q.answer_id == id),
                                     '',
-                                    '',
                                     widget.displayQuestion['answers'][1][index]
                                         ['img'],
                                     disabled: questions.length != null
@@ -166,7 +151,6 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
                                   margin: EdgeInsets.only(right: 5),
                                   child: ImageQuestionOption(
                                     questions.any((q) => q.answer_id == id),
-                                    '',
                                     '',
                                     widget.displayQuestion['answers'][2][index]
                                         ['img'],

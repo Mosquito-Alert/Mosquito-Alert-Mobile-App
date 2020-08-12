@@ -238,13 +238,11 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: CustomCard(
                                           img: 'assets/img/ic_bite_report.png',
                                           title: MyLocalizations.of(
                                               context, 'report_biting_txt'),
-                                          subtitle: MyLocalizations.of(context,
-                                              'bitten_by_mosquito_question_txt'),
                                         ),
                                       ),
                                     ),
@@ -262,14 +260,12 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: CustomCard(
                                           img:
                                               'assets/img/ic_mosquito_report.png',
                                           title: MyLocalizations.of(
                                               context, 'report_adults_txt'),
-                                          subtitle: MyLocalizations.of(context,
-                                              'report_us_adult_mosquitos_txt'),
                                         ),
                                       ),
                                     ),
@@ -288,7 +284,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: GestureDetector(
                                           onTap: () {
                                             loadingStream.add(true);
@@ -299,9 +295,6 @@ class _MainVCState extends State<MainVC> {
                                                 'assets/img/ic_breeding_report.png',
                                             title: MyLocalizations.of(
                                                 context, 'report_nest_txt'),
-                                            subtitle: MyLocalizations.of(
-                                                context,
-                                                'found_breeding_place_question_txt'),
                                           ),
                                         )),
                                     Container(
@@ -310,7 +303,7 @@ class _MainVCState extends State<MainVC> {
                                                 0.45,
                                         height:
                                             MediaQuery.of(context).size.width *
-                                                0.55,
+                                                0.5,
                                         child: GestureDetector(
                                           onTap: () {
                                             Navigator.push(
@@ -324,9 +317,6 @@ class _MainVCState extends State<MainVC> {
                                             img: 'assets/img/ic_my_reports.png',
                                             title: MyLocalizations.of(
                                                 context, 'your_reports_txt'),
-                                            subtitle: MyLocalizations.of(
-                                                context,
-                                                'explore_your_reports_txt'),
                                           ),
                                         )),
                                   ],

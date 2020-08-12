@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class CustomCard extends StatelessWidget {
-  final String img, title, subtitle;
+  final String img, title;
   final bool selected, disabled;
-  CustomCard(
-      {this.img, this.title, this.subtitle, this.selected, this.disabled});
+  CustomCard({this.img, this.title, this.selected, this.disabled});
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +35,16 @@ class CustomCard extends StatelessWidget {
                     : SizedBox(
                         height: 140,
                       ),
-                SizedBox(
-                  height: 30,
-                  child: AutoSizeText(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                ),
                 Expanded(
-                  // height: 30,
-                  child: Style.bodySmall(subtitle,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    child: AutoSizeText(
+                      title,
                       textAlign: TextAlign.center,
-                      fontSize: 12,
-                      color: Colors.black.withOpacity(0.8)),
+                      minFontSize: 14,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                    ),
+                  ),
                 ),
               ],
             ),
