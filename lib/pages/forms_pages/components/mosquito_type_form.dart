@@ -97,7 +97,10 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
                                           ['id'])
                                   ? true
                                   : false,
-                              MyLocalizations.of(context, widget.displayQuestion['answers'][index]['text']),
+                              MyLocalizations.of(
+                                  context,
+                                  widget.displayQuestion['answers'][index]
+                                      ['text']),
                               widget.displayQuestion['answers'][index]['img'],
                               disabled: question.answer_id != null &&
                                   widget.displayQuestion['answers'][index]
@@ -128,6 +131,10 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
       question.answer_id = answerId;
     });
     // widget.setValid(true);
+
+    if (question.answer_id != 61) {
+      Utils.report.responses.removeWhere((element) => element.question_id == 7);
+    }
     Utils.addResponse(question);
   }
 }
