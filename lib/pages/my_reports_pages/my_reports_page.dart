@@ -561,12 +561,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                     ? Expanded(
                                                         flex: 3,
                                                         child: Style.titleMedium(
-                                                            MyLocalizations.of(
-                                                                context,
-                                                                report
+                                                            report
                                                                     .responses[
                                                                         index]
-                                                                    .question),
+                                                                    .question
+                                                                    .startsWith(
+                                                                        'question')
+                                                                ? MyLocalizations.of(
+                                                                    context,
+                                                                    report
+                                                                        .responses[
+                                                                            index]
+                                                                        .question)
+                                                                : report
+                                                                    .responses[
+                                                                        index]
+                                                                    .question,
                                                             fontSize: 14),
                                                       )
                                                     : Container(),
@@ -576,12 +586,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                       report.responses[index]
                                                                   .answer !=
                                                               ' '
-                                                          ? MyLocalizations.of(
-                                                              context,
-                                                              report
+                                                          ? report
                                                                   .responses[
                                                                       index]
-                                                                  .answer)
+                                                                  .answer
+                                                                  .startsWith(
+                                                                      'question')
+                                                              ? MyLocalizations.of(
+                                                                  context,
+                                                                  report
+                                                                      .responses[
+                                                                          index]
+                                                                      .answer)
+                                                              : report
+                                                                  .responses[
+                                                                      index]
+                                                                  .answer
                                                           : report
                                                               .responses[index]
                                                               .answer_value,

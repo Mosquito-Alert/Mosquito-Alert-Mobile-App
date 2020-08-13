@@ -62,10 +62,10 @@ class _MyAppState extends State<MyApp> {
     String lang = await UserManager.getLanguage();
     String country = await UserManager.getLanguageCountry();
 
-    if (lang != null) {
+    if (lang == null) {
       return Utils.language;
     }
-
+    
     return Locale(lang, country);
   }
 

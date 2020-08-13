@@ -152,8 +152,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
     {
       "question": {"id": 8, "text": "question_8"},
       "answers": [
-        {"id": 81, "text": "question_8_answer_81"},
         {"id": 82, "text": "question_8_answer_82"},
+        {"id": 81, "text": "question_8_answer_81"},
       ]
     },
   ];

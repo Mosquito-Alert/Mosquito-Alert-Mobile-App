@@ -792,7 +792,7 @@ class Utils {
   static getSavedLanguage() async {
     String lang = await UserManager.getLanguage();
     String country = await UserManager.getLanguageCountry();
-    if (lang != null) {
+    if (lang != null && country != null) {
       language = Locale(lang, country);
     }
   }
@@ -828,8 +828,8 @@ class Utils {
   static Map<String, String> localizedValues = {};
 
   static Future<bool> loadTranslations() async {
-    getSavedLanguage();
-    
+    getLanguage();
+
     // Load JSON file from the "language" folder
     String jsonString = await rootBundle.loadString(
         'assets/language/${language.languageCode}_${language.countryCode}.json');

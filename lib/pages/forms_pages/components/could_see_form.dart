@@ -60,12 +60,9 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
                         setState(() {
                           selected = text;
                         });
-                        id == 101
+                        id == 82
                             ? widget.addReport(true)
                             : widget.addReport(false);
-                        id == 111
-                            ? widget.addOtherReport('adult')
-                            : id == 112 ? widget.addOtherReport('bite') : null;
                         widget.setValid(true);
                         widget.nextPage();
                       },

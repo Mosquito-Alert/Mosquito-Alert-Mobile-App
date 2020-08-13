@@ -58,13 +58,15 @@ class _BitingReportPageState extends State<BitingReportPage> {
       "answers": [
         {"id": 41, "text": "question_4_answer_41"},
         {"id": 42, "text": "question_4_answer_42"},
+        {"id": 43, "text": "question_4_answer_43"},
+        {"id": 44, "text": "question_4_answer_44"},
       ]
     },
     {
-      "question": {"id": 5, "text": "question_13"},
+      "question": {"id": 5, "text": "question_5"},
       "answers": [
-        {"id": 51, "text": "question_13_answer_131"},
-        {"id": 52, "text": "question_13_answer_132"},
+        {"id": 51, "text": "question_5_answer_51"},
+        {"id": 52, "text": "question_5_answer_52"},
       ]
     },
     {
