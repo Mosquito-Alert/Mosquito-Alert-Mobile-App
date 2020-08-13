@@ -17,7 +17,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 
 class ApiSingleton {
-  static String serverUrl = 'http://humboldt.ceab.csic.es/api';
+  static String serverUrl = 'http://madev.creaf.cat/api';
+  // static String serverUrl = 'http://humboldt.ceab.csic.es/api';
+
   static String token = "D4w29W49rMKC7L6vYQ3ua3rd6fQ12YZ6n70P";
 
   //User
