@@ -85,7 +85,10 @@ class _MyAppState extends State<MyApp> {
                 ? MainVC()
                 : Scaffold(
                     body: Container(
-                      color: Colors.green,
+                      margin: EdgeInsets.all(10),
+                      child: Center(
+                        child: Image.asset('assets/img/ic_logo.png'),
+                      ),
                     ),
                   ),
             locale: Utils.language,
@@ -96,9 +99,9 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: [
-              const Locale('es'),
-              const Locale('en'),
-              const Locale('ca'),
+              const Locale('es', "ES"),
+              const Locale('en', "US"),
+              const Locale('ca', "ES"),
             ],
           );
         });

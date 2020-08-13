@@ -36,12 +36,13 @@ class UserManager {
       setLanguage(Utils.language.languageCode);
       setLanguageCountry(Utils.language.countryCode);
       userScore = await ApiSingleton().getUserScores();
+    } else {
+      Utils.language = await Utils.getSavedLanguage();
     }
 
     fetchUser();
     setUserScores(userScore);
-    Utils.language = await Utils.getSavedLanguage();
-    
+
     return true;
   }
 
@@ -137,7 +138,7 @@ class UserManager {
     return prefs.getString("language");
   }
 
-   static Future<String> getLanguageCountry() async {
+  static Future<String> getLanguageCountry() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("languageCountry");
   }
