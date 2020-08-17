@@ -211,7 +211,7 @@ class Utils {
       if (currentIndex == -1) {
         _questions.add(Question(
           question: question.toString(),
-          answer: ' ',
+          answer: 'N/A',
           answer_id: answer_id,
           question_id: question_id,
           answer_value: '1',
