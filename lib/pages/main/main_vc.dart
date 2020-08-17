@@ -29,7 +29,6 @@ class _MainVCState extends State<MainVC> {
   String userName;
   int userScore = 1;
   String userUuid;
-  String language;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
   @override
@@ -43,7 +42,6 @@ class _MainVCState extends State<MainVC> {
     await UserManager.startFirstTime(context);
     var user = await UserManager.fetchUser();
     userUuid = await UserManager.getUUID();
-    language = Utils.getLanguage();
     int points = await ApiSingleton().getUserScores();
 
     if (user != null) {
@@ -190,7 +188,7 @@ class _MainVCState extends State<MainVC> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => InfoPage(
-                                                    "${MyLocalizations.of(context, 'url_point_1')}$language${MyLocalizations.of(context, 'url_point_2')}$userUuid")),
+                                                    "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
                                           );
                                         },
                                         child: Container(

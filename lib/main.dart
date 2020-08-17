@@ -14,11 +14,11 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 
-  static void setLocale(BuildContext context, Locale newLocale) {
+  static void setLocale(BuildContext context) {
     _MyAppState state = context.ancestorStateOfType(TypeMatcher<_MyAppState>());
 
     state.setState(() {
-      state.language = newLocale;
+      state.language = Utils.language;
     });
   }
 }
@@ -59,14 +59,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Locale> _fetchLocale() async {
-    String lang = await UserManager.getLanguage();
-    String country = await UserManager.getLanguageCountry();
+    await Utils.getLanguage();
 
-    if (lang == null) {
-      return Utils.language;
-    }
-    
-    return Locale(lang, country);
+    return Utils.language;
   }
 
   @override
@@ -91,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                   ),
-            locale: Utils.language,
+            locale: language,
             localizationsDelegates: [
               const MyLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,

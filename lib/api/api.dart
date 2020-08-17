@@ -237,8 +237,8 @@ class ApiSingleton {
       String userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        'http://madev.creaf.cat/api/stats/user_xp_data/?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4',
-        //TODO: change to staging URL
+        // '$serverUrl$userScore?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4',
+        '$serverUrl$userScore?user_id=$userUUID',
         headers: headers,
       );
 

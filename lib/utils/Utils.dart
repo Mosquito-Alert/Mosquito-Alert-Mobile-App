@@ -66,6 +66,7 @@ class Utils {
           user: userUUID,
           session_start_time: DateTime.now().toIso8601String());
 
+      print(language);
       session.id = await ApiSingleton().createSession(session);
     }
 
@@ -89,17 +90,17 @@ class Utils {
         report.device_manufacturer = buildData.manufacturer;
         report.device_model = buildData.model;
         report.os = 'Android';
-        report.os_language = getLanguage();
+        report.os_language = language.languageCode;
         report.os_version = buildData.version.sdkInt.toString();
-        report.app_language = getLanguage();
+        report.app_language = language.languageCode;
       } else if (Platform.isIOS) {
         var buildData = await DeviceInfoPlugin().iosInfo;
         report.device_manufacturer = 'Apple';
         report.device_model = buildData.model;
         report.os = buildData.systemName;
-        report.os_language = getLanguage();
+        report.os_language = language.languageCode;
         report.os_version = buildData.systemVersion;
-        report.app_language = getLanguage();
+        report.app_language = language.languageCode;
       }
 
       if (lat != null && lon != null) {
@@ -797,8 +798,8 @@ class Utils {
     }
   }
 
-  static String getLanguage() {
-    getSavedLanguage();
+  static getLanguage() async {
+    await getSavedLanguage();
     if (language == null) {
       String lan = ui.window.locale.languageCode;
       if (lan == 'es') {

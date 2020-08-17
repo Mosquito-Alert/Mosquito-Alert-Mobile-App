@@ -36,7 +36,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     getTracking();
-    selectedLanguage = Utils.getLanguage();
   }
 
   getTracking() async {
@@ -108,7 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   title: "Escoja idioma",
                   items: getLanguageString(),
-                  selectedItem: selectedLanguage,
+                  selectedItem: Utils.language.languageCode,
                   headerColor: Colors.white,
                   buttonTextColor: Style.colorPrimary,
                   maxLongSide: MediaQuery.of(context).size.height * 0.55,
@@ -132,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Utils.language = Locale('en', "US");
                         break;
                     }
-                    MyApp.setLocale(context, Utils.language);
+                    MyApp.setLocale(context);
                     UserManager.setLanguage(Utils.language.languageCode);
                     UserManager.setLanguageCountry(Utils.language.countryCode);
                   });
@@ -174,10 +173,8 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                        MyLocalizations.of(context, "url_scoring_1") +
-                            Utils.getLanguage() +
-                            MyLocalizations.of(context, "url_scoring_2"))),
+                    builder: (context) =>
+                        InfoPage(MyLocalizations.of(context, "url_scoring_1"))),
               );
             }),
             SizedBox(
