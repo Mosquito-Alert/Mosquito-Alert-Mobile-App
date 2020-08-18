@@ -70,7 +70,7 @@ class Utils {
       session.id = await ApiSingleton().createSession(session);
     }
 
-    if (session.id != null) {
+    if (session.id != null && language != null) {
       var userUUID = await UserManager.getUUID();
       report = new Report(
           type: type,
@@ -829,7 +829,7 @@ class Utils {
   static Map<String, String> localizedValues = {};
 
   static Future<bool> loadTranslations() async {
-    getLanguage();
+    // getLanguage();
 
     // Load JSON file from the "language" folder
     String jsonString = await rootBundle.loadString(

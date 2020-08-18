@@ -485,15 +485,19 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _onWillPop() {
-    Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
-        MyLocalizations.of(context, 'close_report_no_save_txt'), () {
-      if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
-        Utils.deleteLastReport();
-      } else {
-        Utils.resetReport();
-        Utils.imagePath = null;
-      }
+    if (Utils.report.responses.isNotEmpty) {
+      Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'close_report_no_save_txt'), () {
+        if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
+          Utils.deleteLastReport();
+        } else {
+          Utils.resetReport();
+          Utils.imagePath = null;
+        }
+        Navigator.pop(context);
+      }, context);
+    } else {
       Navigator.pop(context);
-    }, context);
+    }
   }
 }

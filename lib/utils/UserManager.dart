@@ -37,7 +37,7 @@ class UserManager {
       setLanguageCountry(Utils.language.countryCode);
       userScore = await ApiSingleton().getUserScores();
     } else {
-      // Utils.language = await Utils.getSavedLanguage();
+      // Utils.language = awa5it Utils.getSavedLanguage();
     }
 
     fetchUser();

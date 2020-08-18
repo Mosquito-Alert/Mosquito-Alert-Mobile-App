@@ -25,7 +25,7 @@ class ApiSingleton {
   static const users = '/users/';
   static const profile = '/profile/';
   static const newProfile = '/profile/new/';
-  static const userScore = '/user_xp_data/';
+  static const userScore = '/stats/user_xp_data/';
 
   //Reports
   static const reports = '/reports/';
@@ -125,7 +125,10 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> sigInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn().catchError((e) {
+      print(e);
+      return null;
+    });
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 

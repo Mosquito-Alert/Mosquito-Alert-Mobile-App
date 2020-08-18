@@ -60,7 +60,6 @@ class _MyAppState extends State<MyApp> {
 
   Future<Locale> _fetchLocale() async {
     await Utils.getLanguage();
-
     return Utils.language;
   }
 

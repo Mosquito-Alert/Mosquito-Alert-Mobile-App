@@ -105,9 +105,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 MyLocalizations.of(context, "select_language_txt"), () {
               showMaterialScrollPicker(
                   context: context,
-                  title: "Escoja idioma",
+                  title: MyLocalizations.of(context, "change_language_txt"),
                   items: getLanguageString(),
-                  selectedItem: Utils.language.languageCode,
+                  selectedItem:
+                      MyLocalizations.of(context, Utils.language.languageCode),
                   headerColor: Colors.white,
                   buttonTextColor: Style.colorPrimary,
                   maxLongSide: MediaQuery.of(context).size.height * 0.55,
@@ -117,7 +118,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     switch (selectedLanguage) {
                       case "Español":
                       case "Spanish":
-                      case "Espanyol":
+                      case "Castellà":
                         Utils.language = Locale('es', 'ES');
                         break;
                       case "Catalán":
