@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -77,6 +78,7 @@ class _MyAppState extends State<MyApp> {
             ),
             home: snapshot.hasData
                 ? MainVC()
+                // ? ConsentForm()
                 : Scaffold(
                     body: Container(
                       margin: EdgeInsets.all(10),

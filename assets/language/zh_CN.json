@@ -8,9 +8,9 @@
     "edit": "",
     "exit": "",
     "reset": "",
-    "es": "",
-    "ca": "",
-    "en": "",
+    "es_ES": "",
+    "ca_ES": "",
+    "en_US": "",
     "understand_txt": "",
     "url_politics": "",
     "url_legal": "",
@@ -241,5 +241,13 @@
     "question_15": "",
     "question_16": "",
     "question_4_answer_43": "",
-    "question_4_answer_44": ""
+    "question_4_answer_44": "",
+    "search_txt": "",
+    "sq_AL": "", 
+    "bg_BG": "", 
+    "nl_NL": "",
+    "de_DE": "", 
+    "it_IT": "",
+    "pt_PT": "",
+    "ro_RO": "" 
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
+import 'package:language_pickers/language_picker_dialog.dart';
+import 'package:language_pickers/languages.dart';
+import 'package:language_pickers/utils/utils.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/main.dart';
 import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
@@ -28,7 +31,20 @@ class _SettingsPageState extends State<SettingsPage> {
   bool enableTracking = false;
   var packageInfo;
 
-  List<String> languageCodes = <String>["es", "ca", "en"];
+  List<Map<String, String>> languageCodes = [
+    {"name": "Spanish", "isoCode": "es_ES"},
+    {"name": "Catalan", "isoCode": "ca_ES"},
+    {"name": "Albanian", "isoCode": "sq_AL"},
+    {"name": "Bulgarian", "isoCode": "bg_BG"},
+    {"name": "Dutch", "isoCode": "nl_NL"},
+    {"name": "German", "isoCode": "de_DE"},
+    {"name": "Italian", "isoCode": "it_IT"},
+    {"name": "Protuguese", "isoCode": "pt_PT"},
+    {"name": "Romanian", "isoCode": "ro_RO"},
+    {"name": "English", "isoCode": "en_US"},
+  ];
+  Language _selectedDialogLanguage =
+      LanguagePickerUtils.getLanguageByIsoCode(Utils.language.languageCode);
 
   String selectedLanguage;
 
@@ -46,10 +62,10 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  getLanguageString() {
-    return List.generate(languageCodes.length,
-        (index) => MyLocalizations.of(context, languageCodes[index]));
-  }
+  // getLanguageString() {
+  //   return List.generate(languageCodes.length,
+  //       (index) => MyLocalizations.of(context, languageCodes[index]));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -103,39 +119,40 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SettingsMenuWidget(
                 MyLocalizations.of(context, "select_language_txt"), () {
-              showMaterialScrollPicker(
-                  context: context,
-                  title: MyLocalizations.of(context, "change_language_txt"),
-                  items: getLanguageString(),
-                  selectedItem:
-                      MyLocalizations.of(context, Utils.language.languageCode),
-                  headerColor: Colors.white,
-                  buttonTextColor: Style.colorPrimary,
-                  maxLongSide: MediaQuery.of(context).size.height * 0.55,
-                  onChanged: (value) =>
-                      setState(() => selectedLanguage = value),
-                  onConfirmed: () {
-                    switch (selectedLanguage) {
-                      case "Español":
-                      case "Spanish":
-                      case "Castellà":
-                        Utils.language = Locale('es', 'ES');
-                        break;
-                      case "Catalán":
-                      case "Catalá":
-                      case "Catalan":
-                        Utils.language = Locale('ca', "ES");
-                        break;
-                      case "Inglés":
-                      case "Anglès":
-                      case "English":
-                        Utils.language = Locale('en', "US");
-                        break;
-                    }
-                    MyApp.setLocale(context);
-                    UserManager.setLanguage(Utils.language.languageCode);
-                    UserManager.setLanguageCountry(Utils.language.countryCode);
-                  });
+              _openLanguagePickerDialog();
+              // showMaterialScrollPicker(
+              //     context: context,
+              //     title: MyLocalizations.of(context, "change_language_txt"),
+              //     items: getLanguageString(),
+              //     selectedItem:
+              //         MyLocalizations.of(context, Utils.language.languageCode),
+              //     headerColor: Colors.white,
+              //     buttonTextColor: Style.colorPrimary,
+              //     maxLongSide: MediaQuery.of(context).size.height * 0.55,
+              //     onChanged: (value) =>
+              //         setState(() => selectedLanguage = value),
+              //     onConfirmed: () {
+              //       switch (selectedLanguage) {
+              //         case "Español":
+              //         case "Spanish":
+              //         case "Castellà":
+              //           Utils.language = Locale('es', 'ES');
+              //           break;
+              //         case "Catalán":
+              //         case "Catalá":
+              //         case "Catalan":
+              //           Utils.language = Locale('ca', "ES");
+              //           break;
+              //         case "Inglés":
+              //         case "Anglès":
+              //         case "English":
+              //           Utils.language = Locale('en', "US");
+              //           break;
+              //       }
+              // MyApp.setLocale(context);
+              // UserManager.setLanguage(Utils.language.languageCode);
+              // UserManager.setLanguageCountry(Utils.language.countryCode);
+              //     });
             }),
             SizedBox(
               height: 10,
@@ -243,6 +260,40 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  void _openLanguagePickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+            data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
+            child: LanguagePickerDialog(
+                languagesList: languageCodes,
+                titlePadding: EdgeInsets.all(8.0),
+                searchCursorColor: Style.colorPrimary,
+                searchInputDecoration: InputDecoration(
+                    hintText: MyLocalizations.of(context, "search_txt")),
+                isSearchable: true,
+                title: Text(MyLocalizations.of(context, "select_language_txt")),
+                onValuePicked: (Language language) => setState(() {
+                      _selectedDialogLanguage = language;
+
+                      var languageCodes = language.isoCode.split('_');
+
+                      Utils.language =
+                          Locale(languageCodes[0], languageCodes[1]);
+                      MyApp.setLocale(context);
+                      UserManager.setLanguage(Utils.language.languageCode);
+                      UserManager.setLanguageCountry(
+                          Utils.language.countryCode);
+                    }),
+                itemBuilder: (Language language) {
+                  return Row(
+                    children: <Widget>[
+                      // Text(MyLocalizations.of(context, language.isoCode)),
+                      Text(language.name),
+                    ],
+                  );
+                })),
+      );
 
   _signOut() async {
     ApiSingleton().logout().then((res) {
