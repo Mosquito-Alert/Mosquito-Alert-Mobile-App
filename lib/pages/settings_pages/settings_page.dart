@@ -181,15 +181,43 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             }),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             SettingsMenuWidget(MyLocalizations.of(context, "terms_of_use_txt"),
                 () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, "url_politics"))),
+                    builder: (context) => InfoPage(
+                          MyLocalizations.of(context, "terms_link"),
+                          localHtml: true,
+                        )),
+              );
+            }),
+            SizedBox(
+              height: 10,
+            ),
+            SettingsMenuWidget(MyLocalizations.of(context, "privacy_txt"), () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => InfoPage(
+                          MyLocalizations.of(context, "privacy_link"),
+                          localHtml: true,
+                        )),
+              );
+            }),
+            SizedBox(
+              height: 10,
+            ),
+            SettingsMenuWidget(MyLocalizations.of(context, "license_txt"), () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => InfoPage(
+                          MyLocalizations.of(context, "lisence_link"),
+                          localHtml: true,
+                        )),
               );
             }),
             SizedBox(

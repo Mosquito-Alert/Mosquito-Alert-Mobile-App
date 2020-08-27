@@ -127,7 +127,7 @@
     "mosquitos_gallery_txt": "Guía de mosquitos",
     "about_the_project_txt": "Sobre el proyecto",
     "about_us_txt": "Sobre nostros",
-    "terms_of_use_txt": "Licencia y términos de uso",
+    "terms_of_use_txt": "Condiciones de uso",
     "gallery_info_01": "De las ciento de especies de mosquitos, buscamos 5 especies en concreto: el (1) mosquito tigre (Aedes. albopictus), el (2) mosquito de la fiebre amarilla (Aedes aegypti), el (3) mosquito del Japón (Aedes japonicus), el (4) mosquito de Corea (Aedes koreicus) y el (5) mosquito común (Culex pipiens). Las cuatro primeras son especies invasoras, mientras que el mosquito común es una especie autóctona. \n\nCon esta guía aprenderás a identificarlos.\n",
     "gallery_info_02": "Para identificar especies de mosquito, necesitas saber que su cuerpo se divide en 3 partes: (A) cabeza, (B) tórax y (C) abdomen. El tórax, que es como la espalda del mosquito, tiene un dibujo que nos permite distinguir varias especies. También el patrón de manchas de las patas, especialmente el del tercer par (3) y, en menor medida, del abdomen.",
     "gallery_info_03": "El mosquito común (Culex pipiens): el que nos pica principalmente de noche. Es de color amarillento/marrón pálido. ",
@@ -266,5 +266,7 @@
     "consent_txt_13": "licencia de Mosquito Alert.",
     "lisence_link": "assets/html/license_es.html",
     "privacy_link": "assets/html/privacy_es.html",
-    "terms_link": "assets/html/terms_es.html"
+    "terms_link": "assets/html/terms_es.html", 
+    "privacy_txt": "Polílica de privacidad", 
+    "license_txt": "Licencia de Mosquito Alert"
 }
