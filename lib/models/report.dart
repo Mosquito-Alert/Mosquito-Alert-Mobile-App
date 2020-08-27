@@ -126,6 +126,7 @@ class Report {
     data['os_version'] = this.os_version;
     data['os_language'] = this.os_language;
     data['app_language'] = this.app_language;
+    return data;
   }
 }
 

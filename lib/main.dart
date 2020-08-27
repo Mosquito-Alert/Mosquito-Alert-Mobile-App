@@ -1,10 +1,12 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 main() {
@@ -29,6 +31,8 @@ class _MyAppState extends State<MyApp> {
 
   Locale language = Utils.language;
 
+  StreamSubscription<ConnectivityResult> subscription;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +56,21 @@ class _MyAppState extends State<MyApp> {
       assert(token != null);
     });
 
+    //backgroud sync reports
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.wifi:
+          Utils.syncReports();
+          break;
+        case ConnectivityResult.none:
+          break;
+      }
+    });
+
+    //fetch locale
     this._fetchLocale().then((language) {
       setState(() {
         this.language = language;
@@ -62,6 +81,12 @@ class _MyAppState extends State<MyApp> {
   Future<Locale> _fetchLocale() async {
     await Utils.getLanguage();
     return Utils.language;
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    subscription.cancel();
   }
 
   @override

@@ -92,6 +92,11 @@ class UserManager {
     prefs.setString("languageCountry", lngCountry);
   }
 
+  static Future<void> setReportList(reportList) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList("reportsList", reportList);
+  }
+
   //get
   static Future<String> getUUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -141,6 +146,11 @@ class UserManager {
   static Future<String> getLanguageCountry() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("languageCountry");
+  }
+
+  static Future<List<String>> getReportList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList("reportsList");
   }
 
   static signOut() async {

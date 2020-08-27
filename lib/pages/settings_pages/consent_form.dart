@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,6 +10,22 @@ class ConsentForm extends StatefulWidget {
 }
 
 class _ConsentFormState extends State<ConsentForm> {
+  Widget linkText(text, link) {
+    return InkWell(
+      onTap: () async {
+        if (await canLaunch(link))
+          await launch(link);
+        else
+          throw 'Could not launch $link';
+      },
+      child: Text(text,
+          style: TextStyle(
+              color: Style.colorPrimary,
+              fontSize: 14,
+              decoration: TextDecoration.underline)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,67 +38,159 @@ class _ConsentFormState extends State<ConsentForm> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 10,
-              ),
-              Style.body(
-                  "Participa en el estudio, seguimiento y control de mosquitos vectores de enfermedades con la App Mosquito Alert. \n\nEnvía datos de posibles lugares de cría en la vía pública, picaduras y hallazgos de estas 5 especies de mosquito: mosquito tigre (Aedes albopictus), mosquito de la fiebre amarilla (Aedes aegypti), mosquito del Japón (Aedes japonicus), mosquito de Corea (Aedes koreicus) y mosquito común (Culex pipiens). \n"),
-              Style.body("FORMULARIO DE CONSENTIMIENTO \n"),
-              Container(
-                width: double.infinity,
-                child: Wrap(
-                  alignment: WrapAlignment.start,
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Style.body(MyLocalizations.of(context, "consent_form_txt_1")),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_2")),
+                      linkText(MyLocalizations.of(context, "terms_of_use"),
+                          'http://webserver.mosquitoalert.com/es/terms/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_3")),
+                      linkText(
+                          MyLocalizations.of(
+                              context, "privacy_policy_data_txt"),
+                          'http://webserver.mosquitoalert.com/es/privacy/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_4")),
+                      linkText(
+                          MyLocalizations.of(
+                                  context, "mosquito_webserver_txt") +
+                              '.',
+                          MyLocalizations.of(
+                              context, "mosquito_webserver_txt")),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_5")),
+                    ],
+                  ),
+                ),
+                Style.body('\n' +
+                    MyLocalizations.of(context, "consent_form_title") +
+                    '\n'),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Style.body("He leído y acepto las "),
+                      linkText(MyLocalizations.of(context, "terms_of_use"),
+                          "http://webserver.mosquitoalert.com/es/terms/"),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_3")),
+                      linkText(
+                          MyLocalizations.of(
+                                  context, "privacy_policy_data_txt") +
+                              '.',
+                          "")
+                    ],
+                  ),
+                ),
+                Style.body(MyLocalizations.of(context, "consent_form_txt_6")),
+                Style.body("· Blabla"),
+                Style.body("· Blabla"),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_7")),
+                      linkText(
+                          MyLocalizations.of(
+                              context, "privacy_policy_data_txt"),
+                          'http://webserver.mosquitoalert.com/es/terms/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_8")),
+                      linkText(MyLocalizations.of(context, "terms_of_use"),
+                          'http://webserver.mosquitoalert.com/es/terms/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_9")),
+                    ],
+                  ),
+                ),
+                Style.body(MyLocalizations.of(context, "consent_form_txt_10")),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_11")),
+                      linkText(MyLocalizations.of(context, "terms_of_use"),
+                          'http://webserver.mosquitoalert.com/es/terms/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_3")),
+                      linkText(
+                          MyLocalizations.of(
+                              context, "privacy_policy_data_txt"),
+                          'http://webserver.mosquitoalert.com/es/privacy/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_from_txt_12")),
+                    ],
+                  ),
+                ),
+                Style.body(MyLocalizations.of(context, "consent_form_txt_13")),
+                Container(
+                  padding: EdgeInsets.only(left: 25),
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_14")),
+                      linkText(MyLocalizations.of(context, "terms_of_use"),
+                          'http://webserver.mosquitoalert.com/es/terms/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_3")),
+                      linkText(
+                          MyLocalizations.of(
+                              context, "privacy_policy_data_txt"),
+                          'http://webserver.mosquitoalert.com/es/privacy/'),
+                      Style.body(
+                          MyLocalizations.of(context, "consent_from_txt_12")),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Style.body(
+                      MyLocalizations.of(context, "consent_form_txt_15")),
+                ),
+                Row(
                   children: <Widget>[
-                    Style.body("He leído y acepto las "),
-                    InkWell(
-                      onTap: () async {
-                        final url = MyLocalizations.of(context, 'url_politics');
-                        if (await canLaunch(url))
-                          await launch(url);
-                        else
-                          throw 'Could not launch $url';
-                      },
-                      child: Text(
-                          MyLocalizations.of(
-                              context, 'terms_and_conditions_txt2'),
-                          style: TextStyle(
-                              color: Style.textColor,
-                              fontSize: 14,
-                              decoration: TextDecoration.underline)),
+                    Checkbox(
+                      value: false,
+                      onChanged: (newValue) {},
+                      
                     ),
-                    Style.body(" y la "),
-                    InkWell(
-                      onTap: () async {
-                        final url = MyLocalizations.of(context, 'url_politics');
-                        if (await canLaunch(url))
-                          await launch(url);
-                        else
-                          throw 'Could not launch $url';
-                      },
-                      child: Text(
-                          MyLocalizations.of(
-                              context, 'terms_and_conditions_txt2'),
-                          style: TextStyle(
-                              color: Style.textColor,
-                              fontSize: 14,
-                              decoration: TextDecoration.underline)),
+                    Expanded(
+                      child: Style.body(
+                          MyLocalizations.of(context, "consent_form_txt_16")),
                     ),
                   ],
                 ),
-              ),
-              Style.body(
-                  "\n\nEntiendo que para participar en el proyecto Mosquito Alert a través de la aplicación Mosquito Alert, tengo que ser mayor de edad o estar supervisado por un adulto. \n\nEntiendo que Mosquito Alert recoge y comparte con terceros o el público general la siguiente información: \n"),
-              Style.body("· Blabla"),
-              Style.body("· Blabla"),
-              Style.body(
-                  'Entiendo que Mosquito Alert recoge y comparte con terceros o el público general la información que se detalla en la política de privacidad de datos y que se usará y compartirá con terceros en los términos que en ella y en las condiciones de uso se detallan.'),
-              Style.body(
-                  'Entiendo que los datos e imágenes recogidos y compartidos a través de Mosquito Alert no son de carácter personal, ya que no se recoge información referente a personas físicas identificadas o identificables, según lo establecido en la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales y en el Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016 (Reglamento general de protección de datos). Entiendo que está bajo mi responsabilidad la correcta utilización de Mosquito Alert y que no tengo que recoger, ni enviar, a través de Mosquito Alert, imágenes o datos personales, ni hacer un uso indebido, o fuera de la legalidad, o diferente al que Mosquito Alert está destinado.')
-            ],
+                Container(
+                  width: double.infinity,
+                  child: Style.button("continuar", () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TutorialPage(false)));
+                  }),
+                )
+              ],
+            ),
           ),
         ),
       ),

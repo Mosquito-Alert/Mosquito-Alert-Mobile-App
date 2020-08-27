@@ -62,11 +62,6 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  // getLanguageString() {
-  //   return List.generate(languageCodes.length,
-  //       (index) => MyLocalizations.of(context, languageCodes[index]));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,39 +115,6 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsMenuWidget(
                 MyLocalizations.of(context, "select_language_txt"), () {
               _openLanguagePickerDialog();
-              // showMaterialScrollPicker(
-              //     context: context,
-              //     title: MyLocalizations.of(context, "change_language_txt"),
-              //     items: getLanguageString(),
-              //     selectedItem:
-              //         MyLocalizations.of(context, Utils.language.languageCode),
-              //     headerColor: Colors.white,
-              //     buttonTextColor: Style.colorPrimary,
-              //     maxLongSide: MediaQuery.of(context).size.height * 0.55,
-              //     onChanged: (value) =>
-              //         setState(() => selectedLanguage = value),
-              //     onConfirmed: () {
-              //       switch (selectedLanguage) {
-              //         case "Español":
-              //         case "Spanish":
-              //         case "Castellà":
-              //           Utils.language = Locale('es', 'ES');
-              //           break;
-              //         case "Catalán":
-              //         case "Catalá":
-              //         case "Catalan":
-              //           Utils.language = Locale('ca', "ES");
-              //           break;
-              //         case "Inglés":
-              //         case "Anglès":
-              //         case "English":
-              //           Utils.language = Locale('en', "US");
-              //           break;
-              //       }
-              // MyApp.setLocale(context);
-              // UserManager.setLanguage(Utils.language.languageCode);
-              // UserManager.setLanguageCountry(Utils.language.countryCode);
-              //     });
             }),
             SizedBox(
               height: 10,

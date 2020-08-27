@@ -341,12 +341,45 @@ class Utils {
       bool isCreated;
       for (int i = 0; i < reportsList.length; i++) {
         isCreated = await ApiSingleton().createReport(reportsList[i]);
+        if (!isCreated) {
+          await saveLocalReport(reportsList[i]);
+        }
       }
 
       closeSession();
       resetReport();
       imagePath = [];
       return isCreated;
+    }
+  }
+
+  static Future<void> saveLocalReport(Report report) async {
+    List<String> savedReports = await UserManager.getReportList();
+    if (savedReports == null || savedReports.isEmpty) {
+      savedReports = [];
+    }
+    String reportString = json.encode(report.toJson());
+    savedReports.add(reportString);
+    await UserManager.setReportList(savedReports);
+  }
+
+  static void syncReports() async {
+    List savedReports = await UserManager.getReportList();
+    List<Report> failedReports = [];
+
+    if (savedReports != null && savedReports.isNotEmpty) {
+      bool isCreated;
+      for (int i = 0; i < savedReports.length; i++) {
+        Report report = Report.fromJson(json.decode(savedReports[i]));
+        isCreated = await ApiSingleton().createReport(report);
+        if (!isCreated) {
+          failedReports.add(report);
+        }
+      }
+    }
+    await UserManager.setReportList(<String>[]);
+    if (failedReports.isNotEmpty) {
+      failedReports.map((e) => saveLocalReport(e));
     }
   }
 
