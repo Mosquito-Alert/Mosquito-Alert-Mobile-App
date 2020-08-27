@@ -102,8 +102,7 @@ class _MyAppState extends State<MyApp> {
               primarySwatch: Colors.orange,
             ),
             home: snapshot.hasData
-                // ? MainVC()
-                ? ConsentForm()
+                ? MainVC()
                 : Scaffold(
                     body: Container(
                       margin: EdgeInsets.all(10),

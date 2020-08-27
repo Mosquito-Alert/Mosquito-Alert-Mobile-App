@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,7 @@ class UserManager {
     if (firstTime == null || !firstTime) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => TutorialPage(false),
+          builder: (context) => ConsentForm(),
         ),
       );
 

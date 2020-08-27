@@ -266,5 +266,7 @@
     "consent_txt_13": "Mosquito Alert license",
     "lisence_link": "assets/html/license_en.html",
     "privacy_link": "assets/html/privacy_en.html",
-    "terms_link": "assets/html/terms_en.html"
+    "terms_link": "assets/html/terms_en.html",
+    "privacy_txt": "", 
+    "license_txt": ""
 }

@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
-import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ConsentForm extends StatefulWidget {
   @override
@@ -15,21 +13,6 @@ class ConsentForm extends StatefulWidget {
 }
 
 class _ConsentFormState extends State<ConsentForm> {
-  Widget linkText(text, link) {
-    return InkWell(
-      onTap: () async {
-        if (await canLaunch(link))
-          await launch(link);
-        else
-          throw 'Could not launch $link';
-      },
-      child: Text(text,
-          style: TextStyle(
-              color: Style.colorPrimary,
-              fontSize: 14,
-              decoration: TextDecoration.underline)),
-    );
-  }
 
   bool isSelected = false;
   StreamController<bool> buttonStream = StreamController<bool>.broadcast();
@@ -37,14 +20,6 @@ class _ConsentFormState extends State<ConsentForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   centerTitle: true,
-      //   title: Image.asset(
-      //     'assets/img/ic_logo.png',
-      //     height: 40,
-      //   ),
-      // ),
       body: SafeArea(
         child: Stack(
           alignment: Alignment.bottomCenter,
@@ -232,7 +207,7 @@ class _ConsentFormState extends State<ConsentForm> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MainVC()),
+                                      builder: (context) => TutorialPage(false)),
                                 );
                               }
                             : null),
