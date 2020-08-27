@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class InfoPage extends StatelessWidget {
   final String url;
+  final bool localHtml;
 
-  InfoPage(this.url);
+  InfoPage(this.url, {this.localHtml = false});
 
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  WebViewController _controller;
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
@@ -29,10 +31,11 @@ class InfoPage extends StatelessWidget {
           ),
           body: Builder(builder: (BuildContext context) {
             return WebView(
-              initialUrl: url,
+              initialUrl: localHtml ? 'about:blank' : url,
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
-                _controller.complete(webViewController);
+                _controller = webViewController;
+                localHtml ? _loadHtmlFromAssets() : null;
               },
               javascriptChannels: <JavascriptChannel>[
                 _toasterJavascriptChannel(context),
@@ -68,5 +71,12 @@ class InfoPage extends StatelessWidget {
             SnackBar(content: Text(message.message)),
           );
         });
+  }
+
+  _loadHtmlFromAssets() async {
+    String fileText = await rootBundle.loadString(url);
+    _controller.loadUrl(Uri.dataFromString(fileText,
+            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        .toString());
   }
 }

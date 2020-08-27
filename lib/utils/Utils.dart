@@ -366,18 +366,21 @@ class Utils {
   static void syncReports() async {
     List savedReports = await UserManager.getReportList();
     List<Report> failedReports = [];
+    await UserManager.setReportList(<String>[]);
 
     if (savedReports != null && savedReports.isNotEmpty) {
       bool isCreated;
       for (int i = 0; i < savedReports.length; i++) {
         Report report = Report.fromJson(json.decode(savedReports[i]));
         isCreated = await ApiSingleton().createReport(report);
+
+        //TODO: images
         if (!isCreated) {
           failedReports.add(report);
         }
       }
     }
-    await UserManager.setReportList(<String>[]);
+
     if (failedReports.isNotEmpty) {
       failedReports.map((e) => saveLocalReport(e));
     }

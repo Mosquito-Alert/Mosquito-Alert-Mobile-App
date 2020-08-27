@@ -73,6 +73,7 @@ flutter:
    - assets/img/gallery/
    - assets/img/tutorial/
    - assets/language/
+   - assets/html/
 
   
   fonts:

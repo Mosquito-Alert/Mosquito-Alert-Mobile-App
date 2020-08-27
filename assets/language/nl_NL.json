@@ -249,5 +249,22 @@
     "de_DE": "", 
     "it_IT": "",
     "pt_PT": "",
-    "ro_RO": "" 
+    "ro_RO": "",
+    "consent_welcome_txt": "Welcome to Mosquito Alert",
+    "consent_txt_01": "With Mosquito Alert you can participate in the study, monitoring and control of disease-transmitting mosquitoes of dengue, Zika or West Nile fever.",
+    "consent_txt_02": "Anonymously collect observations of mosquitoes, their breeding sites, or notify us when you have received bites. All this information is very relevant for the scientific monitoring and management of disease-transmitting mosquitoes.",
+    "consent_txt_03": "Your privacy is important",
+    "consent_txt_04": "The app does not collect personal information that allows the loss of anonymity.",
+    "consent_txt_05": "The app collects your approximate location in the background at random time intervals. It is not an exact approximation but rather indicates that you are in an area between 1.6 and 7.7 km square. This information is of great scientific value, but you can disable it at any time.",
+    "consent_txt_06": "Let's start!",
+    "consent_txt_07": "For more details, consult these documents and accept the conditions of use to participate. Thank you very much!",
+    "consent_txt_08": "I have read the ",
+    "consent_txt_09": "conditions of use",
+    "consent_txt_10": "I accept the ",
+    "consent_txt_11": "privacy policy",
+    "consent_txt_12": "About the ",
+    "consent_txt_13": "Mosquito Alert license",
+    "lisence_link": "assets/html/license_en.html",
+    "privacy_link": "assets/html/privacy_en.html",
+    "terms_link": "assets/html/terms_en.html"
 }
