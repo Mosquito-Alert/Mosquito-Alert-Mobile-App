@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -33,7 +32,7 @@ class UserManager {
       prefs.setBool("trackingDisabled", false);
 
       await ApiSingleton().createUser(uuid);
-      setUserScores(1);
+      setUserScores(0);      
       setLanguage(Utils.language.languageCode);
       setLanguageCountry(Utils.language.countryCode);
       userScore = await ApiSingleton().getUserScores();
@@ -98,6 +97,11 @@ class UserManager {
     prefs.setStringList("reportsList", reportList);
   }
 
+  static Future<void> setImageList(imageList) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList("imagesList", imageList);
+  }
+
   //get
   static Future<String> getUUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -152,6 +156,11 @@ class UserManager {
   static Future<List<String>> getReportList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getStringList("reportsList");
+  }
+
+  static Future<List<String>> getImageList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList("imagesList");
   }
 
   static signOut() async {

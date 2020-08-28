@@ -272,9 +272,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         Theme.of(context).platform,
         context, () {
       Navigator.pop(context);
-    },
-        title:
-            '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
+    }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
   }
 
   _deleteImage(String img, int index) {
@@ -308,11 +306,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   Future getImage(source) async {
-    var image = await ImagePicker.pickImage(
+    final _picker = ImagePicker();
+    var image = await _picker.getImage(
       source: source,
     );
     if (image != null) {
-      Utils.saveImgPath(image);
+      final File file = File(image.path);
+      Utils.saveImgPath(file);
       setState(() {
         images.add(image.path);
       });

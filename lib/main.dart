@@ -5,8 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 main() {
@@ -112,6 +112,18 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
             locale: language,
+            // localeResolutionCallback:
+            //     (Locale newLocale, Iterable<Locale> supportedLocales) {
+            //   if (supportedLocales.any((loc) => loc == newLocale)) {
+            //     language = newLocale;
+            //   } else {
+            //     language = Locale('en', 'US');
+            //   }
+
+            //   Utils.language = language;
+
+            //   return newLocale;
+            // },
             localizationsDelegates: [
               const MyLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
@@ -122,6 +134,13 @@ class _MyAppState extends State<MyApp> {
               const Locale('es', "ES"),
               const Locale('en', "US"),
               const Locale('ca', "ES"),
+              const Locale('sq', "AL"),
+              const Locale('bg', "BG"),
+              const Locale('nl', "NL"),
+              const Locale('de', "DE"),
+              const Locale('it', "IT"),
+              const Locale('pt', "PT"),
+              const Locale('ro', "RO"),
             ],
           );
         });

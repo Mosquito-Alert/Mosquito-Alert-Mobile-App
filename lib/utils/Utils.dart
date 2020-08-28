@@ -24,27 +24,33 @@ import '../models/question.dart';
 import 'MyLocalizations.dart';
 
 class Utils {
-  static Locale language = Locale('es', 'ES');
-
-  //images
+  static Locale language = Locale('en', 'US');
   static List<Map> imagePath;
   static double maskCoordsValue = 0.025;
 
-  static void saveImgPath(File img) {
-    if (imagePath == null) {
-      imagePath = [];
-    }
-    imagePath.add({'image': img.path, 'id': report.version_UUID});
-  }
+   //Manage Data
+  static Position location;
+  static LatLng defaultLocation = LatLng(41.3874, 2.1688);
 
-  static void deleteImage(String image) {
-    imagePath.removeWhere((element) => element['image'] == image);
-  }
+  //Load localizations data
+  static Map<String, String> localizedValues = {};
 
   //REPORTS
   static Report report;
   static Session session;
   static List<Report> reportsList;
+
+  static void saveImgPath(File img) {
+    if (imagePath == null) {
+      imagePath = [];
+    }
+    imagePath
+        .add({'image': img.path, 'id': report.version_UUID, 'imageFile': img});
+  }
+
+  static void deleteImage(String image) {
+    imagePath.removeWhere((element) => element['image'] == image);
+  }
 
   static closeSession() {
     session.session_end_time = DateTime.now().toIso8601String();
@@ -183,17 +189,6 @@ class Utils {
     report.selected_location_lon = lon;
   }
 
-  static void addLocationResponse(double lat, lon) {
-    var newQuestion = new Question(
-        question: "¿Donde estabas cuando te picaron?",
-        answer: " ",
-        question_id: 5,
-        answer_id: 51,
-        answer_value: "POINT( $lat, $lon)");
-
-    report.responses.add(newQuestion);
-  }
-
   static void addBiteResponse(String question, String answer,
       {question_id, answer_id, answer_value}) {
     if (report == null) {
@@ -317,15 +312,19 @@ class Utils {
     }
   }
 
+  //TODO: delete this code
   static Future<bool> saveReports() async {
     bool res;
     if (reportsList != null && reportsList.isNotEmpty) {
       for (int i = 0; i < reportsList.length; i++) {
         res = await ApiSingleton().createReport(reportsList[i]);
+        if (!res) {
+          await saveLocalReport(reportsList[i]);
+        }
       }
     }
-    return true;
-    // return res;
+    // return true;
+    return res;
   }
 
   static Future<bool> createReport() async {
@@ -363,26 +362,49 @@ class Utils {
     await UserManager.setReportList(savedReports);
   }
 
+  static Future<void> saveLocalImage(String image, String version_UUID) async {
+    List<String> savedImages = await UserManager.getImageList();
+    if (savedImages == null || savedImages.isEmpty) {
+      savedImages = [];
+    }
+
+    String imageString =
+        json.encode({'image': image, 'verison_UUID': version_UUID});
+    savedImages.add(imageString);
+    await UserManager.setImageList(savedImages);
+  }
+
   static void syncReports() async {
     List savedReports = await UserManager.getReportList();
-    List<Report> failedReports = [];
+    List savedImages = await UserManager.getImageList();
+
     await UserManager.setReportList(<String>[]);
+    await UserManager.setImageList(<String>[]);
 
     if (savedReports != null && savedReports.isNotEmpty) {
       bool isCreated;
       for (int i = 0; i < savedReports.length; i++) {
-        Report report = Report.fromJson(json.decode(savedReports[i]));
-        isCreated = await ApiSingleton().createReport(report);
+        Report savedReport = Report.fromJson(json.decode(savedReports[i]));
+        isCreated = await ApiSingleton().createReport(savedReport);
 
-        //TODO: images
         if (!isCreated) {
-          failedReports.add(report);
+          saveLocalReport(savedReport);
         }
       }
     }
 
-    if (failedReports.isNotEmpty) {
-      failedReports.map((e) => saveLocalReport(e));
+    if (savedImages != null && savedImages.isNotEmpty) {
+      bool isCreated;
+      for (int i = 0; i < savedImages.length; i++) {
+        Map image = json.decode(savedImages[i]);
+        isCreated = await ApiSingleton()
+            .saveImage(image['image'], image['verison_UUID']);
+        if (!isCreated) {
+          saveLocalImage(image['image'], image['verison_UUID']);
+        } else {
+          await File(image['image']).delete();
+        }
+      }
     }
   }
 
@@ -826,25 +848,20 @@ class Utils {
     }
   }
 
-  static getSavedLanguage() async {
+  static getLanguage() async {
+    String lan = ui.window.locale.languageCode;
+    if (lan == 'es') {
+      language = ui.window.locale;
+    } else if (lan == 'ca') {
+      language = ui.window.locale;
+    } else {
+      language = Locale('en', 'US');
+    }
+
     String lang = await UserManager.getLanguage();
     String country = await UserManager.getLanguageCountry();
     if (lang != null && country != null) {
       language = Locale(lang, country);
-    }
-  }
-
-  static getLanguage() async {
-    await getSavedLanguage();
-    if (language == null) {
-      String lan = ui.window.locale.languageCode;
-      if (lan == 'es') {
-        language = ui.window.locale;
-      } else if (lan == 'ca') {
-        language = ui.window.locale;
-      } else {
-        language = Locale('en', 'US');
-      }
     }
 
     return language.languageCode;
@@ -857,12 +874,7 @@ class Utils {
       throw 'Could not launch';
   }
 
-  //Manage Data
-  static Position location;
-  static LatLng defaultLocation = LatLng(41.3874, 2.1688);
-
-  //Load localizations data
-  static Map<String, String> localizedValues = {};
+ 
 
   static Future<bool> loadTranslations() async {
     // getLanguage();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter/flutter_twitter.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
   static String serverUrl = 'http://madev.creaf.cat/api';
@@ -125,7 +127,8 @@ class ApiSingleton {
   }
 
   Future<FirebaseUser> sigInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn().catchError((e) {
+    final GoogleSignInAccount googleUser =
+        await _googleSignIn.signIn().catchError((e) {
       print(e);
       return null;
     });
@@ -471,14 +474,14 @@ class ApiSingleton {
         body: json.encode(body),
       );
 
+      await saveImages(report);
+
       // print(response);
       if (response.statusCode != 201) {
         print(
             "Request: ${response.request.toString()} -> Response: ${response.body}");
         return false;
       }
-
-      await saveImages(report);
 
       if (report.version_number > 0) {
         var b = json.decode(response.body);
@@ -498,8 +501,18 @@ class ApiSingleton {
     if (Utils.imagePath != null) {
       Utils.imagePath.forEach((img) async {
         if (img['id'] == report.version_UUID) {
-          if (!img['image'].contains('http'))
-            await saveImage(img['image'], report.version_UUID);
+          if (!img['image'].contains('http')) {
+            // bool isSaved = await saveImage(img['image'], report.version_UUID);
+            bool isSaved = false;
+            if (!isSaved) {
+              final Directory directory =
+                  await getApplicationDocumentsDirectory();
+              File newImage = await img['imageFile']
+                  .copy('${directory.path}/${report.version_UUID}.png');
+
+              Utils.saveLocalImage(newImage.path, report.version_UUID);
+            }
+          }
         }
       });
     }
@@ -556,7 +569,7 @@ class ApiSingleton {
   }
 
   //Images
-  Future<dynamic> saveImage(String image, String versionUUID) async {
+  Future<bool> saveImage(String image, String versionUUID) async {
     try {
       String fileName = image != null ? image.split('/').last : null;
       var dio = new Dio();
@@ -572,9 +585,6 @@ class ApiSingleton {
             headers: {"Authorization": "Token " + token},
             contentType: 'multipart/form-data',
           ));
-
-      var a = response.data;
-      print(a);
 
       return response.statusCode == 200;
     } catch (c) {

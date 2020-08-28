@@ -523,7 +523,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                           BorderRadius.circular(
                                                               15),
                                                       child: Image.network(
-                                                        'http://humboldt.ceab.csic.es/media/' +
+                                                        'http://madev.creaf.cat' +
                                                             report.photos[index]
                                                                 .photo,
                                                         height: 60,

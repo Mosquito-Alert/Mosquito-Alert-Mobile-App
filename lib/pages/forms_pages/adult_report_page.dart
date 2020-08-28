@@ -618,12 +618,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   Future getImage(source) async {
-    var image = await ImagePicker.pickImage(
+    final _picker = ImagePicker();
+    var image = await _picker.getImage(
       source: source,
     );
 
     if (image != null) {
-      Utils.saveImgPath(image);
+      final File file = File(image.path);
+      Utils.saveImgPath(file);
       setShowCamera(false);
 
       _pagesController
