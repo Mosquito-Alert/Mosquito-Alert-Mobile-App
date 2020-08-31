@@ -6,6 +6,8 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'Application.dart';
+
 class UserManager {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -32,14 +34,14 @@ class UserManager {
       prefs.setBool("trackingDisabled", false);
 
       await ApiSingleton().createUser(uuid);
-      setUserScores(0);      
+      setUserScores(0);
+      Utils.getLanguage();
       setLanguage(Utils.language.languageCode);
       setLanguageCountry(Utils.language.countryCode);
       userScore = await ApiSingleton().getUserScores();
-    } else {
-      // Utils.language = awa5it Utils.getSavedLanguage();
     }
 
+    application.onLocaleChanged(Utils.getLanguage());
     fetchUser();
     setUserScores(userScore);
 

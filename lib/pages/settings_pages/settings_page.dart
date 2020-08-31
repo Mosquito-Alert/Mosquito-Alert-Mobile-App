@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
+import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -43,8 +44,6 @@ class _SettingsPageState extends State<SettingsPage> {
     {"name": "Romanian", "isoCode": "ro_RO"},
     {"name": "English", "isoCode": "en_US"},
   ];
-  Language _selectedDialogLanguage =
-      LanguagePickerUtils.getLanguageByIsoCode(Utils.language.languageCode);
 
   String selectedLanguage;
 
@@ -264,16 +263,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 isSearchable: true,
                 title: Text(MyLocalizations.of(context, "select_language_txt")),
                 onValuePicked: (Language language) => setState(() {
-                      _selectedDialogLanguage = language;
-
                       var languageCodes = language.isoCode.split('_');
 
                       Utils.language =
                           Locale(languageCodes[0], languageCodes[1]);
-                      MyApp.setLocale(context);
-                      UserManager.setLanguage(Utils.language.languageCode);
-                      UserManager.setLanguageCountry(
-                          Utils.language.countryCode);
+                      UserManager.setLanguage(languageCodes[0]);
+                      UserManager.setLanguageCountry(languageCodes[1]);
+                      application.onLocaleChanged(
+                          Locale(languageCodes[0], languageCodes[1]));
                     }),
                 itemBuilder: (Language language) {
                   return Row(

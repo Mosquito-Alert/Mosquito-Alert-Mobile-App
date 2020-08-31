@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,12 +27,9 @@ class Utils {
   static List<Map> imagePath;
   static double maskCoordsValue = 0.025;
 
-   //Manage Data
+  //Manage Data
   static Position location;
   static LatLng defaultLocation = LatLng(41.3874, 2.1688);
-
-  //Load localizations data
-  static Map<String, String> localizedValues = {};
 
   //REPORTS
   static Report report;
@@ -310,21 +306,6 @@ class Utils {
       _responses.add(question);
       report.responses = _responses;
     }
-  }
-
-  //TODO: delete this code
-  static Future<bool> saveReports() async {
-    bool res;
-    if (reportsList != null && reportsList.isNotEmpty) {
-      for (int i = 0; i < reportsList.length; i++) {
-        res = await ApiSingleton().createReport(reportsList[i]);
-        if (!res) {
-          await saveLocalReport(reportsList[i]);
-        }
-      }
-    }
-    // return true;
-    return res;
   }
 
   static Future<bool> createReport() async {
@@ -848,23 +829,27 @@ class Utils {
     }
   }
 
-  static getLanguage() async {
-    String lan = ui.window.locale.languageCode;
-    if (lan == 'es') {
-      language = ui.window.locale;
-    } else if (lan == 'ca') {
-      language = ui.window.locale;
+  static getLanguage() {
+    if (ui.window != null && ui.window.locale != null) {
+      String stringLanguange = ui.window.locale.languageCode;
+
+      if (stringLanguange == "es" ||
+          stringLanguange == "ca" ||
+          stringLanguange == "en" ||
+          stringLanguange == "sq" ||
+          stringLanguange == "bg" ||
+          stringLanguange == "nl" ||
+          stringLanguange == "de" ||
+          stringLanguange == "it" ||
+          stringLanguange == "pt" ||
+          stringLanguange == "ro") {
+        language = ui.window.locale;
+      }
     } else {
       language = Locale('en', 'US');
     }
 
-    String lang = await UserManager.getLanguage();
-    String country = await UserManager.getLanguageCountry();
-    if (lang != null && country != null) {
-      language = Locale(lang, country);
-    }
-
-    return language.languageCode;
+    return language;
   }
 
   static launchUrl(url) async {
@@ -872,20 +857,5 @@ class Utils {
       await launch(url, forceSafariVC: false);
     else
       throw 'Could not launch';
-  }
-
- 
-
-  static Future<bool> loadTranslations() async {
-    // getLanguage();
-
-    // Load JSON file from the "language" folder
-    String jsonString = await rootBundle.loadString(
-        'assets/language/${language.languageCode}_${language.countryCode}.json');
-    Map<String, dynamic> jsonLanguageMap = json.decode(jsonString);
-    localizedValues = jsonLanguageMap.map((key, value) {
-      return MapEntry(key, value.toString());
-    });
-    return true;
   }
 }

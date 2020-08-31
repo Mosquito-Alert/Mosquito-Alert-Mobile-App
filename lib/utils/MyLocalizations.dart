@@ -1,19 +1,32 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-import 'Utils.dart';
+import 'package:flutter/services.dart';
 
 class MyLocalizations {
-  MyLocalizations(this.locale);
+  Locale locale;
+  static Map<dynamic, dynamic> _localisedValues;
 
-  final Locale locale;
+  MyLocalizations(this.locale) {
+    this.locale = locale;
+    _localisedValues = null;
+  }
+
+  static Future<MyLocalizations> loadTranslations(Locale locale) async {
+    MyLocalizations appTranslations = MyLocalizations(locale);
+    String jsonContent = await rootBundle.loadString(
+        'assets/language/${locale.languageCode}_${locale.countryCode}.json');
+    _localisedValues = json.decode(jsonContent);
+    return appTranslations;
+  }
 
   String translate(key) {
-    return Utils.localizedValues[key];
+    return _localisedValues != null && _localisedValues[key] != null
+        ? _localisedValues[key]
+        : "";
   }
 
   static String of(BuildContext context, String key) {
-    
     return Localizations.of<MyLocalizations>(context, MyLocalizations)
         .translate(key);
   }

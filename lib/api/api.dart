@@ -502,8 +502,7 @@ class ApiSingleton {
       Utils.imagePath.forEach((img) async {
         if (img['id'] == report.version_UUID) {
           if (!img['image'].contains('http')) {
-            // bool isSaved = await saveImage(img['image'], report.version_UUID);
-            bool isSaved = false;
+            bool isSaved = await saveImage(img['image'], report.version_UUID);
             if (!isSaved) {
               final Directory directory =
                   await getApplicationDocumentsDirectory();
@@ -511,6 +510,8 @@ class ApiSingleton {
                   .copy('${directory.path}/${report.version_UUID}.png');
 
               Utils.saveLocalImage(newImage.path, report.version_UUID);
+            } else {
+              Utils.deleteImage(img['image']);
             }
           }
         }

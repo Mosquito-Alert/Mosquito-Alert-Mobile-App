@@ -5,8 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 main() {
@@ -17,21 +17,15 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 
-  static void setLocale(BuildContext context) {
-    _MyAppState state = context.ancestorStateOfType(TypeMatcher<_MyAppState>());
-
-    state.setState(() {
-      state.language = Utils.language;
-    });
-  }
+  static void setLocale(BuildContext context) {}
 }
 
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Locale language = Utils.language;
-
   StreamSubscription<ConnectivityResult> subscription;
+
+  MyLocalizationsDelegate _newLocaleDelegate = MyLocalizationsDelegate();
 
   @override
   void initState() {
@@ -70,17 +64,13 @@ class _MyAppState extends State<MyApp> {
       }
     });
 
-    //fetch locale
-    this._fetchLocale().then((language) {
-      setState(() {
-        this.language = language;
-      });
-    });
+    application.onLocaleChanged = onLocaleChange;
   }
 
-  Future<Locale> _fetchLocale() async {
-    await Utils.getLanguage();
-    return Utils.language;
+  void onLocaleChange(Locale locale) {
+    setState(() {
+      _newLocaleDelegate = MyLocalizationsDelegate(newLocale: locale);
+    });
   }
 
   @override
@@ -91,58 +81,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Utils.loadTranslations(),
-        builder: (context, AsyncSnapshot snapshot) {
-          return MaterialApp(
-            title: 'Mosquito alert',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'Rubik',
-              primarySwatch: Colors.orange,
-            ),
-            home: snapshot.hasData
-                ? MainVC()
-                : Scaffold(
-                    body: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Center(
-                        child: Image.asset('assets/img/ic_logo.png'),
-                      ),
-                    ),
-                  ),
-            locale: language,
-            // localeResolutionCallback:
-            //     (Locale newLocale, Iterable<Locale> supportedLocales) {
-            //   if (supportedLocales.any((loc) => loc == newLocale)) {
-            //     language = newLocale;
-            //   } else {
-            //     language = Locale('en', 'US');
-            //   }
-
-            //   Utils.language = language;
-
-            //   return newLocale;
-            // },
-            localizationsDelegates: [
-              const MyLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: [
-              const Locale('es', "ES"),
-              const Locale('en', "US"),
-              const Locale('ca', "ES"),
-              const Locale('sq', "AL"),
-              const Locale('bg', "BG"),
-              const Locale('nl', "NL"),
-              const Locale('de', "DE"),
-              const Locale('it', "IT"),
-              const Locale('pt', "PT"),
-              const Locale('ro', "RO"),
-            ],
-          );
-        });
+    return MaterialApp(
+      title: 'Mosquito alert',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Rubik',
+        primarySwatch: Colors.orange,
+      ),
+      home: MainVC(),
+      localizationsDelegates: [
+        _newLocaleDelegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: 
+      application.supportedLocales(),
+    );
   }
 }

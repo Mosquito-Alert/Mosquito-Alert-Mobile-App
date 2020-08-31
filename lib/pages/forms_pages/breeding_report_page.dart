@@ -61,7 +61,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     },
   ];
 
-  bool skipReport = false;
   bool addMosquito = false;
   bool validContent = false;
   bool showCamera = false;
@@ -87,12 +86,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           setValid, displayQuestions.elementAt(2)['question']['text']),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
-  }
-
-  setSkipReport(skip) {
-    setState(() {
-      skipReport = skip;
-    });
   }
 
   addAdultReport(addReport) {
@@ -172,13 +165,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         percentStream.add(1.0);
       });
     }
-  }
-
-  _saveReports() async {
-    loadingStream.add(true);
-    bool res = await Utils.saveReports();
-    res == null || !res ? _showAlertKo() : _showAlertOk();
-    Utils.resetReport();
   }
 
   @override
@@ -264,31 +250,27 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                             double currentPage =
                                                 _pagesController.page;
 
-                                            if (skipReport) {
-                                              _saveReports();
+                                            if (currentPage == 0.0) {
+                                              _chooseTypeImage();
+                                              setState(() {
+                                                index = currentPage + 1;
+                                              });
+                                            } else if (currentPage == 3.0 &&
+                                                    otherReport == 'adult' ||
+                                                otherReport == 'bite') {
+                                              navigateOtherReport();
                                             } else {
-                                              if (currentPage == 0.0) {
-                                                _chooseTypeImage();
-                                                setState(() {
-                                                  index = currentPage + 1;
-                                                });
-                                              } else if (currentPage == 3.0 &&
-                                                      otherReport == 'adult' ||
-                                                  otherReport == 'bite') {
-                                                navigateOtherReport();
-                                              } else {
-                                                setState(() {
-                                                  index = currentPage + 1;
-                                                });
-                                                _pagesController
-                                                    .nextPage(
-                                                        duration: Duration(
-                                                            microseconds: 300),
-                                                        curve: Curves.ease)
-                                                    .then((value) => setValid(
-                                                        widget.editReport !=
-                                                            null));
-                                              }
+                                              setState(() {
+                                                index = currentPage + 1;
+                                              });
+                                              _pagesController
+                                                  .nextPage(
+                                                      duration: Duration(
+                                                          microseconds: 300),
+                                                      curve: Curves.ease)
+                                                  .then((value) => setValid(
+                                                      widget.editReport !=
+                                                          null));
                                             }
                                           }),
                                         )

@@ -159,10 +159,10 @@ class _GalleryPageState extends State<GalleryPage> {
               Container(
                 child: Text(
                   currentSlide.description,
-                  style: currentSlide.styleDescription,
+                  // style: currentSlide.styleDescription,
                   textAlign: TextAlign.center,
                   maxLines: 10,
-                  overflow: TextOverflow.ellipsis,
+                  // overflow: TextOverflow.ellipsis,
                 ),
                 margin: EdgeInsets.all(20.0),
               ),
@@ -187,10 +187,9 @@ class _GalleryPageState extends State<GalleryPage> {
         // List slides
         slides: initSlides(),
 
-        // // Skip button
-        // renderSkipBtn: this.renderSkipBtn(),
-        // colorSkipBtn: Color(0x33ffcc5c),
-        // highlightColorSkipBtn: Color(0xffffcc5c),
+        // Skip button
+
+        isShowSkipBtn: false,
 
         // Next button
         renderNextBtn: this.renderNextBtn(),

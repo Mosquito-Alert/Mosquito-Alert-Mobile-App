@@ -585,7 +585,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                   child: Style.body(
                                                       report.responses[index]
                                                                   .answer !=
-                                                              ' '
+                                                              'N/A'
                                                           ? report
                                                                   .responses[
                                                                       index]

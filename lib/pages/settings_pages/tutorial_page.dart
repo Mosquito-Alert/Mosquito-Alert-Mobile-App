@@ -206,7 +206,7 @@ class _TutorialPageState extends State<TutorialPage> {
         centerTitle: true,
         title: Style.title(MyLocalizations.of(context, 'tutorial_txt'),
             fontSize: 16),
-            leading: widget.goBack
+        leading: widget.goBack
             ? IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -218,6 +218,9 @@ class _TutorialPageState extends State<TutorialPage> {
       body: new IntroSlider(
         // List slides
         slides: initSlides(),
+
+        //skip button
+        isShowSkipBtn: false,
 
         // Next button
         renderNextBtn: this.renderNextBtn(),
