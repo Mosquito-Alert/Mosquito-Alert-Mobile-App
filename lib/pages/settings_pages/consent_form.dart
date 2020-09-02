@@ -13,8 +13,8 @@ class ConsentForm extends StatefulWidget {
 }
 
 class _ConsentFormState extends State<ConsentForm> {
-
-  bool isSelected = false;
+  bool acceptConditions = false;
+  bool acceptPrivacy = false;
   StreamController<bool> buttonStream = StreamController<bool>.broadcast();
 
   @override
@@ -80,11 +80,11 @@ class _ConsentFormState extends State<ConsentForm> {
                         Row(
                           children: <Widget>[
                             Checkbox(
-                              value: isSelected,
+                              value: acceptConditions,
                               onChanged: (newValue) {
-                                buttonStream.add(newValue);
+                                buttonStream.add(acceptPrivacy && newValue);
                                 setState(() {
-                                  isSelected = newValue;
+                                  acceptConditions = newValue;
                                 });
                               },
                             ),
@@ -122,34 +122,51 @@ class _ConsentFormState extends State<ConsentForm> {
                             ),
                           ],
                         ),
-                        RichText(
-                          text: TextSpan(
-                              style: new TextStyle(
-                                  color: Style.textColor, fontSize: 14),
-                              children: [
-                                TextSpan(
-                                  text: MyLocalizations.of(
-                                      context, "consent_txt_10"),
-                                ),
-                                TextSpan(
-                                  text: MyLocalizations.of(
-                                      context, "consent_txt_11"),
-                                  style:
-                                      new TextStyle(color: Style.colorPrimary),
-                                  recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => InfoPage(
-                                                  MyLocalizations.of(
-                                                      context, "privacy_link"),
-                                                  localHtml: true,
-                                                )),
-                                      );
-                                    },
-                                ),
-                              ]),
+                        Row(
+                          children: <Widget>[
+                            Checkbox(
+                              value: acceptPrivacy,
+                              onChanged: (newValue) {
+                                buttonStream.add(acceptConditions && newValue);
+                                setState(() {
+                                  acceptPrivacy = newValue;
+                                });
+                              },
+                            ),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                    style: new TextStyle(
+                                        color: Style.textColor, fontSize: 14),
+                                    children: [
+                                      TextSpan(
+                                        text: MyLocalizations.of(
+                                            context, "consent_txt_10"),
+                                      ),
+                                      TextSpan(
+                                        text: MyLocalizations.of(
+                                            context, "consent_txt_11"),
+                                        style: new TextStyle(
+                                            color: Style.colorPrimary),
+                                        recognizer: new TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      InfoPage(
+                                                        MyLocalizations.of(
+                                                            context,
+                                                            "privacy_link"),
+                                                        localHtml: true,
+                                                      )),
+                                            );
+                                          },
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 10,
@@ -195,7 +212,7 @@ class _ConsentFormState extends State<ConsentForm> {
             ),
             StreamBuilder<Object>(
                 stream: buttonStream.stream,
-                initialData: isSelected,
+                initialData: acceptPrivacy && acceptConditions,
                 builder: (context, snapshot) {
                   return Container(
                     margin: EdgeInsets.all(15),
@@ -207,7 +224,8 @@ class _ConsentFormState extends State<ConsentForm> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TutorialPage(false)),
+                                      builder: (context) =>
+                                          TutorialPage(false)),
                                 );
                               }
                             : null),

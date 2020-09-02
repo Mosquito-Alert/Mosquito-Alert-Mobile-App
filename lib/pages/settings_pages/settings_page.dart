@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
 import 'package:language_pickers/language_picker_dialog.dart';
 import 'package:language_pickers/languages.dart';
-import 'package:language_pickers/utils/utils.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/main.dart';
 import 'package:mosquito_alert_app/pages/auth/login_main_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
@@ -43,6 +40,19 @@ class _SettingsPageState extends State<SettingsPage> {
     {"name": "Protuguese", "isoCode": "pt_PT"},
     {"name": "Romanian", "isoCode": "ro_RO"},
     {"name": "English", "isoCode": "en_US"},
+
+    // {"name": "Greek", "isoCode": "el_GR"},
+    // {"name": "French", "isoCode": "fr_FR"},
+    // {"name": "Croatian", "isoCode": "hr_HR"},
+    // {"name": "Hungarian", "isoCode": "hu_HU"},
+    // {"name": "Luxembourgish (Luxembourg)", "isoCode": "lb_LU"},
+    // {"name": "Macedonian (Former Yugoslav Republic of Macedonia)", "isoCode": "mk_MK"},
+    // {"name": "Russian (Russia)", "isoCode": "ru_RU"},
+    // {"name": "Slovenian (Slovenia)", "isoCode": "sl_SI"},
+    // {"name": "Serbian", "isoCode": "sr_RS"},
+    // {"name": "Turkish (Turkey)", "isoCode": "tr_TR"},
+    // {"name": "Chinese", "isoCode": "zh_CH"},
+    // {"name": "Chinese (Traditional, Hong Kong)", "isoCode": "zh_HK"},
   ];
 
   String selectedLanguage;

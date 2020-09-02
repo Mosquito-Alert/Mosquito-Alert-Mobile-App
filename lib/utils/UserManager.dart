@@ -34,15 +34,22 @@ class UserManager {
       prefs.setBool("trackingDisabled", false);
 
       await ApiSingleton().createUser(uuid);
-      setUserScores(0);
       Utils.getLanguage();
       setLanguage(Utils.language.languageCode);
       setLanguageCountry(Utils.language.countryCode);
-      userScore = await ApiSingleton().getUserScores();
+    } else {
+      String languageCode = await getLanguage();
+      String countryCode = await getLanguageCountry();
+      if (languageCode != null && countryCode != null) {
+        Utils.language = Locale(languageCode, countryCode);
+      } else {
+        Utils.getLanguage();
+      }
     }
 
-    application.onLocaleChanged(Utils.getLanguage());
+    application.onLocaleChanged(Utils.language);
     fetchUser();
+    userScore = await ApiSingleton().getUserScores();
     setUserScores(userScore);
 
     return true;

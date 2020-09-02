@@ -286,16 +286,18 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                         );
                                 }),
                           ))
-                        : Container(
-                            width: double.infinity,
-                            height: 54,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 12),
-                            child: Style.button(
-                              MyLocalizations.of(context, "send_data"),
-                              () {
-                                _createReport();
-                              },
+                        : SafeArea(
+                            child: Container(
+                              width: double.infinity,
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
+                              child: Style.button(
+                                MyLocalizations.of(context, "send_data"),
+                                () {
+                                  _createReport();
+                                },
+                              ),
                             ),
                           ),
               ],

@@ -71,7 +71,8 @@ class _MainVCState extends State<MainVC> {
               stopOnTerminate: false,
               startOnBoot: true,
               debug: false,
-              deferTime: 3600000, //1h
+              deferTime: 17280000, // 4.8h
+              locationUpdateInterval: 17280000, // 4.8h
               logLevel: bg.Config.LOG_LEVEL_VERBOSE))
           .then((bg.State state) {
         if (!state.enabled) {

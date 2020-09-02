@@ -284,16 +284,18 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                             );
                                     })),
                           )
-                        : Container(
-                            width: double.infinity,
-                            height: 54,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 12),
-                            child: Style.button(
-                              MyLocalizations.of(context, "send_data"),
-                              () {
-                                _saveData();
-                              },
+                        : SafeArea(
+                            child: Container(
+                              width: double.infinity,
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 12),
+                              child: Style.button(
+                                MyLocalizations.of(context, "send_data"),
+                                () {
+                                  _saveData();
+                                },
+                              ),
                             ),
                           ),
               ],

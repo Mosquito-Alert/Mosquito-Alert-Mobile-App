@@ -832,10 +832,11 @@ class Utils {
   static getLanguage() {
     if (ui.window != null && ui.window.locale != null) {
       String stringLanguange = ui.window.locale.languageCode;
+      String stringCountry = ui.window.locale.countryCode;
 
-      if (stringLanguange == "es" ||
-          stringLanguange == "ca" ||
-          stringLanguange == "en" ||
+      if (stringLanguange == "es" && stringCountry == 'ES' ||
+          stringLanguange == "ca" && stringCountry == 'ES' ||
+          stringLanguange == "en" && stringCountry == 'US' ||
           stringLanguange == "sq" ||
           stringLanguange == "bg" ||
           stringLanguange == "nl" ||

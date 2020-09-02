@@ -406,33 +406,36 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                         );
                                 }),
                           ))
-                        : _formsRepot.length == 2
-                            ? Container(
-                                width: double.infinity,
-                                height: 54,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 12),
-                                child: Style.button(
-                                  MyLocalizations.of(context, "understand_txt"),
-                                  () {
-                                    Navigator.pop(context);
-                                    Utils.resetReport();
-                                    Utils.imagePath = null;
-                                  },
-                                ),
-                              )
-                            : Container(
-                                width: double.infinity,
-                                height: 54,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 12),
-                                child: Style.button(
-                                  MyLocalizations.of(context, "send_data"),
-                                  () {
-                                    _createReport();
-                                  },
-                                ),
-                              ),
+                        : SafeArea(
+                            child: _formsRepot.length == 2
+                                ? Container(
+                                    width: double.infinity,
+                                    height: 54,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
+                                    child: Style.button(
+                                      MyLocalizations.of(
+                                          context, "understand_txt"),
+                                      () {
+                                        Navigator.pop(context);
+                                        Utils.resetReport();
+                                        Utils.imagePath = null;
+                                      },
+                                    ),
+                                  )
+                                : Container(
+                                    width: double.infinity,
+                                    height: 54,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
+                                    child: Style.button(
+                                      MyLocalizations.of(context, "send_data"),
+                                      () {
+                                        _createReport();
+                                      },
+                                    ),
+                                  ),
+                          ),
               ],
             ),
           ),

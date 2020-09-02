@@ -266,7 +266,19 @@
     "consent_txt_13": "licencia de Mosquito Alert.",
     "lisence_link": "assets/html/license_es.html",
     "privacy_link": "assets/html/privacy_es.html",
-    "terms_link": "assets/html/terms_es.html", 
-    "privacy_txt": "Polílica de privacidad", 
-    "license_txt": "Licencia de Mosquito Alert"
+    "terms_link": "assets/html/terms_es.html",
+    "privacy_txt": "Polílica de privacidad",
+    "license_txt": "Licencia de Mosquito Alert",
+    "el_GR": "",
+    "fr_FR": "",
+    "hr_HR": "",
+    "hu_HU": "",
+    "lb_LU": "",
+    "mk_MK": "",
+    "ru_RU": "",
+    "sl_SI": "",
+    "sr_RS": "",
+    "tr_TR": "",
+    "zh_CH": "",
+    "zh_HK": ""
 }
