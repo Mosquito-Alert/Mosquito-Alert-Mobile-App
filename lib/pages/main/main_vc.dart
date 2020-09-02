@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,11 @@ class _MainVCState extends State<MainVC> {
     setState(() {
       userScore = points;
     });
-    _bgTracking();
+
+    if (Platform.isAndroid) {
+      _bgTracking();
+    }
+
     loadingStream.add(false);
   }
 
@@ -66,15 +71,17 @@ class _MainVCState extends State<MainVC> {
 
       // 2.  Configure the plugin
       bg.BackgroundGeolocation.ready(bg.Config(
-              desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-              distanceFilter: 1000.0,
-              stopOnTerminate: false,
-              startOnBoot: true,
-              debug: false,
-              deferTime: 17280000, // 4.8h
-              locationUpdateInterval: 17280000, // 4.8h
-              logLevel: bg.Config.LOG_LEVEL_VERBOSE))
-          .then((bg.State state) {
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 0,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        debug: false,
+        disableElasticity: true,
+        allowIdenticalLocations: true,
+        // deferTime: 17280000, // 4.8h
+        locationUpdateInterval: 17280000, // 4.8h
+        // logLevel: bg.Config.LOG_LEVEL_VERBOSE,
+      )).then((bg.State state) {
         if (!state.enabled) {
           // 3.  Start the plugin.
           bg.BackgroundGeolocation.start().then((bg.State bgState) {
