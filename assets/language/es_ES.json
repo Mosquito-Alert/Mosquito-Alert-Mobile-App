@@ -123,7 +123,7 @@
     "disable_background_tracking": "Deshabilitar esfuerzo de muestreo",
     "enable_background_tracking": "Habilitar esfuerzo de muestreo",
     "disable_tracking_question_text": "Se deshabilitará el esfuerzo de muestreo. ¿Quieres continuar?",
-    "enable_tracking_question_text": "Se deshabilitará el esfuerzo de muestreo. ¿Quieres seguir?",
+    "enable_tracking_question_text": "Se habilitará el esfuerzo de muestreo. ¿Quieres seguir?",
     "mosquitos_gallery_txt": "Guía de mosquitos",
     "about_the_project_txt": "Sobre el proyecto",
     "about_us_txt": "Sobre nostros",

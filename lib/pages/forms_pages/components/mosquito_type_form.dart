@@ -60,7 +60,6 @@ class _MosquitoTypeFormState extends State<MosquitoTypeForm> {
               ),
               Style.title(MyLocalizations.of(
                   context, widget.displayQuestion['question']['text'])),
-              Style.body(MyLocalizations.of(context, "could_recognise_txt")),
               Container(
                 margin: EdgeInsets.only(top: 10),
                 child: Column(
