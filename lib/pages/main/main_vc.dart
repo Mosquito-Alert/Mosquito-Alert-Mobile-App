@@ -97,13 +97,16 @@ class _MainVCState extends State<MainVC> {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude);
 
-    double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
-        Utils.maskCoordsValue;
-    double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
-        Utils.maskCoordsValue;
 
-    ApiSingleton()
-        .sendFixes(lat, lon, location.timestamp, location.battery.level);
+    if ((location.coords.latitude).abs() <= 66.5) {
+      double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
+          Utils.maskCoordsValue;
+      double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
+          Utils.maskCoordsValue;
+
+      ApiSingleton()
+          .sendFixes(lat, lon, location.timestamp, location.battery.level);
+    }
   }
 
   @override
