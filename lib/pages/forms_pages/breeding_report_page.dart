@@ -61,9 +61,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     },
   ];
 
-  bool addMosquito = false;
-  bool validContent = false;
   bool showCamera = false;
+  bool touched = false;
   String otherReport;
 
   double index = 1.0;
@@ -73,7 +72,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     super.initState();
     if (widget.editReport != null) {
       Utils.setEditReport(widget.editReport);
-      validContent = true;
     }
     _pagesController = PageController();
 
@@ -86,12 +84,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
           setValid, displayQuestions.elementAt(2)['question']['text']),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
-  }
-
-  addAdultReport(addReport) {
-    setState(() {
-      addMosquito = addReport;
-    });
   }
 
   addOtherReport(String reportType) {
@@ -196,7 +188,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                         Utils.reportsList.isNotEmpty) {
                       Utils.deleteLastReport();
                     } else {
-                      Utils.resetReport();
+                      _onWillPop();
+                      // Utils.resetReport();
                     }
                     Navigator.pop(context);
                   } else {

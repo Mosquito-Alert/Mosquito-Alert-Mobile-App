@@ -178,6 +178,38 @@ class _ConsentFormState extends State<ConsentForm> {
                               children: [
                                 TextSpan(
                                   text: MyLocalizations.of(
+                                      context, "consent_txt_14"),
+                                ),
+                                TextSpan(
+                                  text: MyLocalizations.of(
+                                      context, "consent_txt_15"),
+                                  style:
+                                      new TextStyle(color: Style.colorPrimary),
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => InfoPage(
+                                                  MyLocalizations.of(
+                                                      context, "url_about_us"),
+                                                  localHtml: true,
+                                                )),
+                                      );
+                                    },
+                                ),
+                              ]),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        RichText(
+                          text: TextSpan(
+                              style: new TextStyle(
+                                  color: Style.textColor, fontSize: 14),
+                              children: [
+                                TextSpan(
+                                  text: MyLocalizations.of(
                                       context, "consent_txt_12"),
                                 ),
                                 TextSpan(

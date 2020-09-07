@@ -26,7 +26,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
   String otherReport;
   bool seeButton = false;
   bool addMosquito = false;
-  bool validContent = false;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
   StreamController<bool> validStream = new StreamController<bool>.broadcast();
   StreamController<double> percentStream =
@@ -189,10 +188,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
                         widget.editReport == null) {
                       Utils.deleteLastReport();
                     } else {
-                      Utils.resetReport();
+                      _onWillPop();
+                      // Utils.resetReport();
                     }
-
-                    Navigator.pop(context);
                   } else if (currentPage == 1) {
                     _pagesController
                         .previousPage(
@@ -365,6 +363,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
         } else {
           Utils.resetReport();
           Utils.imagePath = null;
+        }
+        if (widget.editReport != null) {
+          widget.loadData();
         }
         Navigator.pop(context);
       }, context);

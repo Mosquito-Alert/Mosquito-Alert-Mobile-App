@@ -30,6 +30,8 @@ class Utils {
   //Manage Data
   static Position location;
   static LatLng defaultLocation = LatLng(41.3874, 2.1688);
+  static StreamController<int> userScoresController =
+      StreamController<int>.broadcast();
 
   //REPORTS
   static Report report;
@@ -128,7 +130,7 @@ class Utils {
   }
 
   static setEditReport(Report editReport) {
-    report = editReport;
+    Report report = editReport;
     report.version_number = report.version_number + 1;
     report.version_UUID = new Uuid().v4();
 

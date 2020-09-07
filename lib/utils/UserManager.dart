@@ -61,11 +61,6 @@ class UserManager {
   }
 
   //set
-  static Future<void> setUserName(name) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("userName", name);
-  }
-
   static Future<void> setFrirebaseId(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("firebaseId", id);
@@ -120,11 +115,6 @@ class UserManager {
   static Future<String> getTrackingId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.get("trackingUUID");
-  }
-
-  static Future<String> getUserName() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("userName");
   }
 
   static Future<String> getFirebaseId() async {

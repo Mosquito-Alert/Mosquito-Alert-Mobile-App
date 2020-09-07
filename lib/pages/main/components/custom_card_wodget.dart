@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -28,7 +27,8 @@ class CustomCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 20.0, bottom: 10),
                         child: Image.asset(
                           img,
-                          height: 100,
+                          height: 95,
+                          width: 95,
                           // fit: BoxFit.contain,
                         ),
                       )
@@ -38,12 +38,13 @@ class CustomCard extends StatelessWidget {
                 Expanded(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: AutoSizeText(
+                    child: Style.titleMedium(
                       title,
                       textAlign: TextAlign.center,
-                      minFontSize: 14,
-                      maxFontSize: 16,
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      fontSize: 16
+                      // minFontSize: 14,
+                      // maxFontSize: 16,
+                      // style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ),
                 ),

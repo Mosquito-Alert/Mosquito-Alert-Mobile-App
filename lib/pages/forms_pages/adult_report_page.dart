@@ -297,7 +297,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                         Utils.reportsList.isNotEmpty) {
                       Utils.deleteLastReport();
                     } else {
-                      Utils.resetReport();
+                      _onWillPop();
+                      // Utils.resetReport();
                     }
                     Navigator.pop(context);
                   } else {

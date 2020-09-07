@@ -28,7 +28,6 @@ class MainVC extends StatefulWidget {
 
 class _MainVCState extends State<MainVC> {
   String userName;
-  int userScore = 1;
   String userUuid;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
@@ -43,16 +42,13 @@ class _MainVCState extends State<MainVC> {
     await UserManager.startFirstTime(context);
     var user = await UserManager.fetchUser();
     userUuid = await UserManager.getUUID();
-    int points = await ApiSingleton().getUserScores();
+    await ApiSingleton().getUserScores();
 
     if (user != null) {
       setState(() {
-        userName = user.displayName;
+        userName = user.email;
       });
     }
-    setState(() {
-      userScore = points;
-    });
 
     if (Platform.isAndroid) {
       _bgTracking();
@@ -96,7 +92,6 @@ class _MainVCState extends State<MainVC> {
     Utils.location = Position(
         latitude: location.coords.latitude,
         longitude: location.coords.longitude);
-
 
     if ((location.coords.latitude).abs() <= 66.5) {
       double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
@@ -211,19 +206,28 @@ class _MainVCState extends State<MainVC> {
                                                   "assets/img/points_box.png"),
                                             ),
                                           ),
-                                          child: Center(
-                                              child: AutoSizeText(
-                                            userScore != null
-                                                ? userScore.toString()
-                                                : '',
-                                            maxLines: 1,
-                                            maxFontSize: 26,
-                                            minFontSize: 16,
-                                            style: TextStyle(
-                                                color: Color(0xFF4B3D04),
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 24),
-                                          )),
+                                          child: StreamBuilder<int>(
+                                              stream: Utils
+                                                  .userScoresController.stream,
+                                              initialData:
+                                                  UserManager.userScore,
+                                              builder: (context, snapshot) {
+                                                return Center(
+                                                    child: AutoSizeText(
+                                                  snapshot.data != null &&
+                                                          snapshot.hasData
+                                                      ? snapshot.data.toString()
+                                                      : '',
+                                                  maxLines: 1,
+                                                  maxFontSize: 26,
+                                                  minFontSize: 16,
+                                                  style: TextStyle(
+                                                      color: Color(0xFF4B3D04),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 24),
+                                                ));
+                                              }),
                                         ),
                                       ),
                                     ]),

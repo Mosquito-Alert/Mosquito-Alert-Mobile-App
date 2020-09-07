@@ -95,18 +95,13 @@ class ApiSingleton {
   }
 
   Future<dynamic> singUp(
-      String email, String password, String firstName, String lastName) async {
+      String email, String password) async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     ))
         .user;
     if (user != null) {
-      UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
-      userUpdateInfo.displayName = '$firstName $lastName';
-      user.updateProfile(userUpdateInfo);
-
-      // print(user);
       return user;
     } else {
       return false;
@@ -242,7 +237,6 @@ class ApiSingleton {
       String userUUID = await UserManager.getUUID();
 
       final response = await http.get(
-        // '$serverUrl$userScore?user_id=D9E35B23-6A35-4E3F-84D7-C111F0BF87C4',
         '$serverUrl$userScore?user_id=$userUUID',
         headers: headers,
       );
@@ -256,6 +250,7 @@ class ApiSingleton {
       Map<String, dynamic> jsonAnswer = json.decode(response.body);
 
       UserManager.userScore = jsonAnswer['total_score'];
+      Utils.userScoresController.add(jsonAnswer['total_score']);
       return UserManager.userScore;
     } catch (e) {
       return 1;
@@ -491,6 +486,7 @@ class ApiSingleton {
         //Utils.report = Report.fromJson(json.decode(response.body));
 
       }
+      getUserScores();
       return true;
     } catch (e) {
       return false;
