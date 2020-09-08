@@ -64,6 +64,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   bool showCamera = false;
   bool touched = false;
   String otherReport;
+  Report toEditReport;
 
   double index = 1.0;
 
@@ -71,7 +72,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   void initState() {
     super.initState();
     if (widget.editReport != null) {
-      Utils.setEditReport(widget.editReport);
+      toEditReport = Report.fromJson(widget.editReport.toJson());
+      Utils.setEditReport(toEditReport);
     }
     _pagesController = PageController();
 

@@ -216,7 +216,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Report>> snapshot) {
                         return ReportsList(
-                            snapshot.data != null ? snapshot.data : [],
+                            snapshot.data != null
+                                ? snapshot.data.map((e) => e).toList()
+                                : [],
                             _reportBottomSheet);
                       },
                     );
@@ -820,7 +822,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _updateReport() async {
-    //loadingStream.add(true);
+    loadingStream.add(true);
     //refresh all markers because it has not get image object
     await _getData(letReturn: false);
     /*
@@ -845,7 +847,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     clusteringHelper.updateData(_listMarkers);
 */
 
-    //loadingStream.add(false);
+    loadingStream.add(false);
   }
 
   _getPosition(Report report) {

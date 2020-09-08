@@ -117,9 +117,15 @@ class Report {
     data['package_name'] = this.package_name;
     data['package_version'] = this.package_version;
     data['session'] = this.session;
+
     if (this.responses != null) {
       data['responses'] = this.responses.map((r) => r.toJson()).toList();
     }
+
+    if (this.photos != null) {
+      data['photos'] = this.photos.map((r) => r.toJson()).toList();
+    }
+    
     data['device_manfacturer'] = this.device_manufacturer;
     data['device_model'] = this.device_model;
     data['os'] = this.os;
@@ -142,9 +148,16 @@ class Photo {
   });
 
   Photo.fromJson(Map<dynamic, dynamic> json) {
-    // print(json);
     id = json['id'];
     photo = json['photo'];
     uuid = json['uuid'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['photo'] = this.photo;
+    data['uuid'] = this.uuid;
+    return data;
   }
 }

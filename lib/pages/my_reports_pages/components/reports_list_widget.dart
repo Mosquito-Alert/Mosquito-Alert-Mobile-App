@@ -28,7 +28,11 @@ class ReportsList extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  onTap(reports[index]);
+                  Report reporteItem = List.from(reports)
+                      .where((element) =>
+                          element.report_id == reports[index].report_id)
+                      .toList()[0];
+                  onTap(reporteItem);
                 },
                 child: Card(
                   margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),

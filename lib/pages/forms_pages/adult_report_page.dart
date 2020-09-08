@@ -159,16 +159,16 @@ class _AdultReportPageState extends State<AdultReportPage> {
   ];
 
   bool addBiting = false;
-  bool validContent = false;
   bool showCamera = false;
   String otherReport;
+  Report toEditReport;
 
   @override
   void initState() {
     super.initState();
     if (widget.editReport != null) {
-      Utils.setEditReport(widget.editReport);
-      validContent = true;
+      toEditReport = Report.fromJson(widget.editReport.toJson());
+      Utils.setEditReport(toEditReport);
     }
     _pagesController = PageController();
     index = 0.0;

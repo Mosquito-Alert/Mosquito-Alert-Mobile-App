@@ -81,12 +81,14 @@ class _BitingReportPageState extends State<BitingReportPage> {
       "question": {"id": 14, "text": "question_14"},
     },
   ];
+  Report toEditReport;
 
   @override
   void initState() {
     super.initState();
     if (widget.editReport != null) {
-      Utils.setEditReport(widget.editReport);
+      toEditReport = Report.fromJson(widget.editReport.toJson());
+      Utils.setEditReport(toEditReport);
     }
     _pagesController = PageController();
     _formsRepot = [
@@ -363,9 +365,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
         } else {
           Utils.resetReport();
           Utils.imagePath = null;
-        }
-        if (widget.editReport != null) {
-          widget.loadData();
         }
         Navigator.pop(context);
       }, context);

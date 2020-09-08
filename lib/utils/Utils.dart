@@ -130,7 +130,8 @@ class Utils {
   }
 
   static setEditReport(Report editReport) {
-    Report report = editReport;
+    resetReport();
+    report = editReport;
     report.version_number = report.version_number + 1;
     report.version_UUID = new Uuid().v4();
 
