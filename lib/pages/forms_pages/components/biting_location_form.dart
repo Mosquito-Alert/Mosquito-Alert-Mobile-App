@@ -219,7 +219,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                   margin: EdgeInsets.symmetric(vertical: 30),
                   child: StreamBuilder(
                     stream: streamType.stream,
-                    initialData: LocationType.current,
+                    initialData: Utils.report.location_choice != null
+                        ? Utils.report.location_choice == "selected"
+                            ? LocationType.selected
+                            : LocationType.current
+                        : LocationType.current,
                     builder: (BuildContext context,
                         AsyncSnapshot<LocationType> snapshot) {
                       return Column(
@@ -234,8 +238,6 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                         onTap: () {
                                           updateType(LocationType.current,
                                               context: context);
-                                          // getPosition(LocationType.current,
-                                          //     context: context);
                                         },
                                         child: SmallQuestionOption(
                                           "current_location_txt",

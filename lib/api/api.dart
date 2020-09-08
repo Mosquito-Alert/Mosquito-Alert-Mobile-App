@@ -479,10 +479,10 @@ class ApiSingleton {
       }
 
       if (report.version_number > 0) {
-        var b = json.decode(response.body);
-        print(b);
-        var a = Report.fromJson(json.decode(response.body));
-        print(a);
+        // var b = json.decode(response.body);
+        // print(b);
+        // var a = Report.fromJson(json.decode(response.body));
+        // print(a);
         //Utils.report = Report.fromJson(json.decode(response.body));
 
       }

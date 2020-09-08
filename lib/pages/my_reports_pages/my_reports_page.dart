@@ -709,35 +709,37 @@ class _MyReportsPageState extends State<MyReportsPage> {
         });
   }
 
-  _getData({bool letReturn = true}) async {
+  _getData({bool letReturn = true, bool fromMap = true}) async {
     try {
-      double zoomLevel = await mapController.getZoomLevel();
-      if (_locationData != null && _zoomData != null) {
-        double distance = await Geolocator().distanceBetween(
-            _locationData.latitude,
-            _locationData.longitude,
-            location.latitude,
-            location.longitude);
-        if (distance < 750 && zoomLevel == _zoomData) {
-          if (letReturn) return;
-        }
-      }
-
-      _locationData = location;
-      _zoomData = await mapController.getZoomLevel();
-
       loadingStream.add(true);
+      double distance;
+      if (fromMap) {
+        double zoomLevel = await mapController.getZoomLevel();
+        if (_locationData != null && _zoomData != null) {
+          double distance = await Geolocator().distanceBetween(
+              _locationData.latitude,
+              _locationData.longitude,
+              location.latitude,
+              location.longitude);
+          if (distance < 750 && zoomLevel == _zoomData) {
+            if (letReturn) return;
+          }
+        }
 
-      LatLngBounds bounds = await mapController.getVisibleRegion();
-      double distance = await Geolocator().distanceBetween(
-          bounds.northeast.latitude,
-          bounds.northeast.longitude,
-          bounds.southwest.latitude,
-          bounds.southwest.longitude);
+        _locationData = location;
+        _zoomData = await mapController.getZoomLevel();
+
+        LatLngBounds bounds = await mapController.getVisibleRegion();
+        distance = await Geolocator().distanceBetween(
+            bounds.northeast.latitude,
+            bounds.northeast.longitude,
+            bounds.southwest.latitude,
+            bounds.southwest.longitude);
+      }
 
       List<Report> list = await ApiSingleton().getReportsList(
           location.latitude, location.longitude,
-          radius: (distance / 2).round());
+          radius: (distance != null ? distance : 1000 / 2).round());
 
       if (list == null) {
         list = [];
@@ -822,9 +824,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   _updateReport() async {
-    loadingStream.add(true);
     //refresh all markers because it has not get image object
-    await _getData(letReturn: false);
+    await _getData(letReturn: false, fromMap: false);
     /*
     int index =
         _myData.indexWhere((r) => r.report_id == Utils.report.report_id);
@@ -846,8 +847,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
     clusteringHelper.updateData(_listMarkers);
 */
-
-    loadingStream.add(false);
   }
 
   _getPosition(Report report) {

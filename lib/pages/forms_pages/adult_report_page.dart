@@ -298,9 +298,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       Utils.deleteLastReport();
                     } else {
                       _onWillPop();
-                      // Utils.resetReport();
                     }
-                    Navigator.pop(context);
                   } else {
                     if (currentPage == 2.0 &&
                         !Utils.report.responses

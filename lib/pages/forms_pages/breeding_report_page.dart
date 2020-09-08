@@ -191,9 +191,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                       Utils.deleteLastReport();
                     } else {
                       _onWillPop();
-                      // Utils.resetReport();
                     }
-                    Navigator.pop(context);
                   } else {
                     _pagesController
                         .previousPage(
