@@ -44,18 +44,18 @@ class _SettingsPageState extends State<SettingsPage> {
     {"name": "Greek", "isoCode": "el_GR"},
     {"name": "French", "isoCode": "fr_FR"},
     {"name": "Croatian", "isoCode": "hr_HR"},
-    {"name": "Hungarian", "isoCode": "hu_HU"},
+    // {"name": "Hungarian", "isoCode": "hu_HU"},
     {"name": "Luxembourgish (Luxembourg)", "isoCode": "lb_LU"},
     {
       "name": "Macedonian (Former Yugoslav Republic of Macedonia)",
       "isoCode": "mk_MK"
     },
-    {"name": "Russian (Russia)", "isoCode": "ru_RU"},
+    // {"name": "Russian (Russia)", "isoCode": "ru_RU"},
     {"name": "Slovenian (Slovenia)", "isoCode": "sl_SI"},
     {"name": "Serbian", "isoCode": "sr_RS"},
-    {"name": "Turkish (Turkey)", "isoCode": "tr_TR"},
-    {"name": "Chinese", "isoCode": "zh_CH"},
-    {"name": "Chinese (Traditional, Hong Kong)", "isoCode": "zh_HK"},
+    // {"name": "Turkish (Turkey)", "isoCode": "tr_TR"},
+    // {"name": "Chinese", "isoCode": "zh_CH"},
+    // {"name": "Chinese (Traditional, Hong Kong)", "isoCode": "zh_HK"},
   ];
 
   String selectedLanguage;
@@ -332,7 +332,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
         bg.BackgroundGeolocation.stop();
         bg.BackgroundGeolocation.stopSchedule();
-        print('disable');
 
         setState(() {
           enableTracking = !enableTracking;

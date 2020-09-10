@@ -261,9 +261,10 @@ class ApiSingleton {
   Future<dynamic> getNotifications() async {
     try {
       String userUUID = await UserManager.getUUID();
+      String locale = await UserManager.getLanguage();
 
       final response = await http.get(
-        '$serverUrl$notifications?user_id=$userUUID',
+        '$serverUrl$notifications?user_id=$userUUID&locale=$locale',
         headers: headers,
       );
 
