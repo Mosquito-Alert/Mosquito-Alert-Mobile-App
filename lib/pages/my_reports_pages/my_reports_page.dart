@@ -74,6 +74,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     super.initState();
     _initLocation();
     _initMemoryClustering();
+    _getData();
   }
 
   _initLocation() {
