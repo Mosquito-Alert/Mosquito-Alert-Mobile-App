@@ -183,7 +183,7 @@
     "bite_report_bodypart_leftleg": "лева нога",
     "bite_report_bodypart_rightleg": "десна нога",
     "question_1": "Колку убоди имавте и каде се на Вашето тело?",
-    "question_1_answer_11": "",
+    "question_1_answer_11": "Прашање_1_одговор 11",
     "question_2": "Каде тие Ве гризнаа?",
     "question_2_answer_21": "глава",
     "question_2_answer_22": "лева рака",
@@ -281,6 +281,6 @@
     "tr_TR": "Турски",
     "zh_CH": "Кинески (Кина)",
     "zh_HK": "Кинески (Хонг Конг)",
-    "consent_txt_14": "за",
+    "consent_txt_14": "за ",
     "consent_txt_15": "нас"
 }

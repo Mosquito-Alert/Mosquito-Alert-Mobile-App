@@ -193,7 +193,7 @@ class _ConsentFormState extends State<ConsentForm> {
                                             builder: (context) => InfoPage(
                                                   MyLocalizations.of(
                                                       context, "url_about_us"),
-                                                  localHtml: true,
+                                                  localHtml: false,
                                                 )),
                                       );
                                     },

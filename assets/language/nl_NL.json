@@ -14,7 +14,7 @@
     "understand_txt": "Ik begrijp het",
     "url_politics": "http://webserver.mosquitoalert.com/en/privacy/",
     "url_legal": "http://madev.creaf.cat/en/privacy/",
-    "url_point_1": "http://madev.creaf.cat/en/stats/user_ranking/1//",
+    "url_point_1": "http://madev.creaf.cat/en/stats/user_ranking/1/",
     "url_consent_form": "http://madev.creaf.cat/en/terms/",
     "url_web": "http://www.mosquitoalert.com",
     "url_scoring_1": "http://madev.creaf.cat/en/scoring/",
@@ -281,6 +281,6 @@
     "tr_TR": "Turks",
     "zh_CH": "Chinees (China)",
     "zh_HK": "Chinees (Honk Kong)",
-    "consent_txt_14": "Over",
+    "consent_txt_14": "Over ",
     "consent_txt_15": "ons"
 }
