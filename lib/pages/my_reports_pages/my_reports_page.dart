@@ -166,9 +166,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                   /*clusteringHelper.onCameraMove(newPosition,
                                       forceUpdate: false)*/
                                 },
-                                onCameraIdle: () {
-                                  _getData();
-                                },
+                                // onCameraIdle: () {
+                                //   _getData();
+                                // },
                                 initialCameraPosition: CameraPosition(
                                   target: location != null
                                       ? LatLng(
@@ -615,7 +615,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         ],
                                       );
                                     }),
-                                report.note != ''
+                                report.note != '' && report.note != 'N/A'
                                     ? Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -713,29 +713,29 @@ class _MyReportsPageState extends State<MyReportsPage> {
     try {
       loadingStream.add(true);
       double distance;
-      if (fromMap) {
-        double zoomLevel = await mapController.getZoomLevel();
-        if (_locationData != null && _zoomData != null) {
-          double distance = await Geolocator().distanceBetween(
-              _locationData.latitude,
-              _locationData.longitude,
-              location.latitude,
-              location.longitude);
-          if (distance < 750 && zoomLevel == _zoomData) {
-            if (letReturn) return;
-          }
-        }
+      // if (fromMap) {
+      //   double zoomLevel = await mapController.getZoomLevel();
+      //   if (_locationData != null && _zoomData != null) {
+      //     double distance = await Geolocator().distanceBetween(
+      //         _locationData.latitude,
+      //         _locationData.longitude,
+      //         location.latitude,
+      //         location.longitude);
+      //     if (distance < 750 && zoomLevel == _zoomData) {
+      //       if (letReturn) return;
+      //     }
+      //   }
 
-        _locationData = location;
-        _zoomData = await mapController.getZoomLevel();
+      //   _locationData = location;
+      //   _zoomData = await mapController.getZoomLevel();
 
-        LatLngBounds bounds = await mapController.getVisibleRegion();
-        distance = await Geolocator().distanceBetween(
-            bounds.northeast.latitude,
-            bounds.northeast.longitude,
-            bounds.southwest.latitude,
-            bounds.southwest.longitude);
-      }
+      //   LatLngBounds bounds = await mapController.getVisibleRegion();
+      //   distance = await Geolocator().distanceBetween(
+      //       bounds.northeast.latitude,
+      //       bounds.northeast.longitude,
+      //       bounds.southwest.latitude,
+      //       bounds.southwest.longitude);
+      // }
 
       List<Report> list = await ApiSingleton().getReportsList(
           location.latitude, location.longitude,

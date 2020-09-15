@@ -52,7 +52,12 @@ class ApiSingleton {
     "Authorization": "Token " + token
   };
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
   final facebookLogin = FacebookLogin();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -94,8 +99,7 @@ class ApiSingleton {
     return response;
   }
 
-  Future<dynamic> singUp(
-      String email, String password) async {
+  Future<dynamic> singUp(String email, String password) async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -460,8 +464,10 @@ class ApiSingleton {
       if (report.app_language != null) {
         body.addAll({'app_language': report.app_language});
       }
-      if (report.note != null) {
+      if (report.note != null && report.note != "") {
         body.addAll({'note': report.note});
+      } else {
+        body.addAll({'note': 'N/A'});
       }
 
       final response = await http.post(
@@ -528,12 +534,19 @@ class ApiSingleton {
     try {
       var userUUID = await UserManager.getUUID();
 
+
       final response = await http.get(
-        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=${page != null ? page : '1'}&user=$userUUID&page_size=75&radius=${radius != null ? radius : 1000}' +
+        '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=${page != null ? page : '1'}&user=$userUUID&page_size=75&radius=${100}' +
             (show_hidden == true ? '&show_hidden=1' : '') +
             (show_verions == true ? '&show_versions=1' : ''),
         headers: headers,
       );
+      // final response = await http.get(
+      //   '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=${page != null ? page : '1'}&user=$userUUID&page_size=75&radius=${radius != null ? radius : 1000}' +
+      //       (show_hidden == true ? '&show_hidden=1' : '') +
+      //       (show_verions == true ? '&show_versions=1' : ''),
+      //   headers: headers,
+      // );
 
       if (response.statusCode != 200) {
         print(
@@ -549,7 +562,9 @@ class ApiSingleton {
           UserManager.profileUUIDs = jsonAnswer['user_uuids'];
         }
         for (var item in jsonAnswer['results']) {
-          list.add(Report.fromJson(item));
+          if (UserManager.profileUUIDs.any((id) => id == item['user'])) {
+            list.add(Report.fromJson(item));
+          }
         }
         allReports.addAll(list);
         //callback(list);

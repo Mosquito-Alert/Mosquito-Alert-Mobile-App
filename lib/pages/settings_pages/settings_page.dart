@@ -16,7 +16,6 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:package_info/package_info.dart';
-import 'package:geolocator/geolocator.dart';
 
 class SettingsPage extends StatefulWidget {
   final Function enableTracking;
@@ -305,38 +304,25 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  _disableBgTracking() async {
-    if (enableTracking) {
-      bool isLocationServiceEnabled =
-          await Geolocator().isLocationServiceEnabled();
-      if (!isLocationServiceEnabled) {
-        Utils.showAlert(MyLocalizations.of(context, "app_name"),
-            MyLocalizations.of(context, "location_not_active_txt"), context);
+  _disableBgTracking() {
+    Utils.showAlertYesNo(
+        MyLocalizations.of(context, "app_name"),
+        enableTracking
+            ? MyLocalizations.of(context, "enable_tracking_question_text")
+            : MyLocalizations.of(context, "disable_tracking_question_text"),
+        () async {
+      await UserManager.setTracking(!enableTracking);
+      if (enableTracking) {
+        widget.enableTracking();
       } else {
-        Utils.showAlertYesNo(MyLocalizations.of(context, "app_name"),
-            MyLocalizations.of(context, "enable_tracking_question_text"),
-            () async {
-          await UserManager.setTracking(!enableTracking);
-          widget.enableTracking();
-
-          setState(() {
-            enableTracking = !enableTracking;
-          });
-        }, context);
-      }
-    } else {
-      Utils.showAlertYesNo(MyLocalizations.of(context, "app_name"),
-          MyLocalizations.of(context, "disable_tracking_question_text"),
-          () async {
-        await UserManager.setTracking(!enableTracking);
-
         bg.BackgroundGeolocation.stop();
         bg.BackgroundGeolocation.stopSchedule();
+        print('disable');
+      }
 
-        setState(() {
-          enableTracking = !enableTracking;
-        });
-      }, context);
-    }
+      setState(() {
+        enableTracking = !enableTracking;
+      });
+    }, context);
   }
 }
