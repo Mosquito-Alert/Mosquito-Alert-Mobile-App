@@ -43,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
     {"name": "Greek", "isoCode": "el_GR"},
     {"name": "French", "isoCode": "fr_FR"},
     {"name": "Croatian", "isoCode": "hr_HR"},
-    // {"name": "Hungarian", "isoCode": "hu_HU"},
+    {"name": "Hungarian", "isoCode": "hu_HU"},
     {"name": "Luxembourgish (Luxembourg)", "isoCode": "lb_LU"},
     {
       "name": "Macedonian (Former Yugoslav Republic of Macedonia)",
