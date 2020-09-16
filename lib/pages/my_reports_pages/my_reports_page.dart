@@ -757,13 +757,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
           listMarkers.add(ReportAndGeohash(
               list[i],
-              LatLng(
-                  list[i].current_location_lat != null
-                      ? list[i].current_location_lat
-                      : list[i].selected_location_lat,
-                  list[i].current_location_lon != null
-                      ? list[i].current_location_lon
-                      : list[i].selected_location_lon),
+              list[i].location_choice == 'current'
+                  ? LatLng(list[i].current_location_lat,
+                      list[i].current_location_lon)
+                  : LatLng(list[i].selected_location_lat,
+                      list[i].selected_location_lon),
               i));
         }
       }
