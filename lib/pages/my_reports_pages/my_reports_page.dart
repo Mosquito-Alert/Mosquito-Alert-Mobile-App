@@ -158,8 +158,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 mapType: MapType.normal,
                                 mapToolbarEnabled: false,
                                 myLocationButtonEnabled: false,
-                                minMaxZoomPreference:
-                                    MinMaxZoomPreference(14, 20),
+                                // minMaxZoomPreference:
+                                //     MinMaxZoomPreference(14, 20),
                                 onCameraMove: (newPosition) {
                                   location = Position(
                                       latitude: newPosition.target.latitude,
@@ -777,6 +777,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       dataStream.add(myData);
       _myData = myData;
+      if (myData != null && myData.isNotEmpty) {
+        mapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target: LatLng(
+                    myData
+                        .firstWhere(
+                            (element) => element.location_choice == "current")
+                        .current_location_lat,
+                    myData
+                        .firstWhere(
+                            (element) => element.location_choice == "current")
+                        .current_location_lon),
+                zoom: 15)));
+      }
 
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
