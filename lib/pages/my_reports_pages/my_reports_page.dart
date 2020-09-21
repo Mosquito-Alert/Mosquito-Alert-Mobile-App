@@ -479,7 +479,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         .toString(),
                                     fontSize: 12),
                                 Style.body(
-                                    'A las ' +
+                                    MyLocalizations.of(context, "at_time_txt") +
                                         DateFormat.Hms()
                                             .format(DateTime.parse(
                                                 report.creation_time))
@@ -616,7 +616,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                         ],
                                       );
                                     }),
-                                report.note != '' && report.note != 'N/A'
+                                report.note != null && report.note != "null"
                                     ? Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
