@@ -23,9 +23,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
   @override
   void initState() {
     super.initState();
-    if (Utils.report.note != null &&
-        Utils.report.note != '' &&
-        Utils.report.note != 'N/A') {
+    if (Utils.report.note != null && Utils.report.note != '') {
       _commentsController.text = Utils.report.note;
     }
   }

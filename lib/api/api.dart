@@ -148,8 +148,10 @@ class ApiSingleton {
 
   Future<FirebaseUser> singInWithFacebook() async {
     AuthCredential credential;
-
-    final FacebookLoginResult result = await facebookLogin.logIn(['email']);
+    facebookLogin.loginBehavior = Platform.isIOS
+        ? FacebookLoginBehavior.webViewOnly
+        : FacebookLoginBehavior.nativeWithFallback;
+    final result = await facebookLogin.logIn(['email', 'public_profile']);
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         credential = FacebookAuthProvider.getCredential(
@@ -466,8 +468,6 @@ class ApiSingleton {
       }
       if (report.note != null && report.note != "") {
         body.addAll({'note': report.note});
-      } else {
-        body.addAll({'note': 'N/A'});
       }
 
       final response = await http.post(
@@ -533,7 +533,6 @@ class ApiSingleton {
   }) async {
     try {
       var userUUID = await UserManager.getUUID();
-
 
       final response = await http.get(
         '$serverUrl$nearbyReports?lat=$lat&lon=$lon&page=${page != null ? page : '1'}&user=$userUUID&page_size=75&radius=${100}' +
