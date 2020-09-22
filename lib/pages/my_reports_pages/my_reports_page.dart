@@ -80,7 +80,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   _initLocation() {
     if (Utils.location != null) {
       location = Utils.location;
-    }
+    } 
   }
 
   _initMemoryClustering() {
@@ -172,9 +172,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 // },
                                 initialCameraPosition: CameraPosition(
                                   target: location != null
-                                          ? LatLng(location.latitude,
-                                              location.longitude)
-                                          : Utils.defaultLocation,
+                                      ? LatLng(
+                                          location.latitude, location.longitude)
+                                      : Utils.defaultLocation,
                                   zoom: 12,
                                 ),
                                 markers: markers,

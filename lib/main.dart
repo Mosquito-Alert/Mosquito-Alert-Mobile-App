@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 main() {
@@ -63,8 +64,10 @@ class _MyAppState extends State<MyApp> {
           break;
       }
     });
-
     application.onLocaleChanged = onLocaleChange;
+
+
+    UserManager.fetchUser();
   }
 
   void onLocaleChange(Locale locale) {

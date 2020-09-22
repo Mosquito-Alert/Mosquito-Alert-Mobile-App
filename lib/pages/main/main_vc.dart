@@ -28,6 +28,9 @@ class MainVC extends StatefulWidget {
 
 class _MainVCState extends State<MainVC> {
   String userName;
+
+  StreamController<String> nameStream =
+      new StreamController<String>.broadcast();
   String userUuid;
   StreamController<bool> loadingStream = new StreamController<bool>.broadcast();
 
@@ -45,8 +48,9 @@ class _MainVCState extends State<MainVC> {
     await ApiSingleton().getUserScores();
 
     if (user != null) {
+      nameStream.add(user.email);
       setState(() {
-        userName = user.email;
+        userName = UserManager.user.email;
       });
     }
 
@@ -171,11 +175,23 @@ class _MainVCState extends State<MainVC> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Style.title(
-                                                  userName != null
-                                                      ? " ${MyLocalizations.of(context, "welcome_text")}, $userName."
-                                                      : " ${MyLocalizations.of(context, "welcome_text")}",
-                                                  fontSize: 20),
+                                              StreamBuilder<String>(
+                                                  stream: nameStream.stream,
+                                                  initialData: userName,
+                                                  builder: (context,
+                                                      AsyncSnapshot<String>
+                                                          snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      print(snapshot.data);
+                                                      return Style.title(
+                                                          " ${MyLocalizations.of(context, "welcome_text")}, ${snapshot.data}.",
+                                                          fontSize: 20);
+                                                    } else {
+                                                      return Style.title(
+                                                          " ${MyLocalizations.of(context, "welcome_text")}",
+                                                          fontSize: 20);
+                                                    }
+                                                  }),
                                               SizedBox(
                                                 height: 4,
                                               ),

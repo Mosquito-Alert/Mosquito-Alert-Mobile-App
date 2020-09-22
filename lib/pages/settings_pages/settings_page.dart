@@ -52,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
     // {"name": "Russian (Russia)", "isoCode": "ru_RU"},
     {"name": "Slovenian (Slovenia)", "isoCode": "sl_SI"},
     {"name": "Serbian", "isoCode": "sr_RS"},
-    // {"name": "Turkish (Turkey)", "isoCode": "tr_TR"},
+    {"name": "Turkish (Turkey)", "isoCode": "tr_TR"},
     // {"name": "Chinese", "isoCode": "zh_CH"},
     // {"name": "Chinese (Traditional, Hong Kong)", "isoCode": "zh_HK"},
   ];
