@@ -141,7 +141,7 @@ class Utils {
       imagePath = [];
       editReport.photos.forEach((element) {
         imagePath.add({
-          'image': 'http://humboldt.ceab.csic.es/media/${element.photo}',
+          'image': 'http://madev.creaf.cat/media/${element.photo}',
           'id': editReport.version_UUID
         });
       });

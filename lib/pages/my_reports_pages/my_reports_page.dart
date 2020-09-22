@@ -172,10 +172,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 // },
                                 initialCameraPosition: CameraPosition(
                                   target: location != null
-                                      ? LatLng(
-                                          location.latitude, location.longitude)
-                                      : Utils.defaultLocation,
-                                  zoom: 15.7,
+                                          ? LatLng(location.latitude,
+                                              location.longitude)
+                                          : Utils.defaultLocation,
+                                  zoom: 12,
                                 ),
                                 markers: markers,
                               );
@@ -641,43 +641,43 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Expanded(
-                                        child: Style.noBgButton(
-                                            MyLocalizations.of(context, "edit"),
-                                            () {
-                                      Navigator.pop(context);
-                                      if (report.type == "bite") {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BitingReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateReport,
-                                                  )),
-                                        );
-                                      } else if (report.type == "adult") {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AdultReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateReport,
-                                                  )),
-                                        );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BreedingReportPage(
-                                                    editReport: report,
-                                                    loadData: _updateReport,
-                                                  )),
-                                        );
-                                      }
-                                    })),
+                                    // Expanded(
+                                    //     child: Style.noBgButton(
+                                    //         MyLocalizations.of(context, "edit"),
+                                    //         () {
+                                    //   Navigator.pop(context);
+                                    //   if (report.type == "bite") {
+                                    //     Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               BitingReportPage(
+                                    //                 editReport: report,
+                                    //                 loadData: _updateReport,
+                                    //               )),
+                                    //     );
+                                    //   } else if (report.type == "adult") {
+                                    //     Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               AdultReportPage(
+                                    //                 editReport: report,
+                                    //                 loadData: _updateReport,
+                                    //               )),
+                                    //     );
+                                    //   } else {
+                                    //     Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               BreedingReportPage(
+                                    //                 editReport: report,
+                                    //                 loadData: _updateReport,
+                                    //               )),
+                                    //     );
+                                    //   }
+                                    // })),
                                     Expanded(
                                         child: Style.noBgButton(
                                             MyLocalizations.of(
@@ -778,18 +778,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
       dataStream.add(myData);
       _myData = myData;
       if (myData != null && myData.isNotEmpty) {
+        var location = myData[0].location_choice == "current"
+            ? LatLng(
+                myData[0].current_location_lat, myData[0].current_location_lon)
+            : LatLng(myData[0].selected_location_lat,
+                myData[0].selected_location_lon);
         mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: LatLng(
-                    myData
-                        .firstWhere(
-                            (element) => element.location_choice == "current")
-                        .current_location_lat,
-                    myData
-                        .firstWhere(
-                            (element) => element.location_choice == "current")
-                        .current_location_lon),
-                zoom: 15)));
+            CameraPosition(target: location, zoom: 15)));
       }
 
       clusteringHelper.updateData(listMarkers);
