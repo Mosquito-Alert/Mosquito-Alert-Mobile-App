@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
     {"name": "Catalan", "isoCode": "ca_ES"},
     {"name": "Albanian", "isoCode": "sq_AL"},
     {"name": "Bulgarian", "isoCode": "bg_BG"},
-    // {"name": "Dutch", "isoCode": "nl_NL"},
+    {"name": "Dutch", "isoCode": "nl_NL"},
     {"name": "German", "isoCode": "de_DE"},
     {"name": "Italian", "isoCode": "it_IT"},
     {"name": "Protuguese", "isoCode": "pt_PT"},
