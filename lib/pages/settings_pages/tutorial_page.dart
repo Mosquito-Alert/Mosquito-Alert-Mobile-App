@@ -76,13 +76,13 @@ class _TutorialPageState extends State<TutorialPage> {
         pathImage: "assets/img/tutorial/Fig8.png",
       ),
     );
-    slides.add(
-      new Slide(
-        title: MyLocalizations.of(context, "tutorial_title_09"),
-        description: MyLocalizations.of(context, "tutorial_info_09"),
-        pathImage: "assets/img/tutorial/Fig9.png",
-      ),
-    );
+    // slides.add(
+    //   new Slide(
+    //     title: MyLocalizations.of(context, "tutorial_title_09"),
+    //     description: MyLocalizations.of(context, "tutorial_info_09"),
+    //     pathImage: "assets/img/tutorial/Fig9.png",
+    //   ),
+    // );
     slides.add(
       new Slide(
         title: MyLocalizations.of(context, "tutorial_title_10"),
@@ -111,13 +111,13 @@ class _TutorialPageState extends State<TutorialPage> {
         pathImage: "assets/img/tutorial/Fig13.png",
       ),
     );
-    slides.add(
-      new Slide(
-        title: MyLocalizations.of(context, "tutorial_title_14"),
-        description: MyLocalizations.of(context, "tutorial_info_14"),
-        pathImage: "assets/img/tutorial/Fig14.png",
-      ),
-    );
+    // slides.add(
+    //   new Slide(
+    //     title: MyLocalizations.of(context, "tutorial_title_14"),
+    //     description: MyLocalizations.of(context, "tutorial_info_14"),
+    //     pathImage: "assets/img/tutorial/Fig14.png",
+    //   ),
+    // );
     slides.add(
       new Slide(
         title: "",
