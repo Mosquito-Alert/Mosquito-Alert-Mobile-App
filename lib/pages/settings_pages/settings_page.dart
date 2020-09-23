@@ -91,35 +91,35 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 35,
             ),
-            UserManager.user != null
-                ? SettingsMenuWidget(MyLocalizations.of(context, "logout_txt"),
-                    () {
-                    Utils.showAlertYesNo(
-                        MyLocalizations.of(context, "logout_txt"),
-                        MyLocalizations.of(context, "logout_alert_txt"), () {
-                      _signOut();
-                    }, context);
-                  })
-                : Column(
-                    children: <Widget>[
-                      SettingsMenuWidget(
-                          MyLocalizations.of(
-                              context, "login_with_your_account_txt"), () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginMainPage()),
-                        );
-                      }),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Style.bodySmall(
-                            MyLocalizations.of(
-                                context, "use_your_acount_details_txt"),
-                            color: Colors.grey),
-                      ),
-                    ],
-                  ),
+            // UserManager.user != null
+            //     ? SettingsMenuWidget(MyLocalizations.of(context, "logout_txt"),
+            //         () {
+            //         Utils.showAlertYesNo(
+            //             MyLocalizations.of(context, "logout_txt"),
+            //             MyLocalizations.of(context, "logout_alert_txt"), () {
+            //           _signOut();
+            //         }, context);
+            //       })
+            //     : Column(
+            //         children: <Widget>[
+            //           SettingsMenuWidget(
+            //               MyLocalizations.of(
+            //                   context, "login_with_your_account_txt"), () {
+            //             Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) => LoginMainPage()),
+            //             );
+            //           }),
+            //           Padding(
+            //             padding: const EdgeInsets.all(10.0),
+            //             child: Style.bodySmall(
+            //                 MyLocalizations.of(
+            //                     context, "use_your_acount_details_txt"),
+            //                 color: Colors.grey),
+            //           ),
+            //         ],
+            //       ),
             SizedBox(
               height: 10,
             ),
