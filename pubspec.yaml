@@ -45,7 +45,7 @@ dependencies:
   flutter_material_pickers: ^1.7.1
   permission_handler: ^5.0.1+1
   language_pickers: ^0.2.0+1
-  connectivity: ^0.4.9+2
+  connectivity: ^0.4.9+3
 
 dev_dependencies:
   flutter_test:
