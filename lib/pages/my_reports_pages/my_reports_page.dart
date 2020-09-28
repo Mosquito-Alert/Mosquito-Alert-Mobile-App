@@ -526,7 +526,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                           BorderRadius.circular(
                                                               15),
                                                       child: Image.network(
-                                                        'http://madev.creaf.cat' +
+                                                        'http://webserver.mosquitoalert.com' +
                                                             report.photos[index]
                                                                 .photo,
                                                         height: 60,
