@@ -72,11 +72,11 @@ class Utils {
 
       print(language);
 
-      //TODO: get language from shared preferences
       session.id = await ApiSingleton().createSession(session);
     }
 
     if (session.id != null && language != null) {
+      var lang = await UserManager.getLanguage();
       var userUUID = await UserManager.getUUID();
       report = new Report(
           type: type,
@@ -98,7 +98,7 @@ class Utils {
         report.os = 'Android';
         report.os_language = language.languageCode;
         report.os_version = buildData.version.sdkInt.toString();
-        report.app_language = language.languageCode;
+        report.app_language = lang != null ? lang : language.languageCode;
       } else if (Platform.isIOS) {
         var buildData = await DeviceInfoPlugin().iosInfo;
         report.device_manufacturer = 'Apple';
@@ -106,7 +106,7 @@ class Utils {
         report.os = buildData.systemName;
         report.os_language = language.languageCode;
         report.os_version = buildData.systemVersion;
-        report.app_language = language.languageCode;
+        report.app_language = lang != null ? lang : language.languageCode;
       }
 
       if (lat != null && lon != null) {
