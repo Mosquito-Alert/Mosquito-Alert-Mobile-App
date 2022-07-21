@@ -18,16 +18,18 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breedi
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'components/biting_location_form.dart';
 
 class AdultReportPage extends StatefulWidget {
+  final Report pendingReport;
   final Report editReport;
   final Function loadData;
 
-  AdultReportPage({this.editReport, this.loadData});
+  AdultReportPage({this.editReport, this.loadData, this.pendingReport});
 
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
@@ -170,10 +172,15 @@ class _AdultReportPageState extends State<AdultReportPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.editReport != null) {
-      toEditReport = Report.fromJson(widget.editReport.toJson());
-      Utils.setEditReport(toEditReport);
+    if (widget.pendingReport != null) {
+      Utils.report = widget.pendingReport;
+    } else {
+      if (widget.editReport != null) {
+        toEditReport = Report.fromJson(widget.editReport.toJson());
+        Utils.setEditReport(toEditReport);
+      }
     }
+
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
@@ -254,6 +261,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   void _createReport() async {
+    PendingAdultReportManager.removeStoredData();
+    var safe = await PendingAdultReportManager.saveData(Utils.report);
     loadingStream.add(true);
     setState(() {
       percentStream.add(0.8);
@@ -289,6 +298,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (!res) {
       _showAlertKo();
     } else {
+      PendingAdultReportManager.removeStoredData();
       if (Utils.savedAdultReport != null) {
         if (Utils.savedAdultReport.country != null) {
           List<Campaign> campaignsList =
@@ -319,6 +329,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
             _showAlertOk();
           }
         }
+        _showAlertOk();
       }
 
       // _showAlertOk();
@@ -330,6 +341,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       widget.loadData();
     }
+    _showAlertOk();
   }
 
   @override
@@ -437,19 +449,34 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               vertical: 6, horizontal: 12),
                                           child: Style.button(
                                               MyLocalizations.of(
-                                                  context, 'continue_txt'), () {
+                                                  context, 'continue_txt'),
+                                              () async {
                                             double currentPage =
                                                 _pagesController.page;
 
                                             if (currentPage == 3.0 &&
                                                 addBiting) {
                                               Utils.addOtherReport('bite');
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BitingReportPage()),
-                                              );
+                                              var savedReport =
+                                                  await PendingBiteReportManager
+                                                      .loadData();
+                                              if (savedReport != null) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            BitingReportPage(
+                                                              pendingSavedReport:
+                                                                  savedReport,
+                                                            )));
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            BitingReportPage()));
+                                              }
+                                              ;
                                             } else {
                                               if (showCamera) {
                                                 _chooseTypeImage();
@@ -493,6 +520,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                           context, 'understand_txt'),
                                       () {
                                         Navigator.pop(context);
+                                        PendingAdultReportManager
+                                            .removeStoredData();
                                         Utils.resetReport();
                                         Utils.imagePath = null;
                                       },
@@ -678,7 +707,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
       type: FileType.image,
     );
 
-    if (pickFiles != null && pickFiles.files != null && pickFiles.files.isNotEmpty) {
+    if (pickFiles != null &&
+        pickFiles.files != null &&
+        pickFiles.files.isNotEmpty) {
       setShowCamera(false);
       setState(() {
         index = _pagesController.page + 1;
@@ -688,7 +719,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
           .then((value) => setValid(widget.editReport != null));
     }
 
-    if (pickFiles != null && pickFiles.files != null && pickFiles.files.isNotEmpty) {
+    if (pickFiles != null &&
+        pickFiles.files != null &&
+        pickFiles.files.isNotEmpty) {
       pickFiles.files.forEach((image) {
         Utils.saveImgPath(File(image.path));
       });

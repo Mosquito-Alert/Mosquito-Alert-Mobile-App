@@ -138,7 +138,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   void _saveData() async {
-    var saved = await PendentBiteReportManager.saveData(Utils.report);
+    var saved = await PendingBiteReportManager.saveData(Utils.report);
     print(saved);
     setState(() {
       percentStream.add(0.8);
@@ -172,7 +172,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       }
       _showAlertKo();
     } else {
-      PendentBiteReportManager.removeStoredData();
+      PendingBiteReportManager.removeStoredData();
       if (Utils.savedAdultReport != null) {
         List<Campaign> campaingsList =
             await ApiSingleton().getCampaigns(Utils.savedAdultReport.country);
@@ -211,7 +211,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   goNextPage() async {
-    var saved = await PendentBiteReportManager.saveData(Utils.report);
+    var saved = await PendingBiteReportManager.saveData(Utils.report);
     _pagesController
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) {
@@ -432,7 +432,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
-        PendentBiteReportManager.removeStoredData();
+        PendingBiteReportManager.removeStoredData();
         Navigator.pop(context);
       }, context);
     } else {
@@ -440,7 +440,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         Utils.deleteLastReport();
       }
       Navigator.pop(context);
-      PendentBiteReportManager.removeStoredData();
+      PendingBiteReportManager.removeStoredData();
     }
   }
 }

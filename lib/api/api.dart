@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 //import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 //import 'package:flutter_twitter/flutter_twitter.dart';
@@ -19,6 +20,7 @@ import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
@@ -415,8 +417,6 @@ class ApiSingleton {
     try {
       var body = {};
 
-
-
       if (report.version_UUID != null && report.version_UUID.isNotEmpty) {
         body.addAll({'version_UUID': report.version_UUID});
       }
@@ -547,21 +547,10 @@ class ApiSingleton {
         return null;
       }
       if (response.statusCode != 201) {
-        if (report.type == 'adult') {
-          saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
-              .saveData(report, Utils.imagePath, 'adult', false);
-        }
-        if (report.type == 'bite') {
-          saved = await GeneralReportManager.getInstance(biteReportSaveKey)
-              .saveData(report, null, 'bite', false);
-        }
-        if (report.type == 'site') {
-          saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
-              .saveData(report, Utils.imagePath, 'site', false);
-        }
-
+        PendingAdultReportManager.removeStoredData();
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
+
         return null;
       } else {
         if (report.type == 'adult') {
@@ -782,7 +771,7 @@ class ApiSingleton {
       }
     } catch (e) {
       print(e.message);
-      return false;
+      return null;
     }
   }
 

@@ -16,6 +16,7 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
 import 'package:random_string/random_string.dart';
@@ -222,7 +223,7 @@ class Utils {
     report.version_number = report.version_number + 1;
     report.version_UUID = Uuid().v4();
 
-    if (editReport.photos != null && editReport.photos.isNotEmpty) {
+    if (editReport.photos != null || editReport.photos.isNotEmpty) {
       imagePath = [];
       editReport.photos.forEach((element) {
         imagePath.add({
@@ -508,8 +509,20 @@ class Utils {
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
       bool isCreated;
-
-      for (var i = 0; i < reportsList.length; i++) {
+      bool removed = false;
+      for (int i = 0; i < reportsList.length; i++) {
+        if (removed = false) {
+          if (reportsList.any((element) => element.type == 'adult')) {
+            PendingAdultReportManager.removeStoredData();
+            PendingAdultReportManager.saveData(
+                reportsList.firstWhere((element) => element.type == 'adult'));
+          }
+            if (reportsList.any((element) => element.type == 'bite')) {
+            PendingBiteReportManager.removeStoredData();
+            PendingBiteReportManager.saveData(
+                reportsList.firstWhere((element) => element.type == 'bite'));
+          }
+        }
         var res = await ApiSingleton().createReport(reportsList[i]);
         if (res.type == 'adult') {
           savedAdultReport = res;

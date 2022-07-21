@@ -42,6 +42,7 @@ class _MainVCState extends State<MainVC> {
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
   Report pendingBiteReport;
+  Report pendingAdultReport;
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   _bgTracking() async {
-    bool trackingDisabled = await UserManager.getTracking();
+    var trackingDisabled = await UserManager.getTracking();
     if (trackingDisabled == null || !trackingDisabled) {
       // 1.  Listen to events (See docs for all 12 available events).
 
@@ -98,7 +99,7 @@ class _MainVCState extends State<MainVC> {
       bg.BackgroundGeolocation.onLocation(_onLocation);
 
       // 2.  Configure the plugin
-      bg.BackgroundGeolocation.ready(bg.Config(
+      await bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 0,
         stopOnTerminate: false,
@@ -126,9 +127,9 @@ class _MainVCState extends State<MainVC> {
         longitude: location.coords.longitude);
 
     if ((location.coords.latitude).abs() <= 66.5) {
-      double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
+      var lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
           Utils.maskCoordsValue;
-      double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
+      var lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
           Utils.maskCoordsValue;
 
       ApiSingleton()
@@ -740,12 +741,12 @@ class _MainVCState extends State<MainVC> {
   }
 
   _createBiteReport() async {
-    bool createReport = await Utils.createNewReport('bite');
+    var createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
-      pendingBiteReport = await PendentBiteReportManager.loadData();
+      pendingBiteReport = await PendingBiteReportManager.loadData();
       if (pendingBiteReport != null) {
-        Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => BitingReportPage(
@@ -753,36 +754,44 @@ class _MainVCState extends State<MainVC> {
                   )),
         );
       } else {
-        Navigator.push(context,
+        await Navigator.push(context,
             MaterialPageRoute(builder: (context) => BitingReportPage()));
       }
       ;
     } else {
       print('Bite report was not created');
       loadingStream.add(false);
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'server_down'), context);
     }
   }
 
   _createAdultReport() async {
-    bool createReport = await Utils.createNewReport('adult');
+    var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AdultReportPage()),
-      );
+      pendingAdultReport = await PendingAdultReportManager.loadData();
+      if (pendingAdultReport != null) {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AdultReportPage(
+                      pendingReport: pendingAdultReport,
+                    )));
+      } else {
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AdultReportPage()));
+      }
     } else {
       print('Adult report was not created');
       loadingStream.add(false);
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'server_down'), context);
     }
   }
 
   _createSiteReport() async {
-    bool createReport = await Utils.createNewReport('site');
+    var createReport = await Utils.createNewReport('site');
     loadingStream.add(false);
 
     var createReport = await Utils.createNewReport('site');
@@ -791,14 +800,14 @@ class _MainVCState extends State<MainVC> {
             .loadData();
 
     if (createReport) {
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => BreedingReportPage()),
       );
     } else {
       print('Site report was not created');
       loadingStream.add(false);
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'server_down'), context);
     }
   }

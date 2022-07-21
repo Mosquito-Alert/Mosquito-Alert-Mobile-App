@@ -26,11 +26,6 @@ class GeneralPendingReportManager {
     return GeneralPendingReportManager();
   }
 
-  static removeAllPendingItems() {
-    PendentBiteReportManager.removeStoredData();
-    PendentAdultReportManager.removeStoredData();
-
-  }
 }
 
 ////////////////////////////////////////////////////////////////
@@ -38,21 +33,21 @@ class GeneralPendingReportManager {
 ///           PENDING ADULT REPORT MANAGER
 ///
 ////////////////////////////////////////////////////////////////
-class PendentBiteReportManager {
-  static final PendentBiteReportManager _singleton =
-      PendentBiteReportManager._internal();
+class PendingBiteReportManager {
+  static final PendingBiteReportManager _singleton =
+      PendingBiteReportManager._internal();
 
   @protected
   static final String biteReportKey = 'save_bite_repor_key';
 
-  factory PendentBiteReportManager() {
+  factory PendingBiteReportManager() {
     return _singleton;
   }
 
-  PendentBiteReportManager._internal();
+  PendingBiteReportManager._internal();
 
-  static PendentBiteReportManager getInstance() {
-    return PendentBiteReportManager();
+  static PendingBiteReportManager getInstance() {
+    return PendingBiteReportManager();
   }
 
   static Future<bool> saveData(Report safeReport) async {
@@ -113,21 +108,21 @@ class PendentBiteReportManager {
 ///
 ////////////////////////////////////////////////////////////////
 
-class PendentAdultReportManager {
-  static final PendentAdultReportManager _singleton =
-      PendentAdultReportManager._internal();
+class PendingAdultReportManager {
+  static final PendingAdultReportManager _singleton =
+      PendingAdultReportManager._internal();
 
   @protected
   static final String adultReportKey = 'save_pending_adult_report_key';
 
-  factory PendentAdultReportManager() {
+  factory PendingAdultReportManager() {
     return _singleton;
   }
 
-  PendentAdultReportManager._internal();
+  PendingAdultReportManager._internal();
 
-  static PendentAdultReportManager getInstance() {
-    return PendentAdultReportManager();
+  static PendingAdultReportManager getInstance() {
+    return PendingAdultReportManager();
   }
 
   static Future<bool> saveData(Report safeReport) async {
