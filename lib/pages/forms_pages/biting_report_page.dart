@@ -210,7 +210,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
   }
 
-  goNextPage() {
+  goNextPage() async {
+    var saved = await PendentBiteReportManager.saveData(Utils.report);
     _pagesController
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) {
@@ -431,6 +432,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
+        PendentBiteReportManager.removeStoredData();
         Navigator.pop(context);
       }, context);
     } else {
@@ -438,6 +440,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         Utils.deleteLastReport();
       }
       Navigator.pop(context);
+      PendentBiteReportManager.removeStoredData();
     }
   }
 }
