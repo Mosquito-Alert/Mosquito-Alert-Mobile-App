@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,157 +9,250 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 ////////////////////////////////////////////////////////////////
 
-String biteReportSaveKey = "bite_report_save_key";
-String mosquitoReportSavekey = "mosquito_report_save_key";
-String breedingReportSaveKey = "breeding_report_save_key";
-
-class GeneralReportManager {
-  static final GeneralReportManager _singleton =
-      GeneralReportManager._internal();
+class GeneralPendingReportManager {
+  static final GeneralPendingReportManager _singleton =
+      GeneralPendingReportManager._internal();
 
   @protected
-  static String saveKey = '';
+  static final String biteReportKey = 'save_bite_repor_key';
 
-  factory GeneralReportManager() {
+  factory GeneralPendingReportManager() {
     return _singleton;
   }
 
-  GeneralReportManager._internal();
+  GeneralPendingReportManager._internal();
 
-  static GeneralReportManager getInstance(String targetSaveKey) {
-    saveKey = targetSaveKey;
-    return GeneralReportManager();
+  static GeneralPendingReportManager getInstance() {
+    return GeneralPendingReportManager();
   }
 
-  String uuidkey = "save_uuid_user";
+  static removeAllPendingItems() {
+    PendentBiteReportManager.removeStoredData();
+    PendentAdultReportManager.removeStoredData();
 
-  Future<bool> saveUUIDUser(String userUuids) async {
-    var count = 0;
-    var prefs = await SharedPreferences.getInstance();
+  }
+}
 
-    var istrue = await prefs.setString(uuidkey, userUuids);
-    return istrue;
+////////////////////////////////////////////////////////////////
+///
+///           PENDING ADULT REPORT MANAGER
+///
+////////////////////////////////////////////////////////////////
+class PendentBiteReportManager {
+  static final PendentBiteReportManager _singleton =
+      PendentBiteReportManager._internal();
+
+  @protected
+  static final String biteReportKey = 'save_bite_repor_key';
+
+  factory PendentBiteReportManager() {
+    return _singleton;
   }
 
-  Future<String> loadUUIDUser() async {
-    var prefs = await SharedPreferences.getInstance();
-    var uidkeys =  prefs.getString(uuidkey);
-    return uidkeys;
+  PendentBiteReportManager._internal();
+
+  static PendentBiteReportManager getInstance() {
+    return PendentBiteReportManager();
   }
 
-  Future<bool> saveData(
-      Report safeReport, List<Map> photos, String type, bool isUploaded) async {
+  static Future<bool> saveData(Report safeReport) async {
     try {
-      //removeSpecificData([safeReport.version_UUID], type);
+      removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      if (photos != null) {
-        safeReport.photos = [];
-        photos.forEach((element) {
-          //element['imageFile']
-          element['imageFile'] = null;
-          safeReport.photos
-              .add(Photo(id: element['id'], photo: element['image']));
-        });
-      }
-
-      var currentReports = await loadData();
-      if (currentReports
-              .where((element) => element.isUploaded == true)
-              .any((element) => element.report_id == safeReport.report_id) ||
-          currentReports.any(
-              (element) => element.version_UUID == safeReport.version_UUID)) {
-        return true;
-      } else if (currentReports
-              .where((element) => element.isUploaded == false)
-              .any((element) => element.report_id == safeReport.report_id) ||
-          currentReports.any(
-              (element) => element.version_UUID == safeReport.version_UUID)) {
-        if (isUploaded) {
-          currentReports
-              .where((element) => (element.isUploaded == false &&
-                  (element.report_id == safeReport.report_id ||
-                      element.version_UUID == safeReport.version_UUID)))
-              .first
-              .isUploaded = true;
-          return prefs.setString(saveKey, jsonEncode(currentReports));
-        } else {
-          return false;
-        }
-      }
-      print(currentReports);
-      safeReport.isUploaded = isUploaded;
-      currentReports.add(safeReport);
-
-      print('$saveKey -> ${currentReports.length}');
-      return prefs.setString(saveKey, jsonEncode(currentReports));
-    } catch (e) {
+      return await prefs.setString(biteReportKey, jsonEncode(safeReport));
+    } catch (ex) {
+      print(ex);
       return false;
     }
   }
 
-  Future<bool> setReportToUploaded(String reportId) async {
-    var prefs = await SharedPreferences.getInstance();
-    var reports = await loadData();
-    if (reports.any((element) => element.report_id == reportId)) {
-      reports
-          .firstWhere((element) => element.report_id == reportId)
-          .isUploaded = true;
-    }
-    return prefs.setString(saveKey, jsonEncode(reports));
-  }
-
-  Future<List<Report>> loadData() async {
+  static void removeStoredData() async {
     try {
       var prefs = await SharedPreferences.getInstance();
 
-      var reports = Report.decode(prefs.getString(saveKey) ?? '[]');
-
-      for (Report rep in reports) {
-        rep.version_number = 0;
-        if (rep.note == 'null') {
-          rep.note = '';
-        }
-        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
-          rep.phone_upload_time = DateTime.now().toString();
-        }
-        if (rep.creation_time == null || rep.creation_time == 'null') {
-          rep.creation_time = DateTime.now().toString();
-        }
-      }
-      return reports;
-    } catch (e) {
-      return [];
+      await prefs.remove(biteReportKey);
+    } catch (ex) {
+      print(ex);
     }
   }
 
-  // void removeSpecificData(List<String> reportUUID, String type) async {
-  //   try {
-  //     var prefs = await SharedPreferences.getInstance();
-  //     List<Report> storedData = [];
-  //     if (type == 'adult') {
-  //       storedData =
-  //           await GeneralReportManager.getInstance(mosquitoReportSavekey)
-  //               .loadData();
-  //     }
-  //     if (type == 'site') {
-  //       storedData =
-  //           await GeneralReportManager.getInstance(breedingReportSaveKey)
-  //               .loadData();
-  //     }
-  //     if (type == 'bite') {
-  //       storedData = await GeneralReportManager.getInstance(biteReportSaveKey)
-  //           .loadData();
-  //     }
-  //     for (var repUUID in reportUUID) {
-  //       if (storedData.any((element) =>
-  //           element.version_UUID == repUUID && element.isUploaded == false)) {
-  //         storedData.removeWhere((report) => report.version_UUID == repUUID);
-  //       }
-  //     }
-  //     await prefs.setString(saveKey, jsonEncode(storedData));
-  //   } catch (ex) {
-  //     print(ex);
-  //   }
-  // }
+  static Future<Report> loadData() async {
+    var prefs = await SharedPreferences.getInstance();
+    Report reportSaved;
+    try {
+      final reportEncoded = prefs.getString(biteReportKey);
+
+      dynamic x = jsonDecode(reportEncoded);
+
+      reportSaved = Report.fromJson(x);
+
+      if (reportSaved.note == 'null') {
+        reportSaved.note = '';
+      }
+      if (reportSaved.phone_upload_time == null ||
+          reportSaved.phone_upload_time == 'null') {
+        reportSaved.phone_upload_time = DateTime.now().toString();
+      }
+      if (reportSaved.creation_time == null ||
+          reportSaved.creation_time == 'null') {
+        reportSaved.creation_time = DateTime.now().toString();
+      }
+    } catch (ex) {
+      print(ex);
+      removeStoredData();
+    } finally {
+      return reportSaved;
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////
+///
+///           PENDING ADULT REPORT MANAGER
+///
+////////////////////////////////////////////////////////////////
+
+class PendentAdultReportManager {
+  static final PendentAdultReportManager _singleton =
+      PendentAdultReportManager._internal();
+
+  @protected
+  static final String adultReportKey = 'save_pending_adult_report_key';
+
+  factory PendentAdultReportManager() {
+    return _singleton;
+  }
+
+  PendentAdultReportManager._internal();
+
+  static PendentAdultReportManager getInstance() {
+    return PendentAdultReportManager();
+  }
+
+  static Future<bool> saveData(Report safeReport) async {
+    try {
+      removeStoredData();
+      var prefs = await SharedPreferences.getInstance();
+
+      return await prefs.setString(adultReportKey, jsonEncode(safeReport));
+    } catch (ex) {
+      print(ex);
+      return false;
+    }
+  }
+
+  static void removeStoredData() async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+
+      await prefs.remove(adultReportKey);
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  static Future<Report> loadData() async {
+    var prefs = await SharedPreferences.getInstance();
+    Report reportSaved;
+    try {
+      final reportEncoded = prefs.getString(adultReportKey);
+
+      dynamic x = jsonDecode(reportEncoded);
+
+      reportSaved = Report.fromJson(x);
+
+      if (reportSaved.note == 'null') {
+        reportSaved.note = '';
+      }
+      if (reportSaved.phone_upload_time == null ||
+          reportSaved.phone_upload_time == 'null') {
+        reportSaved.phone_upload_time = DateTime.now().toString();
+      }
+      if (reportSaved.creation_time == null ||
+          reportSaved.creation_time == 'null') {
+        reportSaved.creation_time = DateTime.now().toString();
+      }
+    } catch (ex) {
+      print(ex);
+      removeStoredData();
+    } finally {
+      return reportSaved;
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////
+///
+///           PENDING BREEDING REPORT MANAGER
+///
+////////////////////////////////////////////////////////////////
+
+class PendentBreedingReportManager {
+  static final PendentBreedingReportManager _singleton =
+      PendentBreedingReportManager._internal();
+
+  @protected
+  static final String breadingReportKey = 'save_breading_adult_report_key';
+
+  factory PendentBreedingReportManager() {
+    return _singleton;
+  }
+
+  PendentBreedingReportManager._internal();
+
+  static PendentBreedingReportManager getInstance() {
+    return PendentBreedingReportManager();
+  }
+
+  static Future<bool> saveData(Report safeReport) async {
+    try {
+      removeStoredData();
+      var prefs = await SharedPreferences.getInstance();
+
+      return await prefs.setString(breadingReportKey, jsonEncode(safeReport));
+    } catch (ex) {
+      print(ex);
+      return false;
+    }
+  }
+
+  static void removeStoredData() async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+
+      await prefs.remove(breadingReportKey);
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  static Future<Report> loadData() async {
+    var prefs = await SharedPreferences.getInstance();
+    Report reportSaved;
+    try {
+      final reportEncoded = prefs.getString(breadingReportKey);
+
+      dynamic x = jsonDecode(reportEncoded);
+
+      reportSaved = Report.fromJson(x);
+
+      if (reportSaved.note == 'null') {
+        reportSaved.note = '';
+      }
+      if (reportSaved.phone_upload_time == null ||
+          reportSaved.phone_upload_time == 'null') {
+        reportSaved.phone_upload_time = DateTime.now().toString();
+      }
+      if (reportSaved.creation_time == null ||
+          reportSaved.creation_time == 'null') {
+        reportSaved.creation_time = DateTime.now().toString();
+      }
+    } catch (ex) {
+      print(ex);
+      removeStoredData();
+    } finally {
+      return reportSaved;
+    }
+  }
 }

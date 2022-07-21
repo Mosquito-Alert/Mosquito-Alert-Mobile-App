@@ -10,6 +10,7 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -25,6 +26,8 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/utils/version_control.dart';
 
+import '../../utils/pendent_report_manager.dart';
+
 class MainVC extends StatefulWidget {
   @override
   _MainVCState createState() => _MainVCState();
@@ -37,6 +40,8 @@ class _MainVCState extends State<MainVC> {
       StreamController<String>.broadcast();
   String userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
+  Report pendingBiteReport;
 
   @override
   void initState() {
@@ -738,10 +743,20 @@ class _MainVCState extends State<MainVC> {
     bool createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => BitingReportPage()),
-      );
+      pendingBiteReport = await PendentBiteReportManager.loadData();
+      if (pendingBiteReport != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BitingReportPage(
+                    pendingSavedReport: pendingBiteReport,
+                  )),
+        );
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BitingReportPage()));
+      }
+      ;
     } else {
       print('Bite report was not created');
       loadingStream.add(false);

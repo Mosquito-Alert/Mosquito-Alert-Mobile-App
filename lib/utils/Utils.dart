@@ -222,7 +222,7 @@ class Utils {
     report.version_number = report.version_number + 1;
     report.version_UUID = Uuid().v4();
 
-    if (editReport.photos != null || editReport.photos.isNotEmpty) {
+    if (editReport.photos != null && editReport.photos.isNotEmpty) {
       imagePath = [];
       editReport.photos.forEach((element) {
         imagePath.add({

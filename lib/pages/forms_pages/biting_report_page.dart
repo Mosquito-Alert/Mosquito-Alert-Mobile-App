@@ -8,6 +8,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'adult_report_page.dart';
@@ -15,10 +16,11 @@ import 'components/biting_form.dart';
 import 'components/biting_location_form.dart';
 
 class BitingReportPage extends StatefulWidget {
+  final Report pendingSavedReport;
   final Report editReport;
   final Function loadData;
 
-  BitingReportPage({this.editReport, this.loadData});
+  BitingReportPage({this.editReport, this.loadData, this.pendingSavedReport});
   @override
   _BitingReportPageState createState() => _BitingReportPageState();
 }
@@ -88,10 +90,15 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.editReport != null) {
-      toEditReport = Report.fromJson(widget.editReport.toJson());
-      Utils.setEditReport(toEditReport);
+    if (widget.pendingSavedReport != null) {
+      Utils.report = widget.pendingSavedReport;
+    } else {
+      if (widget.editReport != null) {
+        toEditReport = Report.fromJson(widget.editReport.toJson());
+        Utils.setEditReport(toEditReport);
+      }
     }
+
     _pagesController = PageController();
     _formsRepot = [
       BitingForm(
@@ -111,6 +118,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       ),
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
+    setState(() {});
   }
 
   void addOtherReport(String reportType) {
@@ -130,6 +138,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   void _saveData() async {
+    var saved = await PendentBiteReportManager.saveData(Utils.report);
+    print(saved);
     setState(() {
       percentStream.add(0.8);
     });
@@ -162,6 +172,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       }
       _showAlertKo();
     } else {
+      PendentBiteReportManager.removeStoredData();
       if (Utils.savedAdultReport != null) {
         List<Campaign> campaingsList =
             await ApiSingleton().getCampaigns(Utils.savedAdultReport.country);
