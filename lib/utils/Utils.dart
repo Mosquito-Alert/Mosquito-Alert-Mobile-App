@@ -501,10 +501,17 @@ class Utils {
       report.version_time = DateTime.now().toIso8601String();
       var res = await ApiSingleton().createReport(report);
       if (res != null) {
-        if (res.type == 'adult') {}
-
+        if (res.type == 'adult') {
+          savedAdultReport = res;
+        }
+        if (await PendingAdultReportManager.loadData() != null) {
+          return true;
+        }
         return true;
       } else {
+        if (await PendingAdultReportManager.loadData() != null) {
+          return true;
+        }
         return false;
       }
     } else {
@@ -541,16 +548,17 @@ class Utils {
           isCreated = res != null ? true : false;
           if (!isCreated) {
             await saveLocalReport(reportsList[i]);
+          } else {
+            if (reportsList[i].type == 'bite') {
+              PendingBiteReportManager.removeStoredData();
+            }
+            if (reportsList[i].type == 'adult') {
+              PendingAdultReportManager.removeStoredData();
+            }
+            if (reportsList[i].type == 'site') {
+              PendingBreedingReportManager.removeStoredData();
+            }
           }
-        }
-        if (reportsList[i].type == 'bite') {
-          PendingBiteReportManager.removeStoredData();
-        }
-        if (reportsList[i].type == 'adult') {
-          PendingAdultReportManager.removeStoredData();
-        }
-        if (reportsList[i].type == 'site') {
-          PendingBreedingReportManager.removeStoredData();
         }
       }
 

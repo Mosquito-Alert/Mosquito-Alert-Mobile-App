@@ -16,11 +16,13 @@ import 'components/biting_form.dart';
 import 'components/biting_location_form.dart';
 
 class BitingReportPage extends StatefulWidget {
-  final Report pendingSavedReport;
   final Report editReport;
   final Function loadData;
 
-  BitingReportPage({this.editReport, this.loadData, this.pendingSavedReport});
+  BitingReportPage({
+    this.editReport,
+    this.loadData,
+  });
   @override
   _BitingReportPageState createState() => _BitingReportPageState();
 }
@@ -90,13 +92,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.pendingSavedReport != null) {
-      Utils.report = widget.pendingSavedReport;
-    } else {
-      if (widget.editReport != null) {
-        toEditReport = Report.fromJson(widget.editReport.toJson());
-        Utils.setEditReport(toEditReport);
-      }
+
+    if (widget.editReport != null) {
+      toEditReport = Report.fromJson(widget.editReport.toJson());
+      Utils.setEditReport(toEditReport);
     }
 
     _pagesController = PageController();
@@ -164,22 +163,22 @@ class _BitingReportPageState extends State<BitingReportPage> {
       widget.loadData();
     }
     if (res == null || !res) {
-      if (await GeneralReportManager.getInstance(biteReportSaveKey)
-              .loadData() !=
-          null) {
-        _showAlertOk(offline: true);
+      if (await PendingBiteReportManager.loadData() != null) {
+        _showAlertOk();
         return;
       }
       _showAlertKo();
+      loadingStream.add(false);
     } else {
       PendingBiteReportManager.removeStoredData();
       if (Utils.savedAdultReport != null) {
         List<Campaign> campaingsList =
             await ApiSingleton().getCampaigns(Utils.savedAdultReport.country);
         var now = DateTime.now();
-        if (campaingsList != null && campaingsList.any((element) =>
-            DateTime.parse(element.startDate).isBefore(now) &&
-            DateTime.parse(element.endDate).isAfter(now))) {
+        if (campaingsList != null &&
+            campaingsList.any((element) =>
+                DateTime.parse(element.startDate).isBefore(now) &&
+                DateTime.parse(element.endDate).isAfter(now))) {
           var activeCampaign = campaingsList.firstWhere((element) =>
               DateTime.parse(element.startDate).isBefore(now) &&
               DateTime.parse(element.endDate).isAfter(now));
@@ -211,8 +210,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   goNextPage() async {
-    var saved = await PendingBiteReportManager.saveData(Utils.report);
-    _pagesController
+    await _pagesController
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) {
       setState(() {

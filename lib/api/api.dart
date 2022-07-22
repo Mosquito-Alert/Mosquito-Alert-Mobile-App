@@ -493,7 +493,7 @@ class ApiSingleton {
               '${report.note != null && report.note != "" ? report.note : ''}${report.note != null && report.note != "" && hashtag != null ? ' ' : ''}${hashtag != null ? '$hashtag' : ''}'
         });
       }
-
+      var saved;
       final response = await http
           .post(
         Uri.parse('$serverUrl$reports'),
@@ -504,47 +504,39 @@ class ApiSingleton {
         Duration(seconds: _timeoutTimerInSeconds),
         onTimeout: () async {
           if (report.type == 'adult') {
-            saved =
-                await GeneralReportManager.getInstance(mosquitoReportSavekey)
-                    .saveData(report, Utils.imagePath, 'adult', false);
+            PendingPhotosManager.removeStoredData();
+            PendingAdultReportManager.removeStoredData();
+            saved = await PendingAdultReportManager.saveData(report);
           }
           if (report.type == 'bite') {
-            saved = await GeneralReportManager.getInstance(biteReportSaveKey)
-                .saveData(report, null, 'bite', false);
+            PendingBiteReportManager.removeStoredData();
+            saved = await PendingBiteReportManager.saveData(report);
           }
           if (report.type == 'site') {
-            saved =
-                await GeneralReportManager.getInstance(breedingReportSaveKey)
-                    .saveData(report, Utils.imagePath, 'site', false);
+            PendingBreedingReportManager.removeStoredData();
+            saved = await PendingBreedingReportManager.saveData(report);
           }
 
           return null;
         },
       );
-      ;
 
       await saveImages(report);
-      if (response == null) {
-        // if (report.type == 'adult') {
-        //   GeneralReportManager.getInstance(mosquitoReportSavekey)
-        //       .removeSpecificData([report.version_UUID], 'adult');
-        //   saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
-        //       .saveData(report, Utils.imagePath, 'adult', false);
-        // }
-        // if (report.type == 'bite') {
-        //   GeneralReportManager.getInstance(biteReportSaveKey)
-        //       .removeSpecificData([report.version_UUID], 'bite');
-        //   saved = await GeneralReportManager.getInstance(biteReportSaveKey)
-        //       .saveData(report, null, 'bite', false);
-        // }
-        // if (report.type == 'site') {
-        //   GeneralReportManager.getInstance(breedingReportSaveKey)
-        //       .removeSpecificData([report.version_UUID], 'site');
-        //   saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
-        //       .saveData(report, Utils.imagePath, 'site', false);
-        // }
-        Utils.imagePath = [];
-        return null;
+      if(response == null){
+           if (report.type == 'adult') {
+            PendingPhotosManager.removeStoredData();
+            PendingAdultReportManager.removeStoredData();
+            saved = await PendingAdultReportManager.saveData(report);
+          }
+          if (report.type == 'bite') {
+            PendingBiteReportManager.removeStoredData();
+            saved = await PendingBiteReportManager.saveData(report);
+          }
+          if (report.type == 'site') {
+            PendingBreedingReportManager.removeStoredData();
+            saved = await PendingBreedingReportManager.saveData(report);
+          }
+      return null;
       }
       if (response.statusCode != 201) {
         PendingBreedingReportManager.removeStoredData();
@@ -552,21 +544,7 @@ class ApiSingleton {
             'Request: ${response.request.toString()} -> Response: ${response.body}');
 
         return null;
-      } else {
-        if (report.type == 'adult') {
-          saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
-              .saveData(report, Utils.imagePath, 'adult', true);
-        }
-        if (report.type == 'bite') {
-          saved = await GeneralReportManager.getInstance(biteReportSaveKey)
-              .saveData(report, null, 'bite', true);
-        }
-        if (report.type == 'site') {
-          saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
-              .saveData(report, Utils.imagePath, 'site', true);
-        }
-        Utils.imagePath = [];
-      }
+      } 
 
       if (report.version_number > 0) {
         // var b = json.decode(response.body);

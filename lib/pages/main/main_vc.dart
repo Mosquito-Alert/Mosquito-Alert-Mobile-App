@@ -41,15 +41,35 @@ class _MainVCState extends State<MainVC> {
   String userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
-  Report pendingBiteReport;
-  Report pendingAdultReport;
-  Report pendingBreedingReport;
-
   @override
   void initState() {
     super.initState();
     initAuthStatus();
+    sendPendingItems();
     loadingStream.add(true);
+  }
+
+  sendPendingItems() async {
+    Utils.reportsList = [];
+    var pendingAdultReports = await PendingAdultReportManager.loadData();
+    var pendingBiteReports = await PendingBiteReportManager.loadData();
+    var pendinfBreedingReports = await PendingBreedingReportManager.loadData();
+
+    if (pendingAdultReports != null) {
+      var createReport = await Utils.createNewReport('adult');
+      Utils.report = pendingAdultReports;
+      await Utils.createReport();
+    }
+    if (pendingBiteReports != null) {
+      var createReport = await Utils.createNewReport('bite');
+      Utils.report = pendingBiteReports;
+      await Utils.createReport();
+    }
+    if (pendinfBreedingReports != null) {
+      var createReport = await Utils.createNewReport('site');
+      Utils.report = pendinfBreedingReports;
+      await Utils.createReport();
+    }
   }
 
   initAuthStatus() async {
@@ -745,20 +765,10 @@ class _MainVCState extends State<MainVC> {
     var createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
-      pendingBiteReport = await PendingBiteReportManager.loadData();
-      if (pendingBiteReport != null) {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BitingReportPage(
-                    pendingSavedReport: pendingBiteReport,
-                  )),
-        );
-      } else {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => BitingReportPage()));
-      }
-      ;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BitingReportPage()),
+      );
     } else {
       print('Bite report was not created');
       loadingStream.add(false);
@@ -771,24 +781,14 @@ class _MainVCState extends State<MainVC> {
     var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
-      pendingAdultReport = await PendingAdultReportManager.loadData();
       var images = await PendingPhotosManager.loadData();
-      if (pendingAdultReport != null) {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AdultReportPage(
-                      pendingReport: pendingAdultReport,
-                      images: images,
-                    )));
-      } else {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AdultReportPage(
-                      images: images,
-                    )));
-      }
+
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AdultReportPage(
+                    images: images,
+                  )));
     } else {
       print('Adult report was not created');
       loadingStream.add(false);
@@ -799,14 +799,13 @@ class _MainVCState extends State<MainVC> {
 
   _createSiteReport() async {
     var createReport = await Utils.createNewReport('site');
-    pendingAdultReport = await PendingBreedingReportManager.loadData();
+    var pendingAdultReport = await PendingBreedingReportManager.loadData();
     var images = await PendingPhotosManager.loadData();
     if (createReport) {
       await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => BreedingReportPage(
-                  pendingReport: pendingAdultReport,
                   images: images,
                 )),
       );

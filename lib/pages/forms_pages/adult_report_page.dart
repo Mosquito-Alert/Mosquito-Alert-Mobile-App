@@ -249,12 +249,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
       Utils.addOtherReport('bite');
       var savedReport = await PendingBiteReportManager.loadData();
       if (savedReport != null) {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BitingReportPage(
-                      pendingSavedReport: savedReport,
-                    )));
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BitingReportPage()));
       } else {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => BitingReportPage()));
@@ -270,7 +266,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   void _createReport() async {
-    PendingAdultReportManager.removeStoredData();
     var safe = await PendingAdultReportManager.saveData(Utils.report);
     loadingStream.add(true);
     setState(() {
@@ -304,8 +299,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
     }
     var res = await Utils.createReport();
 
-    if (!res) {
+    if (res == null || !res) {
       _showAlertKo();
+      loadingStream.add(false);
     } else {
       PendingAdultReportManager.removeStoredData();
       if (Utils.savedAdultReport != null) {
@@ -474,10 +470,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            BitingReportPage(
-                                                              pendingSavedReport:
-                                                                  savedReport,
-                                                            )));
+                                                            BitingReportPage()));
                                               } else {
                                                 await Navigator.push(
                                                     context,

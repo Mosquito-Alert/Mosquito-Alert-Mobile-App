@@ -19,12 +19,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 class BreedingReportPage extends StatefulWidget {
   final Report editReport;
-  final Report pendingReport;
   final Function loadData;
   final List<Map> images;
 
-  BreedingReportPage(
-      {this.editReport, this.loadData, this.images, this.pendingReport});
+  BreedingReportPage({this.editReport, this.loadData, this.images});
 
   @override
   _BreedingReportPageState createState() => _BreedingReportPageState();
@@ -87,14 +85,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       Utils.imagePath = widget.images;
       print(Utils.imagePath);
     }
-    if (widget.pendingReport != null) {
-      Utils.report = widget.pendingReport;
-    } else {
-      if (widget.editReport != null) {
-        toEditReport = Report.fromJson(widget.editReport.toJson());
-        Utils.setEditReport(toEditReport);
-      }
+
+    if (widget.editReport != null) {
+      toEditReport = Report.fromJson(widget.editReport.toJson());
+      Utils.setEditReport(toEditReport);
     }
+
     super.initState();
 
     _pagesController = PageController();
@@ -213,6 +209,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     bool res = await Utils.createReport();
 
     if (res == null) {
+      if (await PendingBreedingReportManager.loadData() != null) {
+        _showAlertOk();
+        return;
+      }
       _showAlertKo();
       return;
     }
