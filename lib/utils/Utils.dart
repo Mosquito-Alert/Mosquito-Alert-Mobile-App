@@ -509,8 +509,7 @@ class Utils {
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
       bool isCreated;
-
-      for (int i = 0; i < reportsList.length; i++) {
+      if (reportsList.isNotEmpty) {
         if (reportsList.any((element) => element.type == 'adult')) {
           PendingAdultReportManager.removeStoredData();
           await PendingAdultReportManager.saveData(
@@ -521,7 +520,9 @@ class Utils {
           await PendingBiteReportManager.saveData(
               reportsList.firstWhere((element) => element.type == 'bite'));
         }
+      }
 
+      for (int i = 0; i < reportsList.length; i++) {
         var res = await ApiSingleton().createReport(reportsList[i]);
         if (res != null) {
           if (res.type == 'adult') {
@@ -531,6 +532,12 @@ class Utils {
           if (!isCreated) {
             await saveLocalReport(reportsList[i]);
           }
+        }
+        if (reportsList[i].type == 'bite') {
+          PendingBiteReportManager.removeStoredData();
+        }
+        if (reportsList[i].type == 'adult') {
+          PendingAdultReportManager.removeStoredData();
         }
       }
 
