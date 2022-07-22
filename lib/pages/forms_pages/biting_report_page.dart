@@ -137,8 +137,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   void _saveData() async {
-    var saved = await PendingBiteReportManager.saveData(Utils.report);
-    print(saved);
     setState(() {
       percentStream.add(0.8);
     });
@@ -209,8 +207,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
   }
 
-  goNextPage() async {
-    await _pagesController
+  goNextPage() {
+    _pagesController
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) {
       setState(() {

@@ -539,12 +539,18 @@ class ApiSingleton {
       }
       if (response.statusCode != 201) {
         PendingPhotosManager.removeStoredData();
-
         PendingBreedingReportManager.removeStoredData();
+        PendingAdultReportManager.removeStoredData();
+        PendingBiteReportManager.removeStoredData();
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
 
         return null;
+      } else {
+        PendingPhotosManager.removeStoredData();
+        PendingBreedingReportManager.removeStoredData();
+        PendingAdultReportManager.removeStoredData();
+        PendingBiteReportManager.removeStoredData();
       }
 
       if (report.version_number > 0) {
