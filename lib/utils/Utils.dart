@@ -509,27 +509,28 @@ class Utils {
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
       bool isCreated;
-      bool removed = false;
+
       for (int i = 0; i < reportsList.length; i++) {
-        if (removed = false) {
-          if (reportsList.any((element) => element.type == 'adult')) {
-            PendingAdultReportManager.removeStoredData();
-            PendingAdultReportManager.saveData(
-                reportsList.firstWhere((element) => element.type == 'adult'));
-          }
-            if (reportsList.any((element) => element.type == 'bite')) {
-            PendingBiteReportManager.removeStoredData();
-            PendingBiteReportManager.saveData(
-                reportsList.firstWhere((element) => element.type == 'bite'));
-          }
+        if (reportsList.any((element) => element.type == 'adult')) {
+          PendingAdultReportManager.removeStoredData();
+          await PendingAdultReportManager.saveData(
+              reportsList.firstWhere((element) => element.type == 'adult'));
         }
+        if (reportsList.any((element) => element.type == 'bite')) {
+          PendingBiteReportManager.removeStoredData();
+          await PendingBiteReportManager.saveData(
+              reportsList.firstWhere((element) => element.type == 'bite'));
+        }
+
         var res = await ApiSingleton().createReport(reportsList[i]);
-        if (res.type == 'adult') {
-          savedAdultReport = res;
-        }
-        isCreated = res != null ? true : false;
-        if (!isCreated) {
-          await saveLocalReport(reportsList[i]);
+        if (res != null) {
+          if (res.type == 'adult') {
+            savedAdultReport = res;
+          }
+          isCreated = res != null ? true : false;
+          if (!isCreated) {
+            await saveLocalReport(reportsList[i]);
+          }
         }
       }
 
@@ -578,7 +579,7 @@ class Utils {
             : false;
 
         if (!isCreated) {
-          saveLocalReport(savedReport);
+          await saveLocalReport(savedReport);
         }
       }
     }
@@ -590,7 +591,7 @@ class Utils {
         isCreated = await ApiSingleton()
             .saveImage(image['image'], image['verison_UUID']);
         if (!isCreated) {
-          saveLocalImage(image['image'], image['verison_UUID']);
+          await saveLocalImage(image['image'], image['verison_UUID']);
         } else {
           await File(image['image']).delete();
         }

@@ -238,14 +238,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
     validStream.add(isValid);
   }
 
-  void goNextPage() {
+  void goNextPage() async {
     if (addBiting) {
       Utils.addOtherReport('bite');
-      var savedReport =
-          await GeneralReportManager.getInstance(biteReportSaveKey).loadData();
+      var savedReport = await PendingBiteReportManager.loadData();
       if (savedReport != null) {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => BitingReportPage()));
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BitingReportPage(
+                      pendingSavedReport: savedReport,
+                    )));
       } else {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => BitingReportPage()));
@@ -365,7 +368,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
               centerTitle: true,
               leading: IconButton(
                 icon: Style.iconBack,
-                onPressed: () {
+                onPressed: () async {
                   var currentPage = _pagesController.page;
 
                   if (currentPage == 0.0) {
@@ -385,7 +388,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       setState(() {
                         index = 0;
                       });
-                    
+                      await PendingAdultReportManager.saveData(Utils.report);
                       await _pagesController
                           .animateToPage(0,
                               duration: Duration(microseconds: 300),
@@ -396,7 +399,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       });
                     } else if (currentPage == 4.0) {
                       addBitingReport(false);
-                      _pagesController.previousPage(
+                      await _pagesController.previousPage(
                           duration: Duration(microseconds: 300),
                           curve: Curves.ease);
                       setState(() {
@@ -451,7 +454,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               MyLocalizations.of(
                                                   context, 'continue_txt'),
                                               () async {
-                                            double currentPage =
+                                            var currentPage =
                                                 _pagesController.page;
 
                                             if (currentPage == 3.0 &&
@@ -461,7 +464,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                   await PendingBiteReportManager
                                                       .loadData();
                                               if (savedReport != null) {
-                                                Navigator.push(
+                                                await Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
@@ -470,7 +473,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                                                   savedReport,
                                                             )));
                                               } else {
-                                                Navigator.push(
+                                                await Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
