@@ -43,6 +43,7 @@ class _MainVCState extends State<MainVC> {
 
   Report pendingBiteReport;
   Report pendingAdultReport;
+  Report pendingBreedingReport;
 
   @override
   void initState() {
@@ -798,17 +799,16 @@ class _MainVCState extends State<MainVC> {
 
   _createSiteReport() async {
     var createReport = await Utils.createNewReport('site');
-    loadingStream.add(false);
-
-    var createReport = await Utils.createNewReport('site');
-    var pendingAdultReport =
-        await GeneralReportManager.getInstance(breedingReportSaveKey)
-            .loadData();
-
+    pendingAdultReport = await PendingBreedingReportManager.loadData();
+    var images = await PendingPhotosManager.loadData();
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BreedingReportPage()),
+        MaterialPageRoute(
+            builder: (context) => BreedingReportPage(
+                  pendingReport: pendingAdultReport,
+                  images: images,
+                )),
       );
     } else {
       print('Site report was not created');

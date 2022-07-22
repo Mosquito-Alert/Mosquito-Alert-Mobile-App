@@ -487,8 +487,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               }
                                               ;
                                             } else {
-                                              if (showCamera &&
-                                                  Utils.imagePath == []) {
+                                              if (showCamera) {
                                                 _chooseTypeImage();
                                               } else {
                                                 setState(() {

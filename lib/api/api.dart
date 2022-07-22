@@ -547,7 +547,7 @@ class ApiSingleton {
         return null;
       }
       if (response.statusCode != 201) {
-        PendingAdultReportManager.removeStoredData();
+        PendingBreedingReportManager.removeStoredData();
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
 

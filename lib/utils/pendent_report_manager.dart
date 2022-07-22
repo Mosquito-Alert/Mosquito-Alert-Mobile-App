@@ -183,21 +183,21 @@ class PendingAdultReportManager {
 ///
 ////////////////////////////////////////////////////////////////
 
-class PendentBreedingReportManager {
-  static final PendentBreedingReportManager _singleton =
-      PendentBreedingReportManager._internal();
+class PendingBreedingReportManager {
+  static final PendingBreedingReportManager _singleton =
+      PendingBreedingReportManager._internal();
 
   @protected
   static final String breadingReportKey = 'save_breading_adult_report_key';
 
-  factory PendentBreedingReportManager() {
+  factory PendingBreedingReportManager() {
     return _singleton;
   }
 
-  PendentBreedingReportManager._internal();
+  PendingBreedingReportManager._internal();
 
-  static PendentBreedingReportManager getInstance() {
-    return PendentBreedingReportManager();
+  static PendingBreedingReportManager getInstance() {
+    return PendingBreedingReportManager();
   }
 
   static Future<bool> saveData(Report safeReport) async {

@@ -13,14 +13,18 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/biting_location_
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BreedingReportPage extends StatefulWidget {
   final Report editReport;
+  final Report pendingReport;
   final Function loadData;
+  final List<Map> images;
 
-  BreedingReportPage({this.editReport, this.loadData});
+  BreedingReportPage(
+      {this.editReport, this.loadData, this.images, this.pendingReport});
 
   @override
   _BreedingReportPageState createState() => _BreedingReportPageState();
@@ -79,11 +83,20 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
   @override
   void initState() {
-    super.initState();
-    if (widget.editReport != null) {
-      toEditReport = Report.fromJson(widget.editReport.toJson());
-      Utils.setEditReport(toEditReport);
+    if (widget.images != null) {
+      Utils.imagePath = widget.images;
+      print(Utils.imagePath);
     }
+    if (widget.pendingReport != null) {
+      Utils.report = widget.pendingReport;
+    } else {
+      if (widget.editReport != null) {
+        toEditReport = Report.fromJson(widget.editReport.toJson());
+        Utils.setEditReport(toEditReport);
+      }
+    }
+    super.initState();
+
     _pagesController = PageController();
 
     _formsRepot = [
@@ -176,6 +189,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _createReport() async {
+    var x = await PendingBreedingReportManager.saveData(Utils.report);
+    print(x);
     setState(() {
       percentStream.add(0.8);
     });
@@ -198,12 +213,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     bool res = await Utils.createReport();
 
     if (res == null) {
-      if (await GeneralReportManager.getInstance(breedingReportSaveKey)
-              .loadData() !=
-          null) {
-        _showAlertOk(offline: true);
-        return;
-      }
       _showAlertKo();
       return;
     }
@@ -213,9 +222,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     if (!res) {
       _showAlertKo();
     } else {
+      PendingBiteReportManager.removeStoredData();
+      PendingPhotosManager.removeStoredData();
       _showAlertOk();
       setState(() {
         percentStream.add(1.0);
+        loadingStream.add(false);
       });
     }
   }
@@ -440,24 +452,32 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   getGalleryImages() async {
-    Utils.imagePath ??= [];
     if (Utils.imagePath.isEmpty) {
       var pickFiles = await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (pickFiles != null && pickFiles.files != null && pickFiles.files.isNotEmpty) {
-      setShowCamera(false);
+      if (pickFiles != null &&
+          pickFiles.files != null &&
+          pickFiles.files.isNotEmpty) {
+        setShowCamera(false);
+        await _pagesController
+            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+        setState(() {
+          index = _pagesController.page + 1;
+        });
+      }
+
+      if (pickFiles != null &&
+          pickFiles.files != null &&
+          pickFiles.files.isNotEmpty) {
+        pickFiles.files.forEach((image) {
+          Utils.saveImgPath(File(image.path));
+        });
+      }
+    } else {
       await _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
-      setState(() {
-        index = _pagesController.page + 1;
-      });
-    }
-
-    if (pickFiles != null && pickFiles.files != null && pickFiles.files.isNotEmpty) {
-      pickFiles.files.forEach((image) {
-        Utils.saveImgPath(File(image.path));
-      });
     }
   }
 
@@ -534,6 +554,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
           Utils.deleteLastReport();
         } else {
+          PendingBreedingReportManager.removeStoredData();
           Utils.resetReport();
           Utils.imagePath = null;
         }

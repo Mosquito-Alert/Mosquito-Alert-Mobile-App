@@ -525,6 +525,11 @@ class Utils {
           await PendingBiteReportManager.saveData(
               reportsList.firstWhere((element) => element.type == 'bite'));
         }
+        if (reportsList.any((element) => element.type == 'site')) {
+          PendingBreedingReportManager.removeStoredData();
+          await PendingBreedingReportManager.saveData(
+              reportsList.firstWhere((element) => element.type == 'site'));
+        }
       }
 
       for (int i = 0; i < reportsList.length; i++) {
@@ -543,6 +548,9 @@ class Utils {
         }
         if (reportsList[i].type == 'adult') {
           PendingAdultReportManager.removeStoredData();
+        }
+        if (reportsList[i].type == 'site') {
+          PendingBreedingReportManager.removeStoredData();
         }
       }
 
@@ -1069,7 +1077,7 @@ class Utils {
                                 MyLocalizations.of(context, 'ok_next_txt'),
                                 () {
                                   Navigator.of(context).pop();
-                                  
+
                                   !gallery
                                       ? getImage(ImageSource.camera)
                                       : getImage();
