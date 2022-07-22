@@ -522,29 +522,30 @@ class ApiSingleton {
       );
 
       await saveImages(report);
-      if(response == null){
-           if (report.type == 'adult') {
-            PendingPhotosManager.removeStoredData();
-            PendingAdultReportManager.removeStoredData();
-            saved = await PendingAdultReportManager.saveData(report);
-          }
-          if (report.type == 'bite') {
-            PendingBiteReportManager.removeStoredData();
-            saved = await PendingBiteReportManager.saveData(report);
-          }
-          if (report.type == 'site') {
-            PendingBreedingReportManager.removeStoredData();
-            saved = await PendingBreedingReportManager.saveData(report);
-          }
-      return null;
+      if (response == null) {
+        if (report.type == 'adult') {
+          PendingAdultReportManager.removeStoredData();
+          saved = await PendingAdultReportManager.saveData(report);
+        }
+        if (report.type == 'bite') {
+          PendingBiteReportManager.removeStoredData();
+          saved = await PendingBiteReportManager.saveData(report);
+        }
+        if (report.type == 'site') {
+          PendingBreedingReportManager.removeStoredData();
+          saved = await PendingBreedingReportManager.saveData(report);
+        }
+        return null;
       }
       if (response.statusCode != 201) {
+        PendingPhotosManager.removeStoredData();
+
         PendingBreedingReportManager.removeStoredData();
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
 
         return null;
-      } 
+      }
 
       if (report.version_number > 0) {
         // var b = json.decode(response.body);
