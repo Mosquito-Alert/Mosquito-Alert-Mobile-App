@@ -771,16 +771,22 @@ class _MainVCState extends State<MainVC> {
     loadingStream.add(false);
     if (createReport) {
       pendingAdultReport = await PendingAdultReportManager.loadData();
+      var images = await PendingPhotosManager.loadData();
       if (pendingAdultReport != null) {
         await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => AdultReportPage(
                       pendingReport: pendingAdultReport,
+                      images: images,
                     )));
       } else {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => AdultReportPage()));
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AdultReportPage(
+                      images: images,
+                    )));
       }
     } else {
       print('Adult report was not created');

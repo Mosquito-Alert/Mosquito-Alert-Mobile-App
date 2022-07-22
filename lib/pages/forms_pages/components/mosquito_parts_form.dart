@@ -50,7 +50,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
-              AddPhotoButton(widget.isEditing, false),
+              AddPhotoButton(widget.isEditing, false, ),
               StreamBuilder(
                 stream: widget.showParts.stream,
                 initialData:

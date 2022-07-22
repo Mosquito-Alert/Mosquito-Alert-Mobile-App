@@ -50,6 +50,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           } else {
             images.add(element['image']);
           }
+        } else {
+          element['id'] = Utils.report.version_UUID;
+          images.add(element['image']);
         }
         setState(() {});
       });
@@ -289,10 +292,14 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   getGalleryImages() async {
-    var newFiles = await FilePicker.platform.pickFiles(      type: FileType.image,);
+    var newFiles = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
     List<String> paths = [];
 
-    if (newFiles != null && newFiles.files != null && newFiles.files.isNotEmpty) {
+    if (newFiles != null &&
+        newFiles.files != null &&
+        newFiles.files.isNotEmpty) {
       newFiles.files.forEach((image) {
         Utils.saveImgPath(File(image.path));
         paths.add(image.path);

@@ -28,8 +28,10 @@ class AdultReportPage extends StatefulWidget {
   final Report pendingReport;
   final Report editReport;
   final Function loadData;
+  final List<Map> images;
 
-  AdultReportPage({this.editReport, this.loadData, this.pendingReport});
+  AdultReportPage(
+      {this.editReport, this.loadData, this.pendingReport, this.images});
 
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
@@ -172,6 +174,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.images != null) {
+      Utils.imagePath = widget.images;
+      print(Utils.imagePath);
+    }
     if (widget.pendingReport != null) {
       Utils.report = widget.pendingReport;
     } else {
@@ -481,7 +487,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                               }
                                               ;
                                             } else {
-                                              if (showCamera) {
+                                              if (showCamera &&
+                                                  Utils.imagePath == []) {
                                                 _chooseTypeImage();
                                               } else {
                                                 setState(() {
@@ -588,7 +595,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   _chooseTypeImage() {
     _skipReport(false);
     if (widget.editReport == null) {
-      List<Widget> listForiOS = <Widget>[
+      var listForiOS = <Widget>[
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
@@ -633,7 +640,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           ),
         ),
       ];
-      List<Widget> listForAndroid = <Widget>[
+      var listForAndroid = <Widget>[
         InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -706,28 +713,34 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   getGalleryImages() async {
-    var pickFiles = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+    if (Utils.imagePath.isEmpty) {
+      var pickFiles = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
 
-    if (pickFiles != null &&
-        pickFiles.files != null &&
-        pickFiles.files.isNotEmpty) {
-      setShowCamera(false);
-      setState(() {
-        index = _pagesController.page + 1;
-      });
+      if (pickFiles != null &&
+          pickFiles.files != null &&
+          pickFiles.files.isNotEmpty) {
+        setShowCamera(false);
+        setState(() {
+          index = _pagesController.page + 1;
+        });
+        await _pagesController
+            .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
+            .then((value) => setValid(widget.editReport != null));
+      }
+
+      if (pickFiles != null &&
+          pickFiles.files != null &&
+          pickFiles.files.isNotEmpty) {
+        pickFiles.files.forEach((image) {
+          Utils.saveImgPath(File(image.path));
+        });
+      }
+    } else {
       await _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
           .then((value) => setValid(widget.editReport != null));
-    }
-
-    if (pickFiles != null &&
-        pickFiles.files != null &&
-        pickFiles.files.isNotEmpty) {
-      pickFiles.files.forEach((image) {
-        Utils.saveImgPath(File(image.path));
-      });
     }
   }
 
@@ -809,6 +822,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
+        PendingAdultReportManager.removeStoredData();
+        PendingBiteReportManager.removeStoredData();
+        PendingPhotosManager.removeStoredData();
         Navigator.pop(context);
       }, context);
     } else {

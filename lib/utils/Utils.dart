@@ -64,16 +64,20 @@ class Utils {
   // };
   // static bool firebaseLoaded = false;
 
-  static void saveImgPath(File img) {
+  static void saveImgPath(File img) async {
     if (imagePath == null) {
       imagePath = [];
     }
     imagePath
         .add({'image': img.path, 'id': report.version_UUID, 'imageFile': img});
+    var saved = await PendingPhotosManager.saveData(imagePath);
+    print(saved);
   }
 
   static void deleteImage(String image) {
     imagePath.removeWhere((element) => element['image'] == image);
+    PendingPhotosManager.removeStoredData();
+    PendingPhotosManager.saveData(imagePath);
   }
 
   static void closeSession() {
@@ -511,6 +515,7 @@ class Utils {
       bool isCreated;
       if (reportsList.isNotEmpty) {
         if (reportsList.any((element) => element.type == 'adult')) {
+          PendingPhotosManager.removeStoredData();
           PendingAdultReportManager.removeStoredData();
           await PendingAdultReportManager.saveData(
               reportsList.firstWhere((element) => element.type == 'adult'));
@@ -1064,6 +1069,7 @@ class Utils {
                                 MyLocalizations.of(context, 'ok_next_txt'),
                                 () {
                                   Navigator.of(context).pop();
+                                  
                                   !gallery
                                       ? getImage(ImageSource.camera)
                                       : getImage();
