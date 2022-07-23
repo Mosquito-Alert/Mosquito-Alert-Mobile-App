@@ -97,70 +97,28 @@ class Utils {
       String userUUID = await UserManager.getUUID();
 
       dynamic response = await ApiSingleton().getLastSession(userUUID);
+      int sessionId = (response is bool && !response ? 0 : response) + 1;
+
+      session = new Session(
+          session_ID: sessionId,
+          user: userUUID,
+          session_start_time: DateTime.now().toIso8601String());
+
       if (response is bool && !response) {
         print('Unable to get last session.');
-        return false;
       } else {
-        int sessionId = response + 1;
-
-        session = Session(
-            session_ID: sessionId,
-            user: userUUID,
-            session_start_time: DateTime.now().toIso8601String());
-
-        print(language);
-
         session.id = await ApiSingleton().createSession(session);
         // print("Session: ${jsonEncode(session.toJson())}");
       }
     }
 
-    if (session.id != null && language != null) {
-      var lang = await UserManager.getLanguage();
-      var userUUID = await UserManager.getUUID();
-      report = Report(
-          type: type,
-          report_id: randomAlphaNumeric(4).toString(),
-          version_number: 0,
-          version_UUID: Uuid().v4(),
-          user: userUUID,
-          session: session.id,
-          responses: []);
-
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      report.package_name = packageInfo.packageName;
-      report.package_version = 32;
-
-      if (Platform.isAndroid) {
-        var buildData = await DeviceInfoPlugin().androidInfo;
-        report.device_manufacturer = buildData.manufacturer;
-        report.device_model = buildData.model;
-        report.os = 'Android';
-        report.os_language = language.languageCode;
-        report.os_version = buildData.version.sdkInt.toString();
-        report.app_language = lang ?? language.languageCode;
-      } else if (Platform.isIOS) {
-        var buildData = await DeviceInfoPlugin().iosInfo;
-        report.device_manufacturer = 'Apple';
-        report.device_model = buildData.model;
-        report.os = buildData.systemName;
-        report.os_language = language.languageCode;
-        report.os_version = buildData.systemVersion;
-        report.app_language = lang ?? language.languageCode;
-      }
-
-      if (lat != null && lon != null) {
-        if (locationType == 'selected') {
-          report.location_choice = 'selected';
-          report.selected_location_lat = lat;
-          report.selected_location_lon = lon;
-        } else {
-          report.location_choice = 'current';
-          report.current_location_lat = lat;
-          report.current_location_lon = lon;
-        }
-      }
+    if (session != null && session.id != null && language != null) {
+      await generateReport(type,
+          lat: lat, lon: lon, locationType: locationType);
       return true;
+    } else {
+      await generateReport(type,
+          lat: lat, lon: lon, locationType: locationType, offline: true);
     }
 
     return false;
@@ -177,7 +135,7 @@ class Utils {
         version_UUID: new Uuid().v4(),
         user: userUUID,
         session: offline ? 0 : session.id,
-        isUploaded: offline,
+        offline: offline,
         responses: []);
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

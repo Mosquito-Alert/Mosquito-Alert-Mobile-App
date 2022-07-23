@@ -379,7 +379,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
     return null;
   }
-
+w
   _reportBottomSheet(Report report) async {
     bool isMine = UserManager.profileUUIDs.any((id) => id == report.user);
     Coordinates coord;

@@ -32,7 +32,7 @@ class Report {
   int country;
   String nuts3;
   String nuts2;
-  bool isUploaded;
+  bool offline;
 
   Report(
       {this.version_UUID,
@@ -61,6 +61,7 @@ class Report {
       this.app_language,
       this.displayCity,
       this.nuts3,
+      this.offline,
       this.nuts2,
       this.country});
 
@@ -71,10 +72,8 @@ class Report {
     user = json['user'].toString();
     report_id = json['report_id'].toString();
     phone_upload_time = json['phone_upload_time'].toString();
-    creation_time =
-        json['creation_time'].toString();
-    version_time =
-       json['version_time'].toString();
+    creation_time = json['creation_time'].toString();
+    version_time = json['version_time'].toString();
     type = json['type'].toString();
     location_choice = json['location_choice'].toString();
     current_location_lon = json['current_location_lon'];

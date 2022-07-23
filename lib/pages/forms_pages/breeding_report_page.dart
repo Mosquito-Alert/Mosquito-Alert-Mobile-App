@@ -210,7 +210,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
 
     if (res == null) {
       if (await PendingBreedingReportManager.loadData() != null) {
-        _showAlertOk();
+        _showAlertOk(offline: true);
         return;
       }
       _showAlertKo();
@@ -507,21 +507,22 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     }
   }
 
-  _showAlertOk() {
+  _showAlertOk({bool offline = false}) {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, 'app_name'),
       widget.editReport == null
-          ? MyLocalizations.of(context, 'save_report_ok_txt')
-          : MyLocalizations.of(context, 'edited_report_ok_txt'),
+          ? '${MyLocalizations.of(context, 'save_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}'
+          : '${MyLocalizations.of(context, 'edited_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}',
+
       context,
       onPressed: () {
         Navigator.pop(context);
-        Utils.resetReport();
         if (widget.editReport != null) {
           Navigator.pop(context);
         } else {
           Navigator.of(context).popUntil((r) => r.isFirst);
+          Utils.resetReport();
         }
       },
       barrierDismissible: false,

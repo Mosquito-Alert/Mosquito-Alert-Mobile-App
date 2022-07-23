@@ -53,8 +53,11 @@ class _MainVCState extends State<MainVC> {
     Utils.reportsList = [];
     var pendingAdultReports = await PendingAdultReportManager.loadData();
     var pendingBiteReports = await PendingBiteReportManager.loadData();
-    var pendinfBreedingReports = await PendingBreedingReportManager.loadData();
+    var pendingBreedingReports = await PendingBreedingReportManager.loadData();
 
+    print(pendingAdultReports);
+    print(pendingBiteReports);
+    print(pendingBreedingReports);
     if (pendingAdultReports != null) {
       var createReport = await Utils.createNewReport('adult');
       Utils.report = pendingAdultReports;
@@ -65,9 +68,9 @@ class _MainVCState extends State<MainVC> {
       Utils.report = pendingBiteReports;
       await Utils.createReport();
     }
-    if (pendinfBreedingReports != null) {
+    if (pendingBreedingReports != null) {
       var createReport = await Utils.createNewReport('site');
-      Utils.report = pendinfBreedingReports;
+      Utils.report = pendingBreedingReports;
       await Utils.createReport();
     }
   }
@@ -763,6 +766,7 @@ class _MainVCState extends State<MainVC> {
 
   _createBiteReport() async {
     var createReport = await Utils.createNewReport('bite');
+    print(createReport);
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(
@@ -770,10 +774,14 @@ class _MainVCState extends State<MainVC> {
         MaterialPageRoute(builder: (context) => BitingReportPage()),
       );
     } else {
-      print('Bite report was not created');
-      loadingStream.add(false);
-      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'server_down'), context);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BitingReportPage()),
+      );
+      // print('Bite report was not created');
+      // loadingStream.add(false);
+      // await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      //     MyLocalizations.of(context, 'server_down'), context);
     }
   }
 

@@ -162,7 +162,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
     if (res == null || !res) {
       if (await PendingBiteReportManager.loadData() != null) {
-        _showAlertOk();
+        _showAlertOk(offline: true);
         return;
       }
       _showAlertKo();
@@ -378,13 +378,14 @@ class _BitingReportPageState extends State<BitingReportPage> {
     );
   }
 
-  _showAlertOk() {
+  _showAlertOk({bool offline = false}) {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, 'app_name'),
       widget.editReport == null
-          ? MyLocalizations.of(context, 'save_report_ok_txt')
-          : MyLocalizations.of(context, 'edited_report_ok_txt'),
+          ? '${MyLocalizations.of(context, 'save_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}'
+          : '${MyLocalizations.of(context, 'edited_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}',
+
       context,
       onPressed: () {
         Navigator.pop(context);
