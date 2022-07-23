@@ -284,16 +284,17 @@ class PendingPhotosManager {
     return PendingPhotosManager();
   }
 
-  static Future<bool> saveData(Report safeReport) async {
+  static Future<bool> saveData(List<Map> photos) async {
     try {
       removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      var allPendingReports = await loadData();
-      allPendingReports.add(safeReport);
-      final encodedData = Report.encode(allPendingReports);
+      photos.forEach((element) {
+        //element['imageFile']
+        element['imageFile'] = null;
+      });
 
-      return await prefs.setString(saveKey, encodedData);
+      return await prefs.setString(saveKey, jsonEncode(photos));
     } catch (ex) {
       print(ex);
       return false;
@@ -310,31 +311,30 @@ class PendingPhotosManager {
     }
   }
 
-  static Future<List<Report>> loadData() async {
+  static Future<List<Map>> loadData() async {
     var prefs = await SharedPreferences.getInstance();
+    List<Map> mapPhotos = [];
+    var photos;
+
     try {
-      final reportsSaved = await prefs.getString(saveKey);
+      final reportEncoded = prefs.getString(saveKey);
 
-      final reports = Report.decode(reportsSaved);
+      photos = jsonDecode(reportEncoded);
 
-      for (Report rep in reports) {
-        if (rep.note == 'null') {
-          rep.note = '';
-        }
-        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
-          rep.phone_upload_time = DateTime.now().toString();
-        }
-        if (rep.creation_time == null || rep.creation_time == 'null') {
-          rep.creation_time = DateTime.now().toString();
-        }
+      for (var photo in photos) {
+        mapPhotos.add({
+          'image': photo['image'],
+          'id': photo['id'],
+          'imageFile': File(photo['image'])
+        });
       }
 
-      return reports;
+      print(photos);
     } catch (ex) {
       print(ex);
-      removeStoredData();
+      //removeStoredData();
     } finally {
-      return [];
+      return mapPhotos ?? [];
     }
   }
 }
