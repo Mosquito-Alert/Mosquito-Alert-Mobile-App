@@ -38,7 +38,7 @@ class PendingBiteReportManager {
       PendingBiteReportManager._internal();
 
   @protected
-  static final String biteReportKey = 'save_bite_repor_key';
+  static final String saveKey = 'save_bite_repor_key';
 
   factory PendingBiteReportManager() {
     return _singleton;
@@ -55,7 +55,11 @@ class PendingBiteReportManager {
       removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      return await prefs.setString(biteReportKey, jsonEncode(safeReport));
+      var allPendingReports = await loadData();
+      allPendingReports.add(safeReport);
+      final encodedData = Report.encode(allPendingReports);
+
+      return await prefs.setString(saveKey, encodedData);
     } catch (ex) {
       print(ex);
       return false;
@@ -66,38 +70,37 @@ class PendingBiteReportManager {
     try {
       var prefs = await SharedPreferences.getInstance();
 
-      await prefs.remove(biteReportKey);
+      await prefs.remove(saveKey);
     } catch (ex) {
       print(ex);
     }
   }
 
-  static Future<Report> loadData() async {
+  static Future<List<Report>> loadData() async {
     var prefs = await SharedPreferences.getInstance();
-    Report reportSaved;
     try {
-      final reportEncoded = prefs.getString(biteReportKey);
+      final reportsSaved = await prefs.getString(saveKey);
 
-      dynamic x = jsonDecode(reportEncoded);
+      final reports = Report.decode(reportsSaved);
 
-      reportSaved = Report.fromJson(x);
+      for (Report rep in reports) {
+        if (rep.note == 'null') {
+          rep.note = '';
+        }
+        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
+          rep.phone_upload_time = DateTime.now().toString();
+        }
+        if (rep.creation_time == null || rep.creation_time == 'null') {
+          rep.creation_time = DateTime.now().toString();
+        }
+      }
 
-      if (reportSaved.note == 'null') {
-        reportSaved.note = '';
-      }
-      if (reportSaved.phone_upload_time == null ||
-          reportSaved.phone_upload_time == 'null') {
-        reportSaved.phone_upload_time = DateTime.now().toString();
-      }
-      if (reportSaved.creation_time == null ||
-          reportSaved.creation_time == 'null') {
-        reportSaved.creation_time = DateTime.now().toString();
-      }
+      return reports;
     } catch (ex) {
       print(ex);
       removeStoredData();
     } finally {
-      return reportSaved;
+      return [];
     }
   }
 }
@@ -113,7 +116,7 @@ class PendingAdultReportManager {
       PendingAdultReportManager._internal();
 
   @protected
-  static final String adultReportKey = 'save_pending_adult_report_key';
+  static final String saveKey = 'save_pending_adult_report_key';
 
   factory PendingAdultReportManager() {
     return _singleton;
@@ -130,7 +133,11 @@ class PendingAdultReportManager {
       removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      return await prefs.setString(adultReportKey, jsonEncode(safeReport));
+      var allPendingReports = await loadData();
+      allPendingReports.add(safeReport);
+      final encodedData = Report.encode(allPendingReports);
+
+      return await prefs.setString(saveKey, encodedData);
     } catch (ex) {
       print(ex);
       return false;
@@ -141,38 +148,37 @@ class PendingAdultReportManager {
     try {
       var prefs = await SharedPreferences.getInstance();
 
-      await prefs.remove(adultReportKey);
+      await prefs.remove(saveKey);
     } catch (ex) {
       print(ex);
     }
   }
 
-  static Future<Report> loadData() async {
+  static Future<List<Report>> loadData() async {
     var prefs = await SharedPreferences.getInstance();
-    Report reportSaved;
     try {
-      final reportEncoded = prefs.getString(adultReportKey);
+      final reportsSaved = await prefs.getString(saveKey);
 
-      dynamic x = jsonDecode(reportEncoded);
+      final reports = Report.decode(reportsSaved);
 
-      reportSaved = Report.fromJson(x);
+      for (Report rep in reports) {
+        if (rep.note == 'null') {
+          rep.note = '';
+        }
+        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
+          rep.phone_upload_time = DateTime.now().toString();
+        }
+        if (rep.creation_time == null || rep.creation_time == 'null') {
+          rep.creation_time = DateTime.now().toString();
+        }
+      }
 
-      if (reportSaved.note == 'null') {
-        reportSaved.note = '';
-      }
-      if (reportSaved.phone_upload_time == null ||
-          reportSaved.phone_upload_time == 'null') {
-        reportSaved.phone_upload_time = DateTime.now().toString();
-      }
-      if (reportSaved.creation_time == null ||
-          reportSaved.creation_time == 'null') {
-        reportSaved.creation_time = DateTime.now().toString();
-      }
+      return reports;
     } catch (ex) {
       print(ex);
       removeStoredData();
     } finally {
-      return reportSaved;
+      return [];
     }
   }
 }
@@ -188,7 +194,7 @@ class PendingBreedingReportManager {
       PendingBreedingReportManager._internal();
 
   @protected
-  static final String breadingReportKey = 'save_breading_adult_report_key';
+  static final String saveKey = 'save_breading_adult_report_key';
 
   factory PendingBreedingReportManager() {
     return _singleton;
@@ -205,7 +211,11 @@ class PendingBreedingReportManager {
       removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      return await prefs.setString(breadingReportKey, jsonEncode(safeReport));
+      var allPendingReports = await loadData();
+      allPendingReports.add(safeReport);
+      final encodedData = Report.encode(allPendingReports);
+
+      return await prefs.setString(saveKey, encodedData);
     } catch (ex) {
       print(ex);
       return false;
@@ -216,38 +226,37 @@ class PendingBreedingReportManager {
     try {
       var prefs = await SharedPreferences.getInstance();
 
-      await prefs.remove(breadingReportKey);
+      await prefs.remove(saveKey);
     } catch (ex) {
       print(ex);
     }
   }
 
-  static Future<Report> loadData() async {
+  static Future<List<Report>> loadData() async {
     var prefs = await SharedPreferences.getInstance();
-    Report reportSaved;
     try {
-      final reportEncoded = prefs.getString(breadingReportKey);
+      final reportsSaved = await prefs.getString(saveKey);
 
-      dynamic x = jsonDecode(reportEncoded);
+      final reports = Report.decode(reportsSaved);
 
-      reportSaved = Report.fromJson(x);
+      for (Report rep in reports) {
+        if (rep.note == 'null') {
+          rep.note = '';
+        }
+        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
+          rep.phone_upload_time = DateTime.now().toString();
+        }
+        if (rep.creation_time == null || rep.creation_time == 'null') {
+          rep.creation_time = DateTime.now().toString();
+        }
+      }
 
-      if (reportSaved.note == 'null') {
-        reportSaved.note = '';
-      }
-      if (reportSaved.phone_upload_time == null ||
-          reportSaved.phone_upload_time == 'null') {
-        reportSaved.phone_upload_time = DateTime.now().toString();
-      }
-      if (reportSaved.creation_time == null ||
-          reportSaved.creation_time == 'null') {
-        reportSaved.creation_time = DateTime.now().toString();
-      }
+      return reports;
     } catch (ex) {
       print(ex);
       removeStoredData();
     } finally {
-      return reportSaved;
+      return [];
     }
   }
 }
@@ -263,7 +272,7 @@ class PendingPhotosManager {
       PendingPhotosManager._internal();
 
   @protected
-  static final String photosReportKey = 'save_pending_photos_key';
+  static final String saveKey = 'save_pending_photos_key';
 
   factory PendingPhotosManager() {
     return _singleton;
@@ -275,17 +284,16 @@ class PendingPhotosManager {
     return PendingPhotosManager();
   }
 
-  static Future<bool> saveData(List<Map> photos) async {
+  static Future<bool> saveData(Report safeReport) async {
     try {
       removeStoredData();
       var prefs = await SharedPreferences.getInstance();
 
-      photos.forEach((element) {
-        //element['imageFile']
-        element['imageFile'] = null;
-      });
+      var allPendingReports = await loadData();
+      allPendingReports.add(safeReport);
+      final encodedData = Report.encode(allPendingReports);
 
-      return await prefs.setString(photosReportKey, jsonEncode(photos));
+      return await prefs.setString(saveKey, encodedData);
     } catch (ex) {
       print(ex);
       return false;
@@ -296,36 +304,37 @@ class PendingPhotosManager {
     try {
       var prefs = await SharedPreferences.getInstance();
 
-      await prefs.remove(photosReportKey);
+      await prefs.remove(saveKey);
     } catch (ex) {
       print(ex);
     }
   }
 
-  static Future<List<Map>> loadData() async {
+  static Future<List<Report>> loadData() async {
     var prefs = await SharedPreferences.getInstance();
-    List<Map> mapPhotos = [];
-    var photos;
-
     try {
-      final reportEncoded = prefs.getString(photosReportKey);
+      final reportsSaved = await prefs.getString(saveKey);
 
-      photos = jsonDecode(reportEncoded);
+      final reports = Report.decode(reportsSaved);
 
-      for (var photo in photos) {
-        mapPhotos.add({
-          'image': photo['image'],
-          'id': photo['id'],
-          'imageFile': File(photo['image'])
-        });
+      for (Report rep in reports) {
+        if (rep.note == 'null') {
+          rep.note = '';
+        }
+        if (rep.phone_upload_time == null || rep.phone_upload_time == 'null') {
+          rep.phone_upload_time = DateTime.now().toString();
+        }
+        if (rep.creation_time == null || rep.creation_time == 'null') {
+          rep.creation_time = DateTime.now().toString();
+        }
       }
 
-      print(photos);
+      return reports;
     } catch (ex) {
       print(ex);
-      //removeStoredData();
+      removeStoredData();
     } finally {
-      return mapPhotos ?? [];
+      return [];
     }
   }
 }

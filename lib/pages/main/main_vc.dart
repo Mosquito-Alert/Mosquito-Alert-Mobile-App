@@ -55,23 +55,26 @@ class _MainVCState extends State<MainVC> {
     var pendingBiteReports = await PendingBiteReportManager.loadData();
     var pendingBreedingReports = await PendingBreedingReportManager.loadData();
 
-    print(pendingAdultReports);
-    print(pendingBiteReports);
-    print(pendingBreedingReports);
     if (pendingAdultReports != null) {
-      var createReport = await Utils.createNewReport('adult');
-      Utils.report = pendingAdultReports;
-      await Utils.createReport();
+      for (Report pendingRep in pendingBreedingReports) {
+        var createReport = await Utils.createNewReport('adult');
+        Utils.report = pendingRep;
+        await Utils.createReport();
+      }
     }
     if (pendingBiteReports != null) {
-      var createReport = await Utils.createNewReport('bite');
-      Utils.report = pendingBiteReports;
-      await Utils.createReport();
+      for (Report pendingRep in pendingBiteReports) {
+        var createReport = await Utils.createNewReport('bite');
+        Utils.report = pendingRep;
+        await Utils.createReport();
+      }
     }
     if (pendingBreedingReports != null) {
-      var createReport = await Utils.createNewReport('site');
-      Utils.report = pendingBreedingReports;
-      await Utils.createReport();
+      for (Report pendingRep in pendingBreedingReports) {
+        var createReport = await Utils.createNewReport('site');
+        Utils.report = pendingRep;
+        await Utils.createReport();
+      }
     }
   }
 

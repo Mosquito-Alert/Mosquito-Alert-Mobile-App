@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:mosquito_alert_app/models/question.dart';
@@ -180,7 +181,7 @@ class Report {
         'country': report.country,
         'nuts3': report.nuts3,
         'nuts2': report.nuts2,
-        'offline': report.isUploaded,
+        'offline': report.offline,
       };
 
   static String encode(List<Report> reports) => json.encode(
@@ -189,11 +190,10 @@ class Report {
             .toList(),
       );
 
-  static List<Report> decode(String reports) {
-    return (json.decode(reports) as List<dynamic>)
-        .map<Report>((item) => Report.fromJson(item))
-        .toList();
-  }
+  static List<Report> decode(String reports) =>
+      (json.decode(reports) as List<dynamic>)
+          .map<Report>((item) => Report.fromJson(item))
+          .toList();
 }
 
 class Photo {
