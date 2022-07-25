@@ -420,12 +420,18 @@ class Utils {
         }
       }
 
-      GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
-          .removeSpecificData(reportUUID, 'adult');
-      GeneralPendingReportManager.getInstance(biteReportSaveKey)
-          .removeSpecificData(reportUUID, 'bite');
-      GeneralPendingReportManager.getInstance(breedingReportSaveKey)
-          .removeSpecificData(reportUUID, 'site');
+      if (report.type == 'adult') {
+        GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+            .removeSpecificData(reportUUID, 'adult');
+      }
+      if (report.type == 'bite') {
+        GeneralPendingReportManager.getInstance(biteReportSaveKey)
+            .removeSpecificData(reportUUID, 'bite');
+      }
+      if (report.type == 'site') {
+        GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+            .removeSpecificData(reportUUID, 'site');
+      }
 
       return true;
     } catch (e) {
@@ -469,7 +475,8 @@ class Utils {
           await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'adult'),
-                  Utils.imagePath, 'adult');
+                  Utils.imagePath,
+                  'adult');
         }
         if (reportsList.any((element) => element.type == 'bite')) {
           GeneralPendingReportManager.getInstance(biteReportSaveKey)
@@ -477,7 +484,8 @@ class Utils {
           await GeneralPendingReportManager.getInstance(biteReportSaveKey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'bite'),
-                  null, 'bite');
+                  null,
+                  'bite');
         }
         if (reportsList.any((element) => element.type == 'site')) {
           GeneralPendingReportManager.getInstance(breedingReportSaveKey)
@@ -485,7 +493,8 @@ class Utils {
           await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'site'),
-                  Utils.imagePath, 'site');
+                  Utils.imagePath,
+                  'site');
         }
       }
 
