@@ -159,9 +159,9 @@ class Photo {
   });
 
   Photo.fromJson(Map<dynamic, dynamic> json) {
-    id = json['id'];
-    photo = json['photo'];
-    uuid = json['uuid'];
+    id = json['id'].toString();
+    photo = json['photo'].toString();
+    uuid = json['uuid'].toString();
   }
 
   Map<String, dynamic> toJson() {
