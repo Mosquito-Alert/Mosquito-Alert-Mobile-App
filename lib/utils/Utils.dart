@@ -371,12 +371,13 @@ class Utils {
   static Future<bool> syncPendingReports() async {
     try {
       var pendingAdultReports =
-          await GeneralReportManager.getInstance(mosquitoReportSavekey)
+          await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
               .loadData();
       var pendingBiteReports =
-          await GeneralReportManager.getInstance(biteReportSaveKey).loadData();
+          await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+              .loadData();
       var pendingBreedingReports =
-          await GeneralReportManager.getInstance(breedingReportSaveKey)
+          await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
               .loadData();
 
       print('--> Adult ${pendingAdultReports.length}');
@@ -391,37 +392,10 @@ class Utils {
       String userUUID = await UserManager.getUUID();
 
       var reportUUID = <String>[];
-
-      // CHECK IS UPLOADED
-      if (Utils.location != null) {
-        location = Utils.location;
-        double distance;
-
-        List<Report> list = await ApiSingleton().getReportsList(
-            location.latitude, location.longitude,
-            radius: (distance != null ? distance : 1000 / 2).round());
-
-        if (list == null) {
-          list = [];
-        } else {
-          for (var report in list) {
-            report.isUploaded = true;
-          }
-        }
-        for (var syncReport
-            in syncingReports.where((element) => element.isUploaded == false)) {
-          if (list
-              .any((element) => element.report_id == syncReport.report_id)) {
-            await GeneralReportManager()
-                .setReportToUploaded(syncReport.report_id);
-          }
-        }
-      }
-
-      for (Report report
-          in syncingReports.where((element) => element.isUploaded == false)) {
+      for (Report report in syncingReports) {
         dynamic response = await ApiSingleton().getLastSession(userUUID);
         int sessionId = (response is bool && !response ? 0 : response) + 1;
+
         session = Session(
             session_ID: sessionId,
             user: userUUID,
@@ -438,15 +412,20 @@ class Utils {
         report.version_time = DateTime.now().toIso8601String();
         report.creation_time = DateTime.now().toIso8601String();
         report.phone_upload_time = DateTime.now().toIso8601String();
-        if (report.isUploaded == false) {
-          var res = await ApiSingleton().createReport(report);
-          var isCreated = res != null ? true : false;
-          if (!isCreated) {
-          } else {
-            reportUUID.add(report.version_UUID);
-          }
+        var res = await ApiSingleton().createReport(report);
+        var isCreated = res != null ? true : false;
+        if (!isCreated) {
+        } else {
+          reportUUID.add(report.version_UUID);
         }
       }
+
+      GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+          .removeSpecificData(reportUUID);
+      GeneralPendingReportManager.getInstance(biteReportSaveKey)
+          .removeSpecificData(reportUUID);
+      GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+          .removeSpecificData(reportUUID);
 
       return true;
     } catch (e) {
@@ -462,12 +441,16 @@ class Utils {
         if (res.type == 'adult') {
           savedAdultReport = res;
         }
-        if (await PendingAdultReportManager.loadData() != null) {
+        if (await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+                .loadData() !=
+            null) {
           return true;
         }
         return true;
       } else {
-        if (await PendingAdultReportManager.loadData() != null) {
+        if (await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+                .loadData() !=
+            null) {
           return true;
         }
         return false;
@@ -481,19 +464,25 @@ class Utils {
       if (reportsList.isNotEmpty) {
         if (reportsList.any((element) => element.type == 'adult')) {
           PendingPhotosManager.removeStoredData();
-          PendingAdultReportManager.removeStoredData();
-          await PendingAdultReportManager.saveData(
-              reportsList.firstWhere((element) => element.type == 'adult'));
+          GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+              .removeStoredData();
+          await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+              .saveData(
+                  reportsList.firstWhere((element) => element.type == 'adult'));
         }
         if (reportsList.any((element) => element.type == 'bite')) {
-          PendingBiteReportManager.removeStoredData();
-          await PendingBiteReportManager.saveData(
-              reportsList.firstWhere((element) => element.type == 'bite'));
+          GeneralPendingReportManager.getInstance(biteReportSaveKey)
+              .removeStoredData();
+          await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+              .saveData(
+                  reportsList.firstWhere((element) => element.type == 'bite'));
         }
         if (reportsList.any((element) => element.type == 'site')) {
-          PendingBreedingReportManager.removeStoredData();
-          await PendingBreedingReportManager.saveData(
-              reportsList.firstWhere((element) => element.type == 'site'));
+          GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+              .removeStoredData();
+          await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+              .saveData(
+                  reportsList.firstWhere((element) => element.type == 'site'));
         }
       }
 
@@ -508,13 +497,16 @@ class Utils {
             await saveLocalReport(reportsList[i]);
           } else {
             if (reportsList[i].type == 'bite') {
-              PendingBiteReportManager.removeStoredData();
+              GeneralPendingReportManager.getInstance(biteReportSaveKey)
+                  .removeStoredData();
             }
             if (reportsList[i].type == 'adult') {
-              PendingAdultReportManager.removeStoredData();
+              GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+                  .removeStoredData();
             }
             if (reportsList[i].type == 'site') {
-              PendingBreedingReportManager.removeStoredData();
+              GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+                  .removeStoredData();
             }
           }
         }

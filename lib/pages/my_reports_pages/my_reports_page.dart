@@ -369,17 +369,22 @@ class _MyReportsPageState extends State<MyReportsPage> {
   Future<Campaign> _checkCampaigns(int country) async {
     List<Campaign> campaignsList = await ApiSingleton().getCampaigns(country);
     var now = DateTime.now();
-    if (campaignsList.any((element) =>
-        DateTime.parse(element.startDate).isBefore(now) &&
-        DateTime.parse(element.endDate).isAfter(now))) {
-      var activeCampaign = campaignsList.firstWhere((element) =>
+    try {
+      if (campaignsList.any((element) =>
           DateTime.parse(element.startDate).isBefore(now) &&
-          DateTime.parse(element.endDate).isAfter(now));
-      return activeCampaign;
+          DateTime.parse(element.endDate).isAfter(now))) {
+        var activeCampaign = campaignsList.firstWhere((element) =>
+            DateTime.parse(element.startDate).isBefore(now) &&
+            DateTime.parse(element.endDate).isAfter(now));
+        return activeCampaign;
+      }
+    } catch (e) {
+      return null;
     }
+
     return null;
   }
-w
+
   _reportBottomSheet(Report report) async {
     bool isMine = UserManager.profileUUIDs.any((id) => id == report.user);
     Coordinates coord;

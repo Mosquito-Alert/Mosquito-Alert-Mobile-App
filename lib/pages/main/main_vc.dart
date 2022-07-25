@@ -51,31 +51,10 @@ class _MainVCState extends State<MainVC> {
 
   sendPendingItems() async {
     Utils.reportsList = [];
-    var pendingAdultReports = await PendingAdultReportManager.loadData();
-    var pendingBiteReports = await PendingBiteReportManager.loadData();
-    var pendingBreedingReports = await PendingBreedingReportManager.loadData();
 
-    if (pendingAdultReports != null) {
-      for (Report pendingRep in pendingBreedingReports) {
-        var createReport = await Utils.createNewReport('adult');
-        Utils.report = pendingRep;
-        await Utils.createReport();
-      }
-    }
-    if (pendingBiteReports != null) {
-      for (Report pendingRep in pendingBiteReports) {
-        var createReport = await Utils.createNewReport('bite');
-        Utils.report = pendingRep;
-        await Utils.createReport();
-      }
-    }
-    if (pendingBreedingReports != null) {
-      for (Report pendingRep in pendingBreedingReports) {
-        var createReport = await Utils.createNewReport('site');
-        Utils.report = pendingRep;
-        await Utils.createReport();
-      }
-    }
+
+
+    await Utils.syncPendingReports();
   }
 
   initAuthStatus() async {
@@ -781,10 +760,6 @@ class _MainVCState extends State<MainVC> {
         context,
         MaterialPageRoute(builder: (context) => BitingReportPage()),
       );
-      // print('Bite report was not created');
-      // loadingStream.add(false);
-      // await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-      //     MyLocalizations.of(context, 'server_down'), context);
     }
   }
 
@@ -801,16 +776,28 @@ class _MainVCState extends State<MainVC> {
                     images: images,
                   )));
     } else {
-      print('Adult report was not created');
-      loadingStream.add(false);
-      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'server_down'), context);
+      var images = await PendingPhotosManager.loadData();
+
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AdultReportPage(
+                    images: images,
+                  )));
+      // print('Adult report was not created');
+      // loadingStream.add(false);
+      // await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      //     MyLocalizations.of(context, 'server_down'), context);
     }
   }
 
   _createSiteReport() async {
+    loadingStream.add(false);
+
     var createReport = await Utils.createNewReport('site');
-    var pendingAdultReport = await PendingBreedingReportManager.loadData();
+    var pendingAdultReport =
+        await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+            .loadData();
     var images = await PendingPhotosManager.loadData();
     if (createReport) {
       await Navigator.push(
@@ -821,10 +808,17 @@ class _MainVCState extends State<MainVC> {
                 )),
       );
     } else {
-      print('Site report was not created');
-      loadingStream.add(false);
-      await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'server_down'), context);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BreedingReportPage(
+                  images: images,
+                )),
+      );
+      // print('Site report was not created');
+      // loadingStream.add(false);
+      // await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+      //     MyLocalizations.of(context, 'server_down'), context);
     }
   }
 }

@@ -148,7 +148,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
-          log(notification.expert_html);
           return SafeArea(
             bottom: false,
             child: Container(

@@ -185,7 +185,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _createReport() async {
-    var x = await PendingBreedingReportManager.saveData(Utils.report);
+    var x = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(Utils.report);
     print(x);
     setState(() {
       percentStream.add(0.8);
@@ -209,7 +209,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     bool res = await Utils.createReport();
 
     if (res == null) {
-      if (await PendingBreedingReportManager.loadData() != null) {
+      if (await GeneralPendingReportManager.getInstance(breedingReportSaveKey).loadData() != null) {
         _showAlertOk(offline: true);
         return;
       }
@@ -222,7 +222,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     if (!res) {
       _showAlertKo();
     } else {
-      PendingBiteReportManager.removeStoredData();
+      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
       PendingPhotosManager.removeStoredData();
       _showAlertOk();
       setState(() {
@@ -555,7 +555,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
           Utils.deleteLastReport();
         } else {
-          PendingBreedingReportManager.removeStoredData();
+          GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
           Utils.resetReport();
           Utils.imagePath = null;
         }

@@ -67,7 +67,6 @@ class Report {
       this.country});
 
   Report.fromJson(Map<dynamic, dynamic> json) {
-    log(json.toString());
     version_UUID = json['version_UUID'].toString();
     version_number = json['version_number'];
     user = json['user'].toString();
@@ -190,10 +189,11 @@ class Report {
             .toList(),
       );
 
-  static List<Report> decode(String reports) =>
-      (json.decode(reports) as List<dynamic>)
-          .map<Report>((item) => Report.fromJson(item))
-          .toList();
+  static List<Report> decode(String reports) {
+    return (json.decode(reports) as List<dynamic>)
+        .map<Report>((item) => Report.fromJson(item))
+        .toList();
+  }
 }
 
 class Photo {

@@ -505,16 +505,16 @@ class ApiSingleton {
         onTimeout: () async {
           if (report.type == 'adult') {
             PendingPhotosManager.removeStoredData();
-            PendingAdultReportManager.removeStoredData();
-            saved = await PendingAdultReportManager.saveData(report);
+            GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
+            saved = await GeneralPendingReportManager.getInstance(mosquitoReportSavekey).saveData(report);
           }
           if (report.type == 'bite') {
-            PendingBiteReportManager.removeStoredData();
-            saved = await PendingBiteReportManager.saveData(report);
+            GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
+            saved = await GeneralPendingReportManager.getInstance(biteReportSaveKey).saveData(report);
           }
           if (report.type == 'site') {
-            PendingBreedingReportManager.removeStoredData();
-            saved = await PendingBreedingReportManager.saveData(report);
+            GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
+            saved = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(report);
           }
 
           return null;
@@ -524,33 +524,33 @@ class ApiSingleton {
       await saveImages(report);
       if (response == null) {
         if (report.type == 'adult') {
-          PendingAdultReportManager.removeStoredData();
-          saved = await PendingAdultReportManager.saveData(report);
+          GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
+          saved = await GeneralPendingReportManager.getInstance(mosquitoReportSavekey).saveData(report);
         }
         if (report.type == 'bite') {
-          PendingBiteReportManager.removeStoredData();
-          saved = await PendingBiteReportManager.saveData(report);
+          GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
+          saved = await GeneralPendingReportManager.getInstance(biteReportSaveKey).saveData(report);
         }
         if (report.type == 'site') {
-          PendingBreedingReportManager.removeStoredData();
-          saved = await PendingBreedingReportManager.saveData(report);
+          GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
+          saved = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(report);
         }
         return null;
       }
       if (response.statusCode != 201) {
         PendingPhotosManager.removeStoredData();
-        PendingBreedingReportManager.removeStoredData();
-        PendingAdultReportManager.removeStoredData();
-        PendingBiteReportManager.removeStoredData();
+        GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
+        GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
+        GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
 
         return null;
       } else {
         PendingPhotosManager.removeStoredData();
-        PendingBreedingReportManager.removeStoredData();
-        PendingAdultReportManager.removeStoredData();
-        PendingBiteReportManager.removeStoredData();
+        GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
+        GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
+        GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
       }
 
       if (report.version_number > 0) {

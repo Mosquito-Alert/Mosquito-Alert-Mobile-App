@@ -161,14 +161,14 @@ class _BitingReportPageState extends State<BitingReportPage> {
       widget.loadData();
     }
     if (res == null || !res) {
-      if (await PendingBiteReportManager.loadData() != null) {
+      if (await GeneralPendingReportManager.getInstance(biteReportSaveKey).loadData() != null) {
         _showAlertOk(offline: true);
         return;
       }
       _showAlertKo();
       loadingStream.add(false);
     } else {
-      PendingBiteReportManager.removeStoredData();
+      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
       if (Utils.savedAdultReport != null) {
         List<Campaign> campaingsList =
             await ApiSingleton().getCampaigns(Utils.savedAdultReport.country);
@@ -429,7 +429,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
-        PendingBiteReportManager.removeStoredData();
+        GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
         Navigator.pop(context);
       }, context);
     } else {
@@ -437,7 +437,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         Utils.deleteLastReport();
       }
       Navigator.pop(context);
-      PendingBiteReportManager.removeStoredData();
+      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
     }
   }
 }
