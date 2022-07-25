@@ -247,7 +247,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
   void goNextPage() async {
     if (addBiting) {
       Utils.addOtherReport('bite');
-      var savedReport = await GeneralPendingReportManager.getInstance(biteReportSaveKey).loadData();
+      var savedReport =
+          await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+              .loadData();
       if (savedReport != null) {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => BitingReportPage()));
@@ -266,7 +268,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   void _createReport() async {
-    var safe = await GeneralPendingReportManager.getInstance(mosquitoReportSavekey).saveData(Utils.report);
     loadingStream.add(true);
     setState(() {
       percentStream.add(0.8);
@@ -303,7 +304,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
       _showAlertKo();
       loadingStream.add(false);
     } else {
-      GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
+      GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+          .removeStoredData();
       if (Utils.savedAdultReport != null) {
         if (Utils.savedAdultReport.country != null) {
           List<Campaign> campaignsList =
@@ -390,7 +392,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       setState(() {
                         index = 0;
                       });
-                      await GeneralPendingReportManager.getInstance(mosquitoReportSavekey).saveData(Utils.report);
+                      await GeneralPendingReportManager.getInstance(
+                              mosquitoReportSavekey)
+                          .saveData(Utils.report, Utils.imagePath, 'adult');
                       await _pagesController
                           .animateToPage(0,
                               duration: Duration(microseconds: 300),
@@ -462,23 +466,12 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                             if (currentPage == 3.0 &&
                                                 addBiting) {
                                               Utils.addOtherReport('bite');
-                                              var savedReport =
-                                                  await GeneralPendingReportManager.getInstance(biteReportSaveKey)
-                                                      .loadData();
-                                              if (savedReport != null) {
-                                                await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            BitingReportPage()));
-                                              } else {
-                                                await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            BitingReportPage()));
-                                              }
-                                              ;
+
+                                              await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          BitingReportPage()));
                                             } else {
                                               if (showCamera) {
                                                 _chooseTypeImage();
@@ -522,7 +515,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                           context, 'understand_txt'),
                                       () {
                                         Navigator.pop(context);
-                                        GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+                                        GeneralPendingReportManager.getInstance(
+                                                mosquitoReportSavekey)
                                             .removeStoredData();
                                         Utils.resetReport();
                                         Utils.imagePath = null;
@@ -770,7 +764,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
       widget.editReport == null
           ? '${MyLocalizations.of(context, 'save_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}'
           : '${MyLocalizations.of(context, 'edited_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}',
-
       context,
       onPressed: () {
         Navigator.pop(context);
@@ -814,9 +807,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
-        GeneralPendingReportManager.getInstance(mosquitoReportSavekey).removeStoredData();
-        GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
-        PendingPhotosManager.removeStoredData();
         Navigator.pop(context);
       }, context);
     } else {

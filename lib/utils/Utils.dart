@@ -421,11 +421,11 @@ class Utils {
       }
 
       GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
-          .removeSpecificData(reportUUID);
+          .removeSpecificData(reportUUID, 'adult');
       GeneralPendingReportManager.getInstance(biteReportSaveKey)
-          .removeSpecificData(reportUUID);
+          .removeSpecificData(reportUUID, 'bite');
       GeneralPendingReportManager.getInstance(breedingReportSaveKey)
-          .removeSpecificData(reportUUID);
+          .removeSpecificData(reportUUID, 'site');
 
       return true;
     } catch (e) {
@@ -468,21 +468,24 @@ class Utils {
               .removeStoredData();
           await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
               .saveData(
-                  reportsList.firstWhere((element) => element.type == 'adult'));
+                  reportsList.firstWhere((element) => element.type == 'adult'),
+                  Utils.imagePath, 'adult');
         }
         if (reportsList.any((element) => element.type == 'bite')) {
           GeneralPendingReportManager.getInstance(biteReportSaveKey)
               .removeStoredData();
           await GeneralPendingReportManager.getInstance(biteReportSaveKey)
               .saveData(
-                  reportsList.firstWhere((element) => element.type == 'bite'));
+                  reportsList.firstWhere((element) => element.type == 'bite'),
+                  null, 'bite');
         }
         if (reportsList.any((element) => element.type == 'site')) {
           GeneralPendingReportManager.getInstance(breedingReportSaveKey)
               .removeStoredData();
           await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
               .saveData(
-                  reportsList.firstWhere((element) => element.type == 'site'));
+                  reportsList.firstWhere((element) => element.type == 'site'),
+                  Utils.imagePath, 'site');
         }
       }
 

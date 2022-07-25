@@ -32,9 +32,21 @@ class GeneralPendingReportManager {
     return GeneralPendingReportManager();
   }
 
-  Future<bool> saveData(Report safeReport) async {
+  Future<bool> saveData(Report safeReport, List<Map> photos, String type) async {
     try {
+      removeSpecificData([safeReport.version_UUID], type);
       var prefs = await SharedPreferences.getInstance();
+
+      if (photos != null) {
+        safeReport.photos = [];
+        photos.forEach((element) {
+          //element['imageFile']
+          element['imageFile'] = null;
+          safeReport.photos
+              .add(Photo(id: element['id'], photo: element['image']));
+        });
+      }
+
       var currentReports = await loadData();
       print(currentReports);
       currentReports.add(safeReport);
@@ -80,10 +92,25 @@ class GeneralPendingReportManager {
     // }
   }
 
-  void removeSpecificData(List<String> reportUUID) async {
+  void removeSpecificData(List<String> reportUUID, String type) async {
     try {
       var prefs = await SharedPreferences.getInstance();
-      var storedData = await loadData();
+      var storedData = [];
+      if (type == 'adult') {
+        storedData =
+            await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+                .loadData();
+      }
+      if (type == 'site') {
+        storedData =
+            await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+                .loadData();
+      }
+      if (type == 'bite') {
+        storedData =
+            await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+                .loadData();
+      }
       for (var repUUID in reportUUID) {
         storedData.removeWhere((report) => report.version_UUID == repUUID);
       }
@@ -96,7 +123,7 @@ class GeneralPendingReportManager {
 
 ////////////////////////////////////////////////////////////////
 ///
-///           PENDING ADULT REPORT MANAGER
+///              PENDING PHOTOS REPORT MANAGER
 ///
 ////////////////////////////////////////////////////////////////
 

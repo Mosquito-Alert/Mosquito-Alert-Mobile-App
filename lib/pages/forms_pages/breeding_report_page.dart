@@ -185,7 +185,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _createReport() async {
-    var x = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(Utils.report);
+    var x = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(Utils.report, Utils.imagePath, 'site');
     print(x);
     setState(() {
       percentStream.add(0.8);

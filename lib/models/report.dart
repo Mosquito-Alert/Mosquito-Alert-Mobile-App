@@ -197,7 +197,7 @@ class Report {
 }
 
 class Photo {
-  int id;
+  String id;
   String photo;
   String uuid;
 
