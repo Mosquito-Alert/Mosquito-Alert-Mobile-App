@@ -52,8 +52,6 @@ class _MainVCState extends State<MainVC> {
   sendPendingItems() async {
     Utils.reportsList = [];
 
-
-
     await Utils.syncPendingReports();
   }
 
@@ -767,23 +765,11 @@ class _MainVCState extends State<MainVC> {
     var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
-      var images = await PendingPhotosManager.loadData();
-
       await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AdultReportPage(
-                    images: images,
-                  )));
+          context, MaterialPageRoute(builder: (context) => AdultReportPage()));
     } else {
-      var images = await PendingPhotosManager.loadData();
-
       await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AdultReportPage(
-                    images: images,
-                  )));
+          context, MaterialPageRoute(builder: (context) => AdultReportPage()));
       // print('Adult report was not created');
       // loadingStream.add(false);
       // await Utils.showAlert(MyLocalizations.of(context, 'app_name'),
@@ -798,22 +784,16 @@ class _MainVCState extends State<MainVC> {
     var pendingAdultReport =
         await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
             .loadData();
-    var images = await PendingPhotosManager.loadData();
+
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => BreedingReportPage(
-                  images: images,
-                )),
+        MaterialPageRoute(builder: (context) => BreedingReportPage()),
       );
     } else {
       await Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => BreedingReportPage(
-                  images: images,
-                )),
+        MaterialPageRoute(builder: (context) => BreedingReportPage()),
       );
       // print('Site report was not created');
       // loadingStream.add(false);

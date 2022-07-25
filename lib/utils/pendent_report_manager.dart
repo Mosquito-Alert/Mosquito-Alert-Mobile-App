@@ -78,19 +78,10 @@ class GeneralPendingReportManager {
       }
       return reports;
     } catch (e) {
-      removeStoredData();
       return [];
     }
   }
 
-  void removeStoredData() async {
-    // try {
-    //   var prefs = await SharedPreferences.getInstance();
-    //   await prefs.remove(saveKey);
-    // } catch (ex) {
-    //   print(ex);
-    // }
-  }
 
   void removeSpecificData(List<String> reportUUID, String type) async {
     try {
@@ -117,84 +108,6 @@ class GeneralPendingReportManager {
       await prefs.setString(saveKey, jsonEncode(storedData));
     } catch (ex) {
       print(ex);
-    }
-  }
-}
-
-////////////////////////////////////////////////////////////////
-///
-///              PENDING PHOTOS REPORT MANAGER
-///
-////////////////////////////////////////////////////////////////
-
-class PendingPhotosManager {
-  static final PendingPhotosManager _singleton =
-      PendingPhotosManager._internal();
-
-  @protected
-  static final String saveKey = 'save_pending_photos_key';
-
-  factory PendingPhotosManager() {
-    return _singleton;
-  }
-
-  PendingPhotosManager._internal();
-
-  static PendingPhotosManager getInstance() {
-    return PendingPhotosManager();
-  }
-
-  static Future<bool> saveData(List<Map> photos) async {
-    try {
-      removeStoredData();
-      var prefs = await SharedPreferences.getInstance();
-
-      photos.forEach((element) {
-        //element['imageFile']
-        element['imageFile'] = null;
-      });
-
-      return await prefs.setString(saveKey, jsonEncode(photos));
-    } catch (ex) {
-      print(ex);
-      return false;
-    }
-  }
-
-  static void removeStoredData() async {
-    try {
-      var prefs = await SharedPreferences.getInstance();
-
-      await prefs.remove(saveKey);
-    } catch (ex) {
-      print(ex);
-    }
-  }
-
-  static Future<List<Map>> loadData() async {
-    var prefs = await SharedPreferences.getInstance();
-    List<Map> mapPhotos = [];
-    var photos;
-
-    try {
-      final reportEncoded = prefs.getString(saveKey);
-
-      photos = jsonDecode(reportEncoded);
-
-      for (var photo in photos) {
-        mapPhotos.add({
-          'image': photo['image'],
-          'id': photo['id'],
-          'imageFile': File(photo['image'])
-        });
-      }
-
-      print(photos);
-    } catch (ex) {
-      print(ex);
-      //removeStoredData();
-    } finally {
-      return mapPhotos ?? [];
     }
   }
 }

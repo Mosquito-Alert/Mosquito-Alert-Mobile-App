@@ -142,17 +142,19 @@ class _BitingReportPageState extends State<BitingReportPage> {
     });
     loadingStream.add(true);
     if (Utils.oflineMode) {
-      if (Utils.reportsList.isEmpty) {
+            if (Utils.reportsList.isEmpty) {
         Utils.reportsList.add(Utils.report);
       }
       if (Utils.reportsList.any((element) => element.type == 'bite')) {
-        await GeneralReportManager.getInstance(biteReportSaveKey).saveData(
-            Utils.reportsList.firstWhere((element) => element.type == 'bite' ),
-            null,
-            'bite', false);
+
+        await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+            .saveData(
+                Utils.reportsList
+                    .firstWhere((element) => element.type == 'bite'),
+                null,
+                'bite');
       }
-      _showAlertOk();
-      Utils.imagePath = [];
+      _showAlertOk();      Utils.imagePath = [];
       return;
     }
     var res = await Utils.createReport();
@@ -161,14 +163,16 @@ class _BitingReportPageState extends State<BitingReportPage> {
       widget.loadData();
     }
     if (res == null || !res) {
-      if (await GeneralPendingReportManager.getInstance(biteReportSaveKey).loadData() != null) {
+      if (await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+              .loadData() !=
+          null) {
         _showAlertOk(offline: true);
         return;
       }
       _showAlertKo();
       loadingStream.add(false);
     } else {
-      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
+
       if (Utils.savedAdultReport != null) {
         List<Campaign> campaingsList =
             await ApiSingleton().getCampaigns(Utils.savedAdultReport.country);
@@ -385,7 +389,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
       widget.editReport == null
           ? '${MyLocalizations.of(context, 'save_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}'
           : '${MyLocalizations.of(context, 'edited_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}',
-
       context,
       onPressed: () {
         Navigator.pop(context);
@@ -429,7 +432,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           Utils.resetReport();
           Utils.imagePath = null;
         }
-        GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
+
         Navigator.pop(context);
       }, context);
     } else {
@@ -437,7 +440,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         Utils.deleteLastReport();
       }
       Navigator.pop(context);
-      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
+
     }
   }
 }

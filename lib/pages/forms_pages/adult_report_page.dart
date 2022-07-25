@@ -277,22 +277,28 @@ class _AdultReportPageState extends State<AdultReportPage> {
         Utils.reportsList.add(Utils.report);
       }
       if (Utils.reportsList.any((element) => element.type == 'adult')) {
-        await GeneralReportManager.getInstance(mosquitoReportSavekey).saveData(
-            Utils.reportsList.firstWhere((element) => element.type == 'adult'),
-            Utils.imagePath,
-            'adult', false);
+        await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
+            .saveData(
+                Utils.reportsList
+                    .firstWhere((element) => element.type == 'adult'),
+                Utils.imagePath,
+                'adult');
       }
       if (Utils.reportsList.any((element) => element.type == 'bite')) {
-        await GeneralReportManager.getInstance(biteReportSaveKey).saveData(
-            Utils.reportsList.firstWhere((element) => element.type == 'bite'),
-            null,
-            'bite', false);
+        await GeneralPendingReportManager.getInstance(biteReportSaveKey)
+            .saveData(
+                Utils.reportsList
+                    .firstWhere((element) => element.type == 'bite'),
+                null,
+                'bite');
       }
       if (Utils.reportsList.any((element) => element.type == 'site')) {
-        await GeneralReportManager.getInstance(breedingReportSaveKey).saveData(
-            Utils.reportsList.firstWhere((element) => element.type == 'site'),
-            Utils.imagePath,
-            'site', false);
+        await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+            .saveData(
+                Utils.reportsList
+                    .firstWhere((element) => element.type == 'site'),
+                Utils.imagePath,
+                'site');
       }
       _showAlertOk();
       Utils.imagePath = [];
@@ -304,8 +310,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
       _showAlertKo();
       loadingStream.add(false);
     } else {
-      GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
-          .removeStoredData();
       if (Utils.savedAdultReport != null) {
         if (Utils.savedAdultReport.country != null) {
           List<Campaign> campaignsList =
@@ -515,9 +519,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                           context, 'understand_txt'),
                                       () {
                                         Navigator.pop(context);
-                                        GeneralPendingReportManager.getInstance(
-                                                mosquitoReportSavekey)
-                                            .removeStoredData();
+
                                         Utils.resetReport();
                                         Utils.imagePath = null;
                                       },
@@ -699,7 +701,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   getGalleryImages() async {
-    if (Utils.imagePath.isEmpty) {
+    if (Utils.imagePath == null || Utils.imagePath.isEmpty) {
+      Utils.imagePath = [];
       var pickFiles = await FilePicker.platform.pickFiles(
         type: FileType.image,
       );

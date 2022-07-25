@@ -185,7 +185,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _createReport() async {
-    var x = await GeneralPendingReportManager.getInstance(breedingReportSaveKey).saveData(Utils.report, Utils.imagePath, 'site');
+    var x = await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+        .saveData(Utils.report, Utils.imagePath, 'site');
     print(x);
     setState(() {
       percentStream.add(0.8);
@@ -196,11 +197,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         Utils.reportsList.add(Utils.report);
       }
       if (Utils.reportsList.any((element) => element.type == 'site')) {
-        await GeneralReportManager.getInstance(breedingReportSaveKey).saveData(
-            Utils.reportsList.firstWhere((element) => element.type == 'site'),
-            Utils.imagePath,
-            'site',
-            false);
+        await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+            .saveData(
+                Utils.reportsList
+                    .firstWhere((element) => element.type == 'site'),
+                Utils.imagePath,
+                'site');
       }
       _showAlertOk();
       Utils.imagePath = [];
@@ -209,7 +211,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     bool res = await Utils.createReport();
 
     if (res == null) {
-      if (await GeneralPendingReportManager.getInstance(breedingReportSaveKey).loadData() != null) {
+      if (await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
+              .loadData() !=
+          null) {
         _showAlertOk(offline: true);
         return;
       }
@@ -222,8 +226,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     if (!res) {
       _showAlertKo();
     } else {
-      GeneralPendingReportManager.getInstance(biteReportSaveKey).removeStoredData();
-      PendingPhotosManager.removeStoredData();
       _showAlertOk();
       setState(() {
         percentStream.add(1.0);
@@ -514,7 +516,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       widget.editReport == null
           ? '${MyLocalizations.of(context, 'save_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}'
           : '${MyLocalizations.of(context, 'edited_report_ok_txt')} ${offline ? '(Offline Mode, will sync when connection is available)' : ''}',
-
       context,
       onPressed: () {
         Navigator.pop(context);
@@ -555,7 +556,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         if (Utils.reportsList != null && Utils.reportsList.isNotEmpty) {
           Utils.deleteLastReport();
         } else {
-          GeneralPendingReportManager.getInstance(breedingReportSaveKey).removeStoredData();
           Utils.resetReport();
           Utils.imagePath = null;
         }

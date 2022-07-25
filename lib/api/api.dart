@@ -24,7 +24,7 @@ import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
-  static final _timeoutTimerInSeconds = 10;
+  static final _timeoutTimerInSeconds = 5;
 
   static String devBASEURL = 'https://madev.creaf.cat';
   static String prodBASEURL = 'https://webserver.mosquitoalert.com';
@@ -330,6 +330,9 @@ class ApiSingleton {
         },
       );
 
+      if (response == null) {
+        return null;
+      }
       if (response.statusCode != 200) {
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
@@ -546,6 +549,7 @@ class ApiSingleton {
                   breedingReportSaveKey)
               .saveData(report, Utils.imagePath, 'site');
         }
+        Utils.imagePath = [];
         return null;
       }
       if (response.statusCode != 201) {
@@ -564,7 +568,7 @@ class ApiSingleton {
 
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
-
+        Utils.imagePath = [];
         return null;
       } else {
         if (report.type == 'bite') {
@@ -579,6 +583,7 @@ class ApiSingleton {
           GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
               .removeSpecificData([report.version_UUID], 'adult');
         }
+        Utils.imagePath = [];
       }
 
       if (report.version_number > 0) {

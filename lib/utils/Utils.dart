@@ -28,6 +28,8 @@ import '../models/question.dart';
 import 'MyLocalizations.dart';
 
 class Utils {
+  static bool oflineMode = false;
+
   static Locale language = Locale('en', 'US');
   static List<Map> imagePath;
   static double maskCoordsValue = 0.025;
@@ -70,14 +72,11 @@ class Utils {
     }
     imagePath
         .add({'image': img.path, 'id': report.version_UUID, 'imageFile': img});
-    var saved = await PendingPhotosManager.saveData(imagePath);
-    print(saved);
   }
 
   static void deleteImage(String image) {
     imagePath.removeWhere((element) => element['image'] == image);
-    PendingPhotosManager.removeStoredData();
-    PendingPhotosManager.saveData(imagePath);
+
   }
 
   static void closeSession() {
@@ -97,6 +96,14 @@ class Utils {
       String userUUID = await UserManager.getUUID();
 
       dynamic response = await ApiSingleton().getLastSession(userUUID);
+      if (response == null) {
+        Utils.oflineMode = true;
+        await generateReport(type,
+            lat: lat, lon: lon, locationType: locationType, offline: true);
+        return true;
+      } else {
+        Utils.oflineMode = false;
+      }
       int sessionId = (response is bool && !response ? 0 : response) + 1;
 
       session = new Session(
@@ -469,9 +476,7 @@ class Utils {
       bool isCreated;
       if (reportsList.isNotEmpty) {
         if (reportsList.any((element) => element.type == 'adult')) {
-          PendingPhotosManager.removeStoredData();
-          GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
-              .removeStoredData();
+
           await GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'adult'),
@@ -479,8 +484,7 @@ class Utils {
                   'adult');
         }
         if (reportsList.any((element) => element.type == 'bite')) {
-          GeneralPendingReportManager.getInstance(biteReportSaveKey)
-              .removeStoredData();
+
           await GeneralPendingReportManager.getInstance(biteReportSaveKey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'bite'),
@@ -488,8 +492,7 @@ class Utils {
                   'bite');
         }
         if (reportsList.any((element) => element.type == 'site')) {
-          GeneralPendingReportManager.getInstance(breedingReportSaveKey)
-              .removeStoredData();
+
           await GeneralPendingReportManager.getInstance(breedingReportSaveKey)
               .saveData(
                   reportsList.firstWhere((element) => element.type == 'site'),
@@ -507,19 +510,6 @@ class Utils {
           isCreated = res != null ? true : false;
           if (!isCreated) {
             await saveLocalReport(reportsList[i]);
-          } else {
-            if (reportsList[i].type == 'bite') {
-              GeneralPendingReportManager.getInstance(biteReportSaveKey)
-                  .removeStoredData();
-            }
-            if (reportsList[i].type == 'adult') {
-              GeneralPendingReportManager.getInstance(mosquitoReportSavekey)
-                  .removeStoredData();
-            }
-            if (reportsList[i].type == 'site') {
-              GeneralPendingReportManager.getInstance(breedingReportSaveKey)
-                  .removeStoredData();
-            }
           }
         }
       }
