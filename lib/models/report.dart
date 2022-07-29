@@ -32,6 +32,7 @@ class Report {
   int country;
   String nuts3;
   String nuts2;
+  bool isUploaded;
 
   Report(
       {this.version_UUID,
@@ -58,9 +59,10 @@ class Report {
       this.os_language,
       this.os_version,
       this.app_language,
-        this.displayCity,
-        this.nuts3,
-        this.nuts2,
+      this.displayCity,
+      this.nuts3,
+      this.isUploaded,
+      this.nuts2,
       this.country});
 
   Report.fromJson(Map<dynamic, dynamic> json) {
@@ -107,6 +109,7 @@ class Report {
     country = json['country'];
     nuts3 = json['nuts_3'];
     nuts2 = json['nuts_2'];
+    isUploaded = json['offline'];
   }
 
   Map<String, dynamic> toJson() {
@@ -137,13 +140,59 @@ class Report {
       data['photos'] = photos.map((r) => r.toJson()).toList();
     }
 
-    data['device_manfacturer'] = device_manufacturer;
-    data['device_model'] = device_model;
-    data['os'] = os;
-    data['os_version'] = os_version;
-    data['os_language'] = os_language;
-    data['app_language'] = app_language;
+    data['device_manfacturer'] = this.device_manufacturer;
+    data['device_model'] = this.device_model;
+    data['os'] = this.os;
+    data['os_version'] = this.os_version;
+    data['os_language'] = this.os_language;
+    data['app_language'] = this.app_language;
+    data['offline'] = this.isUploaded;
     return data;
+  }
+
+  static Map<String, dynamic> toMap(Report report) => {
+        'version_UUID': report.version_UUID,
+        'version_number': report.version_number,
+        'user': report.user,
+        'report_id': report.report_id,
+        'phone_upload_time': report.phone_upload_time,
+        'creation_time': report.creation_time,
+        'version_time': report.version_time,
+        'type': report.type,
+        'location_choice': report.location_choice,
+        'current_location_lon': report.current_location_lon,
+        'current_location_lat': report.current_location_lat,
+        'selected_location_lon': report.selected_location_lon,
+        'selected_location_lat': report.selected_location_lat,
+        'note': report.note,
+        'package_name': report.package_name,
+        'package_version': report.package_version,
+        'session': report.session,
+        'photos': report.photos,
+        'responses': report.responses,
+        'device_manufacturer': report.device_manufacturer,
+        'device_model': report.device_model,
+        'os': report.os,
+        'os_version': report.os_version,
+        'os_language': report.os_language,
+        'app_language': report.app_language,
+        'displayCity': report.displayCity,
+        'country': report.country,
+        'nuts3': report.nuts3,
+        'nuts2': report.nuts2,
+        'offline': report.isUploaded,
+      };
+
+  static String encode(List<Report> reports) => json.encode(
+        reports
+            .map<Map<String, dynamic>>((report) => Report.toMap(report))
+            .toList(),
+      );
+
+  static List<Report> decode(String reports) {
+    return (json.decode(reports) as List<dynamic>)
+        .map<Report>((item) => Report.fromJson(item))
+        .toList();
   }
 }
 

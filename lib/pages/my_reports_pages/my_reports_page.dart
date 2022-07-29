@@ -19,6 +19,7 @@ import 'package:mosquito_alert_app/utils/clustering/aggregation_setup.dart';
 import 'package:mosquito_alert_app/utils/clustering/clustering_helper.dart';
 import 'package:mosquito_alert_app/utils/clustering/report_geohash.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
+import 'package:mosquito_alert_app/utils/pendent_report_manager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
@@ -844,31 +845,26 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _getData({bool letReturn = true, bool fromMap = true}) async {
     try {
+      final _genetalReportManager = GeneralReportManager();
       loadingStream.add(true);
       double distance;
-      // if (fromMap) {
-      //   double zoomLevel = await mapController.getZoomLevel();
-      //   if (_locationData != null && _zoomData != null) {
-      //     double distance = await Geolocator().distanceBetween(
-      //         _locationData.latitude,
-      //         _locationData.longitude,
-      //         location.latitude,
-      //         location.longitude);
-      //     if (distance < 750 && zoomLevel == _zoomData) {
-      //       if (letReturn) return;
-      //     }
-      //   }
+      var pendingAdultReports =
+          await GeneralReportManager.getInstance(mosquitoReportSavekey)
+              .loadData();
+      var pendingBiteReports =
+          await GeneralReportManager.getInstance(biteReportSaveKey).loadData();
+      var pendingBreedingReports =
+          await GeneralReportManager.getInstance(breedingReportSaveKey)
+              .loadData();
 
-      //   _locationData = location;
-      //   _zoomData = await mapController.getZoomLevel();
+      print('--> Adult ${pendingAdultReports.length}');
+      print('--> Bite ${pendingBiteReports.length}');
+      print('--> Breeding ${pendingBreedingReports.length}');
 
-      //   LatLngBounds bounds = await mapController.getVisibleRegion();
-      //   distance = await Geolocator().distanceBetween(
-      //       bounds.northeast.latitude,
-      //       bounds.northeast.longitude,
-      //       bounds.southwest.latitude,
-      //       bounds.southwest.longitude);
-      // }
+      List<Report> syncingReports = [];
+      syncingReports.addAll(pendingAdultReports);
+      syncingReports.addAll(pendingBiteReports);
+      syncingReports.addAll(pendingBreedingReports);
 
       List<Report> list = await ApiSingleton().getReportsList(
           location.latitude, location.longitude,
@@ -876,6 +872,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       if (list == null) {
         list = [];
+      } else {
+        for (var report in list) {
+          report.isUploaded = true;
+        }
+      }
+
+      for (var savedReport in syncingReports) {
+        if (savedReport.isUploaded == false) {
+          if (syncingReports
+              .any((element) => element.report_id == savedReport.report_id)) {
+            GeneralReportManager().setReportToUploaded(savedReport.report_id);
+          }
+        }
       }
 
       List<ReportAndGeohash> listMarkers = List();

@@ -180,8 +180,33 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
+    if (Utils.oflineMode) {
+      if (Utils.reportsList.isEmpty) {
+        Utils.reportsList.add(Utils.report);
+      }
+      if (Utils.reportsList.any((element) => element.type == 'site')) {
+        await GeneralReportManager.getInstance(breedingReportSaveKey).saveData(
+            Utils.reportsList.firstWhere((element) => element.type == 'site'),
+            Utils.imagePath,
+            'site',
+            false);
+      }
+      _showAlertOk();
+      Utils.imagePath = [];
+      return;
+    }
     bool res = await Utils.createReport();
 
+    if (res == null) {
+      if (await GeneralReportManager.getInstance(breedingReportSaveKey)
+              .loadData() !=
+          null) {
+        _showAlertOk(offline: true);
+        return;
+      }
+      _showAlertKo();
+      return;
+    }
     if (widget.editReport != null) {
       widget.loadData();
     }
@@ -343,6 +368,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   _chooseTypeImage() {
+    Utils.imagePath ??= [];
     if (widget.editReport == null) {
       List<Widget> listForiOS = <Widget>[
         CupertinoActionSheetAction(
@@ -414,7 +440,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   getGalleryImages() async {
-    var pickFiles = await FilePicker.platform.pickFiles(type: FileType.image);
+    Utils.imagePath ??= [];
+    if (Utils.imagePath.isEmpty) {
+      var pickFiles = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (pickFiles != null && pickFiles.files != null && pickFiles.files.isNotEmpty) {
       setShowCamera(false);

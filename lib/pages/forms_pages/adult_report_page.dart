@@ -234,10 +234,15 @@ class _AdultReportPageState extends State<AdultReportPage> {
   void goNextPage() {
     if (addBiting) {
       Utils.addOtherReport('bite');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => BitingReportPage()),
-      );
+      var savedReport =
+          await GeneralReportManager.getInstance(biteReportSaveKey).loadData();
+      if (savedReport != null) {
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BitingReportPage()));
+      } else {
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => BitingReportPage()));
+      }
     } else {
       _pagesController
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
@@ -253,6 +258,32 @@ class _AdultReportPageState extends State<AdultReportPage> {
     setState(() {
       percentStream.add(0.8);
     });
+    if (Utils.oflineMode) {
+      if (Utils.reportsList.isEmpty) {
+        Utils.reportsList.add(Utils.report);
+      }
+      if (Utils.reportsList.any((element) => element.type == 'adult')) {
+        await GeneralReportManager.getInstance(mosquitoReportSavekey).saveData(
+            Utils.reportsList.firstWhere((element) => element.type == 'adult'),
+            Utils.imagePath,
+            'adult', false);
+      }
+      if (Utils.reportsList.any((element) => element.type == 'bite')) {
+        await GeneralReportManager.getInstance(biteReportSaveKey).saveData(
+            Utils.reportsList.firstWhere((element) => element.type == 'bite'),
+            null,
+            'bite', false);
+      }
+      if (Utils.reportsList.any((element) => element.type == 'site')) {
+        await GeneralReportManager.getInstance(breedingReportSaveKey).saveData(
+            Utils.reportsList.firstWhere((element) => element.type == 'site'),
+            Utils.imagePath,
+            'site', false);
+      }
+      _showAlertOk();
+      Utils.imagePath = [];
+      return;
+    }
     var res = await Utils.createReport();
 
     if (!res) {
@@ -342,7 +373,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       setState(() {
                         index = 0;
                       });
-                      _pagesController
+                    
+                      await _pagesController
                           .animateToPage(0,
                               duration: Duration(microseconds: 300),
                               curve: Curves.ease)

@@ -769,6 +769,12 @@ class _MainVCState extends State<MainVC> {
   _createSiteReport() async {
     bool createReport = await Utils.createNewReport('site');
     loadingStream.add(false);
+
+    var createReport = await Utils.createNewReport('site');
+    var pendingAdultReport =
+        await GeneralReportManager.getInstance(breedingReportSaveKey)
+            .loadData();
+
     if (createReport) {
       Navigator.push(
         context,

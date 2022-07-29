@@ -500,18 +500,81 @@ class ApiSingleton {
       )
           .timeout(
         Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return;
+        onTimeout: () async {
+          if (report.type == 'adult') {
+            saved =
+                await GeneralReportManager.getInstance(mosquitoReportSavekey)
+                    .saveData(report, Utils.imagePath, 'adult', false);
+          }
+          if (report.type == 'bite') {
+            saved = await GeneralReportManager.getInstance(biteReportSaveKey)
+                .saveData(report, null, 'bite', false);
+          }
+          if (report.type == 'site') {
+            saved =
+                await GeneralReportManager.getInstance(breedingReportSaveKey)
+                    .saveData(report, Utils.imagePath, 'site', false);
+          }
+
+          return null;
         },
       );
       ;
 
       await saveImages(report);
+      if (response == null) {
+        // if (report.type == 'adult') {
+        //   GeneralReportManager.getInstance(mosquitoReportSavekey)
+        //       .removeSpecificData([report.version_UUID], 'adult');
+        //   saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
+        //       .saveData(report, Utils.imagePath, 'adult', false);
+        // }
+        // if (report.type == 'bite') {
+        //   GeneralReportManager.getInstance(biteReportSaveKey)
+        //       .removeSpecificData([report.version_UUID], 'bite');
+        //   saved = await GeneralReportManager.getInstance(biteReportSaveKey)
+        //       .saveData(report, null, 'bite', false);
+        // }
+        // if (report.type == 'site') {
+        //   GeneralReportManager.getInstance(breedingReportSaveKey)
+        //       .removeSpecificData([report.version_UUID], 'site');
+        //   saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
+        //       .saveData(report, Utils.imagePath, 'site', false);
+        // }
+        Utils.imagePath = [];
+        return null;
+      }
       if (response.statusCode != 201) {
+        if (report.type == 'adult') {
+          saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
+              .saveData(report, Utils.imagePath, 'adult', false);
+        }
+        if (report.type == 'bite') {
+          saved = await GeneralReportManager.getInstance(biteReportSaveKey)
+              .saveData(report, null, 'bite', false);
+        }
+        if (report.type == 'site') {
+          saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
+              .saveData(report, Utils.imagePath, 'site', false);
+        }
+
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
         return null;
+      } else {
+        if (report.type == 'adult') {
+          saved = await GeneralReportManager.getInstance(mosquitoReportSavekey)
+              .saveData(report, Utils.imagePath, 'adult', true);
+        }
+        if (report.type == 'bite') {
+          saved = await GeneralReportManager.getInstance(biteReportSaveKey)
+              .saveData(report, null, 'bite', true);
+        }
+        if (report.type == 'site') {
+          saved = await GeneralReportManager.getInstance(breedingReportSaveKey)
+              .saveData(report, Utils.imagePath, 'site', true);
+        }
+        Utils.imagePath = [];
       }
 
       if (report.version_number > 0) {

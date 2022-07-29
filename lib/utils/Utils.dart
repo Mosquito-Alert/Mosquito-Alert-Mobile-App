@@ -160,6 +160,55 @@ class Utils {
     return false;
   }
 
+  static generateReport(String type,
+      {lat, lon, locationType, bool offline = false}) async {
+    var lang = await UserManager.getLanguage();
+    var userUUID = await UserManager.getUUID();
+    report = new Report(
+        type: type,
+        report_id: randomAlphaNumeric(4).toString(),
+        version_number: 0,
+        version_UUID: new Uuid().v4(),
+        user: userUUID,
+        session: offline ? 0 : session.id,
+        isUploaded: offline,
+        responses: []);
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    report.package_name = packageInfo.packageName;
+    report.package_version = 32;
+
+    if (Platform.isAndroid) {
+      var buildData = await DeviceInfoPlugin().androidInfo;
+      report.device_manufacturer = buildData.manufacturer;
+      report.device_model = buildData.model;
+      report.os = 'Android';
+      report.os_language = language.languageCode;
+      report.os_version = buildData.version.sdkInt.toString();
+      report.app_language = lang != null ? lang : language.languageCode;
+    } else if (Platform.isIOS) {
+      var buildData = await DeviceInfoPlugin().iosInfo;
+      report.device_manufacturer = 'Apple';
+      report.device_model = buildData.model;
+      report.os = buildData.systemName;
+      report.os_language = language.languageCode;
+      report.os_version = buildData.systemVersion;
+      report.app_language = lang != null ? lang : language.languageCode;
+    }
+
+    if (lat != null && lon != null) {
+      if (locationType == 'selected') {
+        report.location_choice = 'selected';
+        report.selected_location_lat = lat;
+        report.selected_location_lon = lon;
+      } else {
+        report.location_choice = 'current';
+        report.current_location_lat = lat;
+        report.current_location_lon = lon;
+      }
+    }
+  }
+
   static resetReport() {
     report = null;
     session = null;
@@ -355,14 +404,99 @@ class Utils {
     report.responses.removeWhere((element) => element.question_id == id);
   }
 
+  static Future<bool> syncPendingReports() async {
+    try {
+      var pendingAdultReports =
+          await GeneralReportManager.getInstance(mosquitoReportSavekey)
+              .loadData();
+      var pendingBiteReports =
+          await GeneralReportManager.getInstance(biteReportSaveKey).loadData();
+      var pendingBreedingReports =
+          await GeneralReportManager.getInstance(breedingReportSaveKey)
+              .loadData();
+
+      print('--> Adult ${pendingAdultReports.length}');
+      print('--> Bite ${pendingBiteReports.length}');
+      print('--> Breeding ${pendingBreedingReports.length}');
+
+      List<Report> syncingReports = [];
+      syncingReports.addAll(pendingAdultReports);
+      syncingReports.addAll(pendingBiteReports);
+      syncingReports.addAll(pendingBreedingReports);
+
+      String userUUID = await UserManager.getUUID();
+
+      var reportUUID = <String>[];
+
+      // CHECK IS UPLOADED
+      if (Utils.location != null) {
+        location = Utils.location;
+        double distance;
+
+        List<Report> list = await ApiSingleton().getReportsList(
+            location.latitude, location.longitude,
+            radius: (distance != null ? distance : 1000 / 2).round());
+
+        if (list == null) {
+          list = [];
+        } else {
+          for (var report in list) {
+            report.isUploaded = true;
+          }
+        }
+        for (var syncReport
+            in syncingReports.where((element) => element.isUploaded == false)) {
+          if (list
+              .any((element) => element.report_id == syncReport.report_id)) {
+            await GeneralReportManager()
+                .setReportToUploaded(syncReport.report_id);
+          }
+        }
+      }
+
+      for (Report report
+          in syncingReports.where((element) => element.isUploaded == false)) {
+        dynamic response = await ApiSingleton().getLastSession(userUUID);
+        int sessionId = (response is bool && !response ? 0 : response) + 1;
+        session = Session(
+            session_ID: sessionId,
+            user: userUUID,
+            session_start_time: DateTime.now().toIso8601String());
+
+        if (response is bool && !response) {
+          print('Unable to get last session.');
+          break;
+        } else {
+          session.id = await ApiSingleton().createSession(session);
+        }
+
+        report.session = sessionId;
+        report.version_time = DateTime.now().toIso8601String();
+        report.creation_time = DateTime.now().toIso8601String();
+        report.phone_upload_time = DateTime.now().toIso8601String();
+        if (report.isUploaded == false) {
+          var res = await ApiSingleton().createReport(report);
+          var isCreated = res != null ? true : false;
+          if (!isCreated) {
+          } else {
+            reportUUID.add(report.version_UUID);
+          }
+        }
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<bool> createReport() async {
     if (report.version_number > 0) {
       report.version_time = DateTime.now().toIso8601String();
       var res = await ApiSingleton().createReport(report);
       if (res != null) {
-        if (res.type == 'adult') {
-          savedAdultReport = res;
-        }
+        if (res.type == 'adult') {}
+
         return true;
       } else {
         return false;
@@ -373,7 +507,8 @@ class Utils {
       report.phone_upload_time = DateTime.now().toIso8601String();
       reportsList.add(report);
       bool isCreated;
-      for (int i = 0; i < reportsList.length; i++) {
+
+      for (var i = 0; i < reportsList.length; i++) {
         var res = await ApiSingleton().createReport(reportsList[i]);
         if (res.type == 'adult') {
           savedAdultReport = res;

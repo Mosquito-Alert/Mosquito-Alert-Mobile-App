@@ -134,12 +134,32 @@ class _BitingReportPageState extends State<BitingReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
+    if (Utils.oflineMode) {
+      if (Utils.reportsList.isEmpty) {
+        Utils.reportsList.add(Utils.report);
+      }
+      if (Utils.reportsList.any((element) => element.type == 'bite')) {
+        await GeneralReportManager.getInstance(biteReportSaveKey).saveData(
+            Utils.reportsList.firstWhere((element) => element.type == 'bite' ),
+            null,
+            'bite', false);
+      }
+      _showAlertOk();
+      Utils.imagePath = [];
+      return;
+    }
     var res = await Utils.createReport();
 
     if (widget.editReport != null) {
       widget.loadData();
     }
-    if (!res) {
+    if (res == null || !res) {
+      if (await GeneralReportManager.getInstance(biteReportSaveKey)
+              .loadData() !=
+          null) {
+        _showAlertOk(offline: true);
+        return;
+      }
       _showAlertKo();
     } else {
       if (Utils.savedAdultReport != null) {
