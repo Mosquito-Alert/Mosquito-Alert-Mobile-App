@@ -32,6 +32,22 @@ class GeneralReportManager {
     return GeneralReportManager();
   }
 
+  String uuidkey = "save_uuid_user";
+
+  Future<bool> saveUUIDUser(String userUuids) async {
+    var count = 0;
+    var prefs = await SharedPreferences.getInstance();
+
+    var istrue = await prefs.setString(uuidkey, userUuids);
+    return istrue;
+  }
+
+  Future<String> loadUUIDUser() async {
+    var prefs = await SharedPreferences.getInstance();
+    var uidkeys =  prefs.getString(uuidkey);
+    return uidkeys;
+  }
+
   Future<bool> saveData(
       Report safeReport, List<Map> photos, String type, bool isUploaded) async {
     try {

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -112,6 +114,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if (Utils.locationLast != null) {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: Utils.locationLast, zoom: 15)));
+    }
+
     clusteringHelper.mapController = controller;
     clusteringHelper.updateMap();
   }
@@ -384,7 +391,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
           report.selected_location_lat, report.selected_location_lon);
     }
     Campaign campaign = await _checkCampaigns(report.country);
-    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
+    var address;
+    try {
+      address = await Geocoder.local.findAddressesFromCoordinates(coord);
+    } catch (ex) {
+      print(ex);
+    }
+
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         dismissible: true,
@@ -570,9 +583,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                 .toStringAsFixed(5) +
                                             ')',
                                     fontSize: 12),
-                                Style.body(
-                                    ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
-                                    fontSize: 12),
+                                address == null
+                                    ? SizedBox()
+                                    : Style.body(
+                                        ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
+                                        fontSize: 12),
                               ],
                             ),
                           ),
@@ -629,7 +644,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     ),
                                   ],
                                 ),
-                                report.photos.isNotEmpty
+                                report.photos != null &&
+                                        report.photos.isNotEmpty
                                     ? Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -658,14 +674,55 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               15),
-                                                      child: Image.network(
-                                                        ApiSingleton.baseUrl +
-                                                            report.photos[index]
-                                                                .photo,
-                                                        height: 60,
-                                                        width: 60,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                      child: report.isUploaded
+                                                          ? CachedNetworkImage(
+                                                              imageUrl: ApiSingleton
+                                                                      .baseUrl +
+                                                                  report
+                                                                      .photos[
+                                                                          index]
+                                                                      .photo,
+                                                              fadeOutDuration:
+                                                                  const Duration(
+                                                                      // TODO CHANGE IMAGE
+                                                                      microseconds:
+                                                                          1),
+                                                              fadeInDuration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                              placeholder:
+                                                                  (context,
+                                                                          url) =>
+                                                                      Container(
+                                                                child:
+                                                                    const Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              60),
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                ),
+                                                              ),
+                                                              errorWidget:
+                                                                  (context, url,
+                                                                          error) =>
+                                                                      Icon(
+                                                                Icons.wifi_off,
+                                                                color:
+                                                                    Colors.red,
+                                                                size: 24,
+                                                              ),
+                                                            )
+                                                          : Image.file(
+                                                              File(report
+                                                                  .photos[index]
+                                                                  .photo),
+                                                              height: 60,
+                                                              width: 60,
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                     ),
                                                   );
                                                 }),
@@ -878,12 +935,42 @@ class _MyReportsPageState extends State<MyReportsPage> {
         }
       }
 
+      bool hasChanged = false;
       for (var savedReport in syncingReports) {
         if (savedReport.isUploaded == false) {
           if (syncingReports
               .any((element) => element.report_id == savedReport.report_id)) {
-            GeneralReportManager().setReportToUploaded(savedReport.report_id);
+            await GeneralReportManager()
+                .setReportToUploaded(savedReport.report_id);
+            hasChanged = true;
           }
+        }
+      }
+      if (hasChanged && syncingReports != null && syncingReports.isNotEmpty) {
+        syncingReports.clear();
+        var pendingAdultReportstemp =
+            await GeneralReportManager.getInstance(mosquitoReportSavekey)
+                .loadData();
+        var pendingBiteReportstemp =
+            await GeneralReportManager.getInstance(biteReportSaveKey)
+                .loadData();
+        var pendingBreedingReportstemp =
+            await GeneralReportManager.getInstance(breedingReportSaveKey)
+                .loadData();
+
+        print('--> Adult ${pendingAdultReports.length}');
+        print('--> Bite ${pendingBiteReports.length}');
+        print('--> Breeding ${pendingBreedingReports.length}');
+
+        syncingReports = [];
+        syncingReports.addAll(pendingAdultReportstemp);
+        syncingReports.addAll(pendingBiteReportstemp);
+        syncingReports.addAll(pendingBreedingReportstemp);
+      }
+
+      for (var syncRep in syncingReports) {
+        if (!list.any((element) => element.report_id == syncRep.report_id)) {
+          list.add(syncRep);
         }
       }
 
@@ -906,7 +993,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
               i));
         }
       }
-
+      //"4ccb388b-52de-4081-a2f5-8076cb0d5b23"
+      if (UserManager.profileUUIDs != null) {
+        var x = UserManager.profileUUIDs.first;
+        await GeneralReportManager().saveUUIDUser(x);
+      } else {
+        UserManager.profileUUIDs = [];
+        String x = await GeneralReportManager().loadUUIDUser();
+        UserManager.profileUUIDs.add(x);
+      }
       List<Report> myData = list
           .where((element) =>
               UserManager.profileUUIDs.any((id) => id == element.user))
@@ -924,10 +1019,18 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 myData[0].current_location_lat, myData[0].current_location_lon)
             : LatLng(myData[0].selected_location_lat,
                 myData[0].selected_location_lon);
-        mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: location, zoom: 15)));
-      }
 
+        if (mapController != null) {
+          mapController.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(target: location, zoom: 15)));
+        } else {
+          Utils.locationLast = myData[0].location_choice == 'current'
+              ? LatLng(myData[0].current_location_lat,
+                  myData[0].current_location_lon)
+              : LatLng(myData[0].selected_location_lat,
+                  myData[0].selected_location_lon);
+        }
+      }
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
 

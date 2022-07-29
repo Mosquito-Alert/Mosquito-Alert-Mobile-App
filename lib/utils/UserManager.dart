@@ -59,8 +59,7 @@ class UserManager {
   }
 
   static fetchUser() async {
-    user = _auth
-        .currentUser;
+    user = _auth.currentUser;
 
     if (user == null) {
       return null;

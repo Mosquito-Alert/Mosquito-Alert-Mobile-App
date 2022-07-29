@@ -593,6 +593,18 @@ class ApiSingleton {
       await getUserScores();
       return newReport;
     } catch (e) {
+      if (report.type == 'adult') {
+        await GeneralReportManager.getInstance(mosquitoReportSavekey)
+            .saveData(report, Utils.imagePath, 'adult', false);
+      }
+      if (report.type == 'bite') {
+        await GeneralReportManager.getInstance(biteReportSaveKey)
+            .saveData(report, null, 'bite', false);
+      }
+      if (report.type == 'site') {
+        await GeneralReportManager.getInstance(breedingReportSaveKey)
+            .saveData(report, Utils.imagePath, 'site', false);
+      }
       return null;
     }
   }
