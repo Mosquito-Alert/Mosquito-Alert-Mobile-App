@@ -1,6 +1,6 @@
 name: mosquito_alert_app
 description: A new Flutter project.
-version: 2.0.8+1700
+version: 2.0.8+1773
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -51,7 +51,7 @@ dependencies:
   #connectivity_widget: ^0.1.7
   overlay_support: ^1.2.1
   app_tracking_transparency: ^2.0.2+1
-  cached_network_image: ^3.2.1
+  cached_network_image: ^3.2.0
 
   flutter_html: ^3.0.0-alpha.5
   webview_flutter: ^3.0.1
