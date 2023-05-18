@@ -20,7 +20,7 @@ dependencies:
   http: ^0.13.4
   random_string: ^2.3.1
   geolocator: ^8.2.0
-  dio: ^4.0.6
+  dio: ">=4.0.6 <6.0.0"
   image_picker: ^0.8.5
   firebase_auth: ^3.3.13
   firebase_messaging: ^11.2.12
