@@ -101,21 +101,21 @@ class Style {
 
   ///Buttons
 
+
   static Widget button(text, onPressed,
       {color, textColor, borderColor, elevation}) {
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: onPressed,
-      elevation: 0,
-      highlightElevation: 0,
-      hoverElevation: 0,
-      highlightColor: color ?? colorPrimary.withOpacity(0.5),
-      padding: EdgeInsets.symmetric(vertical: 14),
-      color: color ?? colorPrimary,
-      disabledColor: color != null
-          ? color.withOpacity(0.3)
-          : colorPrimary.withOpacity(0.3),
-      shape: RoundedRectangleBorder(
+      style: ElevatedButton.styleFrom(
+          elevation: 0,
+          padding: EdgeInsets.symmetric(vertical: 14),
+          backgroundColor: color ?? colorPrimary,
+          disabledBackgroundColor: color != null
+              ? color.withOpacity(0.3)
+              : colorPrimary.withOpacity(0.3),
+          shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3),
+      )
       ),
       child: Text(
         text,
@@ -128,21 +128,21 @@ class Style {
   }
 
   static Widget noBgButton(text, onPressed, {textColor, borderColor}) {
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
       elevation: 0,
-      highlightElevation: 0,
-      hoverElevation: 0,
-      highlightColor: colorPrimary.withOpacity(0.5),
+      shadowColor: colorPrimary.withOpacity(0.5),
       padding: EdgeInsets.symmetric(vertical: 14),
-      color: Colors.transparent,
-      disabledColor: Colors.white.withOpacity(0.3),
-      textColor: textColor ?? Colors.black,
-      disabledTextColor: textColor != null
+      backgroundColor: Colors.transparent,
+      disabledBackgroundColor: Colors.white.withOpacity(0.3),
+      foregroundColor: textColor ?? Colors.black,
+      disabledForegroundColor: textColor != null
           ? textColor.withOpacity(0.3)
           : Colors.black.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3),
+      )
       ),
       child: Text(
         text,
@@ -159,17 +159,19 @@ class Style {
       {colorBorder}) {
     return Container(
       height: 50,
-      child: RaisedButton(
-        elevation: 2,
+      child: ElevatedButton(
         onPressed: onPressed,
-        padding: EdgeInsets.all(0),
-        color: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          side: BorderSide(
-              color: colorBorder ?? color,
-              width: 1,
-              style: BorderStyle.solid),
+        style: ElevatedButton.styleFrom(
+          elevation: 2,
+          padding: EdgeInsets.all(0),
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(3.0),
+            side: BorderSide(
+                color: colorBorder ?? color,
+                width: 1,
+                style: BorderStyle.solid),
+          )
         ),
         child: Stack(
           children: <Widget>[

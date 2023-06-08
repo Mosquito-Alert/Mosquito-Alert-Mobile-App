@@ -17,7 +17,7 @@ class PartnersPage extends StatefulWidget {
 class _PartnersPageState extends State<PartnersPage> {
   GoogleMapController controller;
 
-  List<Marker> markers = List();
+  List<Marker> markers = List.empty(growable: true);
   StreamController<List<Marker>> markersStram =
       StreamController<List<Marker>>.broadcast();
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();

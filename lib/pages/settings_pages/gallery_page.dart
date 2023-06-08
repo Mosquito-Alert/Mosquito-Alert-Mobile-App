@@ -131,7 +131,7 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   List<Widget> renderListCustomTabs() {
-    List<Widget> tabs = List();
+    List<Widget> tabs = List.empty(growable: true);
     for (int i = 0; i < slides.length; i++) {
       Slide currentSlide = slides[i];
       tabs.add(Container(

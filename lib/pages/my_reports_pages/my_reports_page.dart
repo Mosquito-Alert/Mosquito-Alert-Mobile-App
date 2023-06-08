@@ -39,7 +39,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   //Map
   ClusteringHelper clusteringHelper;
-  List<ReportAndGeohash> _listMarkers = List();
+  List<ReportAndGeohash> _listMarkers = List.empty(growable: true);
   Set<Marker> markers = Set();
   BitmapDescriptor iconAdultYours;
   BitmapDescriptor iconBitesYours;
@@ -186,25 +186,23 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 width: 50,
                                 height: 50,
                                 margin: EdgeInsets.only(left: 12, bottom: 12),
-                                child: RaisedButton(
+                                child: ElevatedButton(
                                     onPressed: () {
                                       _infoBottom(context);
                                     },
+                                    style: ElevatedButton.styleFrom(
                                     elevation: 0,
-                                    highlightElevation: 0,
-                                    hoverElevation: 0,
-                                    highlightColor:
+                                    shadowColor:
                                         Style.colorPrimary.withOpacity(0.5),
                                     padding: EdgeInsets.symmetric(vertical: 2),
-                                    color: Color(0xffffffff),
-                                    disabledColor:
-                                        Style.colorPrimary.withOpacity(0.3),
+                                    backgroundColor: Color(0xffffffff),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(3),
                                         side: BorderSide(
                                             color:
                                                 Colors.black.withOpacity(0.2),
                                             width: 1.0)),
+                                      ),
                                     child: Icon(Icons.info_outline))),
                           )
                         ],
@@ -878,7 +876,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         list = [];
       }
 
-      List<ReportAndGeohash> listMarkers = List();
+      List<ReportAndGeohash> listMarkers = List.empty(growable: true);
       for (int i = 0; i < list.length; i++) {
         if (list[i].location_choice != 'missing' &&
                 list[i].current_location_lat != null &&

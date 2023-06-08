@@ -333,13 +333,13 @@ class ApiSingleton {
         return ApiResponse.fromJson(json.decode(response.body));
       } else {
         List<dynamic> jsonAnswer = json.decode(response.body);
-        List<Session> allSessions = List();
+        var allSessions = List<Session>.empty(growable: true);
 
         for (var item in jsonAnswer) {
           allSessions.add(Session.fromJson(item));
         }
 
-        if (allSessions.length == 0) {
+        if (allSessions.isEmpty) {
           return 0;
         }
 
@@ -589,11 +589,11 @@ class ApiSingleton {
         return null;
       } else {
         Map<String, dynamic> jsonAnswer = json.decode(response.body);
-        List<Report> list = [];
+        var list = <Report>[];
         page = jsonAnswer['next'];
 
         if (allReports == null) {
-          allReports = List();
+          allReports = List.empty(growable: true);
           UserManager.profileUUIDs = jsonAnswer['user_uuids'];
         }
         for (var item in jsonAnswer['results']) {

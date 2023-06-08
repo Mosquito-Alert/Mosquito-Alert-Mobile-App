@@ -83,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final key = GlobalKey<ScaffoldState>();
+    final key = GlobalKey<ScaffoldMessengerState>();
 
     return Scaffold(
       key: key,

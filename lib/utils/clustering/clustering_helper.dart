@@ -206,18 +206,18 @@ class ClusteringHelper {
       List<AggregatedPoints> aggregatedPoints;
       final latLngBounds = await mapController.getVisibleRegion();
       final listBounds = list.where((p) {
-        final double leftTopLatitude = latLngBounds.northeast.latitude;
-        final double leftTopLongitude = latLngBounds.southwest.longitude;
-        final double rightBottomLatitude = latLngBounds.southwest.latitude;
-        final double rightBottomLongitude = latLngBounds.northeast.longitude;
+        final leftTopLatitude = latLngBounds.northeast.latitude;
+        final leftTopLongitude = latLngBounds.southwest.longitude;
+        final rightBottomLatitude = latLngBounds.southwest.latitude;
+        final rightBottomLongitude = latLngBounds.northeast.longitude;
 
-        final bool latQuery = (leftTopLatitude > rightBottomLatitude)
+        final latQuery = (leftTopLatitude > rightBottomLatitude)
             ? p.location.latitude <= leftTopLatitude &&
                 p.location.latitude >= rightBottomLatitude
             : p.location.latitude <= leftTopLatitude ||
                 p.location.latitude >= rightBottomLatitude;
 
-        final bool longQuery = (leftTopLongitude < rightBottomLongitude)
+        final longQuery = (leftTopLongitude < rightBottomLongitude)
             ? p.location.longitude >= leftTopLongitude &&
                 p.location.longitude <= rightBottomLongitude
             : p.location.longitude >= leftTopLongitude ||
@@ -225,10 +225,10 @@ class ClusteringHelper {
         return latQuery && longQuery;
       }).toList();
 
-      aggregatedPoints = _retrieveAggregatedPoints(listBounds, List(), level);
+      aggregatedPoints = _retrieveAggregatedPoints(listBounds, List.empty(growable: true), level);
       return aggregatedPoints;
     } catch (e) {
-      return List<AggregatedPoints>();
+      return List.empty(growable: true);
     }
   }
 
@@ -241,14 +241,14 @@ class ClusteringHelper {
     if (inputList.isEmpty) {
       return resultList;
     }
-    final List<ReportAndGeohash> newInputList = List.from(inputList);
+    final newInputList = List<ReportAndGeohash>.from(inputList);
     List<ReportAndGeohash> tmp;
     final t = newInputList[0].geohash.substring(0, level);
     tmp =
         newInputList.where((p) => p.geohash.substring(0, level) == t).toList();
     newInputList.removeWhere((p) => p.geohash.substring(0, level) == t);
-    double latitude = 0;
-    double longitude = 0;
+    var latitude = 0.0;
+    var longitude = 0.0;
     tmp.forEach((l) {
       latitude += l.location.latitude;
       longitude += l.location.longitude;
@@ -271,7 +271,7 @@ class ClusteringHelper {
       if (a.count == 1) {
         bitmapDescriptor = getIcon(a.report, a.index == _selectedIndex);
       } else {
-        final Uint8List markerIcon =
+        final markerIcon =
             await getBytesFromCanvas(a.count.toString());
         bitmapDescriptor = BitmapDescriptor.fromBytes(markerIcon);
       }

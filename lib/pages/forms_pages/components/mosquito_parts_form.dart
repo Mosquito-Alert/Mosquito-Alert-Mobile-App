@@ -21,7 +21,7 @@ class MosquitoPartsForm extends StatefulWidget {
 }
 
 class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
-  List<Question> questions = List();
+  List<Question> questions = List.empty(growable: true);
 
   @override
   void initState() {

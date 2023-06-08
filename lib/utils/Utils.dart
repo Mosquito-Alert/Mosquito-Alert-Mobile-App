@@ -538,7 +538,7 @@ class Utils {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(MyLocalizations.of(context, 'ok')),
                 onPressed: () {
                   if (onPressed != null) {
@@ -608,7 +608,7 @@ class Utils {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(MyLocalizations.of(context, 'ok')),
                 onPressed: () {
                   if (onPressed != null) {
@@ -678,14 +678,14 @@ class Utils {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(MyLocalizations.of(context, 'yes')),
                 onPressed: () {
                   Navigator.of(context).pop();
                   onYesPressed();
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text(MyLocalizations.of(context, 'no')),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -1044,7 +1044,7 @@ class Utils {
               ]),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -1062,7 +1062,7 @@ class Utils {
                     Navigator.pop(context);
                     onPressed(context);
                   }),
-              FlatButton(
+              TextButton(
                 child: Text(MyLocalizations.of(context, 'no_show_info')),
                 onPressed: () {
                   Navigator.of(context).popUntil((r) => r.isFirst);

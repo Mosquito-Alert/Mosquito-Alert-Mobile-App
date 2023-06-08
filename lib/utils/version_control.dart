@@ -210,7 +210,7 @@ class VersionControl {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(okButtonTitle),
                 onPressed: () async {
                   if (updateMode == ComparisonMode.soft) {
@@ -223,7 +223,7 @@ class VersionControl {
                 },
               ),
               updateMode == ComparisonMode.soft
-                  ? FlatButton(
+                  ? TextButton(
                 child: Text(cancelButtonTitle),
                 onPressed: () {
                   Navigator.of(context).pop(true);
@@ -366,7 +366,7 @@ class VersionData {
     _id = json['id'];
     _name = json['name'];
     if (json['currentVersionConfig'] != null) {
-      _currentVersionConfig = List<CurrentVersionConfig>();
+      _currentVersionConfig = List.empty(growable: true);
       json['currentVersionConfig'].forEach((v) {
         _currentVersionConfig.add(CurrentVersionConfig.fromJson(v));
       });
