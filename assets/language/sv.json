@@ -320,5 +320,6 @@
     "ma_not_available": "Det verkar som om Mosquito Alert inte finns tillgänglig just nu. Var god försök senare.",
     "not_enough_permissions_location": "Vi saknar tillstånd för att få tillgång till platsdata på din enhet. Du kan ändra detta i app-inställningar. Vill du öppna inställningarna?",
     "gl_ES": "Galiciska",
-    "eu_ES": "Baskiska"
+    "eu_ES": "Baskiska",
+    "sv_SE": "Svenska"
 }

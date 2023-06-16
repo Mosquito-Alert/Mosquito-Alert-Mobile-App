@@ -320,5 +320,6 @@
     "ma_not_available": "Looks like Mosquito Alert isn't available right now. Please, try again later.",
     "not_enough_permissions_location": "We don't have enough permissions to acess the location data on your device. You can enable this on the app settings. Want to go there?",
     "gl_ES": "Galego",
-    "eu_ES": "Basco"
+    "eu_ES": "Basco",
+    "sv_SE": "Sueco"
 }
