@@ -1,0 +1,8 @@
+name: Pull request workflows
+
+on:
+  push:
+
+jobs:
+  integration_tests:
+    uses: ./.github/workflows/ios_integration_test.yml

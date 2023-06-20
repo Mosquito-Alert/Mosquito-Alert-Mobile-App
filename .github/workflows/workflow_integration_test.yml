@@ -1,0 +1,9 @@
+name: Integration tests
+on: 
+  workflow_call:
+    inputs:
+
+
+jobs:
+  integration_test:
+    # flutter test integration_test

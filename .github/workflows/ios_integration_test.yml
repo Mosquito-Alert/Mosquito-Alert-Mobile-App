@@ -1,0 +1,33 @@
+name: iOS Integration Tests
+on: 
+  workflow_call:
+
+jobs:
+  test_ios:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          - "iPhone 8"
+          - "iPhone 12 Pro Max"
+
+    steps:
+      - name: "Start Simulator"
+        uses: futureware-tech/simulator-action@v1
+        with:
+          model: ${{ matrix.device }}
+          erase_before_boot: true
+          shutdown_after_job: true
+
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.6.0'
+          channel: 'stable'
+
+      - run: "flutter clean"
+
+      - name: "Run Flutter integration tests"
+        run: "flutter test integration_test" 
