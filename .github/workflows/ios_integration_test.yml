@@ -25,11 +25,17 @@ jobs:
           echo $UDID
           xcrun simctl boot "${UDID:?No Simulator with this name found}"
       - uses: actions/checkout@v3
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
+
+      - name: Set up Dart SDK
+        uses: dart-lang/setup-dart@v1
         with:
-          channel: stable
-          flutter-version: '2.6.0'
+          dart-sdk: '2.17.6'
+  
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+          flutter-version: '3.0.5' 
+
       - name: Install Flutter dependencies
         run: flutter pub get
       - name: Run integration tests
