@@ -1,9 +1,9 @@
-name: Unit tests
-on: [push, pull_request]
+name: Static analysis
+on: 
+    workflow_call:
 
 jobs:
-
-  unit_test:
+  static_analysis:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -27,6 +27,3 @@ jobs:
 
     - name: Statically analyze the Dart code for any errors.
       run: flutter analyze
-
-    - name: Run tests for our flutter project.
-      run: flutter test unit_test

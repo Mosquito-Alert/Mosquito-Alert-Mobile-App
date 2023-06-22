@@ -1,0 +1,11 @@
+name: On push workflows
+
+on:
+  push:
+
+jobs:
+  unit_tests:
+    uses: ./.github/workflows/unit_tests.yml
+
+  static_analysis:
+    uses: ./.github/workflows/static_analysis.yml
