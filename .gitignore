@@ -52,3 +52,6 @@ android/app/src/profile/AndroidManifest.xml
 
 ios/Runner/GoogleService-Info.plist
 ios/Runner/Info.plist
+
+# Coverage
+coverage/
