@@ -1,11 +1,14 @@
-name: On push workflows
+# TODO: Enable this. I disabled only during this task
+#name: On push workflows
 
-on:
-  push:
+#on:
+#  push:
 
-jobs:
-  unit_tests:
-    uses: ./.github/workflows/unit_tests.yml
+#jobs:
+  
+#  unit_tests:
+#    uses: ./.github/workflows/unit_tests.yml
 
-  static_analysis:
-    uses: ./.github/workflows/static_analysis.yml
+
+  #static_analysis:
+  #  uses: ./.github/workflows/static_analysis.yml

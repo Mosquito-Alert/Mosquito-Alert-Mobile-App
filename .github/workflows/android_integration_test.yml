@@ -1,0 +1,59 @@
+name: Android Integration Tests
+on: 
+  workflow_call:
+
+jobs:
+    build-apk:
+        runs-on: ubuntu-latest
+        
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v3
+
+        - name: Set up Dart SDK
+          uses: dart-lang/setup-dart@v1
+          with:
+            dart-sdk: '2.17.6'
+
+        - name: Set up Flutter
+          uses: subosito/flutter-action@v2
+          with:
+            channel: stable
+            flutter-version: '3.0.5'
+            
+        - name: Get Packages
+          run: flutter pub get
+            
+        - name: Build APK
+          run: flutter build apk
+            
+    test:
+        needs: build-apk
+
+        strategy:
+            matrix:
+              device: [pixel_3, nexus_5]
+        
+        runs-on: macos-latest  # Android emulator is only available on macOS runners
+        
+        steps:
+        - name: Start Android Emulator
+          uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 30
+            target: ${{ matrix.device }}
+            
+        - name: Install APK
+          uses: devicefarm/setup-android-device@v1
+            
+        - name: Deploy APK to Emulator
+          run: adb install -r ./build/app/outputs/flutter-apk/app.apk
+            
+        - name: Run Integration Tests
+          run: flutter test integration_test
+            
+        - name: Publish Test Results
+          uses: actions/upload-artifact@v2
+          with:
+            name: Test Results
+            path: ${{ github.workspace }}/test/integration_screenshots/

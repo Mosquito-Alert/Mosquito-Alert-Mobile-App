@@ -4,5 +4,8 @@ on:
   push:
 
 jobs:
-  integration_tests:
+  ios_integration_tests:
     uses: ./.github/workflows/ios_integration_test.yml
+
+  android_integration_tests:
+    uses: ./.github/workflows/android_integration_test.yml
