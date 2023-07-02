@@ -10,6 +10,11 @@ jobs:
         - name: Checkout Repository
           uses: actions/checkout@v3
 
+        - name: Generate local.properties file
+          run: |
+            echo "transistorsoft.Key=${{ secrets.TRANSISTORSOFTKEY }}" >> android/local.properties
+            echo "googlemaps.Key=${{ secrets.GOOGLEMAPSKEY }}" >> android/local.properties
+
         - name: Set up Dart SDK
           uses: dart-lang/setup-dart@v1
           with:
@@ -19,7 +24,7 @@ jobs:
           uses: subosito/flutter-action@v2
           with:
             channel: stable
-            flutter-version: '3.0.5'
+            flutter-version: '2.8.1'
             
         - name: Get Packages
           run: flutter pub get
@@ -42,6 +47,7 @@ jobs:
           with:
             api-level: 30
             target: ${{ matrix.device }}
+            script: ./gradlew connectedCheck
             
         - name: Install APK
           uses: devicefarm/setup-android-device@v1
