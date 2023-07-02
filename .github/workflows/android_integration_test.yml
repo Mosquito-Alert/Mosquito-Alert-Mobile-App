@@ -15,17 +15,17 @@ jobs:
             echo "transistorsoft.Key=${{ secrets.TRANSISTORSOFTKEY }}" >> android/local.properties
             echo "googlemaps.Key=${{ secrets.GOOGLEMAPSKEY }}" >> android/local.properties
 
-        - name: Set up Dart SDK
-          uses: dart-lang/setup-dart@v1
-          with:
-            dart-sdk: '2.17.6'
-
         - name: Set up Flutter
           uses: subosito/flutter-action@v2
           with:
             channel: stable
-            flutter-version: '2.8.1'
-            
+            flutter-version: '2.10.5'
+
+        - name: Set up Dart SDK
+          uses: dart-lang/setup-dart@v1
+          with:
+            sdk: '2.19.0'
+
         - name: Get Packages
           run: flutter pub get
             
