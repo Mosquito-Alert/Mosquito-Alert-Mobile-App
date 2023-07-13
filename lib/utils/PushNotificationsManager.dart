@@ -139,7 +139,7 @@ class PushNotificationsManager {
       }
     }
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    /*SchedulerBinding.instance.addPostFrameCallback((_) {
       Navigator.push(
         navigatorKey.currentContext,
         MaterialPageRoute(
@@ -149,7 +149,7 @@ class PushNotificationsManager {
             fullscreenDialog: true),
       );
       ;
-    });
+    });*/
   }
 
   static Future<void> registerFCMToken(String fcmToken) async {
