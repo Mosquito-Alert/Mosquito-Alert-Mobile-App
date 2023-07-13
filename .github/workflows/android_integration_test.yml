@@ -18,7 +18,7 @@ jobs:
         - name: Set up Dart SDK
           uses: dart-lang/setup-dart@v1
           with:
-            dart-sdk: '2.17.6'
+            sdk: '2.17.6'
 
         - name: Set up Flutter
           uses: subosito/flutter-action@v2
