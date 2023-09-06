@@ -321,5 +321,6 @@
     "not_enough_permissions_location": "No tenemos permiso para utilizar los datos de ubicación de tu dispositivo. Puedes habilitarlos en los ajustes de la app. ¿Quieres abrirlos?",
     "gl_ES": "Gallego",
     "eu_ES": "Euskera",
-    "sv_SE": "Sueco"
+    "sv_SE": "Sueco",
+    "bn_BD": "Bengalí"
 }

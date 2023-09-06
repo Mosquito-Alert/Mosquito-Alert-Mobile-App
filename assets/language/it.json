@@ -321,5 +321,6 @@
     "not_enough_permissions_location": "We don't have enough permissions to acess the location data on your device. You can enable this on the app settings. Want to go there?",
     "gl_ES": "Galiziano",
     "eu_ES": "Basco",
-    "sv_SE": "Svedese"
+    "sv_SE": "Svedese",
+    "bn_BD": "Bengalese"
 }
