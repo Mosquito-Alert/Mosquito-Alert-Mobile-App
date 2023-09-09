@@ -12,14 +12,14 @@
     "ca": "Català",
     "en": "English",
     "understand_txt": "আমি বুঝেছি",
-    "url_politics": "http://webserver.mosquitoalert.com/bn/terms/",
-    "url_legal": "http://webserver.mosquitoalert.com/bn/privacy/",
-    "url_point_1": "http://webserver.mosquitoalert.com/bn/stats/user_ranking/1/",
-    "url_consent_form": "http://webserver.mosquitoalert.com/bn/terms/",
+    "url_politics": "https://webserver.mosquitoalert.com/bn/terms/",
+    "url_legal": "https://webserver.mosquitoalert.com/bn/privacy/",
+    "url_point_1": "https://webserver.mosquitoalert.com/bn/stats/user_ranking/1",
+    "url_consent_form": "https://webserver.mosquitoalert.com/bn/terms/",
     "url_web": "http://www.mosquitoalert.com",
-    "url_scoring_1": "http://webserver.mosquitoalert.com/bn/scoring/",
-    "url_about_us": "http://webserver.mosquitoalert.com/bn/about_us/",
-    "url_about_project": "http://webserver.mosquitoalert.com/bn/project_about/",
+    "url_scoring_1": "https://webserver.mosquitoalert.com/bn/scoring/",
+    "url_about_us": "https://webserver.mosquitoalert.com/bn/about_us/",
+    "url_about_project": "https://webserver.mosquitoalert.com/bn/project_about/",
     "welcome_app_title": "অন্য ওয়েবসাইটের অ্যাকাউন্ট ব্যবহার করে লগইন করুন",
     "login_method_txt": "আপনি অ্যাপটি আনইনস্টল করলেও একাধিক ডিভাইসে সিঙ্ক্রোনাইজ করতে পারবেন এবং আপনার তথ্য পুনরুদ্ধার করতে পারবেন",
     "login_btn1": "ফেসবুক দিয়ে লগইন করুন",
@@ -322,5 +322,5 @@
     "gl_ES": "গ্যালিসিয়ান",
     "eu_ES": "বাস্ক",
     "sv_SE": "সুইডিশ",
-    "bn_BD": "বাঙালি"
+    "bn_BD": "বাংলা"
 }
