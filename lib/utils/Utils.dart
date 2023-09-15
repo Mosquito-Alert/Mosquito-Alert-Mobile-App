@@ -95,7 +95,7 @@ class Utils {
       if (response is bool && !response) {
         print('Unable to get last session.');
         return false;
-      }else if(response is ApiResponse){
+      } else if(response is ApiResponse){
         print('response is of type ApiResponse, not a number.');
         return false;
       } else {
