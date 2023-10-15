@@ -36,7 +36,6 @@ dependencies:
   photo_view: ^0.13.0
   percent_indicator: ^4.0.0
   flutter_widget_from_html_core: ^0.8.5+1
-  geohash: ^0.2.1
   flutter_background_geolocation:
     git:
       url: https://github.com/transistorsoft/flutter_background_geolocation.git
