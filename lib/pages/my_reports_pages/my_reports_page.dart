@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
@@ -158,18 +157,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 mapType: MapType.normal,
                                 mapToolbarEnabled: false,
                                 myLocationButtonEnabled: false,
-                                // minMaxZoomPreference:
-                                //     MinMaxZoomPreference(14, 20),
                                 onCameraMove: (newPosition) {
                                   location = Position(
                                       latitude: newPosition.target.latitude,
                                       longitude: newPosition.target.longitude);
-                                  /*clusteringHelper.onCameraMove(newPosition,
-                                      forceUpdate: false)*/
                                 },
-                                // onCameraIdle: () {
-                                //   _getData();
-                                // },
                                 initialCameraPosition: CameraPosition(
                                   target: location != null
                                       ? LatLng(
@@ -374,16 +366,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   _reportBottomSheet(Report report) async {
     bool isMine = UserManager.profileUUIDs.any((id) => id == report.user);
-    Coordinates coord;
-    if (report.location_choice == 'current') {
-      coord =
-          Coordinates(report.current_location_lat, report.current_location_lon);
-    } else if (report.location_choice == 'selected') {
-      coord = Coordinates(
-          report.selected_location_lat, report.selected_location_lon);
-    }
     Campaign campaign = await _checkCampaigns(report.country);
-    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         dismissible: true,
@@ -570,7 +553,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             ')',
                                     fontSize: 12),
                                 Style.body(
-                                    ' ${MyLocalizations.of(context, "near_from_txt")} ${address[0].locality} (${address[0].subAdminArea})',
+                                    ' ${MyLocalizations.of(context, "near_from_txt")} ',
                                     fontSize: 12),
                               ],
                             ),
@@ -773,43 +756,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    // Expanded(
-                                    //     child: Style.noBgButton(
-                                    //         MyLocalizations.of(context, "edit"),
-                                    //         () {
-                                    //   Navigator.pop(context);
-                                    //   if (report.type == "bite") {
-                                    //     Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               BitingReportPage(
-                                    //                 editReport: report,
-                                    //                 loadData: _updateReport,
-                                    //               )),
-                                    //     );
-                                    //   } else if (report.type == "adult") {
-                                    //     Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               AdultReportPage(
-                                    //                 editReport: report,
-                                    //                 loadData: _updateReport,
-                                    //               )),
-                                    //     );
-                                    //   } else {
-                                    //     Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               BreedingReportPage(
-                                    //                 editReport: report,
-                                    //                 loadData: _updateReport,
-                                    //               )),
-                                    //     );
-                                    //   }
-                                    // })),
                                     Expanded(
                                         child: Style.noBgButton(
                                             MyLocalizations.of(
@@ -846,29 +792,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
     try {
       loadingStream.add(true);
       double distance;
-      // if (fromMap) {
-      //   double zoomLevel = await mapController.getZoomLevel();
-      //   if (_locationData != null && _zoomData != null) {
-      //     double distance = await Geolocator().distanceBetween(
-      //         _locationData.latitude,
-      //         _locationData.longitude,
-      //         location.latitude,
-      //         location.longitude);
-      //     if (distance < 750 && zoomLevel == _zoomData) {
-      //       if (letReturn) return;
-      //     }
-      //   }
-
-      //   _locationData = location;
-      //   _zoomData = await mapController.getZoomLevel();
-
-      //   LatLngBounds bounds = await mapController.getVisibleRegion();
-      //   distance = await Geolocator().distanceBetween(
-      //       bounds.northeast.latitude,
-      //       bounds.northeast.longitude,
-      //       bounds.southwest.latitude,
-      //       bounds.southwest.longitude);
-      // }
 
       List<Report> list = await ApiSingleton().getReportsList(
           location.latitude, location.longitude,
@@ -903,10 +826,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
               UserManager.profileUUIDs.any((id) => id == element.user))
           .toList();
 
-      myData
-          .map((element) async => element.displayCity = await getCity(element))
-          .toList();
-
       dataStream.add(myData);
       _myData = myData;
       if (myData != null && myData.isNotEmpty) {
@@ -926,19 +845,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<String> getCity(report) async {
-    Coordinates coord;
-    if (report.location_choice == 'current') {
-      coord =
-          Coordinates(report.current_location_lat, report.current_location_lon);
-    } else if (report.location_choice == 'selected') {
-      coord = Coordinates(
-          report.selected_location_lat, report.selected_location_lon);
-    }
-    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
-    return address[0].locality;
   }
 
   void _deleteReport(Report report) async {
@@ -961,32 +867,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
         context,
       );
     }
-  }
-
-  _updateReport() async {
-    //refresh all markers because it has not get image object
-    await _getData(letReturn: false, fromMap: false);
-    /*
-    int index =
-        _myData.indexWhere((r) => r.report_id == Utils.report.report_id);
-    _myData[index] = Utils.report;
-
-    int indexMarker = _listMarkers
-        .indexWhere((r) => r.report.report_id == Utils.report.report_id);
-
-    _listMarkers[indexMarker] = (ReportAndGeohash(
-        Utils.report,
-        LatLng(
-            Utils.report.current_location_lat != null
-                ? Utils.report.current_location_lat
-                : Utils.report.selected_location_lat,
-            Utils.report.current_location_lon != null
-                ? Utils.report.current_location_lon
-                : Utils.report.selected_location_lon),
-        indexMarker));
-
-    clusteringHelper.updateData(_listMarkers);
-*/
   }
 
   _getPosition(Report report) {

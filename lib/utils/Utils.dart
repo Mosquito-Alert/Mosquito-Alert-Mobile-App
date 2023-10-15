@@ -379,7 +379,7 @@ class Utils {
       bool isCreated;
       for (int i = 0; i < reportsList.length; i++) {
         var res = await ApiSingleton().createReport(reportsList[i]);
-        if (res.type == 'adult') {
+        if (res?.type == 'adult') {
           savedAdultReport = res;
         }
         isCreated = res != null ? true : false;

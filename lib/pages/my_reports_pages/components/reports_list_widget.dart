@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -99,18 +98,5 @@ class ReportsList extends StatelessWidget {
             }),
       );
     }
-  }
-
-  getCity(report) async {
-    Coordinates coord;
-    if (report.location_choice == 'current') {
-      coord =
-          Coordinates(report.current_location_lat, report.current_location_lon);
-    } else if (report.location_choice == 'selected') {
-      coord = Coordinates(
-          report.selected_location_lat, report.selected_location_lon);
-    }
-    var address = await Geocoder.local.findAddressesFromCoordinates(coord);
-    return address[0].locality;
   }
 }
