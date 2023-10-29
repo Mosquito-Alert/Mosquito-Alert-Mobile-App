@@ -7,7 +7,7 @@ class ReportAndGeohash {
   final LatLng location;
   final int index;
 
-  String geohash;
+  late String geohash;
 
   ReportAndGeohash(this.report, this.location, this.index) {
     //geohash = Geohash.encode(location.latitude, location.longitude);
