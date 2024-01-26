@@ -75,7 +75,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   MyLocalizations.of(context, 'notifications_title'),
                   fontSize: 16),
             ),
-            body: notifications.length == 0 || notifications.isEmpty
+            body: notifications.isEmpty
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
