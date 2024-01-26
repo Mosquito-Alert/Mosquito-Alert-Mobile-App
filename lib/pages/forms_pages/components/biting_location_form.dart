@@ -332,7 +332,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     );
   }
 
-  resetLocations() {
+  void resetLocations() {
     Utils.report!.selected_location_lat = null;
     Utils.report!.selected_location_lon = null;
     Utils.report!.current_location_lat = null;
