@@ -298,7 +298,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                                     .defaultLocation.longitude),
                                     zoom: 15.0,
                                   ),
-                                  markers: markers != null && markers.isNotEmpty
+                                  markers: markers.isNotEmpty
                                       ? Set.from(markers)
                                       : Set(),
                                   gestureRecognizers:
