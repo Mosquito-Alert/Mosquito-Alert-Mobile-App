@@ -296,25 +296,18 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  languagesSortedAlphabetically() {
-    // Alphabet depends on the currently selected language
-    List<Language> sortedLanguages = languageCodes.map((language) {
-      String translatedName = MyLocalizations.of(context, language.isoCode) ?? language.name;;
-
-      return Language(language.isoCode, translatedName);
-    }).toList();
-
-    sortedLanguages.sort((a, b) => a.name.compareTo(b.name));
-
-    return sortedLanguages;
-  }
-
   void _openLanguagePickerDialog() => showDialog(
         context: context,
         builder: (context) => Theme(
             data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
             child: LanguagePickerDialog(
-                languages: languagesSortedAlphabetically(),
+                languages: languageCodes.map(
+                  (language) => Language(
+                    language.isoCode,
+                    MyLocalizations.of(context, language.isoCode) ?? language.name
+                  )).toList()..sort(
+                          (a, b) => a.name.compareTo(b.name)
+                        ),
                 titlePadding: EdgeInsets.all(8.0),
                 searchCursorColor: Style.colorPrimary,
                 searchInputDecoration: InputDecoration(
