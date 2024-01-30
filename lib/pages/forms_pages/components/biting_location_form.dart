@@ -289,7 +289,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                                     .defaultLocation.longitude),
                                     zoom: 15.0,
                                   ),
-                                  markers: markers != null && markers.isNotEmpty
+                                  markers: markers.isNotEmpty
                                       ? Set.from(markers)
                                       : Set(),
                                   gestureRecognizers:
@@ -323,7 +323,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
     );
   }
 
-  resetLocations() {
+  void resetLocations() {
     Utils.report!.selected_location_lat = null;
     Utils.report!.selected_location_lon = null;
     Utils.report!.current_location_lat = null;
