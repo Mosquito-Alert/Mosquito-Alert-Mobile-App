@@ -61,8 +61,6 @@ class _SettingsPageState extends State<SettingsPage> {
     Language('ro_RO', 'Romanian'),
   ];
 
-  String? selectedLanguage;
-
   @override
   void initState() {
     super.initState();
@@ -298,12 +296,25 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  languagesSortedAlphabetically() {
+    // Alphabet depends on the currently selected language
+    List<Language> sortedLanguages = languageCodes.map((language) {
+      String translatedName = MyLocalizations.of(context, language.isoCode) ?? language.name;;
+
+      return Language(language.isoCode, translatedName);
+    }).toList();
+
+    sortedLanguages.sort((a, b) => a.name.compareTo(b.name));
+
+    return sortedLanguages;
+  }
+
   void _openLanguagePickerDialog() => showDialog(
         context: context,
         builder: (context) => Theme(
             data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
             child: LanguagePickerDialog(
-                languages: languageCodes..sort(((a, b) => a.name.compareTo(b.name))),
+                languages: languagesSortedAlphabetically(),
                 titlePadding: EdgeInsets.all(8.0),
                 searchCursorColor: Style.colorPrimary,
                 searchInputDecoration: InputDecoration(
