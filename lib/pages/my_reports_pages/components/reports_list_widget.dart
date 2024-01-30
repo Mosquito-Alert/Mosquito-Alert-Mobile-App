@@ -57,8 +57,8 @@ class ReportsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Style.titleMedium(
-                                  "TODO: report type",                                      
-                                  fontSize: 14),                                  
+                                  reports[index].type,
+                                  fontSize: 14),
                               Style.body(
                                   '${MyLocalizations.of(context, "location_txt")} ${reports[index].displayCity ?? ''}'),
                               Style.body(
@@ -68,6 +68,7 @@ class ReportsList extends StatelessWidget {
                                   .format(DateTime.parse(
                                       reports[index].creation_time!))
                                   .toString() +
+                                ' ' +
                                 DateFormat.Hm()
                                   .format(DateTime.parse(
                                       reports[index].creation_time!))
