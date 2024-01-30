@@ -12,6 +12,21 @@ class ReportsList extends StatelessWidget {
 
   ReportsList(this.reports, this.onTap);
 
+  String getTranslatedReportType(BuildContext context, String? reportType){
+    var translationString = '';
+    if(reportType == 'adult'){
+      translationString = 'single_mosquito';
+    }else if(reportType == 'bite'){
+      translationString = 'single_bite';
+    }else if(reportType == 'bite'){
+      translationString = 'single_breeding_site';
+    }else{
+      print('Unhandled report type: $reportType');
+    }
+
+    return MyLocalizations.of(context, translationString) ?? reportType ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (reports.isEmpty ||
@@ -57,7 +72,7 @@ class ReportsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Style.titleMedium(
-                                  reports[index].type,
+                                  getTranslatedReportType(context, reports[index].type),
                                   fontSize: 14),
                               Style.body(
                                   '${MyLocalizations.of(context, "location_txt")} ${reports[index].displayCity ?? ''}'),
