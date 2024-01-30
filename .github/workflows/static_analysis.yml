@@ -26,7 +26,8 @@ jobs:
       run: flutter pub get
 
     - name: Statically analyze the Dart code for any errors, ignoring "info" level warnings
-      run: flutter analyze 2>&1 | grep -q -E 'error:|warning:'; 
+      run: |
+        if flutter analyze 2>&1 | grep -q -E 'error:|warning:'; 
         then exit 1
         else exit 0
         fi
