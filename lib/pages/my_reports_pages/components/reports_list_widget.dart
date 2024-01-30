@@ -57,22 +57,23 @@ class ReportsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Style.titleMedium(
-                                  MyLocalizations.of(
-                                          context, 'report_of_the_day_txt')! +
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(DateTime.parse(
-                                              reports[index].creation_time!))
-                                          .toString(),
-                                  fontSize: 14),
+                                  "TODO: report type",                                      
+                                  fontSize: 14),                                  
                               Style.body(
                                   '${MyLocalizations.of(context, "location_txt")} ${reports[index].displayCity ?? ''}'),
                               Style.body(
-                                  MyLocalizations.of(context, 'at_time_txt')! +
-                                      DateFormat.Hm()
-                                          .format(DateTime.parse(
-                                              reports[index].creation_time!))
-                                          .toString(),
-                                  color: Colors.grey),
+                                MyLocalizations.of(context, 'at_time_txt')! +
+                                ' ' +
+                                DateFormat('dd-MM-yyyy')
+                                  .format(DateTime.parse(
+                                      reports[index].creation_time!))
+                                  .toString() +
+                                DateFormat.Hm()
+                                  .format(DateTime.parse(
+                                      reports[index].creation_time!))
+                                  .toString(),
+                                color: Colors.grey
+                              ),
                             ],
                           ),
                         ),
