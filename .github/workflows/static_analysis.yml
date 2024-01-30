@@ -8,10 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-java@v4
-      with:
-        java-version: '12.x'
-
     - name: Set up Dart SDK
       uses: dart-lang/setup-dart@v1
       with:
