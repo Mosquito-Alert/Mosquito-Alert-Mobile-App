@@ -8,11 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Dart SDK
-      uses: dart-lang/setup-dart@v1
-      with:
-        dart-sdk: '2.17.6'
-
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
