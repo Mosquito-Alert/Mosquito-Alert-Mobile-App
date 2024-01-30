@@ -424,11 +424,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                          MyLocalizations.of(
-                              context, 'report_of_the_day_txt')! +
-                              DateFormat('dd-MM-yyyy')
-                              .format(DateTime.parse(report.creation_time!))
-                                  .toString()),
+                        MyLocalizations.of(context, 'report_of_the_day_txt')! +
+                        DateFormat('dd-MM-yyyy')
+                          .format(DateTime.parse(report.creation_time!))
+                          .toString()),
                       SizedBox(
                         height: 20,
                       ),
