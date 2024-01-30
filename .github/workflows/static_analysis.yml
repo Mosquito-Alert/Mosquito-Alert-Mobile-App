@@ -18,9 +18,6 @@ jobs:
         channel: 'stable'
         flutter-version: '3.0.0'   
 
-    - name: Get flutter dependencies
-      run: flutter pub get
-
     - name: Statically analyze the Dart code for any errors/warnings, ignoring "info" level warnings
       run: |
         if flutter analyze 2>&1 | grep -q -E 'error:|warning:'; 
