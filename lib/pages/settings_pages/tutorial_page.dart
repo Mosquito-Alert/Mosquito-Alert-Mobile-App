@@ -133,10 +133,6 @@ class _TutorialPageState extends State<TutorialPage> {
     Navigator.pop(context);
   }
 
-  void onTabChangeCompleted(index) {
-    // Index of current tab is focused
-  }
-
   Widget renderNextBtn() {
     return Icon(
       Icons.navigate_next,
@@ -233,7 +229,6 @@ class _TutorialPageState extends State<TutorialPage> {
           goToTab = refFunc;
         },
         hideStatusBar: false,
-        onTabChangeCompleted: onTabChangeCompleted,
       ),
     );
   }
