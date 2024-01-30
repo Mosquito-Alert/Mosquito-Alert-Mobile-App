@@ -103,10 +103,6 @@ class _GalleryPageState extends State<GalleryPage> {
     Navigator.pop(context);
   }
 
-  void onTabChangeCompleted(index) {
-    // Index of current tab is focused
-  }
-
   Widget renderNextBtn() {
     return Icon(
       Icons.navigate_next,
@@ -147,21 +143,11 @@ class _GalleryPageState extends State<GalleryPage> {
                 height: MediaQuery.of(context).size.height * 0.55,
                 fit: BoxFit.contain,
               )),
-              // Container(
-              //   child: Text(
-              //     currentSlide.title,
-              //     style: currentSlide.styleTitle,
-              //     textAlign: TextAlign.center,
-              //   ),
-              //   margin: EdgeInsets.only(top: 20.0),
-              // ),
               Container(
                 child: Text(
                   currentSlide.description!,
-                  // style: currentSlide.styleDescription,
                   textAlign: TextAlign.center,
                   maxLines: 20,
-                  // overflow: TextOverflow.ellipsis,
                 ),
                 margin: EdgeInsets.all(20.0),
               ),
@@ -187,7 +173,6 @@ class _GalleryPageState extends State<GalleryPage> {
         slides: initSlides(),
 
         // Skip button
-
         showSkipBtn: false,
 
         // Next button
@@ -216,9 +201,6 @@ class _GalleryPageState extends State<GalleryPage> {
 
         // Show or hide status bar
         hideStatusBar: false,
-
-        // On tab change completed
-        onTabChangeCompleted: onTabChangeCompleted,
       ),
     );
   }
