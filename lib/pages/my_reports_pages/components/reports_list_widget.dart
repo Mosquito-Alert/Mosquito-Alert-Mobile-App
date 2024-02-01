@@ -3,6 +3,7 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:intl/intl.dart';
 
@@ -11,26 +12,6 @@ class ReportsList extends StatelessWidget {
   final List<Report> reports;
 
   ReportsList(this.reports, this.onTap);
-
-  String getTranslatedReportType(BuildContext context, String? reportType){
-    var translationString;
-    switch (reportType) {
-      case 'adult':
-        translationString = 'single_mosquito';
-        break;
-      case 'bite':
-        translationString = 'single_bite';
-        break;
-      case 'site':
-        translationString = 'single_breeding_site';
-        break;
-      default:
-        print('Unhandled report type: $reportType');
-        return reportType ?? '';
-    }
-
-    return MyLocalizations.of(context, translationString) ?? reportType ?? '';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +58,7 @@ class ReportsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Style.titleMedium(
-                                  getTranslatedReportType(context, reports[index].type),
+                                  Utils.getTranslatedReportType(context, reports[index].type),
                                   fontSize: 14),
                               Style.body(
                                   '${MyLocalizations.of(context, "location_txt")} ${reports[index].displayCity ?? ''}'),
