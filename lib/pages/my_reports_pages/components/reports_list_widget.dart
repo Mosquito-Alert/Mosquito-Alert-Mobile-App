@@ -13,16 +13,21 @@ class ReportsList extends StatelessWidget {
   ReportsList(this.reports, this.onTap);
 
   String getTranslatedReportType(BuildContext context, String? reportType){
-    var translationString = '';
-    if(reportType == 'adult'){
-      translationString = 'single_mosquito';
-    }else if(reportType == 'bite'){
-      translationString = 'single_bite';
-    }else if(reportType == 'bite'){
-      translationString = 'single_breeding_site';
-    }else{
-      print('Unhandled report type: $reportType');
-    }
+    var translationString;
+switch (reportType) {  
+    case 'adult':  
+      translationString = 'single_mosquito';  
+      break;  
+    case 'bite':  
+      translationString = 'single_bite';  
+      break;  
+    case 'breeding_site':  
+      translationString = 'single_breeding_site';  
+      break;  
+    default:  
+      print('Unhandled report type: $reportType');  
+      return reportType ?? '';  
+  }
 
     return MyLocalizations.of(context, translationString) ?? reportType ?? '';
   }
@@ -79,12 +84,7 @@ class ReportsList extends StatelessWidget {
                               Style.body(
                                 MyLocalizations.of(context, 'at_time_txt')! +
                                 ' ' +
-                                DateFormat('dd-MM-yyyy')
-                                  .format(DateTime.parse(
-                                      reports[index].creation_time!))
-                                  .toString() +
-                                ' ' +
-                                DateFormat.Hm()
+                                DateFormat('dd-MM-yyyy HH:mm')
                                   .format(DateTime.parse(
                                       reports[index].creation_time!))
                                   .toString(),
