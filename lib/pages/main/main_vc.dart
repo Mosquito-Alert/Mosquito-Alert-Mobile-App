@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-//import 'package:connectivity_widget/connectivity_widget.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class _MainVCState extends State<MainVC> {
     loadingStream.add(true);
   }
 
-  initAuthStatus() async {
+  void initAuthStatus() async {
     if (Platform.isIOS) {
       await AppTrackingTransparency.requestTrackingAuthorization();
     }
@@ -58,12 +57,9 @@ class _MainVCState extends State<MainVC> {
 
   }
 
-  _getData() async {
+  void _getData() async {
     await UserManager.startFirstTime(context);
-    // dynamic user;
-    // if (Utils.userFetched) {
-    //   user = await UserManager.fetchUser();
-    // }
+
     userUuid = await UserManager.getUUID();
     UserManager.userScore = await ApiSingleton().getUserScores();
     await UserManager.setUserScores(UserManager.userScore);
@@ -84,7 +80,7 @@ class _MainVCState extends State<MainVC> {
     loadingStream.add(false);
   }
 
-  _bgTracking() async {
+  void _bgTracking() async {
     bool? trackingDisabled = await UserManager.getTracking();
     if (trackingDisabled == null || !trackingDisabled) {
       // 1.  Listen to events (See docs for all 12 available events).
