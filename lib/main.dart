@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
@@ -17,12 +15,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main({String env = 'dev'}) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final config = await AppConfig.forEnvironment(env: env);
-
-  ApiSingleton.baseUrl = config.baseUrl;
-  ApiSingleton.serverUrl = '${config.baseUrl}/api';
-  print('base url: ${ApiSingleton.baseUrl}');  
-  print('server Url: ${ApiSingleton.serverUrl}');
+  await ApiSingleton.initialize(env);
 
   try {
     await Firebase.initializeApp();

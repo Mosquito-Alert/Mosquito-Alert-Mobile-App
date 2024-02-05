@@ -17,6 +17,7 @@ import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
@@ -76,6 +77,12 @@ class ApiSingleton {
   }
 
   ApiSingleton._internal();
+
+  static Future<void> initialize(String env) async {
+    final config = await AppConfig.forEnvironment(env: env);
+    baseUrl = config.baseUrl;
+    serverUrl = '$baseUrl/api';
+  }
 
   static ApiSingleton getInstance() {
     return ApiSingleton();
