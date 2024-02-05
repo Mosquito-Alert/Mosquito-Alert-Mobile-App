@@ -568,11 +568,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     DateFormat('EEEE, dd MMMM yyyy',
                                             Utils.language.languageCode)
                                         .format(DateTime.parse(
-                                            report.creation_time!))
+                                            report.creation_time!).toLocal())
                                         .toString(),
                                     fontSize: 12),
                                 Style.body(
-                                    "${MyLocalizations.of(context, "at_time_txt")} ${DateFormat.Hms().format(DateTime.parse(report.creation_time!))} ${MyLocalizations.of(context, 'hours')}",
+                                    "${MyLocalizations.of(context, "at_time_txt")} ${DateFormat.Hms().format(DateTime.parse(report.creation_time!).toLocal())} ${MyLocalizations.of(context, 'hours')}",
                                     fontSize: 12),
                               ],
                             ),

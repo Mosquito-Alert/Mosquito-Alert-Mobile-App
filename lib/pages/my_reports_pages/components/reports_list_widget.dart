@@ -67,7 +67,7 @@ class ReportsList extends StatelessWidget {
                                 ' ' +
                                 DateFormat('dd-MM-yyyy HH:mm')
                                   .format(DateTime.parse(
-                                      reports[index].creation_time!))
+                                      reports[index].creation_time!).toLocal())
                                   .toString(),
                                 color: Colors.grey
                               ),
