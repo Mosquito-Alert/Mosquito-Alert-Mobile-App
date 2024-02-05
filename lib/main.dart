@@ -13,7 +13,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main({String env = 'dev'}) async {
+void main({String env = 'prod'}) async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApiSingleton.initialize(env);
 
