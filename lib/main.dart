@@ -22,7 +22,6 @@ void main({String env = 'dev'}) async {
   } catch (err) {
     print('$err');
   }
-
   runApp(MyApp());
 }
 
