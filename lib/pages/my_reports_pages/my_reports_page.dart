@@ -603,7 +603,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               ),
                             ],
                           ),
-                          report.photos!.isNotEmpty
+                          report.photos != null && report.photos!.isNotEmpty
                               ? Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
