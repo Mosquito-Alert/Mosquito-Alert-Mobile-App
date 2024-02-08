@@ -89,9 +89,8 @@ class ReportsList extends StatelessWidget {
                   ),
                 ),
               );
-            }
-        ),
+            }),
       );
-    } 
+    }
   }
 }
