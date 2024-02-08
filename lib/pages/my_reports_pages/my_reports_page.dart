@@ -796,9 +796,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       loadingStream.add(true);
       double? distance;
 
-      List<Report>? myData = await ApiSingleton().getReportsList(
-          location!.latitude, location!.longitude,
-          radius: (distance ?? 1000 / 2).round());
+      var myData = await ApiSingleton().getReportsList();
 
       myData ??= [];
 

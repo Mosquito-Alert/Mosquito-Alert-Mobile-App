@@ -423,23 +423,13 @@ class ApiSingleton {
     }
   }
 
-  Future<List<Report>?> getReportsList(
-    lat,
-    lon, {
-    int? page,
-    List<Report>? allReports,
-    bool? show_hidden,
-    int? radius,
-    bool? show_verions,
-  }) async {
+  Future<List<Report>?> getReportsList() async {
     try {
       var userUUID = await UserManager.getUUID();
 
       final response = await http.get(
         Uri.parse(
-            '$serverUrl$reports?user=$userUUID' +
-                (show_hidden == true ? '&show_hidden=1' : '') +
-                (show_verions == true ? '&show_versions=1' : '')),
+            '$serverUrl$reports?user=$userUUID'),
         headers: headers,
       )
           .timeout(
