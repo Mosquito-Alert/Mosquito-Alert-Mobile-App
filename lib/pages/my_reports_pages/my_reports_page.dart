@@ -144,22 +144,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   itemCount: 2,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
-                    if (index != 0.0){
-                      return StreamBuilder<List<Report>>(
-                        stream: dataStream.stream,
-                        initialData: _myData,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Report>> snapshot) {
-                          return ReportsList(
-                              snapshot.data != null
-                                  ? snapshot.data!.map((e) => e).toList()
-                                  : [],
-                              _reportBottomSheet);
-                        },
-                      );
-                    }
-
-                    return Stack(
+                    if (index == 0.0){
+                      return Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
                         StreamBuilder<List<Report>>(
@@ -216,6 +202,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         )
                       ],
                     );
+                    }                    
+
+                    return StreamBuilder<List<Report>>(
+                        stream: dataStream.stream,
+                        initialData: _myData,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Report>> snapshot) {
+                          return ReportsList(
+                              snapshot.data != null
+                                  ? snapshot.data!.map((e) => e).toList()
+                                  : [],
+                              _reportBottomSheet);
+                        },
+                      );
                   })),
 
           StreamBuilder<bool>(
