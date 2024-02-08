@@ -367,8 +367,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     return null;
   }
 
-  _reportBottomSheet(Report report) async {
-    bool? isMine = UserManager.profileUUIDs.any((id) => id == report.user);
+  void _reportBottomSheet(Report report) async {
     Campaign? campaign = await _checkCampaigns(report.country);
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
@@ -376,12 +375,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
         builder: (BuildContext bc) {
           return Container(
             constraints: BoxConstraints(
-              maxHeight: isMine!
-                  ? MediaQuery.of(context).size.height * 0.85
-                  : MediaQuery.of(context).size.height * 0.45,
-              minHeight: isMine
-                  ? MediaQuery.of(context).size.height * 0.55
-                  : MediaQuery.of(context).size.height * 0.45,
+              maxHeight: MediaQuery.of(context).size.height * 0.85,
+              minHeight: MediaQuery.of(context).size.height * 0.55
             ),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -391,9 +386,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 )),
             child: Container(
               constraints: BoxConstraints(
-                maxHeight: isMine
-                    ? MediaQuery.of(context).size.height * 0.9
-                    : MediaQuery.of(context).size.height * 0.45,
+                maxHeight: MediaQuery.of(context).size.height * 0.9
               ),
               // height: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -581,206 +574,204 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ),
                         ],
                       ),
-                      isMine
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: Divider(),
-                                ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Style.titleMedium(
-                                            MyLocalizations.of(
-                                                context, 'identifier_small'),
-                                            fontSize: 14),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Style.body(report.report_id,
-                                            fontSize: 14,
-                                            textAlign: TextAlign.center),
-                                      ],
-                                    ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0),
+                            child: Divider(),
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Style.titleMedium(
+                                      MyLocalizations.of(
+                                          context, 'identifier_small'),
+                                      fontSize: 14),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Style.body(report.report_id,
+                                      fontSize: 14,
+                                      textAlign: TextAlign.center),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                            ],
+                          ),
+                          report.photos != null && report.photos!.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: <Widget>[
                                     SizedBox(
                                       height: 12,
                                     ),
+                                    Style.titleMedium(
+                                        MyLocalizations.of(context,
+                                            'reported_images_txt'),
+                                        fontSize: 14),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 60,
+                                      child: ListView.builder(
+                                          scrollDirection:
+                                              Axis.horizontal,
+                                          itemCount:
+                                              report.photos!.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              margin: EdgeInsets.only(
+                                                  right: 5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15),
+                                                child: Image.network(
+                                                  ApiSingleton
+                                                          .baseUrl +
+                                                      report
+                                                          .photos![index]
+                                                          .photo!,
+                                                  height: 60,
+                                                  width: 60,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
                                   ],
-                                ),
-                                report.photos!.isNotEmpty
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                )
+                              : Container(),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: report.responses!.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
                                         children: <Widget>[
-                                          SizedBox(
-                                            height: 12,
-                                          ),
-                                          Style.titleMedium(
-                                              MyLocalizations.of(context,
-                                                  'reported_images_txt'),
-                                              fontSize: 14),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            height: 60,
-                                            child: ListView.builder(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount:
-                                                    report.photos!.length,
-                                                itemBuilder: (context, index) {
-                                                  return Container(
-                                                    margin: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      child: Image.network(
-                                                        ApiSingleton
-                                                                .baseUrl +
-                                                            report
-                                                                .photos![index]
-                                                                .photo!,
-                                                        height: 60,
-                                                        width: 60,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                                ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: report.responses!.length,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                report.responses![index]!
-                                                            .question !=
-                                                        null
-                                                    ? Expanded(
-                                                        flex: 3,
-                                                        child: Style.titleMedium(
-                                                            report
-                                                                    .responses![
-                                                                        index]!
-                                                                    .question!
-                                                                    .startsWith(
-                                                                        'question')
-                                                                ? MyLocalizations.of(
-                                                                    context,
-                                                                    report
-                                                                        .responses![
-                                                                            index]!
-                                                                        .question)
-                                                                : report
-                                                                    .responses![
-                                                                        index]!
-                                                                    .question,
-                                                            fontSize: 14),
-                                                      )
-                                                    : Container(),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Style.body(
-                                                      report.responses![index]!
-                                                                  .answer !=
-                                                              'N/A'
-                                                          ? report
+                                          report.responses![index]!
+                                                      .question !=
+                                                  null
+                                              ? Expanded(
+                                                  flex: 3,
+                                                  child: Style.titleMedium(
+                                                      report
+                                                              .responses![
+                                                                  index]!
+                                                              .question!
+                                                              .startsWith(
+                                                                  'question')
+                                                          ? MyLocalizations.of(
+                                                              context,
+                                                              report
                                                                   .responses![
                                                                       index]!
-                                                                  .answer!
-                                                                  .startsWith(
-                                                                      'question')
-                                                              ? MyLocalizations.of(
-                                                                  context,
-                                                                  report
-                                                                      .responses![
-                                                                          index]!
-                                                                      .answer)
-                                                              : report
-                                                                  .responses![
-                                                                      index]!
-                                                                  .answer
+                                                                  .question)
                                                           : report
                                                               .responses![
                                                                   index]!
-                                                              .answer_value,
-                                                      textAlign: TextAlign.end),
-                                                ),
-                                              ],
-                                            ),
+                                                              .question,
+                                                      fontSize: 14),
+                                                )
+                                              : Container(),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Style.body(
+                                                report.responses![index]!
+                                                            .answer !=
+                                                        'N/A'
+                                                    ? report
+                                                            .responses![
+                                                                index]!
+                                                            .answer!
+                                                            .startsWith(
+                                                                'question')
+                                                        ? MyLocalizations.of(
+                                                            context,
+                                                            report
+                                                                .responses![
+                                                                    index]!
+                                                                .answer)
+                                                        : report
+                                                            .responses![
+                                                                index]!
+                                                            .answer
+                                                    : report
+                                                        .responses![
+                                                            index]!
+                                                        .answer_value,
+                                                textAlign: TextAlign.end),
                                           ),
                                         ],
-                                      );
-                                    }),
-                                report.note != null && report.note != 'null'
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Divider(),
-                                          ),
-                                          Style.titleMedium(
-                                              MyLocalizations.of(
-                                                  context, 'comments_txt'),
-                                              fontSize: 14),
-                                          Style.body(
-                                            report.note,
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                        child: Style.noBgButton(
-                                            MyLocalizations.of(
-                                                context, 'delete'), () {
-                                      Utils.showAlertYesNo(
-                                          MyLocalizations.of(
-                                              context, 'delete_report_title'),
-                                          MyLocalizations.of(
-                                              context, 'delete_report_txt'),
-                                          () {
-                                        _deleteReport(report);
-                                      }, context);
-                                    }, textColor: Colors.red))
+                                      ),
+                                    ),
                                   ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            )
-                          : Container(),
+                                );
+                              }),
+                          report.note != null && report.note != 'null'
+                              ? Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Divider(),
+                                    ),
+                                    Style.titleMedium(
+                                        MyLocalizations.of(
+                                            context, 'comments_txt'),
+                                        fontSize: 14),
+                                    Style.body(
+                                      report.note,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Style.noBgButton(
+                                      MyLocalizations.of(
+                                          context, 'delete'), () {
+                                Utils.showAlertYesNo(
+                                    MyLocalizations.of(
+                                        context, 'delete_report_title'),
+                                    MyLocalizations.of(
+                                        context, 'delete_report_txt'),
+                                    () {
+                                  _deleteReport(report);
+                                }, context);
+                              }, textColor: Colors.red))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -794,16 +785,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void _getData() async {
     try {
       loadingStream.add(true);
-      double? distance;
 
-      List<Report>? myData = await ApiSingleton().getReportsList(
-          location!.latitude, location!.longitude,
-          radius: (distance ?? 1000 / 2).round());
+      var myData = await ApiSingleton().getReportsList();
 
-      myData ??= [];
-
-      List<ReportAndGeohash> listMarkers = [];
-      for (int i = 0; i < myData.length; i++) {
+      var listMarkers = <ReportAndGeohash>[];
+      for (var i = 0; i < myData.length; i++) {
         if (myData[i].location_choice != 'missing' &&
                 myData[i].current_location_lat != null &&
                 myData[i].current_location_lon != null ||
@@ -825,19 +811,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       dataStream.add(myData);
       _myData = myData;
       if (myData.isNotEmpty) {
-        var location = myData[0].location_choice == 'current'
-            ? LatLng(
-                myData[0].current_location_lat!,
-                myData[0].current_location_lon!)
-            : LatLng(myData[0].selected_location_lat!,
-                myData[0].selected_location_lon!);
-        await mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: location, zoom: 15)));
-      }
-
-      dataStream.add(myData);
-      _myData = myData;
-      if (myData != null && myData.isNotEmpty) {
         var location = myData[0].location_choice == 'current'
             ? LatLng(
                 myData[0].current_location_lat!,
