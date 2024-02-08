@@ -144,7 +144,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   itemCount: 2,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
-                    if (index == 0.0){
+                    if (index == 0.0) {
                       return Stack(
                         alignment: Alignment.bottomLeft,
                         children: <Widget>[
