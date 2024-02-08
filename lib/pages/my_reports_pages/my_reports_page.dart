@@ -824,19 +824,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
             CameraPosition(target: location, zoom: 15)));
       }
 
-      dataStream.add(myData);
-      _myData = myData;
-      if (myData != null && myData.isNotEmpty) {
-        var location = myData[0].location_choice == 'current'
-            ? LatLng(
-                myData[0].current_location_lat!,
-                myData[0].current_location_lon!)
-            : LatLng(myData[0].selected_location_lat!,
-                myData[0].selected_location_lon!);
-        await mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: location, zoom: 15)));
-      }
-
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
 
