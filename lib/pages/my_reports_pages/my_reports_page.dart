@@ -685,7 +685,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                               report
                                                                   .responses![
                                                                       index]!
-                                                                  .answer)
+                                                                  .question)
                                                           : report
                                                               .responses![
                                                                   index]!
