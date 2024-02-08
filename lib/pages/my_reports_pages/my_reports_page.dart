@@ -785,14 +785,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void _getData() async {
     try {
       loadingStream.add(true);
-      double? distance;
 
       var myData = await ApiSingleton().getReportsList();
 
-      myData ??= [];
-
-      List<ReportAndGeohash> listMarkers = [];
-      for (int i = 0; i < myData.length; i++) {
+      var listMarkers = <ReportAndGeohash>[];
+      for (var i = 0; i < myData.length; i++) {
         if (myData[i].location_choice != 'missing' &&
                 myData[i].current_location_lat != null &&
                 myData[i].current_location_lon != null ||

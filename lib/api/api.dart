@@ -423,7 +423,7 @@ class ApiSingleton {
     }
   }
 
-  Future<List<Report>?> getReportsList() async {
+  Future<List<Report>> getReportsList() async {
     try {
       var userUUID = await UserManager.getUUID();
 
@@ -443,7 +443,7 @@ class ApiSingleton {
       if (response.statusCode != 200) {
         print(
             'Request: ${response.request.toString()} -> Response: ${response.body}');
-        return null;
+        return [];
       } else {
         List<dynamic> jsonAnswer = json.decode(response.body);
         var list = <Report>[];
@@ -454,7 +454,7 @@ class ApiSingleton {
       }
     } catch (e) {
       // print(e);
-      return null;
+      return [];
     }
   }
 
