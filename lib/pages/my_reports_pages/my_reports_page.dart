@@ -202,20 +202,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           )
                         ],
                       );
-                    }                    
+                    }
 
                     return StreamBuilder<List<Report>>(
-                        stream: dataStream.stream,
-                        initialData: _myData,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Report>> snapshot) {
-                          return ReportsList(
-                              snapshot.data != null
-                                  ? snapshot.data!.map((e) => e).toList()
-                                  : [],
-                              _reportBottomSheet);
-                        },
-                      );
+                      stream: dataStream.stream,
+                      initialData: _myData,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Report>> snapshot) {
+                        return ReportsList(
+                            snapshot.data != null
+                                ? snapshot.data!.map((e) => e).toList()
+                                : [],
+                            _reportBottomSheet);
+                      },
+                    );
                   })),
 
           StreamBuilder<bool>(
