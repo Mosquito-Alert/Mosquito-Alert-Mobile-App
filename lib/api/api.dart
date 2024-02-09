@@ -296,7 +296,7 @@ class ApiSingleton {
         body.addAll({'version_number': report.version_number});
         if (report.version_number == 0){
           body.addAll({'phone_upload_time': DateTime.now().toUtc().toIso8601String()});
-        }else if (report.phone_upload_time != null && report.phone_upload_time!.isNotEmpty){
+        } else if (report.phone_upload_time != null && report.phone_upload_time!.isNotEmpty){
           body.addAll({'phone_upload_time': report.phone_upload_time});
         }
       }
