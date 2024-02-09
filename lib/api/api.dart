@@ -305,8 +305,6 @@ class ApiSingleton {
         body.addAll({'phone_upload_time': DateTime.now().toUtc().toIso8601String()});
       } else if (report.phone_upload_time != null && report.phone_upload_time!.isNotEmpty){
         body.addAll({'phone_upload_time': report.phone_upload_time});
-      } else {
-        body.addAll({'phone_upload_time': DateTime.now().toUtc().toIso8601String()});
       }
       if (report.creation_time != null && report.creation_time!.isNotEmpty) {
         body.addAll({'creation_time': report.creation_time});
