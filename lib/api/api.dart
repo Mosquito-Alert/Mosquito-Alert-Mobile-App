@@ -795,7 +795,8 @@ class ApiSingleton {
   }
   
   Future<String> getCityNameFromCoords(double lat, double lon) async {
-    var placemarks = await placemarkFromCoordinates(lat, lon);
+    var locale = "${await UserManager.getLanguage()}_${await UserManager.getLanguageCountry()}";
+    var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
     return placemarks[0].locality ?? '';
   }
 }
