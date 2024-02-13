@@ -183,7 +183,6 @@ class Utils {
   static void addOtherReport(String type) {
     report!.version_time = DateTime.now().toUtc().toIso8601String();
     report!.creation_time = DateTime.now().toUtc().toIso8601String();
-    report!.phone_upload_time = DateTime.now().toUtc().toIso8601String();
 
     reportsList!.add(report);
     report = null;
@@ -200,7 +199,7 @@ class Utils {
     }
   }
 
-  static deleteLastReport() {
+  static void deleteLastReport() {
     report = null;
     report = Report.fromJson(reportsList!.last!.toJson());
     reportsList!.removeLast();
@@ -365,7 +364,6 @@ class Utils {
     } else {
       report!.version_time = DateTime.now().toUtc().toIso8601String();
       report!.creation_time = DateTime.now().toUtc().toIso8601String();
-      report!.phone_upload_time = DateTime.now().toUtc().toIso8601String();
       reportsList!.add(report);
       bool? isCreated;
       for (int i = 0; i < reportsList!.length; i++) {
