@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:geocoding/geocoding.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 
 class Report {
