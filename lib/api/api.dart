@@ -796,6 +796,6 @@ class ApiSingleton {
   
   Future<String> getCityNameFromCoords(double lat, double lon) async {
     var placemarks = await placemarkFromCoordinates(lat, lon);
-    return placemarks[0].locality ?? 'Error';
+    return placemarks[0].locality ?? '';
   }
 }

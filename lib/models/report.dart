@@ -148,11 +148,6 @@ class Report {
     data['app_language'] = app_language;
     return data;
   }
-
-  Future<String> getCityNameFromCoords(double lat, double lon) async {
-    var placemarks = await placemarkFromCoordinates(lat, lon);
-    return placemarks[0].locality ?? 'Error';
-  }
 }
 
 class Photo {
