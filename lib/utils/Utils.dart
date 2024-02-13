@@ -7,6 +7,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1176,5 +1177,12 @@ class Utils {
     }
 
     return MyLocalizations.of(context, translationString) ?? reportType ?? '';
+  }
+    
+  static Future<String> getCityNameFromCoords(double lat, double lon) async {
+    var locale = '${await UserManager.getLanguage()}_${await UserManager.getLanguageCountry()}';
+    var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
+    if (placemarks.isEmpty) { return ''; }
+    return placemarks.first.locality ?? '';
   }
 }

@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geocoding/geocoding.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -458,7 +457,7 @@ class ApiSingleton {
               lat = item['selected_location_lat'] ?? Utils.defaultLocation.latitude;
               lon = item['selected_location_lon'] ?? Utils.defaultLocation.longitude;
           }
-          var cityName = await getCityNameFromCoords(lat, lon);
+          var cityName = await Utils.getCityNameFromCoords(lat, lon);
           item['display_city'] = cityName;
           list.add(Report.fromJson(item));          
         }
@@ -789,12 +788,5 @@ class ApiSingleton {
       print('setFirebaseToken, failed for ${e}');
       return false;
     }
-  }
-  
-  Future<String> getCityNameFromCoords(double lat, double lon) async {
-    var locale = '${await UserManager.getLanguage()}_${await UserManager.getLanguageCountry()}';
-    var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
-    if (placemarks.isEmpty) { return ''; }
-    return placemarks.first.locality ?? '';
   }
 }
