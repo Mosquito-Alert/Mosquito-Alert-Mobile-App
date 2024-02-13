@@ -24,7 +24,6 @@ class ReportsList extends StatelessWidget {
         child: ListView.builder(
             itemCount: reports.length,
             itemBuilder: (context, index) {
-              //reports[index].displayCity = 'dummy';
               return GestureDetector(
                 onTap: () {
                   Report reporteItem = List.from(reports)

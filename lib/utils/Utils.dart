@@ -128,7 +128,6 @@ class Utils {
         report!.os_language = language.languageCode;
         report!.os_version = buildData.version.sdkInt.toString();
         report!.app_language = lang ?? language.languageCode;
-        report!.displayCity = 'TEST android';
       } else if (Platform.isIOS) {
         var buildData = await DeviceInfoPlugin().iosInfo;
         report!.device_manufacturer = 'Apple';
@@ -137,7 +136,6 @@ class Utils {
         report!.os_language = language.languageCode;
         report!.os_version = buildData.systemVersion;
         report!.app_language = lang ?? language.languageCode;
-        report!.displayCity = 'TEST iOS';
       }
 
       if (lat != null && lon != null) {
