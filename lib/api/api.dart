@@ -332,9 +332,6 @@ class ApiSingleton {
       if (report.selected_location_lon != null) {
         body.addAll({'selected_location_lon': report.selected_location_lon});
       }
-      if (report.displayCity != null) {
-        body.addAll({'display_city': report.displayCity});
-      }
       if (report.package_name != null) {
         body.addAll({'package_name': report.package_name});
       }
@@ -797,6 +794,7 @@ class ApiSingleton {
   Future<String> getCityNameFromCoords(double lat, double lon) async {
     var locale = '${await UserManager.getLanguage()}_${await UserManager.getLanguageCountry()}';
     var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
-    return placemarks[0].locality ?? '';
+    if (placemarks.isEmpty) { return ''; }
+    return placemarks.first.locality ?? '';
   }
 }
