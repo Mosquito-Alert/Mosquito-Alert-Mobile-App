@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -330,6 +331,9 @@ class ApiSingleton {
       if (report.selected_location_lon != null) {
         body.addAll({'selected_location_lon': report.selected_location_lon});
       }
+      if (report.displayCity != null) {
+        body.addAll({'display_city': report.displayCity});
+      }
       if (report.package_name != null) {
         body.addAll({'package_name': report.package_name});
       }
@@ -448,6 +452,16 @@ class ApiSingleton {
         List<dynamic> jsonAnswer = json.decode(response.body);
         var list = <Report>[];
         for (var item in jsonAnswer) {
+          double lat, lon;
+          if (item['location_choice'] == 'current') {
+              lat = item['current_location_lat'];
+              lon = item['current_location_lon'];
+          } else {
+              lat = item['selected_location_lat'];
+              lon = item['selected_location_lon'];
+          }
+          var cityName = await getCityNameFromCoords(lat, lon);
+          item['display_city'] = cityName;
           list.add(Report.fromJson(item));          
         }
         return list;
@@ -777,5 +791,10 @@ class ApiSingleton {
       print('setFirebaseToken, failed for ${e}');
       return false;
     }
+  }
+  
+  Future<String> getCityNameFromCoords(double lat, double lon) async {
+    var placemarks = await placemarkFromCoordinates(lat, lon);
+    return placemarks[0].locality ?? 'Error';
   }
 }

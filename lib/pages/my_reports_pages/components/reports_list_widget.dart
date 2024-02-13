@@ -24,6 +24,7 @@ class ReportsList extends StatelessWidget {
         child: ListView.builder(
             itemCount: reports.length,
             itemBuilder: (context, index) {
+              //reports[index].displayCity = 'dummy';
               return GestureDetector(
                 onTap: () {
                   Report reporteItem = List.from(reports)
@@ -58,7 +59,7 @@ class ReportsList extends StatelessWidget {
                                   Utils.getTranslatedReportType(context, reports[index].type),
                                   fontSize: 14),
                               Style.body(
-                                  '${MyLocalizations.of(context, "location_txt")}: ${reports[index].displayCity ?? ''}'),
+                                  '${MyLocalizations.of(context, "location_txt")}: ${reports[index].displayCity}'),
                               Style.body(
                                 MyLocalizations.of(context, 'at_time_txt')! +
                                 ' ' +

@@ -70,20 +70,20 @@ class _MyReportsPageState extends State<MyReportsPage> {
   List<Report> data = [];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _initLocation();
     _initMemoryClustering();
     _getData();
   }
 
-  _initLocation() {
+  void _initLocation() {
     if (Utils.location != null) {
       location = Utils.location;
     }
   }
 
-  _initMemoryClustering() {
+  void _initMemoryClustering() {
     clusteringHelper = ClusteringHelper.forMemory(
         list: _listMarkers,
         updateMarkers: updateMarkers,
@@ -93,7 +93,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         }));
   }
 
-  updateMarkers(Set<Marker> markers) {
+  void updateMarkers(Set<Marker> markers) {
     setState(() {
       this.markers = markers;
     });
@@ -548,7 +548,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             ')',
                                     fontSize: 12),
                                 Style.body(
-                                    ' ${MyLocalizations.of(context, "near_from_txt")} ',
+                                    ' ${MyLocalizations.of(context, "near_from_txt")} ${report.displayCity}',
                                     fontSize: 12),
                               ],
                             ),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:geocoding/geocoding.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 
 class Report {
@@ -58,9 +59,9 @@ class Report {
       this.os_language,
       this.os_version,
       this.app_language,
-        this.displayCity,
-        this.nuts3,
-        this.nuts2,
+      this.displayCity,
+      this.nuts3,
+      this.nuts2,
       this.country});
 
   Report.fromJson(Map<dynamic, dynamic> json) {
@@ -78,6 +79,7 @@ class Report {
     current_location_lat = json['current_location_lat'];
     selected_location_lon = json['selected_location_lon'];
     selected_location_lat = json['selected_location_lat'];
+    displayCity = json['display_city'];
     note = json['note'].toString();
     package_name = json['package_name'].toString();
     package_version = json['package_version'];
@@ -110,7 +112,7 @@ class Report {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['version_UUID'] = version_UUID;
     data['version_number'] = version_number;
     data['user'] = user;
@@ -144,6 +146,11 @@ class Report {
     data['os_language'] = os_language;
     data['app_language'] = app_language;
     return data;
+  }
+
+  Future<String> getCityNameFromCoords(double lat, double lon) async {
+    var placemarks = await placemarkFromCoordinates(lat, lon);
+    return placemarks[0].locality ?? 'Error';
   }
 }
 

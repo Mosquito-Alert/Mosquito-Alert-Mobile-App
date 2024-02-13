@@ -104,7 +104,7 @@ class Utils {
       }
     }
 
-    if (session!.id != null && language != null) {
+    if (session!.id != null) {
       var lang = await UserManager.getLanguage();
       var userUUID = await UserManager.getUUID();
       report = Report(
@@ -128,6 +128,7 @@ class Utils {
         report!.os_language = language.languageCode;
         report!.os_version = buildData.version.sdkInt.toString();
         report!.app_language = lang ?? language.languageCode;
+        report!.displayCity = 'TEST android';
       } else if (Platform.isIOS) {
         var buildData = await DeviceInfoPlugin().iosInfo;
         report!.device_manufacturer = 'Apple';
@@ -136,6 +137,7 @@ class Utils {
         report!.os_language = language.languageCode;
         report!.os_version = buildData.systemVersion;
         report!.app_language = lang ?? language.languageCode;
+        report!.displayCity = 'TEST iOS';
       }
 
       if (lat != null && lon != null) {
@@ -155,13 +157,13 @@ class Utils {
     return false;
   }
 
-  static resetReport() {
+  static void resetReport() {
     report = null;
     session = null;
     reportsList = null;
   }
 
-  static setEditReport(Report editReport) {
+  static void setEditReport(Report editReport) {
     resetReport();
     report = editReport;
     report!.version_number = report!.version_number! + 1;
@@ -178,7 +180,7 @@ class Utils {
     }
   }
 
-  static addOtherReport(String type) {
+  static void addOtherReport(String type) {
     report!.version_time = DateTime.now().toUtc().toIso8601String();
     report!.creation_time = DateTime.now().toUtc().toIso8601String();
     report!.phone_upload_time = DateTime.now().toUtc().toIso8601String();
@@ -421,7 +423,7 @@ class Utils {
             : false;
 
         if (!isCreated) {
-          saveLocalReport(savedReport);
+          await saveLocalReport(savedReport);
         }
       }
     }
