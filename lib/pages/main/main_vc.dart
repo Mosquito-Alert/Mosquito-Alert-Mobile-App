@@ -113,7 +113,8 @@ class _MainVCState extends State<MainVC> {
   void _onLocation(bg.Location location) {
     Utils.location = Position(
         latitude: location.coords.latitude,
-        longitude: location.coords.longitude);
+        longitude: location.coords.longitude,
+        accuracy: -1, altitude: -1, altitudeAccuracy: -1, speed: -1, speedAccuracy: -1, heading: -1, headingAccuracy: -1, timestamp: null);
 
     if ((location.coords.latitude).abs() <= 66.5) {
       double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *

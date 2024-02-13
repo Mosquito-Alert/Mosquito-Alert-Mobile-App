@@ -34,7 +34,8 @@ class MyReportsPage extends StatefulWidget {
 class _MyReportsPageState extends State<MyReportsPage> {
   Position? location = Position(
       latitude: Utils.defaultLocation.latitude,
-      longitude: Utils.defaultLocation.longitude);
+      longitude: Utils.defaultLocation.longitude,
+      accuracy: -1, altitude: -1, altitudeAccuracy: -1, speed: -1, speedAccuracy: -1, heading: -1, headingAccuracy: -1, timestamp: null);
 
   //Map
   late ClusteringHelper clusteringHelper;
@@ -174,7 +175,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               onCameraMove: (newPosition) {
                                 location = Position(
                                     latitude: newPosition.target.latitude,
-                                    longitude: newPosition.target.longitude);
+                                    longitude: newPosition.target.longitude,
+                                    accuracy: -1, altitude: -1, altitudeAccuracy: -1, speed: -1, speedAccuracy: -1, heading: -1, headingAccuracy: -1, timestamp: null);
                               },
                               initialCameraPosition: CameraPosition(
                                 target: location != null
