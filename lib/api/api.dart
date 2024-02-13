@@ -454,11 +454,11 @@ class ApiSingleton {
         for (var item in jsonAnswer) {
           double lat, lon;
           if (item['location_choice'] == 'current') {
-              lat = item['current_location_lat'];
-              lon = item['current_location_lon'];
+              lat = item['current_location_lat'] ?? Utils.defaultLocation.latitude;
+              lon = item['current_location_lon'] ?? Utils.defaultLocation.longitude;
           } else {
-              lat = item['selected_location_lat'];
-              lon = item['selected_location_lon'];
+              lat = item['selected_location_lat'] ?? Utils.defaultLocation.latitude;
+              lon = item['selected_location_lon'] ?? Utils.defaultLocation.longitude;
           }
           var cityName = await getCityNameFromCoords(lat, lon);
           item['display_city'] = cityName;
