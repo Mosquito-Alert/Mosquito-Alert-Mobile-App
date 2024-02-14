@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:mosquito_alert_app/models/question.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 
 class Report {
   String? version_UUID;
@@ -108,6 +109,22 @@ class Report {
     country = json['country'];
     nuts3 = json['nuts_3'];
     nuts2 = json['nuts_2'];
+
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    double lat, lon;
+    if (location_choice == 'current') {
+      lat = current_location_lat ?? Utils.defaultLocation.latitude;
+      lon = current_location_lon ?? Utils.defaultLocation.longitude;
+    } else {
+      lat = selected_location_lat ?? Utils.defaultLocation.latitude;
+      lon = selected_location_lon ?? Utils.defaultLocation.longitude;
+    }
+
+    var cityName = await Utils.getCityNameFromCoords(lat, lon);
+    displayCity = cityName;
   }
 
   Map<String, dynamic> toJson() {

@@ -449,16 +449,6 @@ class ApiSingleton {
         List<dynamic> jsonAnswer = json.decode(response.body);
         var list = <Report>[];
         for (var item in jsonAnswer) {
-          double lat, lon;
-          if (item['location_choice'] == 'current') {
-              lat = item['current_location_lat'] ?? Utils.defaultLocation.latitude;
-              lon = item['current_location_lon'] ?? Utils.defaultLocation.longitude;
-          } else {
-              lat = item['selected_location_lat'] ?? Utils.defaultLocation.latitude;
-              lon = item['selected_location_lon'] ?? Utils.defaultLocation.longitude;
-          }
-          var cityName = await Utils.getCityNameFromCoords(lat, lon);
-          item['display_city'] = cityName;
           list.add(Report.fromJson(item));          
         }
         return list;
