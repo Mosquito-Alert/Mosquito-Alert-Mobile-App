@@ -1180,7 +1180,7 @@ class Utils {
   }
     
   static Future<String> getCityNameFromCoords(double lat, double lon) async {
-    var locale = '${await UserManager.getLanguage()}_${await UserManager.getLanguageCountry()}';
+    var locale = await UserManager.getUserLocale();
     var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
     if (placemarks.isEmpty) { return ''; }
     return placemarks.first.locality ?? '';
