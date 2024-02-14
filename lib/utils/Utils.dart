@@ -34,7 +34,7 @@ class Utils {
   static double maskCoordsValue = 0.025;
 
   //Manage Data
-  static Position? location;
+  static LatLng? location;
   static LatLng defaultLocation = LatLng(0, 0);
   static StreamController<int?> userScoresController =
       StreamController<int?>.broadcast();
@@ -505,7 +505,8 @@ class Utils {
         await Geolocator.openLocationSettings();
       }, context);
     } else {
-      location = await Geolocator.getLastKnownPosition();
+      var pos = await Geolocator.getLastKnownPosition();
+      location = LatLng(pos!.latitude, pos.longitude);
     }
   }
 
