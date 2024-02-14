@@ -79,7 +79,6 @@ class Report {
     current_location_lat = json['current_location_lat'];
     selected_location_lon = json['selected_location_lon'];
     selected_location_lat = json['selected_location_lat'];
-    displayCity = json['display_city'];
     note = json['note'].toString();
     package_name = json['package_name'].toString();
     package_version = json['package_version'];
@@ -141,7 +140,6 @@ class Report {
     data['current_location_lat'] = current_location_lat;
     data['selected_location_lon'] = selected_location_lon;
     data['selected_location_lat'] = selected_location_lat;
-    data['display_city'] = displayCity;
     data['note'] = note;
     data['package_name'] = package_name;
     data['package_version'] = package_version;
