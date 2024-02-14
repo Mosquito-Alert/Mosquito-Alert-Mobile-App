@@ -110,10 +110,10 @@ class Report {
     nuts3 = json['nuts_3'];
     nuts2 = json['nuts_2'];
 
-    _initialize();
+    _initializeDisplayCity();
   }
 
-  Future<void> _initialize() async {
+  Future<void> _initializeDisplayCity() async {
     double lat, lon;
     if (location_choice == 'current') {
       lat = current_location_lat ?? Utils.defaultLocation.latitude;
@@ -123,8 +123,7 @@ class Report {
       lon = selected_location_lon ?? Utils.defaultLocation.longitude;
     }
 
-    var cityName = await Utils.getCityNameFromCoords(lat, lon);
-    displayCity = cityName;
+    displayCity = await Utils.getCityNameFromCoords(lat, lon);
   }
 
   Map<String, dynamic> toJson() {
