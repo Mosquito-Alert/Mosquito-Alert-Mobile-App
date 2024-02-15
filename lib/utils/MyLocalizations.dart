@@ -14,15 +14,15 @@ class MyLocalizations {
   }
 
   static Future<void> _loadEnglishTranslations() async {
-    var jsonContent = await rootBundle.loadString('assets/language/en.json');
+    var jsonContent = await rootBundle.loadString('assets/language/en_US.json');
     _englishValues = json.decode(jsonContent);
   }
 
   static Future<MyLocalizations> loadTranslations(Locale locale) async {
     MyLocalizations appTranslations = MyLocalizations(locale);
-    String jsonContent = await rootBundle.loadString(locale.languageCode == 'zh'
-        ? 'assets/language/${locale.languageCode}_${locale.countryCode}.json'
-        : 'assets/language/${locale.languageCode}.json');
+    String jsonContent = await rootBundle.loadString(
+      'assets/language/${locale.languageCode}_${locale.countryCode}.json'
+    );
     _localisedValues = json.decode(jsonContent);
     return appTranslations;
   }
