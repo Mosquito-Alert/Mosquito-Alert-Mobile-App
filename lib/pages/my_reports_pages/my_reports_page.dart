@@ -486,7 +486,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             children: [
                                               Style.body(
                                                   MyLocalizations.of(
-                                                      context, 'more_info') + ': ',
+                                                      context, 'more_info')! + ': ',
                                                   fontSize: 12,
                                                   textAlign: TextAlign.center),
                                               SizedBox(
@@ -526,7 +526,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               children: <Widget>[
                                 Style.titleMedium(
                                     MyLocalizations.of(
-                                        context, 'registered_location_txt') + ': ',
+                                        context, 'registered_location_txt')! + ': ',
                                     fontSize: 14),
                                 Style.body(
                                     report.location_choice == 'current'
@@ -588,7 +588,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 children: [
                                   Style.titleMedium(
                                       MyLocalizations.of(
-                                          context, 'identifier_small') + ': ',
+                                          context, 'identifier_small')! + ': ',
                                       fontSize: 14),
                                   SizedBox(
                                     height: 4,
