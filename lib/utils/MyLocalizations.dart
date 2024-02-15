@@ -28,7 +28,19 @@ class MyLocalizations {
   }
 
   String translate(String? key) {
-    return _localisedValues[key] ?? _englishValues[key] ?? '';
+    // Check if the key is null or empty
+    if (key == null || key.isEmpty) {
+      return '';
+    }
+
+    // Look for the localized value first, then fallback to English if not found
+    String? localizedValue = _localisedValues[key];
+    if (localizedValue != null && localizedValue.isNotEmpty) {
+      return localizedValue;
+    }
+
+    // If localized value is null, empty, or not found, fallback to English
+    return _englishValues[key] ?? '';
   }
 
   static String? of(BuildContext context, String? key) {
