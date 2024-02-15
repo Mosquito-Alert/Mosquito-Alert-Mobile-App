@@ -55,7 +55,7 @@
     "found_breeding_place_question_txt": "Në hapësira publike",
     "report_adults_txt": "Raporto mushkonjën",
     "report_us_adult_mosquitos_txt": "Mendoj se është një nga llojet target të mushkonjave",
-    "your_reports_txt": "Të dhënat e mia",
+    "your_reports_txt": "Raportet e tua",
     "explore_your_reports_txt": "Shih ose modifiko",
     "help_validating_other_photos_txt": "Dëshironi të vlerësoni fotografitë nga pjesëmarrësit e tjerë?",
     "we_need_help_txt": "Kemi nevojë për ndihmën tuaj! Bashkëpunoni me Aplikacionin \"Mosquito Alert\"",
@@ -322,5 +322,8 @@
     "gl_ES": "Galiane",
     "eu_ES": "Baske",
     "sv_SE": "Suedeze",
-    "bn_BD": "Bengal"
+    "bn_BD": "Bengal",
+    "single_mosquito": "Mushkonjë",
+    "single_breeding_site": "Vend-rritje",
+    "single_bite": "Pickim"
 }

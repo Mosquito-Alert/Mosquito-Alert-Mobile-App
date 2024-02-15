@@ -55,7 +55,7 @@
     "found_breeding_place_question_txt": "en la vía pública",
     "report_adults_txt": "Notificar mosquito",
     "report_us_adult_mosquitos_txt": "creo que es una de las especies buscadas",
-    "your_reports_txt": "Mis datos",
+    "your_reports_txt": "Mis observaciones",
     "explore_your_reports_txt": "ver o modificar",
     "help_validating_other_photos_txt": "¿Quieres validar fotografías enviadas por otras personas?",
     "we_need_help_txt": "Necesitamos tu ayuda. Colabora con Mosquito Alert",
@@ -164,7 +164,7 @@
     "map_txt": "Mapa",
     "list_txt": "Lista",
     "report_of_the_day_txt": "Notificación del día ",
-    "location_txt": "Ubicación aproximada: ",
+    "location_txt": "Ubicación aproximada",
     "at_time_txt": "A las: ",
     "registered_location_txt": "Ubicación registrada",
     "exact_time_register_txt": "Hora exacta del registro",
@@ -322,5 +322,8 @@
     "gl_ES": "Gallego",
     "eu_ES": "Euskera",
     "sv_SE": "Sueco",
-    "bn_BD": "Bengalí"
+    "bn_BD": "Bengalí",
+    "single_mosquito": "Mosquito",
+    "single_breeding_site": "Lugar de cría",
+    "single_bite": "Picadura"
 }

@@ -16,7 +16,7 @@
     "url_legal": "https://webserver.mosquitoalert.com/eu/privacy/",
     "url_point_1": "https://webserver.mosquitoalert.com/eu/stats/user_ranking/1/",
     "url_consent_form": "https://webserver.mosquitoalert.com/eu/terms/",
-    "url_web": "http://www.mosquitoalert.com",
+    "url_web": "https://www.mosquitoalert.com",
     "url_scoring_1": "https://webserver.mosquitoalert.com/eu/scoring/",
     "url_about_us": "https://webserver.mosquitoalert.com/eu/about_us/",
     "url_about_project": "https://webserver.mosquitoalert.com/eu/project_about/",
@@ -164,7 +164,7 @@
     "map_txt": "Mapa",
     "list_txt": "Zerrenda",
     "report_of_the_day_txt": "Eguneko jakinarazpena",
-    "location_txt": "Gutxi gorabeherako kokapena: ",
+    "location_txt": "Gutxi gorabeherako kokapena",
     "at_time_txt": "Ordutan: ",
     "registered_location_txt": "Erregistratutako kokalekua",
     "exact_time_register_txt": "Erregistroaren ordu zehatza",
@@ -322,5 +322,8 @@
     "gl_ES": "Galegoa",
     "eu_ES": "Euskera",
     "sv_SE": "Suediera",
-    "bn_BD": "Bengalera"
+    "bn_BD": "Bengalera",
+    "single_mosquito": "Eltxoa",
+    "single_breeding_site": "",
+    "single_bite": ""
 }
