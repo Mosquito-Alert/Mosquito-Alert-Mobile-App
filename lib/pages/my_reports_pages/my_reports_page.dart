@@ -820,9 +820,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
 
-      loadingStream.add(false);
     } catch (e) {
       print(e);
+    } finally {	
+      loadingStream.add(false);
     }
   }
 
