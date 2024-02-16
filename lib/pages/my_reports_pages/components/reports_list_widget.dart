@@ -14,6 +14,10 @@ class ReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // Sort the reports by creation_time in descending order
+    reports.sort((a, b) => b.creation_time.compareTo(a.creation_time));
+
     if (reports.isEmpty) {
       return Center(
         child: Style.body(MyLocalizations.of(context, 'no_reports_yet_txt')),
