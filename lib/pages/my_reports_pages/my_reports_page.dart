@@ -542,7 +542,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                             ')',
                                     fontSize: 12),
                                 Style.body(
-                                    ' ${MyLocalizations.of(context, "near_from_txt")} ${report.displayCity}',
+                                    ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',
                                     fontSize: 12),
                               ],
                             ),
