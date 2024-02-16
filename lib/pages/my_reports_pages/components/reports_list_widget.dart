@@ -14,9 +14,9 @@ class ReportsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Sort the reports by creation_time in descending order
-    reports.sort((a, b) => b.creation_time.compareTo(a.creation_time));
+    reports.sort((a, b) => b.creation_time!
+        .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
 
     if (reports.isEmpty) {
       return Center(
@@ -59,23 +59,25 @@ class ReportsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Style.titleMedium(
-                                  Utils.getTranslatedReportType(context, reports[index].type),
+                                  Utils.getTranslatedReportType(
+                                      context, reports[index].type),
                                   fontSize: 14),
                               Style.body(
                                   '${MyLocalizations.of(context, "location_txt")}: ${reports[index].displayCity}'),
                               Style.body(
-                                MyLocalizations.of(context, 'at_time_txt')! +
-                                ': ' +
-                                DateFormat('dd-MM-yyyy HH:mm')
-                                  .format(DateTime.parse(
-                                      reports[index].creation_time!).toLocal())
-                                  .toString(),
-                                color: Colors.grey
-                              ),
+                                  MyLocalizations.of(context, 'at_time_txt')! +
+                                      ': ' +
+                                      DateFormat('dd-MM-yyyy HH:mm')
+                                          .format(DateTime.parse(
+                                                  reports[index].creation_time!)
+                                              .toLocal())
+                                          .toString(),
+                                  color: Colors.grey),
                             ],
                           ),
                         ),
-                        reports[index].photos != null && reports[index].photos!.isNotEmpty
+                        reports[index].photos != null &&
+                                reports[index].photos!.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
                                 child: Image.network(
@@ -85,8 +87,7 @@ class ReportsList extends StatelessWidget {
                                   height: 50,
                                   fit: BoxFit.cover,
                                 ))
-                            : Container(
-                                ),
+                            : Container(),
                       ],
                     ),
                   ),
