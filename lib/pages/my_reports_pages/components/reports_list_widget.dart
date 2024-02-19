@@ -80,10 +80,11 @@ class ReportsList extends StatelessWidget {
                                 reports[index].photos!.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.network(reports[index].photos![0].photo!,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
+                                child: Image.network(
+                                  reports[index].photos![0].photo!,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
                                 ))
                             : Container(),
                       ],

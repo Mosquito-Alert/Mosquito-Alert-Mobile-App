@@ -628,7 +628,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         15),
-                                                child: Image.network(report.photos![index].photo!,
+                                                child: Image.network(
+                                                  report.photos![index].photo!,
                                                   height: 60,
                                                   width: 60,
                                                   fit: BoxFit.cover,
