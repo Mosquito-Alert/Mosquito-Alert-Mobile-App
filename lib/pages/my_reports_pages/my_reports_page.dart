@@ -784,6 +784,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       var myData = await ApiSingleton().getReportsList();
 
+      // Sort the reports by creation_time in descending order
+      myData.sort((a, b) => b.creation_time!
+        .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
+
       var listMarkers = <ReportAndGeohash>[];
       for (var i = 0; i < myData.length; i++) {
         if (myData[i].location_choice != 'missing' &&
