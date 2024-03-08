@@ -17,8 +17,6 @@ import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
 import 'package:package_info/package_info.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -347,8 +345,8 @@ class _SettingsPageState extends State<SettingsPage> {
       if (enableTracking!) {
         widget.enableTracking!();
       } else {
-        bg.BackgroundGeolocation.stop();
-        bg.BackgroundGeolocation.stopSchedule();
+        //bg.BackgroundGeolocation.stop();
+        //bg.BackgroundGeolocation.stopSchedule();
         print('disable');
       }
 

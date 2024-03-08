@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:geolocator/geolocator.dart';
+import 'package:workmanager/workmanager.dart';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +25,28 @@ void main({String env = 'prod'}) async {
   } catch (err) {
     print('$err');
   }
+
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true
+  );
+
+  await Workmanager().registerPeriodicTask('backgroundTracking', 'backgroundTracking', frequency: Duration(minutes: 15));
+
   runApp(MyApp());
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await Firebase.initializeApp();
+
+    switch (task) {
+      case 'backgroundTracking':
+        await ApiSingleton().sendFixes(0, 0, DateTime.now().toUtc().toIso8601String(), 0);
+        break;
+    }
+    return Future.value(true);
+  });
 }
 
 class MyApp extends StatefulWidget {

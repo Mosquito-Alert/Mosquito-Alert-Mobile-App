@@ -23,8 +23,8 @@ import 'package:path_provider/path_provider.dart';
 class ApiSingleton {
   static final _timeoutTimerInSeconds = 10;
 
-  static String baseUrl = '';
-  static String serverUrl = '';
+  static String baseUrl = 'https://webdev.mosquitoalert.com';
+  static String serverUrl = 'https://webdev.mosquitoalert.com/api';
 
   static String token = 'D4w29W49rMKC7L6vYQ3ua3rd6fQ12YZ6n70P';
 
