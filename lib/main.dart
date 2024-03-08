@@ -42,7 +42,8 @@ void callbackDispatcher() {
 
     switch (task) {
       case 'backgroundTracking':
-        await ApiSingleton().sendFixes(0, 0, DateTime.now().toUtc().toIso8601String(), 0);
+        var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        await ApiSingleton().sendFixes(position.latitude, position.longitude, DateTime.now().toUtc().toIso8601String(), 0);
         break;
     }
     return Future.value(true);
