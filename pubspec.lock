@@ -363,7 +363,7 @@ packages:
       name: geocoding
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.1+1"
   geocoding_android:
     dependency: transitive
     description:
@@ -377,7 +377,7 @@ packages:
       name: geocoding_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "2.3.0"
   geocoding_platform_interface:
     dependency: transitive
     description:
