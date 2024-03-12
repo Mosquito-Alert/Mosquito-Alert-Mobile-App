@@ -33,7 +33,7 @@ class UserManager {
       var trackingUuid = Uuid().v4();
       prefs.setString('uuid', uuid);
       prefs.setString('trackingUUID', trackingUuid);
-      prefs.setBool('trackingDisabled', false);
+      prefs.setBool('trackingEnabled', true);
 
       Utils.initializedCheckData['userCreated']['required'] = true;
 
@@ -81,9 +81,9 @@ class UserManager {
     prefs.setInt('userScores', scores);
   }
 
-  static Future<void> setTracking(enabled) async {
+  static Future<void> setTracking(bool enabled) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('trackingDisabled', enabled);
+    prefs.setBool('trackingEnabled', enabled);
   }
 
   static Future<void> setSowInfoAdult(show) async {
@@ -145,9 +145,9 @@ class UserManager {
     return prefs.getInt('userScores');
   }
 
-  static Future<bool?> getTracking() async {
+  static Future<bool> getTracking() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('trackingDisabled');
+    return prefs.getBool('trackingEnabled') ?? false;
   }
 
   static Future<bool?> getShowInfoAdult() async {

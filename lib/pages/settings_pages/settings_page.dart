@@ -18,6 +18,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   final Function? enableTracking;
@@ -29,7 +30,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool? enableTracking = false;
+  bool isBgTrackingEnabled = false;
   String? hashtag;
   var packageInfo;
 
@@ -67,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void getTracking() async {
-    enableTracking = await UserManager.getTracking();
+    isBgTrackingEnabled = await UserManager.getTracking();
     PackageInfo _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       packageInfo = _packageInfo;
@@ -144,10 +145,9 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                enableTracking!
-                    ? MyLocalizations.of(context, 'enable_background_tracking')
-                    : MyLocalizations.of(
-                        context, 'disable_background_tracking'), () {
+                isBgTrackingEnabled
+                    ? MyLocalizations.of(context, 'disable_background_tracking')
+                    : MyLocalizations.of(context, 'enable_background_tracking'), () {
               _disableBgTracking();
             }),
             SizedBox(
@@ -334,25 +334,30 @@ class _SettingsPageState extends State<SettingsPage> {
                 })),
       );
 
-  _disableBgTracking() {
+  void _disableBgTracking() {
     Utils.showAlertYesNo(
         MyLocalizations.of(context, 'app_name'),
-        enableTracking!
-            ? MyLocalizations.of(context, 'enable_tracking_question_text')
-            : MyLocalizations.of(context, 'disable_tracking_question_text'),
+        isBgTrackingEnabled
+            ? MyLocalizations.of(context, 'disable_tracking_question_text')
+            : MyLocalizations.of(context, 'enable_tracking_question_text'),
         () async {
-      await UserManager.setTracking(!enableTracking!);
-      if (enableTracking!) {
-        widget.enableTracking!();
+      if (isBgTrackingEnabled) {
+        print('disable bg tracking');
+        await UserManager.setTracking(false);
+        setState(() { isBgTrackingEnabled = false; });
       } else {
-        //bg.BackgroundGeolocation.stop();
-        //bg.BackgroundGeolocation.stopSchedule();
-        print('disable');
-      }
+        print('enable bg tracking');
+        var status = await Permission.locationAlways.status;
+        if (!status.isGranted){
+          await Permission.locationAlways.request();
+        }
 
-      setState(() {
-        enableTracking = !enableTracking!;
-      });
+        if (status.isGranted){
+          await UserManager.setTracking(true);
+          setState(() { isBgTrackingEnabled = true; });
+        }
+        widget.enableTracking!();
+      }
     }, context);
   }
 
