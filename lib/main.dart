@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:connectivity/connectivity.dart';
@@ -46,6 +47,12 @@ void callbackDispatcher() {
       case 'backgroundTracking':
         var permission = await Geolocator.checkPermission();
         var isBgTrackingEnabled = await UserManager.getTracking();
+
+        var status = await Permission.locationAlways.status;
+        if (!status.isGranted){
+          await Permission.locationAlways.request();
+        }
+
         if (permission == LocationPermission.always && isBgTrackingEnabled){
           var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
           var battery = Battery();
