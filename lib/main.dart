@@ -33,7 +33,7 @@ void main({String env = 'prod'}) async {
     isInDebugMode: true
   );
 
-  await Workmanager().registerPeriodicTask('backgroundTracking', 'backgroundTracking', frequency: Duration(minutes: 15));
+  await Workmanager().registerPeriodicTask('backgroundTracking', 'backgroundTracking', frequency: Duration(hours: 4, minutes: 48));
 
   runApp(MyApp());
 }
