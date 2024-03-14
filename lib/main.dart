@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:connectivity/connectivity.dart';
@@ -31,7 +30,7 @@ void main({String env = 'prod'}) async {
 
   await Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true
+    isInDebugMode: false
   );
 
   await Workmanager().registerPeriodicTask('backgroundTracking', 'backgroundTracking', frequency: Duration(hours: 4, minutes: 48));
