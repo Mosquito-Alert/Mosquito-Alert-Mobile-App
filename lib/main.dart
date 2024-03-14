@@ -48,11 +48,6 @@ void callbackDispatcher() {
         var permission = await Geolocator.checkPermission();
         var isBgTrackingEnabled = await UserManager.getTracking();
 
-        var status = await Permission.locationAlways.status;
-        if (!status.isGranted){
-          await Permission.locationAlways.request();
-        }
-
         if (permission == LocationPermission.always && isBgTrackingEnabled){
           var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
           var battery = Battery();
