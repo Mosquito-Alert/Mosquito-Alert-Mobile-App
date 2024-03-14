@@ -21,9 +21,7 @@ import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
-  final Function? enableTracking;
-
-  SettingsPage({this.enableTracking});
+  SettingsPage();
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -348,19 +346,22 @@ class _SettingsPageState extends State<SettingsPage> {
       if (isBgTrackingEnabled) {
         print('disable bg tracking');
         await UserManager.setTracking(false);
-        setState(() { isBgTrackingEnabled = false; });
+        setState(() {
+          isBgTrackingEnabled = false;
+        });
       } else {
         print('enable bg tracking');
         var status = await Permission.locationAlways.status;
         if (!status.isGranted){
-          await Permission.locationAlways.request();
+          status = await Permission.locationAlways.request();
         }
 
         if (status.isGranted){
           await UserManager.setTracking(true);
-          setState(() { isBgTrackingEnabled = true; });
+          setState(() {
+            isBgTrackingEnabled = true;
+          });
         }
-        widget.enableTracking!();
       }
     }, context);
   }

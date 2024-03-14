@@ -124,6 +124,11 @@ class UserManager {
     return prefs.setString('hashtag', hashtag);
   }
 
+  static Future<void> setServerUrl(String serverUrl) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('serverUrl', serverUrl);
+  }
+
   //get
   static Future<String?> getUUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -187,6 +192,11 @@ class UserManager {
   static Future<String?> getHashtag() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('hashtag');
+  }
+
+  static Future<String> getServerUrl() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('serverUrl') ?? '';
   }
 
   static signOut() async {
