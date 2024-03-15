@@ -146,12 +146,16 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            SettingsMenuWidget(
-                isBgTrackingEnabled
-                    ? MyLocalizations.of(context, 'disable_background_tracking')
-                    : MyLocalizations.of(context, 'enable_background_tracking'), () {
-              _disableBgTracking();
-            }),
+            SwitchListTile(
+              title: Text((isBgTrackingEnabled
+                  ? MyLocalizations.of(context, 'disable_background_tracking')
+                  : MyLocalizations.of(context, 'enable_background_tracking')) ?? ''),
+              value: isBgTrackingEnabled,
+              activeColor: Colors.orange,
+              onChanged: (bool value) {
+                _disableBgTracking();
+              },
+            ),
             SizedBox(
               height: 10,
             ),
@@ -336,13 +340,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 })),
       );
 
-  void _disableBgTracking() {
-    Utils.showAlertYesNo(
-        MyLocalizations.of(context, 'app_name'),
-        isBgTrackingEnabled
-            ? MyLocalizations.of(context, 'disable_tracking_question_text')
-            : MyLocalizations.of(context, 'enable_tracking_question_text'),
-        () async {
+  void _disableBgTracking() async {
       if (isBgTrackingEnabled) {
         print('disable bg tracking');
         await UserManager.setTracking(false);
@@ -363,7 +361,6 @@ class _SettingsPageState extends State<SettingsPage> {
           });
         }
       }
-    }, context);
   }
 
   _manageHashtag() async {
