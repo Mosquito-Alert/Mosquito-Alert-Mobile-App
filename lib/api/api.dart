@@ -492,8 +492,8 @@ class ApiSingleton {
       var body = {
         'user_coverage_uuid': userIdFix,
         'fix_time': time,
-        'masked_lat': lat,
-        'masked_lon': lon,
+        'masked_lat': (lat / Utils.maskCoordsValue).floor() * Utils.maskCoordsValue,
+        'masked_lon': (lon / Utils.maskCoordsValue).floor() * Utils.maskCoordsValue,
         'power': power,
         'phone_upload_time': DateTime.now().toUtc().toIso8601String(),
       };
