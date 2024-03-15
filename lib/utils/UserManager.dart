@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -81,9 +82,23 @@ class UserManager {
     prefs.setInt('userScores', scores);
   }
 
-  static Future<void> setTracking(bool enabled) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('trackingEnabled', enabled);
+  static Future<void> setTracking(bool new_value) async {
+    var prefs = await SharedPreferences.getInstance();
+
+    if (new_value == true){
+      print('enable bg tracking');
+      var status = await Permission.locationAlways.status;
+      if (!status.isGranted){
+        status = await Permission.locationAlways.request();
+      }
+
+      if (status.isGranted){
+        await prefs.setBool('trackingEnabled', true);
+      }
+    } else {
+        print('disable bg tracking');
+        await prefs.setBool('trackingEnabled', false);
+    }
   }
 
   static Future<void> setSowInfoAdult(show) async {
@@ -136,7 +151,7 @@ class UserManager {
   }
 
   static Future<String?> getTrackingId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
     return prefs.get('trackingUUID') as FutureOr<String?>;
   }
 

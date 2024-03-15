@@ -18,7 +18,6 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage();
@@ -147,13 +146,15 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SwitchListTile(
-              title: Text((isBgTrackingEnabled
-                  ? MyLocalizations.of(context, 'disable_background_tracking')
-                  : MyLocalizations.of(context, 'enable_background_tracking')) ?? ''),
+              title: Text(MyLocalizations.of(context, 'enable_background_tracking') ?? ''),
               value: isBgTrackingEnabled,
               activeColor: Colors.orange,
-              onChanged: (bool value) {
-                _disableBgTracking();
+              onChanged: (bool value) async {
+                await UserManager.setTracking(value);
+                var trackingStatus = await UserManager.getTracking();
+                setState(() {
+                  isBgTrackingEnabled = trackingStatus;
+                });
               },
             ),
             SizedBox(
@@ -339,29 +340,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   );
                 })),
       );
-
-  void _disableBgTracking() async {
-      if (isBgTrackingEnabled) {
-        print('disable bg tracking');
-        await UserManager.setTracking(false);
-        setState(() {
-          isBgTrackingEnabled = false;
-        });
-      } else {
-        print('enable bg tracking');
-        var status = await Permission.locationAlways.status;
-        if (!status.isGranted){
-          status = await Permission.locationAlways.request();
-        }
-
-        if (status.isGranted){
-          await UserManager.setTracking(true);
-          setState(() {
-            isBgTrackingEnabled = true;
-          });
-        }
-      }
-  }
 
   _manageHashtag() async {
     if (hashtag != null) {
