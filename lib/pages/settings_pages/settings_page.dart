@@ -27,7 +27,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool isBgTrackingEnabled = true;
+  late bool isBgTrackingEnabled;
   String? hashtag;
   var packageInfo;
 
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void initializeBgTracking() async {
-    await UserManager.setTracking(true);
+    isBgTrackingEnabled = await UserManager.getTracking();
   }
 
   void getPackageInfo() async {
@@ -102,7 +102,6 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 12,
             ),
-
             FutureBuilder(
               future: UserManager.getUUID(),
               builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
