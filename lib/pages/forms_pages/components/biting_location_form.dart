@@ -45,7 +45,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
               markerId: MarkerId('mk_${markers.length}'),
               position: LatLng(Utils.report!.selected_location_lat!,
                   Utils.report!.selected_location_lon!)));
-          currentLocation = LatLng(Utils.report!.selected_location_lat!, Utils.report!.selected_location_lon!);
+          currentLocation = LatLng(Utils.report!.selected_location_lat!,
+              Utils.report!.selected_location_lon!);
           widget.setValid(true);
           break;
         case 'current':
@@ -54,7 +55,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
               markerId: MarkerId('mk_${markers.length}'),
               position: LatLng(Utils.report!.current_location_lat!,
                   Utils.report!.current_location_lon!)));
-          currentLocation = LatLng(Utils.report!.current_location_lat!, Utils.report!.current_location_lon!);
+          currentLocation = LatLng(Utils.report!.current_location_lat!,
+              Utils.report!.current_location_lon!);
           widget.setValid(true);
           break;
         default:
@@ -95,11 +97,11 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         streamType.add(type);
 
         if (geolocationEnabled) {
-          Position currentPosition =
-              await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          var currentPosition = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
           Utils.setCurrentLocation(
               currentPosition.latitude, currentPosition.longitude);
-          controller.moveCamera(
+          await controller.moveCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(
@@ -115,7 +117,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
           ];
           widget.setValid(true);
         } else {
-          Utils.showAlert(
+          await Utils.showAlert(
               MyLocalizations.of(context, 'location_not_active_title'),
               MyLocalizations.of(context, 'location_not_active_txt'),
               context, onPressed: () {
@@ -130,7 +132,7 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         // get saved marker
         if (Utils.report!.selected_location_lat != null &&
             Utils.report!.selected_location_lon != null) {
-          controller.moveCamera(
+          await controller.moveCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(Utils.report!.selected_location_lat!,
@@ -150,21 +152,20 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
         //get markers in responses
         try {
           if (Utils.report!.responses!.any((r) => r!.question_id == 5)) {
-            int i = 0;
+            var i = 0;
             Utils.report!.responses!.forEach((q) {
               i++;
               if (q!.question_id == 5) {
-
                 print(q.answer_value);
 
                 var res = q.answer_value!
                     .substring(q.answer_value!.indexOf('( ') + 2,
-                    q.answer_value!.indexOf(')'))
+                        q.answer_value!.indexOf(')'))
                     .split(', ');
                 currentMarkers.add(Marker(
                     markerId: MarkerId('mk_$i'),
                     position:
-                    LatLng(double.parse(res[0]), double.parse(res[1]))));
+                        LatLng(double.parse(res[0]), double.parse(res[1]))));
               }
             });
           }
@@ -286,14 +287,15 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
                                     zoom: 7.0,
                                   ),
                                   markers: markers.isNotEmpty
-                                      ? Set.from(markers)
-                                      : Set(),
-                                  gestureRecognizers:
-                                      <Factory<OneSequenceGestureRecognizer>>[
+                                      ? Set.from(markers.cast<
+                                          Marker>()) // Cast elements to Marker
+                                      : <Marker>{},
+                                  gestureRecognizers: <Factory<
+                                      OneSequenceGestureRecognizer>>{
                                     Factory<OneSequenceGestureRecognizer>(
                                       () => EagerGestureRecognizer(),
                                     ),
-                                  ].toSet(),
+                                  },
                                 )),
                           ),
                           SizedBox(
