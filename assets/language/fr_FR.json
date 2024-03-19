@@ -325,5 +325,6 @@
     "bn_BD": "Bengali",
     "single_mosquito": "Moustique",
     "single_breeding_site": "Site de reproduction",
-    "single_bite": "Piqûre"
+    "single_bite": "Piqûre",
+    "background_tracking_title": "Localisation en arrière-plan"
 }
