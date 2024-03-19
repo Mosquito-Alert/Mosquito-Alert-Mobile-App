@@ -145,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             Container(
-              padding: EdgeInsets.only(bottom: 12.0),
+              padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.white,
@@ -153,10 +153,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               child: SwitchListTile(
                 title: Style.body(MyLocalizations.of(context, 'background_tracking_title') ?? ''),
-                subtitle: Text(
-                  'Anonymously share your location to improve the scientific value of your observations. More info.',
-                  style: TextStyle(fontSize: 11),
+                subtitle: Padding(
+                  padding: EdgeInsets.only(top: 8.0), // Adjust the padding as needed
+                  child: Text(
+                    'Anonymously share your location to improve the scientific value of your observations. More info in Privacy Policy below.',
+                    style: TextStyle(fontSize: 11),
                   ),
+                ),
                 value: isBgTrackingEnabled,
                 activeColor: Colors.orange,
                 onChanged: (bool value) async {
