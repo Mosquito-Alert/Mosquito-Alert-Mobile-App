@@ -144,17 +144,29 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            SwitchListTile(
-              title: Text(MyLocalizations.of(context, 'enable_background_tracking') ?? ''),
-              value: isBgTrackingEnabled,
-              activeColor: Colors.orange,
-              onChanged: (bool value) async {
-                await UserManager.setTracking(value);
-                var trackingStatus = await UserManager.getTracking();
-                setState(() {
-                  isBgTrackingEnabled = trackingStatus;
-                });
-              },
+            Container(
+              padding: EdgeInsets.only(bottom: 12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+                border: Border.all(color: Colors.black.withOpacity(0.1))
+              ),
+              child: SwitchListTile(
+                title: Style.body(MyLocalizations.of(context, 'background_tracking_title') ?? ''),
+                subtitle: Text(
+                  'Anonymously share your location to improve the scientific value of your observations. More info.',
+                  style: TextStyle(fontSize: 11),
+                  ),
+                value: isBgTrackingEnabled,
+                activeColor: Colors.orange,
+                onChanged: (bool value) async {
+                  await UserManager.setTracking(value);
+                  var trackingStatus = await UserManager.getTracking();
+                  setState(() {
+                    isBgTrackingEnabled = trackingStatus;
+                  });
+                },
+              ),
             ),
             SizedBox(
               height: 10,
