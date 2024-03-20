@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,12 +30,13 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  LatLng? location = LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
+  LatLng? location =
+      LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
 
   //Map
   late ClusteringHelper clusteringHelper;
   List<ReportAndGeohash> _listMarkers = [];
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
   BitmapDescriptor? iconAdultYours;
   BitmapDescriptor? iconBitesYours;
   BitmapDescriptor? iconBreedingYours;
@@ -101,10 +101,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+    var data = await rootBundle.load(path);
+    var codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
+    var fi = await codec.getNextFrame();
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
         .buffer
         .asUint8List();
@@ -174,13 +174,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               mapToolbarEnabled: false,
                               myLocationButtonEnabled: false,
                               onCameraMove: (newPosition) {
-                                location = LatLng(newPosition.target.latitude, newPosition.target.longitude);
+                                location = LatLng(newPosition.target.latitude,
+                                    newPosition.target.longitude);
                               },
                               initialCameraPosition: CameraPosition(
                                 target: location != null
                                     ? LatLng(
-                                        location!.latitude,
-                                        location!.longitude)
+                                        location!.latitude, location!.longitude)
                                     : Utils.defaultLocation,
                                 zoom: 12,
                               ),
@@ -189,35 +189,34 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           },
                         ),
                         SafeArea(
-                          child: Container(
-                              width: 50,
-                              height: 50,
-                              margin: EdgeInsets.only(left: 12, bottom: 12),
-                              child: RaisedButton(
-                                  onPressed: () {
-                                    _infoBottom(context);
-                                  },
-                                  elevation: 0,
-                                  highlightElevation: 0,
-                                  hoverElevation: 0,
-                                  highlightColor:
-                                      Style.colorPrimary.withOpacity(0.5),
-                                  padding: EdgeInsets.symmetric(vertical: 2),
-                                  color: Color(0xffffffff),
-                                  disabledColor:
-                                      Style.colorPrimary.withOpacity(0.3),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3),
-                                      side: BorderSide(
-                                          color:
-                                              Colors.black.withOpacity(0.2),
-                                          width: 1.0)),
-                                  child: Icon(Icons.info_outline))),
-                        )
+                            child: Container(
+                          width: 50,
+                          height: 50,
+                          margin: EdgeInsets.only(left: 12, bottom: 12),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _infoBottom(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              backgroundColor: Color(0xffffffff),
+                              foregroundColor:
+                                  Style.colorPrimary.withOpacity(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
+                                side: BorderSide(
+                                  color: Colors.black.withOpacity(0.2),
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                            child: Icon(Icons.info_outline),
+                          ),
+                        ))
                       ],
-                    );                    
+                    );
                   })),
-
           StreamBuilder<bool>(
               stream: loadingStream.stream,
               initialData: true,
@@ -231,7 +230,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 }
                 return Container();
               }),
-
           Container(
             child: Card(
               margin: EdgeInsets.all(0),
@@ -368,16 +366,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   void _reportBottomSheet(Report report) async {
-    Campaign? campaign = await _checkCampaigns(report.country);
+    var campaign = await _checkCampaigns(report.country);
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         dismissible: true,
         builder: (BuildContext bc) {
           return Container(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.85,
-              minHeight: MediaQuery.of(context).size.height * 0.55
-            ),
+                maxHeight: MediaQuery.of(context).size.height * 0.85,
+                minHeight: MediaQuery.of(context).size.height * 0.55),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -386,8 +383,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 )),
             child: Container(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.9
-              ),
+                  maxHeight: MediaQuery.of(context).size.height * 0.9),
               // height: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: SingleChildScrollView(
@@ -419,7 +415,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         height: 20,
                       ),
                       Style.titleMedium(
-                        Utils.getTranslatedReportType(context, report.type)),
+                          Utils.getTranslatedReportType(context, report.type)),
                       SizedBox(
                         height: 20,
                       ),
@@ -485,8 +481,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Style.body(
-                                                  MyLocalizations.of(
-                                                      context, 'more_info')! + ': ',
+                                                  MyLocalizations.of(context,
+                                                          'more_info')! +
+                                                      ': ',
                                                   fontSize: 12,
                                                   textAlign: TextAlign.center),
                                               SizedBox(
@@ -525,8 +522,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Style.titleMedium(
-                                    MyLocalizations.of(
-                                        context, 'registered_location_txt')! + ': ',
+                                    MyLocalizations.of(context,
+                                            'registered_location_txt')! +
+                                        ': ',
                                     fontSize: 14),
                                 Style.body(
                                     report.location_choice == 'current'
@@ -563,7 +561,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     DateFormat('EEEE, dd MMMM yyyy',
                                             Utils.language.languageCode)
                                         .format(DateTime.parse(
-                                            report.creation_time!).toLocal())
+                                                report.creation_time!)
+                                            .toLocal())
                                         .toString(),
                                     fontSize: 12),
                                 Style.body(
@@ -578,8 +577,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Divider(),
                           ),
                           Column(
@@ -588,7 +586,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                 children: [
                                   Style.titleMedium(
                                       MyLocalizations.of(
-                                          context, 'identifier_small')! + ': ',
+                                              context, 'identifier_small')! +
+                                          ': ',
                                       fontSize: 14),
                                   SizedBox(
                                     height: 4,
@@ -605,15 +604,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
                           ),
                           report.photos != null && report.photos!.isNotEmpty
                               ? Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     SizedBox(
                                       height: 12,
                                     ),
                                     Style.titleMedium(
-                                        MyLocalizations.of(context,
-                                            'reported_images_txt'),
+                                        MyLocalizations.of(
+                                            context, 'reported_images_txt'),
                                         fontSize: 14),
                                     SizedBox(
                                       height: 10,
@@ -621,18 +619,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                     Container(
                                       height: 60,
                                       child: ListView.builder(
-                                          scrollDirection:
-                                              Axis.horizontal,
-                                          itemCount:
-                                              report.photos!.length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: report.photos!.length,
                                           itemBuilder: (context, index) {
                                             return Container(
-                                              margin: EdgeInsets.only(
-                                                  right: 5),
+                                              margin: EdgeInsets.only(right: 5),
                                               child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        15),
+                                                    BorderRadius.circular(15),
                                                 child: Image.network(
                                                   report.photos![index].photo!,
                                                   height: 60,
@@ -661,18 +655,14 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                           vertical: 10.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          report.responses![index]!
-                                                      .question !=
+                                          report.responses![index]!.question !=
                                                   null
                                               ? Expanded(
                                                   flex: 3,
                                                   child: Style.titleMedium(
-                                                      report
-                                                              .responses![
-                                                                  index]!
+                                                      report.responses![index]!
                                                               .question!
                                                               .startsWith(
                                                                   'question')
@@ -695,9 +685,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                 report.responses![index]!
                                                             .answer !=
                                                         'N/A'
-                                                    ? report
-                                                            .responses![
-                                                                index]!
+                                                    ? report.responses![index]!
                                                             .answer!
                                                             .startsWith(
                                                                 'question')
@@ -708,12 +696,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                                                     index]!
                                                                 .answer)
                                                         : report
-                                                            .responses![
-                                                                index]!
+                                                            .responses![index]!
                                                             .answer
-                                                    : report
-                                                        .responses![
-                                                            index]!
+                                                    : report.responses![index]!
                                                         .answer_value,
                                                 textAlign: TextAlign.end),
                                           ),
@@ -725,8 +710,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                               }),
                           report.note != null && report.note != 'null'
                               ? Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -750,14 +734,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
                             children: <Widget>[
                               Expanded(
                                   child: Style.noBgButton(
-                                      MyLocalizations.of(
-                                          context, 'delete'), () {
+                                      MyLocalizations.of(context, 'delete'),
+                                      () {
                                 Utils.showAlertYesNo(
                                     MyLocalizations.of(
                                         context, 'delete_report_title'),
                                     MyLocalizations.of(
-                                        context, 'delete_report_txt'),
-                                    () {
+                                        context, 'delete_report_txt'), () {
                                   _deleteReport(report);
                                 }, context);
                               }, textColor: Colors.red))
@@ -786,7 +769,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       // Sort the reports by creation_time in descending order
       myData.sort((a, b) => b.creation_time!
-        .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
+          .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
 
       var listMarkers = <ReportAndGeohash>[];
       for (var i = 0; i < myData.length; i++) {
@@ -812,8 +795,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       _myData = myData;
       if (myData.isNotEmpty) {
         var location = myData[0].location_choice == 'current'
-            ? LatLng(
-                myData[0].current_location_lat!,
+            ? LatLng(myData[0].current_location_lat!,
                 myData[0].current_location_lon!)
             : LatLng(myData[0].selected_location_lat!,
                 myData[0].selected_location_lon!);
@@ -823,10 +805,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
-
     } catch (e) {
       print(e);
-    } finally {	
+    } finally {
       loadingStream.add(false);
     }
   }
@@ -853,7 +834,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
-  _getPosition(Report report) {
+  CameraPosition _getPosition(Report report) {
     var _target;
 
     if (report.location_choice == 'current') {
@@ -870,7 +851,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
     );
   }
 
-  _getMarker(Report report) {
+  Set<Marker> _getMarker(Report report) {
     var marker;
     var icon = setIconMarker(report.type);
     if (report.location_choice == 'current') {
@@ -891,25 +872,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
       );
     }
 
-    return <Marker>[marker].toSet();
+    return <Marker>{marker};
   }
 
   BitmapDescriptor? setIconMarker(type) {
-     switch (type) {
-        case 'adult':
-          // return
-          return iconAdultYours;
-          break;
-        case 'bite':
-          return iconBitesYours;
-          break;
-        case 'site':
-          return iconBreedingYours;
-          break;
-        default:
-          return iconAdultOthers;
-          break;
-      }
+    switch (type) {
+      case 'adult':
+        // return
+        return iconAdultYours;
+        break;
+      case 'bite':
+        return iconBitesYours;
+        break;
+      case 'site':
+        return iconBreedingYours;
+        break;
+      default:
+        return iconAdultOthers;
+        break;
+    }
   }
 
   _onItemTapped(index) {
