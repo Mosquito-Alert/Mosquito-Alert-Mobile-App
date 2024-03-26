@@ -156,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 subtitle: Padding(
                   padding: EdgeInsets.only(top: 8.0), // Adjust the padding as needed
                   child: Text(
-                    'Anonymously share your location to improve the scientific value of your observations. More info in Privacy Policy below.',
+                    MyLocalizations.of(context, 'background_tracking_subtitle') ?? '',
                     style: TextStyle(fontSize: 11),
                   ),
                 ),

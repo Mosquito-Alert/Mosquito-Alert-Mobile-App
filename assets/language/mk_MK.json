@@ -326,5 +326,6 @@
     "single_mosquito": "комарец",
     "single_breeding_site": "Едно хранилиште",
     "single_bite": "едно_хранење",
-    "background_tracking_title": "позадина_следење_наслов"
+    "background_tracking_title": "позадина_следење_наслов",
+    "background_tracking_subtitle": "позадина_следење_превод"
 }
