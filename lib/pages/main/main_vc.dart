@@ -87,7 +87,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _bgTracking() async {
-    bool? trackingDisabled = await UserManager.getTracking();
+    var trackingDisabled = await UserManager.getTracking();
     if (trackingDisabled == null || !trackingDisabled) {
       // 1.  Listen to events (See docs for all 12 available events).
 
@@ -122,9 +122,9 @@ class _MainVCState extends State<MainVC> {
         LatLng(location.coords.latitude, location.coords.longitude);
 
     if ((location.coords.latitude).abs() <= 66.5) {
-      double lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
+      var lat = (location.coords.latitude / Utils.maskCoordsValue).floor() *
           Utils.maskCoordsValue;
-      double lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
+      var lon = (location.coords.longitude / Utils.maskCoordsValue).floor() *
           Utils.maskCoordsValue;
 
       ApiSingleton()
@@ -439,7 +439,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   _createBiteReport() async {
-    bool createReport = await Utils.createNewReport('bite');
+    var createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(
@@ -455,7 +455,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   _createAdultReport() async {
-    bool createReport = await Utils.createNewReport('adult');
+    var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(
@@ -471,7 +471,7 @@ class _MainVCState extends State<MainVC> {
   }
 
   _createSiteReport() async {
-    bool createReport = await Utils.createNewReport('site');
+    var createReport = await Utils.createNewReport('site');
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(

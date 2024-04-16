@@ -70,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void getTracking() async {
     enableTracking = await UserManager.getTracking();
-    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+    var _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       packageInfo = _packageInfo;
     });
@@ -96,201 +96,220 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(15),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                  Widget>[
-            SizedBox(
-              height: 12,
-            ),
-
-            FutureBuilder(
-              future: UserManager.getUUID(),
-              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                print(snapshot.data);
-                return Row(
-                  children: [
-                    Style.body('ID'),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Expanded(
-                        child: Style.bodySmall(snapshot.data,
-                            color: Colors.black.withOpacity(0.7))),
-                    GestureDetector(
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 18,
-                      ),
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: snapshot.data));
-                        key.currentState!.showSnackBar(SnackBar(
-                          content: Text('Copied to Clipboard'),
-                        ));
-                      },
-                    )
-                  ],
-                );
-              },
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, 'select_language_txt'), () {
-              _openLanguagePickerDialog();
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(
-                enableTracking!
-                    ? MyLocalizations.of(context, 'enable_background_tracking')
-                    : MyLocalizations.of(
-                        context, 'disable_background_tracking'), () {
-              _disableBgTracking();
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(
-                hashtag == null
-                    ? MyLocalizations.of(context, 'enable_auto_hashtag')
-                    : MyLocalizations.of(context, 'disable_auto_hashtag'), () {
-              _manageHashtag();
-            }),
-            SizedBox(
-              height: 35,
-            ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, 'mosquitos_gallery_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GalleryPage()),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'tutorial_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TutorialPage(true)),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'info_scores_txt'),
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, 'url_scoring_1'))),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, 'about_the_project_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                        MyLocalizations.of(context, 'url_about_project'))),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'coordination_txt'),
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, 'url_about_us'))),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'partners_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PartnersPage()),
-              );
-            }),
-            SizedBox(
-              height: 30,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'terms_of_use_txt'),
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                          MyLocalizations.of(context, 'terms_link'),
-                          localHtml: true,
-                        )),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'privacy_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                          MyLocalizations.of(context, 'privacy_link'),
-                          localHtml: true,
-                        )),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'license_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => InfoPage(
-                          MyLocalizations.of(context, 'lisence_link'),
-                          localHtml: true,
-                        )),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 60,
-            ),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Style.title(MyLocalizations.of(context, 'app_name'),
-                      fontSize: 8, textAlign: TextAlign.center),
-                  Style.bodySmall(
-                      packageInfo != null
-                          ? '${packageInfo.version} (build ${packageInfo.buildNumber})'
-                          : '',
-                      fontSize: 8,
-                      textAlign: TextAlign.center),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 60,
-            ),
-          ]),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 12,
+                ),
+                FutureBuilder(
+                  future: UserManager.getUUID(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                    print(snapshot.data);
+                    return Row(
+                      children: [
+                        Style.body('ID'),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Expanded(
+                            child: Style.bodySmall(snapshot.data,
+                                color: Colors.black.withOpacity(0.7))),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.copy_rounded,
+                            size: 18,
+                          ),
+                          onTap: () {
+                            final String? data = snapshot.data;
+                            if (data != null) {
+                              Clipboard.setData(ClipboardData(text: data));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Copied to Clipboard'),
+                                ),
+                              );
+                            } else {
+                              // Display an error message for troubleshooting
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Error: Unable to copy to clipboard. Data is null.'),
+                                ),
+                              );
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'select_language_txt'), () {
+                  _openLanguagePickerDialog();
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    enableTracking!
+                        ? MyLocalizations.of(
+                            context, 'enable_background_tracking')
+                        : MyLocalizations.of(
+                            context, 'disable_background_tracking'), () {
+                  _disableBgTracking();
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    hashtag == null
+                        ? MyLocalizations.of(context, 'enable_auto_hashtag')
+                        : MyLocalizations.of(context, 'disable_auto_hashtag'),
+                    () {
+                  _manageHashtag();
+                }),
+                SizedBox(
+                  height: 35,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'mosquitos_gallery_txt'), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GalleryPage()),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(MyLocalizations.of(context, 'tutorial_txt'),
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TutorialPage(true)),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'info_scores_txt'), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                            MyLocalizations.of(context, 'url_scoring_1'))),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'about_the_project_txt'), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                            MyLocalizations.of(context, 'url_about_project'))),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'coordination_txt'), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                            MyLocalizations.of(context, 'url_about_us'))),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(MyLocalizations.of(context, 'partners_txt'),
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PartnersPage()),
+                  );
+                }),
+                SizedBox(
+                  height: 30,
+                ),
+                SettingsMenuWidget(
+                    MyLocalizations.of(context, 'terms_of_use_txt'), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                              MyLocalizations.of(context, 'terms_link'),
+                              localHtml: true,
+                            )),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(MyLocalizations.of(context, 'privacy_txt'),
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                              MyLocalizations.of(context, 'privacy_link'),
+                              localHtml: true,
+                            )),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SettingsMenuWidget(MyLocalizations.of(context, 'license_txt'),
+                    () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoPage(
+                              MyLocalizations.of(context, 'lisence_link'),
+                              localHtml: true,
+                            )),
+                  );
+                }),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Style.title(MyLocalizations.of(context, 'app_name'),
+                          fontSize: 8, textAlign: TextAlign.center),
+                      Style.bodySmall(
+                          packageInfo != null
+                              ? '${packageInfo.version} (build ${packageInfo.buildNumber})'
+                              : '',
+                          fontSize: 8,
+                          textAlign: TextAlign.center),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+              ]),
         ),
       ),
     );
@@ -301,13 +320,13 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (context) => Theme(
             data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
             child: LanguagePickerDialog(
-                languages: languageCodes.map(
-                  (language) => Language(
-                    language.isoCode,
-                    MyLocalizations.of(context, language.isoCode) ?? language.name
-                  )).toList()..sort(
-                          (a, b) => a.name.compareTo(b.name)
-                        ),
+                languages: languageCodes
+                    .map((language) => Language(
+                        language.isoCode,
+                        MyLocalizations.of(context, language.isoCode) ??
+                            language.name))
+                    .toList()
+                  ..sort((a, b) => a.name.compareTo(b.name)),
                 titlePadding: EdgeInsets.all(8.0),
                 searchCursorColor: Style.colorPrimary,
                 searchInputDecoration: InputDecoration(
@@ -347,8 +366,8 @@ class _SettingsPageState extends State<SettingsPage> {
       if (enableTracking!) {
         widget.enableTracking!();
       } else {
-        bg.BackgroundGeolocation.stop();
-        bg.BackgroundGeolocation.stopSchedule();
+        await bg.BackgroundGeolocation.stop();
+        await bg.BackgroundGeolocation.stopSchedule();
         print('disable');
       }
 
@@ -358,7 +377,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }, context);
   }
 
-  _manageHashtag() async {
+  Future<void> _manageHashtag() async {
     if (hashtag != null) {
       await Utils.showAlertYesNo(
         MyLocalizations.of(context, 'app_name'),
