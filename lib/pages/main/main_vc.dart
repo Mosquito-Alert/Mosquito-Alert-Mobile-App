@@ -121,6 +121,7 @@ class _MainVCState extends State<MainVC> {
                 Stack(
                   children: <Widget>[
                     IconButton(
+                      padding: EdgeInsets.only(top: 6),
                       icon: Icon(Icons.notifications),
                       onPressed: () {
                         Navigator.push(
@@ -129,27 +130,30 @@ class _MainVCState extends State<MainVC> {
                         );
                       },
                     ),
-                Positioned(
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: BoxConstraints(
-                      minWidth: 15,
-                      minHeight: 15,
-                    ),
-                    child: Text(
-                      '5',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),)],)
+                    Positioned(
+                      right: 2,
+                      top: 2,
+                      child: Container(
+                        padding: EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 15,
+                          minHeight: 15,
+                        ),
+                        child: Text(
+                          '5',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),)
+                  ],
+                )
               ],
             ),
             body: LayoutBuilder(
