@@ -32,11 +32,13 @@ class _MainVCState extends State<MainVC> {
   StreamController<String?> nameStream = StreamController<String?>.broadcast();
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+  int notificationCount = 0;
 
   @override
   void initState() {
     super.initState();
     initAuthStatus();
+    _getNotificationCount();
   }
 
   @override
@@ -77,6 +79,15 @@ class _MainVCState extends State<MainVC> {
         userName = UserManager.user!.email;
       });
     }
+  }
+
+  void _getNotificationCount() async {
+    //int count = await ApiSingleton().getNotificationCount();
+
+    setState(() {
+      //notificationCount = count;
+      notificationCount = 2;
+    });
   }
 
   @override
@@ -130,28 +141,29 @@ class _MainVCState extends State<MainVC> {
                         );
                       },
                     ),
-                    Positioned(
-                      right: 2,
-                      top: 2,
-                      child: Container(
-                        padding: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 15,
-                          minHeight: 15,
-                        ),
-                        child: Text(
-                          '5',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
+                    if (notificationCount > 0)
+                      Positioned(
+                        right: 2,
+                        top: 2,
+                        child: Container(
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),)
+                          constraints: BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Text(
+                            '$notificationCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),)
                   ],
                 )
               ],
