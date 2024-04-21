@@ -17,10 +17,37 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
-  late WebViewController _controller;
   var title;
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+
+  final _controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(const Color(0x00000000))
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {
+          // Update loading bar.
+        },
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://www.youtube.com/')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://flutter.dev'));
+  final _navigationDelegate = NavigationDelegate();
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +68,8 @@ class _InfoPageState extends State<InfoPage> {
             child: Stack(
               children: [
                 Builder(builder: (BuildContext context) {
-                  return WebView(
-                    initialUrl: widget.localHtml ? 'about:blank' : widget.url,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onWebViewCreated: (WebViewController webViewController) {
-                      _controller = webViewController;
-                      widget.localHtml ? _loadHtmlFromAssets() : null;
-                    },
-                    javascriptChannels: <JavascriptChannel>{
-                      _toasterJavascriptChannel(context),
-                    },
-                    onPageFinished: (String url) {
-                      loadingStream.add(false);
-                    },
-                    onPageStarted: (String url) {
-                      loadingStream.add(true);
-                    },
-                    gestureNavigationEnabled: true,
+                  return WebViewWidget(
+                    controller: _controller,
                   );
                 }),
                 StreamBuilder<bool>(
@@ -82,20 +94,14 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        });
+  void _toasterJavascriptChannel(BuildContext context) {
+
   }
 
   void _loadHtmlFromAssets() async {
     var fileText = await rootBundle.loadString(widget.url!);
-    await _controller.loadUrl(Uri.dataFromString(fileText,
+    await _controller.loadRequest(Uri.dataFromString(fileText,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
+        .toString() as Uri);
   }
 }
