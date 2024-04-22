@@ -238,7 +238,7 @@
     "question_16": "Unde este locul de reproducere?",
     "question_4_answer_43": "Afară",
     "question_4_answer_44": "Nu știu",
-    "es_ES": "Spaniolă",
+    "es_ES": "Spaniolă (Spania)",
     "ca_ES": "Catalană",
     "en_US": "Engleză",
     "search_txt": "Caută",
@@ -325,5 +325,8 @@
     "bn_BD": "Bengaleză",
     "single_mosquito": "Ţânţar",
     "single_breeding_site": "",
-    "single_bite": ""
+    "single_bite": "",
+    "background_tracking_title": "Urmărire în fundal",
+    "background_tracking_subtitle": "Partajați locația mea în mod anonim pentru a îmbunătăți valoarea științifică a observațiilor mele. Mai multe informații în secțiunea „Politica de confidențialitate” de mai jos.",
+    "es_UY": "Spaniolă (Uruguay)"
 }

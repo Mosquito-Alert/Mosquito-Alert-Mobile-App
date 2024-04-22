@@ -238,7 +238,7 @@
     "question_16": "Kje je mesto razvoja ličink?",
     "question_4_answer_43": "Na prostem",
     "question_4_answer_44": "Ne vem",
-    "es_ES": "Španščina",
+    "es_ES": "Španščina (Španija)",
     "ca_ES": "Katalonščina",
     "en_US": "Angleščina",
     "search_txt": "Najdi...",
@@ -325,5 +325,8 @@
     "bn_BD": "Bengalščina",
     "single_mosquito": "komar",
     "single_breeding_site": "",
-    "single_bite": ""
+    "single_bite": "",
+    "background_tracking_title": "Sledenje v ozadju",
+    "background_tracking_subtitle": "Anonimno deli mojo lokacijo, da izboljšam znanstveno vrednost svojih opazovanj. Več informacij v spodnjem razdelku »Politika zasebnosti«.",
+    "es_UY": "Španščina (Urugvaj)"
 }
