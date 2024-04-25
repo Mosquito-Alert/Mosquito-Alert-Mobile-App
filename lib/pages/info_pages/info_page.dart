@@ -21,32 +21,33 @@ class _InfoPageState extends State<InfoPage> {
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
-  final _controller = WebViewController()
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..setBackgroundColor(const Color(0x00000000))
-    ..setNavigationDelegate(
-      NavigationDelegate(
-        onProgress: (int progress) {
-          // Update loading bar.
-        },
-        onPageStarted: (String url) {},
-        onPageFinished: (String url) {},
-        onWebResourceError: (WebResourceError error) {},
-        onNavigationRequest: (NavigationRequest request) {
-          if (request.url.startsWith('https://www.youtube.com/')) {
-            return NavigationDecision.prevent;
-          }
-          return NavigationDecision.navigate;
-        },
-      ),
-    )
-    ..loadRequest(Uri.parse('https://flutter.dev'));
-  final _navigationDelegate = NavigationDelegate();
+  late WebViewController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            loadingStream.add(true);
+          },
+          onPageFinished: (String url) {
+            loadingStream.add(false);
+          },
+          onWebResourceError: (WebResourceError error) {
+            print(error);
+          },
+        ),
+      );
 
+      if (widget.localHtml) {
+        _loadHtmlFromAssets();
+      } else {
+        _controller.loadRequest(Uri.parse(widget.url ?? 'https://www.mosquitoalert.com/'));
+      }
   }
 
   @override
@@ -94,14 +95,20 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  void _toasterJavascriptChannel(BuildContext context) {
-
-  }
-
   void _loadHtmlFromAssets() async {
+    loadingStream.add(true);
     var fileText = await rootBundle.loadString(widget.url!);
-    await _controller.loadRequest(Uri.dataFromString(fileText,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString() as Uri);
+    try {
+      await _controller.loadRequest(
+        Uri.dataFromString(
+          fileText,
+          mimeType: 'text/html',
+          encoding: Encoding.getByName('utf-8')
+        )
+      );
+    } catch (e) {
+      print('Error loading local HTML: $e');
+    }
+    loadingStream.add(false);
   }
 }
