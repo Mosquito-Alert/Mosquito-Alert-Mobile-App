@@ -42,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Language('de_DE', 'German'),
     Language('el_GR', 'Greek'),
     Language('en_US', 'English'),
-    Language('es_ES', 'Spanish (Spain)'),
+    Language('es_ES', 'Spanish'),
     Language('es_UY', 'Spanish (Uruguay)'),
     Language('eu_ES', 'Basque'),
     Language('fr_FR', 'French'),
