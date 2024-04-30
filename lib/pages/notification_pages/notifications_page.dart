@@ -34,13 +34,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     loadingStream.add(true);
-    _getData();
-    Future.delayed(Duration(seconds: 5), () {
+    _getData().then((_) {
       _updateUnreadNotificationCount();
     });
   }
 
-  void _getData() async {
+  Future<void> _getData() async {
     List<MyNotification> response = await ApiSingleton().getNotifications();
 
     setState(() {
