@@ -118,7 +118,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
             margin: EdgeInsets.only(top: 100),
             child: PageView.builder(
               controller: _pagesController,
-              itemCount: 2,
+              itemCount: 10,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return StreamBuilder<List<Report>>(
