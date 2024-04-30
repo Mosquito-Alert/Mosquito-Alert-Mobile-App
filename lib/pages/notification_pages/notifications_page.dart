@@ -35,6 +35,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
     loadingStream.add(true);
     _getData();
+    Future.delayed(Duration(seconds: 5), () {
+      _updateUnreadNotificationCount();
+    });
   }
 
   void _getData() async {
@@ -224,8 +227,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
       setState(() {
         notifications[index].acknowledged = true;
       });
-      var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-      widget.onNotificationUpdate!(unacknowledgedCount);
+      _updateUnreadNotificationCount();
     } 
+  }
+
+  void _updateUnreadNotificationCount(){
+    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
+    widget.onNotificationUpdate!(unacknowledgedCount);
   }
 }

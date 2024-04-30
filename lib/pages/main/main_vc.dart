@@ -48,12 +48,6 @@ class _MainVCState extends State<MainVC> {
     super.dispose();
   }
 
-  /*@override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _getNotificationCount();
-  }*/
-
   void initAuthStatus() async {
     loadingStream.add(true);
 
