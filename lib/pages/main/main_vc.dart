@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -82,10 +83,10 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _getNotificationCount() async {
-    var count = await UserManager.getUnreadNotificationsCount();
-
+    List<MyNotification> notifications = await ApiSingleton().getNotifications();
+    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
     setState(() {
-      unreadNotifications = count;
+      unreadNotifications = unacknowledgedCount;
     });
   }
 

@@ -144,11 +144,6 @@ class UserManager {
     await prefs.setString('serverUrl', serverUrl);
   }
 
-  static Future<void> setUnreadNotificationsCount(int unreadNotifications) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('unreadNotifications', unreadNotifications);
-  }
-
   //get
   static Future<String?> getUUID() async {
     var prefs = await SharedPreferences.getInstance();
@@ -217,11 +212,6 @@ class UserManager {
   static Future<String> getServerUrl() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('serverUrl') ?? '';
-  }
-
-  static Future<int> getUnreadNotificationsCount() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('unreadNotifications') ?? 99;
   }
 
   static signOut() async {
