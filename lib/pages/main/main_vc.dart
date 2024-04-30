@@ -85,9 +85,7 @@ class _MainVCState extends State<MainVC> {
   void _getNotificationCount() async {
     List<MyNotification> notifications = await ApiSingleton().getNotifications();
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    setState(() {
-      unreadNotifications = unacknowledgedCount;
-    });
+    updateNotificationCount(unacknowledgedCount);
   }
 
   void updateNotificationCount(int newCount) {
