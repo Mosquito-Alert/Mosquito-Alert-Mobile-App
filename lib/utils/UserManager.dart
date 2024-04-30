@@ -221,7 +221,7 @@ class UserManager {
 
   static Future<int> getUnreadNotificationsCount() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('unreadNotifications') ?? 0;
+    return prefs.getInt('unreadNotifications') ?? 99;
   }
 
   static signOut() async {

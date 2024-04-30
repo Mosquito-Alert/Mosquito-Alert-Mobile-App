@@ -32,7 +32,7 @@ class _MainVCState extends State<MainVC> {
   StreamController<String?> nameStream = StreamController<String?>.broadcast();
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
-  int notificationCount = 0;
+  int unreadNotifications = 0;
 
   @override
   void initState() {
@@ -47,6 +47,12 @@ class _MainVCState extends State<MainVC> {
     loadingStream.close();
     super.dispose();
   }
+
+  /*@override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getNotificationCount();
+  }*/
 
   void initAuthStatus() async {
     loadingStream.add(true);
@@ -82,11 +88,16 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _getNotificationCount() async {
-    //int count = await ApiSingleton().getNotificationCount();
+    var count = await UserManager.getUnreadNotificationsCount();
 
     setState(() {
-      //notificationCount = count;
-      notificationCount = 2;
+      unreadNotifications = count;
+    });
+  }
+
+  void updateNotificationCount(int newCount) {
+    setState(() {
+      unreadNotifications = newCount;
     });
   }
 
@@ -137,11 +148,11 @@ class _MainVCState extends State<MainVC> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NotificationsPage()),
+                          MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
                         );
                       },
                     ),
-                    if (notificationCount > 0)
+                    if (unreadNotifications > 0)
                       Positioned(
                         right: 2,
                         top: 2,
@@ -156,7 +167,7 @@ class _MainVCState extends State<MainVC> {
                             minHeight: 15,
                           ),
                           child: Text(
-                            '$notificationCount',
+                            '$unreadNotifications',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
