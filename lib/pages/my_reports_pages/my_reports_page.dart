@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -51,9 +50,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       StreamController<List<Report>>.broadcast();
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
-
-  int _currentIndex = 0;
-  late Map<int, Widget> _children;
 
   late GoogleMapController mapController;
   GoogleMapController? miniMapController;
@@ -115,38 +111,29 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   @override
   Widget build(BuildContext context) {
-    _children = {
-      0: Container(
-        child: Text(MyLocalizations.of(context, 'map_txt')!),
-      ),
-      1: Container(
-        child: Text(MyLocalizations.of(context, 'list_txt')!),
-      ),
-    };
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 100),
             child: PageView.builder(
-                controller: _pagesController,
-                itemCount: 2,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return StreamBuilder<List<Report>>(
-                    stream: dataStream.stream,
-                    initialData: _myData,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<Report>> snapshot) {
-                      return ReportsList(
-                          snapshot.data != null
-                              ? snapshot.data!.map((e) => e).toList()
-                              : [],
-                          _reportBottomSheet);
-                    },
-                  );
-                })),
+              controller: _pagesController,
+              itemCount: 2,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return StreamBuilder<List<Report>>(
+                  stream: dataStream.stream,
+                  initialData: _myData,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Report>> snapshot) {
+                    return ReportsList(
+                        snapshot.data != null
+                            ? snapshot.data!.map((e) => e).toList()
+                            : [],
+                        _reportBottomSheet);
+                  },
+                );
+              })),
 
           StreamBuilder<bool>(
             stream: loadingStream.stream,
@@ -191,21 +178,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         )
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 15, bottom: 16),
-                      width: double.infinity,
-                      child: MaterialSegmentedControl(
-                        children: _children,
-                        selectionIndex: _currentIndex,
-                        borderColor: Style.colorPrimary,
-                        selectedColor: Style.colorPrimary,
-                        unselectedColor: Colors.white,
-                        borderRadius: 5.0,
-                        onSegmentChosen: (dynamic index) {
-                          _onItemTapped(index);
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -249,7 +221,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
             child: Container(
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * 0.9),
-              // height: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
@@ -715,14 +686,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   Set<Marker> _getMarker(Report report) {
     var marker;
-    var icon = setIconMarker(report.type);
     if (report.location_choice == 'current') {
       marker = Marker(
         markerId: MarkerId('currentMarker'),
         position: LatLng(
           report.current_location_lat!,
           report.current_location_lon!,
-        ), /*icon: icon*/
+        ),
       );
     } else {
       marker = Marker(
@@ -730,7 +700,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         position: LatLng(
           report.selected_location_lat!,
           report.selected_location_lon!,
-        ), /*icon: icon*/
+        ),
       );
     }
 
@@ -748,13 +718,5 @@ class _MyReportsPageState extends State<MyReportsPage> {
       default:
         return iconAdultOthers;
     }
-  }
-
-  void _onItemTapped(index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    _pagesController.animateToPage(index,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }
