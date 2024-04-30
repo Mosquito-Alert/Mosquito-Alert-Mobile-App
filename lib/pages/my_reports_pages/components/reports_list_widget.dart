@@ -24,7 +24,6 @@ class ReportsList extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.only(top: 0), // TODO: Remove?
       child: ListView.builder(
         itemCount: reports.length,
         itemBuilder: (context, index) {

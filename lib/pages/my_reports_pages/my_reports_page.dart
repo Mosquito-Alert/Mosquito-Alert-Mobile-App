@@ -115,7 +115,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 100),
+            margin: EdgeInsets.only(top: 55),
             child: PageView.builder(
               controller: _pagesController,
               itemCount: 10,
@@ -124,16 +124,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 return StreamBuilder<List<Report>>(
                   stream: dataStream.stream,
                   initialData: _myData,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Report>> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Report>> snapshot) {
                     return ReportsList(
-                        snapshot.data != null
-                            ? snapshot.data!.map((e) => e).toList()
-                            : [],
-                        _reportBottomSheet);
+                      snapshot.data != null
+                        ? snapshot.data!.map((e) => e).toList()
+                        : [],
+                      _reportBottomSheet);
                   },
                 );
-              })),
+              }
+            )
+          ),
 
           StreamBuilder<bool>(
             stream: loadingStream.stream,
@@ -147,7 +148,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 );
               }
               return Container();
-            }),
+            }
+          ),
 
           Container(
             child: Card(
