@@ -28,7 +28,8 @@ class MyReportsPage extends StatefulWidget {
 }
 
 class _MyReportsPageState extends State<MyReportsPage> {
-  LatLng? location = LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
+  LatLng? location =
+      LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
 
   //Map
   late ClusteringHelper clusteringHelper;
@@ -67,17 +68,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   void _initMemoryClustering() {
     clusteringHelper = ClusteringHelper.forMemory(
-      list: _listMarkers,
-      updateMarkers: updateMarkers,
-      aggregationSetup: AggregationSetup(markerSize: 150),
-      onClick: ((index) {
-        for (var i = 0; i < _listMarkers.length; i++) {
-          if (_listMarkers[i].index == index) {
-            _reportBottomSheet(_listMarkers[i].report);
-            break;
+        list: _listMarkers,
+        updateMarkers: updateMarkers,
+        aggregationSetup: AggregationSetup(markerSize: 150),
+        onClick: ((index) {
+          for (var i = 0; i < _listMarkers.length; i++) {
+            if (_listMarkers[i].index == index) {
+              _reportBottomSheet(_listMarkers[i].report);
+              break;
+            }
           }
-        }
-      }));
+        }));
   }
 
   void updateMarkers(Set<Marker> markers) {
@@ -107,41 +108,37 @@ class _MyReportsPageState extends State<MyReportsPage> {
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 55),
-            child: PageView.builder(
-              itemCount: 10,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return StreamBuilder<List<Report>>(
-                  stream: dataStream.stream,
-                  initialData: _myData,
-                  builder: (BuildContext context, AsyncSnapshot<List<Report>> snapshot) {
-                    return ReportsList(
-                      snapshot.data != null
-                        ? snapshot.data!.map((e) => e).toList()
-                        : [],
-                      _reportBottomSheet);
-                  },
-                );
-              }
-            )
-          ),
-
+              margin: EdgeInsets.only(top: 55),
+              child: PageView.builder(
+                  itemCount: 10,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return StreamBuilder<List<Report>>(
+                      stream: dataStream.stream,
+                      initialData: _myData,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Report>> snapshot) {
+                        return ReportsList(
+                            snapshot.data != null
+                                ? snapshot.data!.map((e) => e).toList()
+                                : [],
+                            _reportBottomSheet);
+                      },
+                    );
+                  })),
           StreamBuilder<bool>(
-            stream: loadingStream.stream,
-            initialData: true,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-              if (snapLoading.data == true) {
-                return Container(
-                  child: Center(
-                    child: Utils.loading(true),
-                  ),
-                );
-              }
-              return Container();
-            }
-          ),
-
+              stream: loadingStream.stream,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                if (snapLoading.data == true) {
+                  return Container(
+                    child: Center(
+                      child: Utils.loading(true),
+                    ),
+                  );
+                }
+                return Container();
+              }),
           Container(
             child: Card(
               margin: EdgeInsets.all(0),
@@ -218,249 +215,255 @@ class _MyReportsPageState extends State<MyReportsPage> {
               child: SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: GoogleMap(
-                          rotateGesturesEnabled: false,
-                          mapToolbarEnabled: false,
-                          scrollGesturesEnabled: false,
-                          zoomControlsEnabled: false,
-                          zoomGesturesEnabled: false,
-                          myLocationButtonEnabled: false,
-                          initialCameraPosition: _getPosition(report),
-                          markers: _getMarker(report),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: GoogleMap(
+                            rotateGesturesEnabled: false,
+                            mapToolbarEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomControlsEnabled: false,
+                            zoomGesturesEnabled: false,
+                            myLocationButtonEnabled: false,
+                            initialCameraPosition: _getPosition(report),
+                            markers: _getMarker(report),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Style.titleMedium(
-                      Utils.getTranslatedReportType(context, report.type)),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    report.type == 'adult' && campaign != null
-                    ? Container(
-                      padding: EdgeInsets.all(12),
-                      color: Colors.orange[50],
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 0,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Style.body(
-                                      MyLocalizations.of(context, 'you_can_send_info_address'),
-                                      fontSize: 14,
-                                      textAlign: TextAlign.start),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Style.titleMedium(
-                                      campaign.postingAddress,
-                                      fontSize: 14),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Style.body(
-                                          "${MyLocalizations.of(context, "you_can_send_report_id")}: ",
-                                          fontSize: 14,
-                                          textAlign: TextAlign.start),
-                                            SizedBox(
-                                              width: 6,
-                                            ),
-                                            Style.titleMedium(
-                                              report.report_id,
-                                              fontSize: 14),
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  children: [
-                                    Style.body(
-                                      MyLocalizations.of(context, 'more_info')! + ': ',
-                                      fontSize: 12,
-                                      textAlign: TextAlign.center),
-                                    SizedBox(height: 2),
-                                    IconButton(
-                                      icon: SvgPicture.asset(
-                                        'assets/img/sendmodule/ic_adn.svg',
-                                        color: Colors.black,
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Style.titleMedium(
+                          Utils.getTranslatedReportType(context, report.type)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      report.type == 'adult' && campaign != null
+                          ? Container(
+                              padding: EdgeInsets.all(12),
+                              color: Colors.orange[50],
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 0,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          flex: 3,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Style.body(
+                                                  MyLocalizations.of(context,
+                                                      'you_can_send_info_address'),
+                                                  fontSize: 14,
+                                                  textAlign: TextAlign.start),
+                                              SizedBox(
+                                                height: 4,
+                                              ),
+                                              Style.titleMedium(
+                                                  campaign.postingAddress,
+                                                  fontSize: 14),
+                                              SizedBox(
+                                                height: 4,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Style.body(
+                                                      "${MyLocalizations.of(context, "you_can_send_report_id")}: ",
+                                                      fontSize: 14,
+                                                      textAlign:
+                                                          TextAlign.start),
+                                                  SizedBox(
+                                                    width: 6,
+                                                  ),
+                                                  Style.titleMedium(
+                                                      report.report_id,
+                                                      fontSize: 14),
+                                                ],
+                                              )
+                                            ],
+                                          )),
+                                      SizedBox(
+                                        width: 12,
                                       ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => CampaignTutorialPage()),
-                                        );
-                                      }
-                                    )
-                                  ],
-                                )
+                                      Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Style.body(
+                                                  MyLocalizations.of(context,
+                                                          'more_info')! +
+                                                      ': ',
+                                                  fontSize: 12,
+                                                  textAlign: TextAlign.center),
+                                              SizedBox(height: 2),
+                                              IconButton(
+                                                  icon: SvgPicture.asset(
+                                                    'assets/img/sendmodule/ic_adn.svg',
+                                                    color: Colors.black,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CampaignTutorialPage()),
+                                                    );
+                                                  })
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
+                            )
+                          : Container(),
+                      report.type == 'adult' && campaign != null
+                          ? SizedBox(height: 20)
+                          : Container(),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Style.titleMedium(
+                                    MyLocalizations.of(context,
+                                            'registered_location_txt')! +
+                                        ': ',
+                                    fontSize: 14),
+                                Style.body(
+                                    report.location_choice == 'current'
+                                        ? '(' +
+                                            report.current_location_lat!
+                                                .toStringAsFixed(5) +
+                                            ', ' +
+                                            report.current_location_lon!
+                                                .toStringAsFixed(5) +
+                                            ')'
+                                        : '(' +
+                                            report.selected_location_lat!
+                                                .toStringAsFixed(5) +
+                                            ', ' +
+                                            report.selected_location_lon!
+                                                .toStringAsFixed(5) +
+                                            ')',
+                                    fontSize: 12),
+                                Style.body(
+                                    ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',
+                                    fontSize: 12),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Style.titleMedium(
+                                    MyLocalizations.of(
+                                        context, 'exact_time_register_txt'),
+                                    fontSize: 14),
+                                Style.body(
+                                    DateFormat('EEEE, dd MMMM yyyy',
+                                            Utils.language.languageCode)
+                                        .format(DateTime.parse(
+                                                report.creation_time!)
+                                            .toLocal())
+                                        .toString(),
+                                    fontSize: 12),
+                                Style.body(
+                                    "${MyLocalizations.of(context, "at_time_txt")}: ${DateFormat.Hms().format(DateTime.parse(report.creation_time!).toLocal())} ${MyLocalizations.of(context, 'hours')}",
+                                    fontSize: 12),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    )
-                    : Container(),
-                    report.type == 'adult' && campaign != null
-                    ? SizedBox(height: 20)
-                    : Container(),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                MyLocalizations.of(
-                                    context, 'registered_location_txt')! + ': ',
-                                fontSize: 14),
-                              Style.body(
-                                report.location_choice == 'current'
-                                  ? '(' +
-                                    report.current_location_lat!
-                                        .toStringAsFixed(5) +
-                                    ', ' +
-                                    report.current_location_lon!
-                                        .toStringAsFixed(5) +
-                                    ')'
-                                  : '(' +
-                                    report.selected_location_lat!
-                                        .toStringAsFixed(5) +
-                                    ', ' +
-                                    report.selected_location_lon!
-                                        .toStringAsFixed(5) +
-                                    ')',
-                                fontSize: 12),
-                              Style.body(
-                                ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',
-                                fontSize: 12),
-                            ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Divider(),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Style.titleMedium(
-                                MyLocalizations.of(context, 'exact_time_register_txt'),
-                                fontSize: 14),
-                              Style.body(
-                                  DateFormat('EEEE, dd MMMM yyyy',
-                                          Utils.language.languageCode)
-                                      .format(DateTime.parse(
-                                          report.creation_time!).toLocal())
-                                      .toString(),
-                                  fontSize: 12),
-                              Style.body(
-                                  "${MyLocalizations.of(context, "at_time_txt")}: ${DateFormat.Hms().format(DateTime.parse(report.creation_time!).toLocal())} ${MyLocalizations.of(context, 'hours')}",
-                                  fontSize: 12),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Divider(),
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Style.titleMedium(
-                                  MyLocalizations.of(
-                                    context, 'identifier_small')! + ': ',
-                                  fontSize: 14),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Style.body(report.report_id,
-                                  fontSize: 14,
-                                  textAlign: TextAlign.center),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                          ],
-                        ),
-                        report.photos != null && report.photos!.isNotEmpty
-                        ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Style.titleMedium(
-                              MyLocalizations.of(
-                                  context, 'reported_images_txt'),
-                              fontSize: 14),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              height: 60,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: report.photos!.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: 5),
-                                    child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(15),
-                                      child: Image.network(
-                                        report.photos![index].photo!,
-                                        height: 60,
-                                        width: 60,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                }
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Style.titleMedium(
+                                      MyLocalizations.of(
+                                              context, 'identifier_small')! +
+                                          ': ',
+                                      fontSize: 14),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Style.body(report.report_id,
+                                      fontSize: 14,
+                                      textAlign: TextAlign.center),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        )
-                        : Container(),
+                              SizedBox(
+                                height: 12,
+                              ),
+                            ],
+                          ),
+                          report.photos != null && report.photos!.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    Style.titleMedium(
+                                        MyLocalizations.of(
+                                            context, 'reported_images_txt'),
+                                        fontSize: 14),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 60,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: report.photos!.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              margin: EdgeInsets.only(right: 5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                child: Image.network(
+                                                  report.photos![index].photo!,
+                                                  height: 60,
+                                                  width: 60,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
                           ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -480,21 +483,21 @@ class _MyReportsPageState extends State<MyReportsPage> {
                                               ? Expanded(
                                                   flex: 3,
                                                   child: Style.titleMedium(
-                                                    report.responses![index]!
-                                                            .question!
-                                                            .startsWith(
-                                                                'question')
-                                                        ? MyLocalizations.of(
-                                                            context,
-                                                            report
-                                                                .responses![
-                                                                    index]!
-                                                                .question)
-                                                        : report
-                                                            .responses![
-                                                                index]!
-                                                            .question,
-                                                    fontSize: 14),
+                                                      report.responses![index]!
+                                                              .question!
+                                                              .startsWith(
+                                                                  'question')
+                                                          ? MyLocalizations.of(
+                                                              context,
+                                                              report
+                                                                  .responses![
+                                                                      index]!
+                                                                  .question)
+                                                          : report
+                                                              .responses![
+                                                                  index]!
+                                                              .question,
+                                                      fontSize: 14),
                                                 )
                                               : Container(),
                                           Expanded(
@@ -587,7 +590,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       // Sort the reports by creation_time in descending order
       myData.sort((a, b) => b.creation_time!
-        .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
+          .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
 
       var listMarkers = <ReportAndGeohash>[];
       for (var i = 0; i < myData.length; i++) {
@@ -614,10 +617,9 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
-
     } catch (e) {
       print(e);
-    } finally {	
+    } finally {
       loadingStream.add(false);
     }
   }
