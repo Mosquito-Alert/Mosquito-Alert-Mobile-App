@@ -42,8 +42,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   //My reports
   List<Report> _myData = [];
 
-  final _pagesController = PageController();
-
   StreamController<List<Report>> dataMarkersStream =
       StreamController<List<Report>>.broadcast();
   StreamController<List<Report>> dataStream =
@@ -71,17 +69,17 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   void _initMemoryClustering() {
     clusteringHelper = ClusteringHelper.forMemory(
-        list: _listMarkers,
-        updateMarkers: updateMarkers,
-        aggregationSetup: AggregationSetup(markerSize: 150),
-        onClick: ((index) {
-          for (var i = 0; i < _listMarkers.length; i++) {
-            if (_listMarkers[i].index == index) {
-              _reportBottomSheet(_listMarkers[i].report);
-              break;
-            }
+      list: _listMarkers,
+      updateMarkers: updateMarkers,
+      aggregationSetup: AggregationSetup(markerSize: 150),
+      onClick: ((index) {
+        for (var i = 0; i < _listMarkers.length; i++) {
+          if (_listMarkers[i].index == index) {
+            _reportBottomSheet(_listMarkers[i].report);
+            break;
           }
-        }));
+        }
+      }));
   }
 
   void updateMarkers(Set<Marker> markers) {
@@ -117,7 +115,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
           Container(
             margin: EdgeInsets.only(top: 55),
             child: PageView.builder(
-              controller: _pagesController,
               itemCount: 10,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
