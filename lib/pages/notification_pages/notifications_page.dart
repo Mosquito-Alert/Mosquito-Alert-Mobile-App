@@ -217,7 +217,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         });
   }
 
-  void _updateNotification(id) async {
+  Future<void> _updateNotification(id) async {
     var userId = await UserManager.getUUID();
     var res = await ApiSingleton().markNotificationAsRead(userId, id);
 
