@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -43,10 +42,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   //My reports
   List<Report> _myData = [];
-
-  //Data
-  Position? _locationData;
-  double? _zoomData;
 
   final _pagesController = PageController();
 
@@ -109,12 +104,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
         .asUint8List();
   }
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-    clusteringHelper.mapController = controller;
-    clusteringHelper.forceUpdateMap();
-  }
-
   void _onMiniMapCreated(GoogleMapController controller) async {
     miniMapController = controller;
   }
@@ -139,39 +128,39 @@ class _MyReportsPageState extends State<MyReportsPage> {
       body: Stack(
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(top: 100),
-              child: PageView.builder(
-                  controller: _pagesController,
-                  itemCount: 2,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return StreamBuilder<List<Report>>(
-                      stream: dataStream.stream,
-                      initialData: _myData,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Report>> snapshot) {
-                        return ReportsList(
-                            snapshot.data != null
-                                ? snapshot.data!.map((e) => e).toList()
-                                : [],
-                            _reportBottomSheet);
-                      },
-                    );
-                  })),
+            margin: EdgeInsets.only(top: 100),
+            child: PageView.builder(
+                controller: _pagesController,
+                itemCount: 2,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return StreamBuilder<List<Report>>(
+                    stream: dataStream.stream,
+                    initialData: _myData,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Report>> snapshot) {
+                      return ReportsList(
+                          snapshot.data != null
+                              ? snapshot.data!.map((e) => e).toList()
+                              : [],
+                          _reportBottomSheet);
+                    },
+                  );
+                })),
 
           StreamBuilder<bool>(
-              stream: loadingStream.stream,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-                if (snapLoading.data == true) {
-                  return Container(
-                    child: Center(
-                      child: Utils.loading(true),
-                    ),
-                  );
-                }
-                return Container();
-              }),
+            stream: loadingStream.stream,
+            initialData: true,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+              if (snapLoading.data == true) {
+                return Container(
+                  child: Center(
+                    child: Utils.loading(true),
+                  ),
+                );
+              }
+              return Container();
+            }),
 
           Container(
             child: Card(
@@ -225,73 +214,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
         ],
       ),
     );
-  }
-
-  void _infoBottom(BuildContext context) {
-    CustomShowModalBottomSheet.customShowModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            color: Colors.white,
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-            ),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30,
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/img/maps/ic_red_marker.png',
-                        height: 36,
-                      ),
-                      title: Style.body(
-                          MyLocalizations.of(context, 'your_reports_bites_txt'),
-                          textAlign: TextAlign.left),
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/img/maps/ic_yellow_marker.png',
-                        height: 36,
-                      ),
-                      title: Style.body(
-                          MyLocalizations.of(
-                              context, 'your_reports_adults_txt'),
-                          textAlign: TextAlign.left),
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/img/maps/ic_blue_marker.png',
-                        height: 36,
-                      ),
-                      title: Style.body(
-                          MyLocalizations.of(
-                              context, 'your_reports_breeding_txt'),
-                          textAlign: TextAlign.left),
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/img/maps/ic_green_marker.png',
-                        height: 36,
-                      ),
-                      title: Style.body(
-                          MyLocalizations.of(context, 'other_reports_txt'),
-                          textAlign: TextAlign.left),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
   }
 
   Future<Campaign?> _checkCampaigns(int? country) async {
@@ -828,36 +750,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
     }
   }
 
-  _onItemTapped(index) {
+  void _onItemTapped(index) {
     setState(() {
       _currentIndex = index;
     });
     _pagesController.animateToPage(index,
         duration: Duration(milliseconds: 300), curve: Curves.ease);
-  }
-
-  void _checkCampaign(Report report, Campaign campaign) async {
-    var activeCampaign = campaign;
-    await Utils.showCustomAlert(
-        MyLocalizations.of(context, 'alert_campaing_found_title'),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 12,
-            ),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                color: Style.colorPrimary,
-                child: Style.titleMedium('ID: ' + report.report_id!)),
-            SizedBox(
-              height: 20,
-            ),
-            Style.body(activeCampaign.postingAddress,
-                textAlign: TextAlign.center),
-          ],
-        ),
-        context);
   }
 }
