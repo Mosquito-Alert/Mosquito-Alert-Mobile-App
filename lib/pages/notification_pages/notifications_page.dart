@@ -28,7 +28,6 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   List<MyNotification> notifications = [];
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
-  int updatedUnreadNotificationsCount = 1;
 
   @override
   void initState() {
