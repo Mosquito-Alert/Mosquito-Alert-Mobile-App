@@ -22,6 +22,32 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>bg-BG</string>
+		<string>bn-BD</string>
+		<string>ca-ES</string>
+		<string>de-DE</string>
+		<string>el-GR</string>
+		<string>en-US</string>
+		<string>es-ES</string>
+		<string>es-UY</string>
+		<string>fr-FR</string>
+		<string>gl-ES</string>
+		<string>hr-HR</string>
+		<string>hu-HU</string>
+		<string>it-IT</string>
+		<string>lb-LU</string>
+		<string>mk-MK</string>
+		<string>nl-NL</string>
+		<string>pt-PT</string>
+		<string>ro-RO</string>
+		<string>sl-SI</string>
+		<string>sq-AL</string>
+		<string>sr-RS</string>
+		<string>sv-SE</string>
+		<string>tr-TR</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
