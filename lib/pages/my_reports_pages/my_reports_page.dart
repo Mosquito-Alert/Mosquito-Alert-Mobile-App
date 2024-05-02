@@ -10,8 +10,6 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/utils/clustering/aggregation_setup.dart';
-import 'package:mosquito_alert_app/utils/clustering/clustering_helper.dart';
 import 'package:mosquito_alert_app/utils/clustering/report_geohash.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -31,8 +29,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   LatLng? location =
       LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
 
-  //Map
-  late ClusteringHelper clusteringHelper;
   List<ReportAndGeohash> _listMarkers = [];
   Set<Marker> markers = {};
   BitmapDescriptor? iconAdultYours;
@@ -43,8 +39,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
   //My reports
   List<Report> _myData = [];
 
-  StreamController<List<Report>> dataMarkersStream =
-      StreamController<List<Report>>.broadcast();
   StreamController<List<Report>> dataStream =
       StreamController<List<Report>>.broadcast();
 
@@ -55,36 +49,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   @override
   void initState() {
     super.initState();
-    _initLocation();
-    _initMemoryClustering();
     _getData();
-  }
-
-  void _initLocation() {
-    if (Utils.location != null) {
-      location = Utils.location;
-    }
-  }
-
-  void _initMemoryClustering() {
-    clusteringHelper = ClusteringHelper.forMemory(
-        list: _listMarkers,
-        updateMarkers: updateMarkers,
-        aggregationSetup: AggregationSetup(markerSize: 150),
-        onClick: ((index) {
-          for (var i = 0; i < _listMarkers.length; i++) {
-            if (_listMarkers[i].index == index) {
-              _reportBottomSheet(_listMarkers[i].report);
-              break;
-            }
-          }
-        }));
-  }
-
-  void updateMarkers(Set<Marker> markers) {
-    setState(() {
-      this.markers = markers;
-    });
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -614,8 +579,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       dataStream.add(myData);
       _myData = myData;
-
-      clusteringHelper.updateData(listMarkers);
       _listMarkers = listMarkers;
     } catch (e) {
       print(e);
@@ -635,7 +598,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
       _listMarkers.removeWhere(
           (element) => element.report.report_id == report.report_id);
-      clusteringHelper.updateData(_listMarkers);
     } else {
       loadingStream.add(false);
       await Utils.showAlert(
