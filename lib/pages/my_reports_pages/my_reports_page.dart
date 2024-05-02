@@ -29,15 +29,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   LatLng? location =
       LatLng(Utils.defaultLocation.latitude, Utils.defaultLocation.longitude);
 
-  List<ReportAndGeohash> _listMarkers = [];
   Set<Marker> markers = {};
   BitmapDescriptor? iconAdultYours;
   BitmapDescriptor? iconBitesYours;
   BitmapDescriptor? iconBreedingYours;
   BitmapDescriptor? iconAdultOthers;
-
-  //My reports
-  List<Report> _myData = [];
 
   StreamController<List<Report>> dataStream =
       StreamController<List<Report>>.broadcast();
@@ -80,7 +76,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return StreamBuilder<List<Report>>(
                       stream: dataStream.stream,
-                      initialData: _myData,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Report>> snapshot) {
                         return ReportsList(
@@ -578,8 +573,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
       }
 
       dataStream.add(myData);
-      _myData = myData;
-      _listMarkers = listMarkers;
     } catch (e) {
       print(e);
     } finally {
@@ -593,11 +586,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
     var res = await Utils.deleteReport(report);
     if (res) {
       loadingStream.add(false);
-      _myData.removeWhere((element) => element.report_id == report.report_id);
-      dataStream.add(_myData);
-
-      _listMarkers.removeWhere(
-          (element) => element.report.report_id == report.report_id);
     } else {
       loadingStream.add(false);
       await Utils.showAlert(
