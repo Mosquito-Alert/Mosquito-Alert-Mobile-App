@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
@@ -123,7 +124,7 @@ class PushNotificationsManager {
     }
   }
 
-  static void openMessageScreen(Map<String, dynamic> message) {
+  static Future<void> openMessageScreen(Map<String, dynamic> message) async {
     var notifId = '';
 
     if (Platform.isIOS) {
@@ -139,27 +140,18 @@ class PushNotificationsManager {
         print(e);
       }
     }
-// TODO
-      /*Future<void> _getData() async {
-    List<MyNotification> response = await ApiSingleton().getNotifications();
 
-    setState(() {
-      notifications = response;
-      _checkOpenNotification();
-    });
-      loadingStream.add(false);
-  }*/
+    List<MyNotification> notifications = await ApiSingleton().getNotifications();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Navigator.push(
         navigatorKey.currentContext!,
         MaterialPageRoute(
             builder: (context) => NotificationsPage(
-                  notificationId: notifId, notifications: [],
+                  notificationId: notifId, notifications: notifications,
                 ),
             fullscreenDialog: true),
       );
-      ;
     });
   }
 
