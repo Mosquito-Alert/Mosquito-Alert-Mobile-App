@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -33,7 +34,11 @@ void main({String env = 'prod'}) async {
     isInDebugMode: false
   );
 
-  await Workmanager().registerPeriodicTask('backgroundTracking', 'backgroundTracking', frequency: Duration(hours: 4, minutes: 48));
+  await Workmanager().registerPeriodicTask(
+    'fiveTimesPerDayTracking',
+    'fiveTimesPerDayTracking',
+    frequency: Duration(minutes: 15)
+  );
 
   runApp(MyApp());
 }
@@ -44,19 +49,10 @@ void callbackDispatcher() {
 
     switch (task) {
       case 'backgroundTracking':
-        var permission = await Geolocator.checkPermission();
-        var isBgTrackingEnabled = await UserManager.getTracking();
-
-        if (permission != LocationPermission.always || !isBgTrackingEnabled){
-          return Future.value(true);
-        }
-
-        var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        var battery = Battery();
-        await ApiSingleton().sendFixes(position.latitude,
-                                       position.longitude,
-                                       DateTime.now().toUtc().toIso8601String(),
-                                       await battery.batteryLevel);
+        BackgroundTracking.trackingTask();
+        break;
+      case 'fiveTimesPerDayTracking':
+        BackgroundTracking.fiveTimesPerDayTracking();
         break;
     }
     return Future.value(true);
