@@ -113,7 +113,7 @@ class PushNotificationsManager {
               context,
               MaterialPageRoute(
                   builder: (context) => NotificationsPage(
-                        notificationId: notifId, notifications: [],
+                        notificationId: notifId,
                       ),
                   fullscreenDialog: true),
             );
@@ -139,23 +139,13 @@ class PushNotificationsManager {
         print(e);
       }
     }
-// TODO
-      /*Future<void> _getData() async {
-    List<MyNotification> response = await ApiSingleton().getNotifications();
-
-    setState(() {
-      notifications = response;
-      _checkOpenNotification();
-    });
-      loadingStream.add(false);
-  }*/
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Navigator.push(
         navigatorKey.currentContext!,
         MaterialPageRoute(
             builder: (context) => NotificationsPage(
-                  notificationId: notifId, notifications: [],
+                  notificationId: notifId,
                 ),
             fullscreenDialog: true),
       );
