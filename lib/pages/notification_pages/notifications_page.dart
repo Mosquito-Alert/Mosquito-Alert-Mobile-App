@@ -33,7 +33,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     _updateUnreadNotificationCount();
-    _checkOpenNotification();
   }
 
   void _checkOpenNotification() {
