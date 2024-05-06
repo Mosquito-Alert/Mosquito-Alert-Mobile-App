@@ -209,6 +209,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
       notifications = widget.notifications;
     });
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    widget.onNotificationUpdate!(unacknowledgedCount);
+    if(widget.onNotificationUpdate != null) {
+      widget.onNotificationUpdate!(unacknowledgedCount);
+    }
   }
 }

@@ -90,7 +90,7 @@ class _MainVCState extends State<MainVC> {
       notifications = _notifications;
     });
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    updateNotificationCount(unacknowledgedCount ?? 0);
+    updateNotificationCount(unacknowledgedCount);
     loadingStream.add(false);
   }
 
