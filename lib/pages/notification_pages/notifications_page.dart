@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,36 +15,24 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/UserManager.dart';
 
 class NotificationsPage extends StatefulWidget {
+  final List<MyNotification> notifications;
   final String? notificationId;
   final Function(int)? onNotificationUpdate;
 
-  const NotificationsPage({Key? key, this.notificationId, this.onNotificationUpdate}) : super(key: key);
+  const NotificationsPage({Key? key, required this.notifications, this.notificationId, this.onNotificationUpdate}) : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  List<MyNotification> notifications = [];
+  late List<MyNotification> notifications;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
   @override
   void initState() {
     super.initState();
-    loadingStream.add(true);
-    _getData().then((_) {
-      _updateUnreadNotificationCount();
-    });
-  }
-
-  Future<void> _getData() async {
-    List<MyNotification> response = await ApiSingleton().getNotifications();
-
-    setState(() {
-      notifications = response;
-      _checkOpenNotification();
-    });
-      loadingStream.add(false);
+    _updateUnreadNotificationCount();
   }
 
   void _checkOpenNotification() {
@@ -126,19 +113,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             ),
                           );
                         }))),
-        StreamBuilder<bool>(
-            stream: loadingStream.stream,
-            initialData: true,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-              if (snapLoading.data == true) {
-                return Container(
-                  child: Center(
-                    child: Utils.loading(true),
-                  ),
-                );
-              }
-              return Container();
-            }),
       ],
     );
   }
@@ -230,6 +204,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _updateUnreadNotificationCount(){
+    setState(() {
+      notifications = widget.notifications;
+    });
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
     widget.onNotificationUpdate!(unacknowledgedCount);
   }

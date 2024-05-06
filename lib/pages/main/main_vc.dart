@@ -34,12 +34,14 @@ class _MainVCState extends State<MainVC> {
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   int unreadNotifications = 0;
+  List<MyNotification> notifications = [];
 
   @override
   void initState() {
     super.initState();
     initAuthStatus();
     _getNotificationCount();
+    loadingStream.add(false);
   }
 
   @override
@@ -83,14 +85,20 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _getNotificationCount() async {
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
+    List<MyNotification> _notifications = await ApiSingleton().getNotifications();
+    setState(() {
+      notifications = _notifications;
+    });
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    updateNotificationCount(unacknowledgedCount);
+    updateNotificationCount(unacknowledgedCount ?? 0);
+    loadingStream.add(false);
   }
 
   void updateNotificationCount(int newCount) {
-    setState(() {
-      unreadNotifications = newCount;
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        unreadNotifications = newCount;
+      });
     });
   }
 
@@ -141,7 +149,7 @@ class _MainVCState extends State<MainVC> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
+                          MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount, notifications: notifications)),
                         );
                       },
                     ),
