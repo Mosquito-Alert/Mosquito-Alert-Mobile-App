@@ -34,11 +34,7 @@ void main({String env = 'prod'}) async {
     isInDebugMode: false
   );
 
-  await Workmanager().registerPeriodicTask(
-    'fiveTimesPerDayTracking',
-    'fiveTimesPerDayTracking',
-    frequency: Duration(minutes: 15)
-  );
+  await Workmanager().registerPeriodicTask('fiveTimesPerDayTracking', 'fiveTimesPerDayTracking', frequency: Duration(minutes: 20));
 
   runApp(MyApp());
 }
@@ -48,7 +44,7 @@ void callbackDispatcher() {
     await Firebase.initializeApp();
 
     switch (task) {
-      case 'backgroundTracking':
+      case 'trackingTask':
         BackgroundTracking.trackingTask();
         break;
       case 'fiveTimesPerDayTracking':
