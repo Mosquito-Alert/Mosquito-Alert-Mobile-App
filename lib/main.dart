@@ -47,15 +47,17 @@ void callbackDispatcher() {
         var permission = await Geolocator.checkPermission();
         var isBgTrackingEnabled = await UserManager.getTracking();
 
-        if (permission == LocationPermission.always && isBgTrackingEnabled){
-          var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-          var battery = Battery();
-          await ApiSingleton().sendFixes(position.latitude,
-                                         position.longitude,
-                                         DateTime.now().toUtc().toIso8601String(),
-                                         await battery.batteryLevel);
-          break;
+        if (permission != LocationPermission.always || !isBgTrackingEnabled){
+          return Future.value(true);
         }
+
+        var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        var battery = Battery();
+        await ApiSingleton().sendFixes(position.latitude,
+                                       position.longitude,
+                                       DateTime.now().toUtc().toIso8601String(),
+                                       await battery.batteryLevel);
+        break;
     }
     return Future.value(true);
   });
