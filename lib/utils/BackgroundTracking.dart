@@ -14,17 +14,11 @@ class BackgroundTracking{
     var randomTimes = <TimeOfDay>[];
 
     for (var i = 0; i < 5; i++) {
-      //var hour = random.nextInt(24); // Random hour between 00 and 23
-      //var minute = random.nextInt(60); // Random minute between 00 and 59
-      var hour = 0;
-      var minute = 15 + i;
+      var hour = random.nextInt(24); // Random hour between 00 and 23
+      var minute = random.nextInt(60); // Random minute between 00 and 59
       var time = TimeOfDay(hour: hour, minute: minute);
       randomTimes.add(time);
     }
-
-    // TODO: Debug only, remove this
-    //var time = TimeOfDay(hour: 0, minute: 15);
-    //randomTimes.add(time);
 
     return randomTimes;
   }
