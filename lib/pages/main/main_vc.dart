@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -133,42 +134,20 @@ class _MainVCState extends State<MainVC> {
                     );
                   },
                 ),
-                Stack(
-                  children: <Widget>[
-                    IconButton(
-                      padding: EdgeInsets.only(top: 6),
-                      icon: Icon(Icons.notifications),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
-                        );
-                      },
-                    ),
-                    if (unreadNotifications > 0)
-                      Positioned(
-                        right: 2,
-                        top: 2,
-                        child: Container(
-                          padding: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Text(
-                            '$unreadNotifications',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),)
-                  ],
+                badges.Badge(
+                  position: badges.BadgePosition.topEnd(top: 2, end: 2),
+                  showBadge: unreadNotifications > 0,
+                  badgeContent: Text('$unreadNotifications'),
+                  child: IconButton(
+                    padding: EdgeInsets.only(top: 6),
+                    icon: Icon(Icons.notifications, size: 32, ), 
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
+                      );
+                    },
+                  )
                 )
               ],
             ),
