@@ -34,7 +34,17 @@ void main({String env = 'prod'}) async {
     isInDebugMode: false
   );
 
-  await Workmanager().registerPeriodicTask('fiveTimesPerDayTracking', 'fiveTimesPerDayTracking', frequency: Duration(minutes: 20));
+  // Start background tracking at midnight to ensure 5 random samples per day
+  var now = DateTime.now().toLocal();
+  var nextMidnight = DateTime(now.year, now.month, now.day + 1);
+  var timeUntilMidnight = nextMidnight.difference(now);
+
+  await Workmanager().registerPeriodicTask(
+    'fiveTimesPerDayTracking',
+    'fiveTimesPerDayTracking',
+    frequency: Duration(days: 1),
+    initialDelay: timeUntilMidnight,
+    );
 
   runApp(MyApp());
 }
