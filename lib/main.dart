@@ -40,8 +40,9 @@ void main({String env = 'prod'}) async {
   var timeUntilMidnight = nextMidnight.difference(now);
 
   await Workmanager().registerPeriodicTask(
-    'fiveTimesPerDayTracking',
-    'fiveTimesPerDayTracking',
+    'scheduleDailyTasks',
+    'scheduleDailyTasks',
+    tag: 'scheduleDailyTasks',
     frequency: Duration(days: 1),
     initialDelay: timeUntilMidnight,
     );
@@ -57,8 +58,8 @@ void callbackDispatcher() {
       case 'trackingTask':
         BackgroundTracking.trackingTask();
         break;
-      case 'fiveTimesPerDayTracking':
-        BackgroundTracking.fiveTimesPerDayTracking();
+      case 'scheduleDailyTasks':
+        BackgroundTracking.scheduleMultipleTrackingTask(5);
         break;
     }
     return Future.value(true);

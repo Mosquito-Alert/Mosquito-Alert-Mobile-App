@@ -9,11 +9,11 @@ import 'package:workmanager/workmanager.dart';
 
 
 class BackgroundTracking{
-  static List<TimeOfDay> getRandomTimes() {
+  static List<TimeOfDay> getRandomTimes(int numSamples) {
     var random = Random();
     var randomTimes = <TimeOfDay>[];
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < numSamples; i++) {
       var hour = random.nextInt(24); // Random hour between 00 and 23
       var minute = random.nextInt(60); // Random minute between 00 and 59
       var time = TimeOfDay(hour: hour, minute: minute);
@@ -23,16 +23,18 @@ class BackgroundTracking{
     return randomTimes;
   }
 
-  static void fiveTimesPerDayTracking() {
-    var randomTimes = getRandomTimes();
+  static void scheduleMultipleTrackingTask(int numTasks) {
+    var randomTimes = getRandomTimes(numTasks);
 
-    for (var i = 0; i < 5; i++) {
-      Workmanager().registerOneOffTask(
-        'tracking_task_$i',
-        'trackingTask',
-        initialDelay: Duration(hours: randomTimes[i].hour, minutes: randomTimes[i].minute),
+    randomTimes.asMap().forEach((index, time) async {
+      await Workmanager().registerOneOffTask(
+      'tracking_task_$index',
+      'trackingTask',
+      initialDelay: Duration(hours: time.hour, minutes: time.minute),
+      tag: 'trackingTask',
+      constraints: Constraints(networkType: NetworkType.connected)
       );
-    }
+    });
   }
 
   static void trackingTask() async {
