@@ -32,7 +32,8 @@ class BackgroundTracking{
       'trackingTask',
       initialDelay: Duration(hours: time.hour, minutes: time.minute),
       tag: 'trackingTask',
-      constraints: Constraints(networkType: NetworkType.connected)
+      constraints: Constraints(networkType: NetworkType.connected),
+      backoffPolicy: BackoffPolicy.linear,
       );
     });
   }
