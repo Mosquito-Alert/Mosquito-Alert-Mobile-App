@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import GoogleMaps
 import Firebase
+import workmanager
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -16,6 +17,10 @@ import Firebase
     }
     GMSServices.provideAPIKey("AIzaSyC5szIWBSfTg3SzJPkTPU7DPfZcdkvFd4A")
     GeneratedPluginRegistrant.register(with: self)
+    WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "trackingTask")
+    WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "scheduleDailyTasks")
+    // Register a periodic task in iOS 13+
+    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "be.tramckrijte.workmanagerExample.iOSBackgroundAppRefresh", frequency: NSNumber(value: 86400))
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
