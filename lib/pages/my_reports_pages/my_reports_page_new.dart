@@ -2,8 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 
-class TabBarDemo extends StatelessWidget {
+
+class TabBarDemo extends StatefulWidget {
   const TabBarDemo({Key? key}) : super(key: key);
+
+  @override
+  _TabBarDemoState createState() => _TabBarDemoState();
+}
+
+class _TabBarDemoState extends State<TabBarDemo> {
+  late List<Report> adultReports;
+  late List<Report> biteReports;
+  late List<Report> siteReports;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadReports();
+  }
+
+  void loadReports() async {
+    var myData = await ApiSingleton().getReportsList();
+    setState(() {
+      adultReports = myData.where((report) => report.type == 'adult').toList();
+      biteReports = myData.where((report) => report.type == 'bite').toList();
+      siteReports = myData.where((report) => report.type == 'site').toList();
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,61 +47,53 @@ class TabBarDemo extends StatelessWidget {
           ),
           title: const Text('My Reports'),
         ),
-        body: TabBarView(
-          children: [
-            ReportList(type: 'adult'),
-            ReportList(type: 'bite'),
-            ReportList(type: 'site'),
-          ],
-        ),
+        body: isLoading ?
+          Center(child: CircularProgressIndicator())
+          :
+          TabBarView(
+            children: [
+              ReportsList(reports: adultReports),
+              ReportsList(reports: biteReports),
+              ReportsList(reports: siteReports),
+            ],
+          ),
       ),
     );
   }
 }
 
-class ReportList extends StatefulWidget {
-  final String type;
+class ReportsList extends StatelessWidget {
+  final List<Report> reports;
 
-  const ReportList({Key? key, required this.type}) : super(key: key);
-
-  @override
-  _ReportListState createState() => _ReportListState();
-}
-
-class _ReportListState extends State<ReportList> {
-  List<Report> reports = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getReports(widget.type);
-  }
-
-  void getReports(String type) async {
-    var myData = await ApiSingleton().getReportsList();
-    var filtered = myData.where((report) => report.type == type).toList();
-    setState(() {
-      reports = filtered;
-    });
-  }
+  const ReportsList({Key? key, required this.reports}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: reports.isNotEmpty
-        ? ListView.builder(
-            itemCount: reports.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(reports[index].type ?? ''),
-                subtitle: Text('Type: ${reports[index].type}'),
-                // Add other properties of Report you want to display
-              );
-            },
-          )
-        : Center(
+      body: reports.isEmpty
+        ? Center(
             child: Text('No reports found.'),
-          ),
+          )
+        : 
+        ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (context, index) {
+            return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 4.0,
+              child: ListTile(
+                title: Text(reports[index].type ?? ''),
+                subtitle: Text('Type: ${reports[index].type} \nAt: '),
+                isThreeLine: true,
+                onTap: () {
+                  print('Tile pressed!');
+                },
+              ),
+            );
+          },
+        )
     );
   }
 }
