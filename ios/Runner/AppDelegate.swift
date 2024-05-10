@@ -17,6 +17,7 @@ import workmanager
     }
     GMSServices.provideAPIKey("AIzaSyC5szIWBSfTg3SzJPkTPU7DPfZcdkvFd4A")
     GeneratedPluginRegistrant.register(with: self)
+    UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
     WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "trackingTask")
     WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "scheduleDailyTasks")
     // Register a periodic task in iOS 13+
