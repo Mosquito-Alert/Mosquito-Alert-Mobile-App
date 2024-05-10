@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_new.dart';
 
 
 class TabBarDemo extends StatefulWidget {
@@ -58,42 +59,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
             ],
           ),
       ),
-    );
-  }
-}
-
-class ReportsList extends StatelessWidget {
-  final List<Report> reports;
-
-  const ReportsList({Key? key, required this.reports}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: reports.isEmpty
-        ? Center(
-            child: Text('No reports found.'),
-          )
-        : 
-        ListView.builder(
-          itemCount: reports.length,
-          itemBuilder: (context, index) {
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 4.0,
-              child: ListTile(
-                title: Text(reports[index].type ?? ''),
-                subtitle: Text('Type: ${reports[index].type} \nAt: '),
-                isThreeLine: true,
-                onTap: () {
-                  print('Tile pressed!');
-                },
-              ),
-            );
-          },
-        )
     );
   }
 }
