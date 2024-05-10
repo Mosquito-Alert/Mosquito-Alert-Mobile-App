@@ -184,7 +184,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     isBgTrackingEnabled = trackingStatus;
                   });
                   if (!isBgTrackingEnabled){
-                    await Workmanager().cancelByTag('scheduleDailyTasks');
                     await Workmanager().cancelByTag('trackingTask');
                   }
                 },
