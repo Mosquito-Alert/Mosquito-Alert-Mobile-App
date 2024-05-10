@@ -23,7 +23,14 @@ class BackgroundTracking{
     return randomTimes;
   }
 
-  static void scheduleMultipleTrackingTask(int numTasks) {
+  static Future<void> scheduleMultipleTrackingTask(int numTasks) async {
+    var permission = await Geolocator.checkPermission();
+    var isBgTrackingEnabled = await UserManager.getTracking();
+
+    if (permission != LocationPermission.always || !isBgTrackingEnabled){
+      return Future.value(true);
+    }
+
     var randomTimes = getRandomTimes(numTasks);
 
     randomTimes.asMap().forEach((index, time) async {
@@ -38,7 +45,7 @@ class BackgroundTracking{
     });
   }
 
-  static void trackingTask() async {
+  static Future<void> trackingTask() async {
     var permission = await Geolocator.checkPermission();
     var isBgTrackingEnabled = await UserManager.getTracking();
 
