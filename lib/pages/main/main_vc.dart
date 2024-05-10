@@ -12,6 +12,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page_new.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
@@ -340,8 +341,7 @@ class _MainVCState extends State<MainVC> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MyReportsPage()),
+                                                  builder: (context) => TabBarDemo()),
                                               );
                                             },
                                             child: CustomCard(
