@@ -4,14 +4,14 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
 
 
-class MyReportsTabBar extends StatefulWidget {
-  const MyReportsTabBar({Key? key}) : super(key: key);
+class MyReportsPage extends StatefulWidget {
+  const MyReportsPage({Key? key}) : super(key: key);
 
   @override
-  _MyReportsTabBarState createState() => _MyReportsTabBarState();
+  _MyReportsPageState createState() => _MyReportsPageState();
 }
 
-class _MyReportsTabBarState extends State<MyReportsTabBar> {
+class _MyReportsPageState extends State<MyReportsPage> {
   late List<Report> adultReports;
   late List<Report> biteReports;
   late List<Report> siteReports;
