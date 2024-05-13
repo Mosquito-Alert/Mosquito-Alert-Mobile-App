@@ -53,6 +53,7 @@ class _MyReportsListState extends State<ReportsList> {
               elevation: 4.0,
               child: ListTile(    
                 leading: CircleAvatar(
+                  radius: 28,
                   backgroundImage: reports[index].photos != null && reports[index].photos!.isNotEmpty
                     ? NetworkImage(reports[index].photos![0].photo ?? '')
                     : null,
