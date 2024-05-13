@@ -13,6 +13,8 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>cat.ibeji.tigatrapp</string>
+	<key>MinimumOSVersion</key>  
+	<string>13.0</string>  
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
