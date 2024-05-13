@@ -154,7 +154,7 @@ class _MyReportsListState extends State<ReportsList> {
         position: LatLng(
           report.current_location_lat!,
           report.current_location_lon!,
-        ), /*icon: icon*/
+        ),
       );
     } else {
       marker = Marker(
@@ -162,7 +162,7 @@ class _MyReportsListState extends State<ReportsList> {
         position: LatLng(
           report.selected_location_lat!,
           report.selected_location_lon!,
-        ), /*icon: icon*/
+        ),
       );
     }
 
