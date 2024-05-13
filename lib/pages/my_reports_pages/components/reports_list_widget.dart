@@ -51,13 +51,18 @@ class _MyReportsListState extends State<ReportsList> {
                 borderRadius: BorderRadius.circular(10),
               ),
               elevation: 4.0,
-              child: ListTile(
+              child: ListTile(    
+                leading: CircleAvatar(
+                  backgroundImage: reports[index].photos != null && reports[index].photos!.isNotEmpty
+                    ? NetworkImage(reports[index].photos![0].photo ?? '')
+                    : null,
+                ),    
                 title: Text(Utils.getTranslatedReportType(context, reports[index].type)),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
                       WidgetSpan(
-                        child: Icon(Icons.location_on, size: 16), // This adds the location marker icon
+                        child: Icon(Icons.location_on, size: 16),
                       ),
                       TextSpan(
                         text: ' ${reports[index].displayCity ?? ''}\n',
@@ -67,7 +72,7 @@ class _MyReportsListState extends State<ReportsList> {
                         ),
                       ),
                       WidgetSpan(
-                        child: Icon(Icons.calendar_today, size: 16), // This adds the calendar icon
+                        child: Icon(Icons.calendar_today, size: 16),
                       ),
                       TextSpan(
                         text: ' ${formatCreationTime(reports[index].creation_time)}',
