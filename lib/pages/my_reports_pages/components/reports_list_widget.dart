@@ -21,7 +21,7 @@ class ReportsList extends StatefulWidget {
 }
 
 class _MyReportsListState extends State<ReportsList> {
-  final List<Report> reports;
+  List<Report> reports;
   GoogleMapController? miniMapController;
 
   _MyReportsListState({required this.reports});
@@ -149,6 +149,23 @@ class _MyReportsListState extends State<ReportsList> {
     return <Marker>{marker};
   }
 
+  void _deleteReport(Report report) async {
+    Navigator.pop(context);
+    var res = await Utils.deleteReport(report);
+    if (res){
+      reports.removeWhere((element) => element.report_id == report.report_id);
+      setState(() {
+        reports = reports;
+      });
+    } else {
+      await Utils.showAlert(
+        MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'save_report_ko_txt'),
+        context,
+      );
+    }
+  }
+
   void _reportBottomSheet(Report report, BuildContext context) async {
     var campaign = await _checkCampaigns(report.country);
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
@@ -168,7 +185,6 @@ class _MyReportsListState extends State<ReportsList> {
           child: Container(
             constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.9),
-            // height: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 15),
             child: SingleChildScrollView(
               physics: ClampingScrollPhysics(),
@@ -523,7 +539,7 @@ class _MyReportsListState extends State<ReportsList> {
                                       context, 'delete_report_title'),
                                   MyLocalizations.of(
                                       context, 'delete_report_txt'), () {
-                                //_deleteReport(report);
+                                _deleteReport(report);
                               }, context);
                             }, textColor: Colors.red))
                           ],
