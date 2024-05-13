@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 
 class MyReportsPage extends StatefulWidget {
@@ -39,14 +40,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          bottom: const TabBar(
+          backgroundColor: Colors.white,
+          bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.car_crash), text: 'Adult'),
-              Tab(icon: Icon(Icons.biotech), text: 'Bite'),
-              Tab(icon: Icon(Icons.location_on), text: 'Sites'),
+              Tab(icon: Icon(Icons.car_crash), text: MyLocalizations.of(context, 'single_mosquito') ?? 'Mosquito'),
+              Tab(icon: Icon(Icons.biotech), text: MyLocalizations.of(context, 'single_bite') ?? 'Bite'),
+              Tab(icon: Icon(Icons.location_on), text: MyLocalizations.of(context, 'single_breeding_site') ?? 'Sites'),
             ],
           ),
-          title: const Text('My Reports'),
+          title: Text(MyLocalizations.of(context, 'your_reports_txt') ?? 'My reports'),
         ),
         body: isLoading ?
           Center(child: CircularProgressIndicator())
