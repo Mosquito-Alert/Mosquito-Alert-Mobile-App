@@ -203,7 +203,7 @@ class Utils {
     // print(reportsList);
   }
 
-  static setCurrentLocation(double latitude, double longitude) {
+  static void setCurrentLocation(double latitude, double longitude) {
     report!.location_choice = 'current';
     report!.selected_location_lat = null;
     report!.selected_location_lon = null;
@@ -211,7 +211,7 @@ class Utils {
     report!.current_location_lon = longitude;
   }
 
-  static setSelectedLocation(double? lat, lon) {
+  static void setSelectedLocation(double? lat, lon) {
     report!.location_choice = 'selected';
     report!.current_location_lat = null;
     report!.current_location_lon = null;

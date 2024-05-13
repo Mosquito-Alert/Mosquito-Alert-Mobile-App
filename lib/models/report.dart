@@ -170,7 +170,6 @@ class Report {
   }
 
   LatLng getLocation() {
-    LatLng test = LatLng(5, 5);
     if (location_choice == 'current'){
       return LatLng(current_location_lat ?? 0, current_location_lon ?? 0);
     } else {

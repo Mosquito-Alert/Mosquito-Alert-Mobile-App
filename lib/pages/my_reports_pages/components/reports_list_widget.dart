@@ -130,18 +130,8 @@ class _MyReportsListState extends State<ReportsList> {
   }
 
   CameraPosition _getPosition(Report report) {
-    var _target;
-
-    if (report.location_choice == 'current') {
-      _target =
-          LatLng(report.current_location_lat!, report.current_location_lon!);
-    } else {
-      _target =
-          LatLng(report.selected_location_lat!, report.selected_location_lon!);
-    }
-
     return CameraPosition(
-      target: _target,
+      target: report.getLocation(),
       zoom: 15.0,
     );
   }
