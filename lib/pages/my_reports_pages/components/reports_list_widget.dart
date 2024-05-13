@@ -147,24 +147,10 @@ class _MyReportsListState extends State<ReportsList> {
   }
 
   Set<Marker> _getMarker(Report report) {
-    var marker;
-    if (report.location_choice == 'current') {
-      marker = Marker(
-        markerId: MarkerId('currentMarker'),
-        position: LatLng(
-          report.current_location_lat!,
-          report.current_location_lon!,
-        ),
-      );
-    } else {
-      marker = Marker(
-        markerId: MarkerId('selectedtMarker'),
-        position: LatLng(
-          report.selected_location_lat!,
-          report.selected_location_lon!,
-        ),
-      );
-    }
+    var marker = Marker(
+      markerId: MarkerId('marker'),
+      position: report.getLocation(),
+    );
 
     return <Marker>{marker};
   }
@@ -347,21 +333,9 @@ class _MyReportsListState extends State<ReportsList> {
                                     context, 'registered_location_txt')! + ': ',
                                 fontSize: 14),
                               Style.body(
-                                report.location_choice == 'current'
-                                  ? '(' +
-                                    report.current_location_lat!
-                                        .toStringAsFixed(5) +
-                                    ', ' +
-                                    report.current_location_lon!
-                                        .toStringAsFixed(5) +
-                                    ')'
-                                  : '(' +
-                                    report.selected_location_lat!
-                                        .toStringAsFixed(5) +
-                                    ', ' +
-                                    report.selected_location_lon!
-                                        .toStringAsFixed(5) +
-                                    ')',
+                                  '(' + report.getLocation().latitude.toStringAsFixed(5) +
+                                  ', ' +
+                                  report.getLocation().longitude.toStringAsFixed(5) + ')',
                                 fontSize: 12),
                               Style.body(
                                   ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',

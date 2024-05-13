@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
@@ -166,6 +167,15 @@ class Report {
     data['os_language'] = os_language;
     data['app_language'] = app_language;
     return data;
+  }
+
+  LatLng getLocation() {
+    LatLng test = LatLng(5, 5);
+    if (location_choice == 'current'){
+      return LatLng(current_location_lat ?? 0, current_location_lon ?? 0);
+    } else {
+      return LatLng(selected_location_lat ?? 0, selected_location_lon ?? 0);
+    }
   }
 }
 
