@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -25,6 +26,15 @@ class _MyReportsListState extends State<ReportsList> {
 
   _MyReportsListState({required this.reports});
 
+  String formatCreationTime(String? utcTimeString) {
+    utcTimeString ??= '1970-01-01 00:00';
+    var utcTime = DateTime.parse(utcTimeString);
+    var localTime = utcTime.toLocal();
+    var formattedTime = DateFormat('yyyy-MM-dd HH:mm').format(localTime);
+    
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +52,27 @@ class _MyReportsListState extends State<ReportsList> {
               ),
               elevation: 4.0,
               child: ListTile(
-                title: Text(reports[index].type ?? ''),
-                subtitle: Text('Type: ${reports[index].type} \nAt: '),
+                title: Text(Utils.getTranslatedReportType(context, reports[index].type)),
+                subtitle:  RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Approximate location: ${reports[index].displayCity ?? ''}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '\nAt: ${formatCreationTime(reports[index].creation_time)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 isThreeLine: true,
                 onTap: () {
                   _reportBottomSheet(reports[index], context);
@@ -168,96 +197,98 @@ class _MyReportsListState extends State<ReportsList> {
                     SizedBox(
                       height: 20,
                     ),
-                    report.type == 'adult' && campaign != null
-                        ? Container(
-                            padding: EdgeInsets.all(12),
-                            color: Colors.orange[50],
-                            child: Column(
+                    report.type != 'adult' || campaign == null
+                      ?
+                      Container()
+                      :
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        color: Colors.orange[50],
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 0,
+                            ),
+                            Row(
                               children: [
-                                SizedBox(
-                                  height: 0,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Style.body(
+                                            MyLocalizations.of(context,
+                                                'you_can_send_info_address'),
+                                            fontSize: 14,
+                                            textAlign: TextAlign.start),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Style.titleMedium(
+                                            campaign.postingAddress,
+                                            fontSize: 14),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Row(
                                           children: [
                                             Style.body(
-                                                MyLocalizations.of(context,
-                                                    'you_can_send_info_address'),
+                                                "${MyLocalizations.of(context, "you_can_send_report_id")}: ",
                                                 fontSize: 14,
-                                                textAlign: TextAlign.start),
+                                                textAlign:
+                                                    TextAlign.start),
                                             SizedBox(
-                                              height: 4,
+                                              width: 6,
                                             ),
                                             Style.titleMedium(
-                                                campaign.postingAddress,
+                                                report.report_id,
                                                 fontSize: 14),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Style.body(
-                                                    "${MyLocalizations.of(context, "you_can_send_report_id")}: ",
-                                                    fontSize: 14,
-                                                    textAlign:
-                                                        TextAlign.start),
-                                                SizedBox(
-                                                  width: 6,
-                                                ),
-                                                Style.titleMedium(
-                                                    report.report_id,
-                                                    fontSize: 14),
-                                              ],
-                                            )
                                           ],
-                                        )),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Style.body(
-                                            MyLocalizations.of(
-                                                context, 'more_info')! + ': ',
-                                            fontSize: 12,
-                                            textAlign: TextAlign.center),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          IconButton(
-                                            icon: SvgPicture.asset(
-                                              'assets/img/sendmodule/ic_adn.svg',
-                                              color: Colors.black,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CampaignTutorialPage()),
-                                              );
-                                            })
-                                        ],
-                                      )),
-                                  ],
+                                        )
+                                      ],
+                                    )),
+                                SizedBox(
+                                  width: 12,
                                 ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Style.body(
+                                        MyLocalizations.of(
+                                            context, 'more_info')! + ': ',
+                                        fontSize: 12,
+                                        textAlign: TextAlign.center),
+                                      SizedBox(
+                                        height: 2,
+                                      ),
+                                      IconButton(
+                                        icon: SvgPicture.asset(
+                                          'assets/img/sendmodule/ic_adn.svg',
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CampaignTutorialPage()),
+                                          );
+                                        })
+                                    ],
+                                  )),
                               ],
                             ),
-                          )
-                        : Container(),
+                          ],
+                        ),
+                      ),
                     report.type == 'adult' && campaign != null
                         ? SizedBox(
                             height: 20,
@@ -304,16 +335,16 @@ class _MyReportsListState extends State<ReportsList> {
                                   MyLocalizations.of(
                                       context, 'exact_time_register_txt'),
                                   fontSize: 14),
-                              /*Style.body(
+                              Style.body(
                                   DateFormat('EEEE, dd MMMM yyyy',
                                           Utils.language.languageCode)
                                       .format(DateTime.parse(
                                           report.creation_time!).toLocal())
                                       .toString(),
-                                  fontSize: 12),*/
-                              /*Style.body(
+                                  fontSize: 12),
+                              Style.body(
                                   "${MyLocalizations.of(context, "at_time_txt")}: ${DateFormat.Hms().format(DateTime.parse(report.creation_time!).toLocal())} ${MyLocalizations.of(context, 'hours')}",
-                                  fontSize: 12),*/
+                                  fontSize: 12),
                             ],
                           ),
                         ),
