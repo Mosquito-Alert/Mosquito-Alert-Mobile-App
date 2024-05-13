@@ -25,7 +25,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   void loadReports() async {
-    var myData = await ApiSingleton().getReportsList();
+    var myData = await ApiSingleton().getReportsList();    
     setState(() {
       adultReports = myData.where((report) => report.type == 'adult').toList();
       biteReports = myData.where((report) => report.type == 'bite').toList();

@@ -64,7 +64,7 @@ class Report {
       this.nuts2,
       this.country});
 
-  Report.fromJson(Map<dynamic, dynamic> json) {
+  Report._internal(Map<dynamic, dynamic> json){
     log(json.toString());
     version_UUID = json['version_UUID'].toString();
     version_number = json['version_number'];
@@ -108,8 +108,14 @@ class Report {
     country = json['country'];
     nuts3 = json['nuts_3'];
     nuts2 = json['nuts_2'];
+  }
 
-    _initializeDisplayCity();
+  static Future<Report> fromJsonAsync(Map<dynamic, dynamic> json) async{
+    var report = Report._internal(json);
+
+    await report._initializeDisplayCity();
+
+    return report;
   }
 
   Future<void> _initializeDisplayCity() async {

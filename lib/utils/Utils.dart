@@ -195,9 +195,9 @@ class Utils {
     }
   }
 
-  static void deleteLastReport() {
+  static Future<void> deleteLastReport() async {
     report = null;
-    report = Report.fromJson(reportsList!.last!.toJson());
+    report = await Report.fromJsonAsync(reportsList!.last!.toJson());
     reportsList!.removeLast();
     print('${jsonEncode(reportsList)}');
     // print(reportsList);
@@ -408,7 +408,7 @@ class Utils {
     if (savedReports != null && savedReports.isNotEmpty) {
       bool isCreated;
       for (var i = 0; i < savedReports.length; i++) {
-        var savedReport = Report.fromJson(json.decode(savedReports[i]));
+        var savedReport = await Report.fromJsonAsync(json.decode(savedReports[i]));
         isCreated = await ApiSingleton().createReport(savedReport) != null
             ? true
             : false;
