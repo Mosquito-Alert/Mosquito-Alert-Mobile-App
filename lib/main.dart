@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:battery_plus/battery_plus.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:connectivity/connectivity.dart';
