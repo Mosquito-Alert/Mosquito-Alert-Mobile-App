@@ -53,18 +53,24 @@ class _MyReportsListState extends State<ReportsList> {
               elevation: 4.0,
               child: ListTile(
                 title: Text(Utils.getTranslatedReportType(context, reports[index].type)),
-                subtitle:  RichText(
+                subtitle: RichText(
                   text: TextSpan(
                     children: [
+                      WidgetSpan(
+                        child: Icon(Icons.location_on, size: 16), // This adds the location marker icon
+                      ),
                       TextSpan(
-                        text: 'Approximate location: ${reports[index].displayCity ?? ''}',
+                        text: ' ${reports[index].displayCity ?? ''}\n',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
                         ),
                       ),
+                      WidgetSpan(
+                        child: Icon(Icons.calendar_today, size: 16), // This adds the calendar icon
+                      ),
                       TextSpan(
-                        text: '\nAt: ${formatCreationTime(reports[index].creation_time)}',
+                        text: ' ${formatCreationTime(reports[index].creation_time)}',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           color: Colors.grey,
