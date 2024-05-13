@@ -35,6 +35,19 @@ class _MyReportsListState extends State<ReportsList> {
     return formattedTime;
   }
 
+  String getTitle(BuildContext context, Report report){
+    switch(report.type) {
+      case 'adult':
+        return MyLocalizations.of(context, report.responses![0]?.answer ?? 'Non identified') ?? '';
+      case 'bite':
+        return '${report.responses![0]?.answer_value ?? ''} bites';
+      case 'site':
+        return MyLocalizations.of(context, report.responses![0]?.answer ?? '') ?? '';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,13 +65,14 @@ class _MyReportsListState extends State<ReportsList> {
               ),
               elevation: 4.0,
               child: ListTile(    
-                leading: CircleAvatar(
-                  radius: 28,
-                  backgroundImage: reports[index].photos != null && reports[index].photos!.isNotEmpty
-                    ? NetworkImage(reports[index].photos![0].photo ?? '')
-                    : null,
-                ),    
-                title: Text(Utils.getTranslatedReportType(context, reports[index].type)),
+                leading: reports[index].type == 'bite' ? null :
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundImage: reports[index].photos != null && reports[index].photos!.isNotEmpty
+                      ? NetworkImage(reports[index].photos![0].photo ?? '')
+                      : null,
+                  ),
+                title: Text(getTitle(context, reports[index])),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
