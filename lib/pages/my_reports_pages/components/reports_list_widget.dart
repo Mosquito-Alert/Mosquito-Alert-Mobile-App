@@ -132,17 +132,17 @@ class _MyReportsListState extends State<ReportsList> {
     miniMapController = controller;
   }
 
-  CameraPosition _getPosition(Report report) {
+  CameraPosition _getPosition(LatLng latlng) {
     return CameraPosition(
-      target: report.getLocation(),
+      target: latlng,
       zoom: 15.0,
     );
   }
 
-  Set<Marker> _getMarker(Report report) {
+  Set<Marker> _getMarker(LatLng latlng) {
     var marker = Marker(
       markerId: MarkerId('marker'),
-      position: report.getLocation(),
+      position: latlng,
     );
 
     return <Marker>{marker};
@@ -166,6 +166,8 @@ class _MyReportsListState extends State<ReportsList> {
   }
 
   void _reportBottomSheet(Report report, BuildContext context) async {
+    var hasValidLocation = report.getLocation() != null;
+    var location = report.getLocation();
     var campaign = await _checkCampaigns(report.country);
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
       context: context,
@@ -193,23 +195,26 @@ class _MyReportsListState extends State<ReportsList> {
                     SizedBox(
                       height: 15,
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: GoogleMap(
-                          rotateGesturesEnabled: false,
-                          mapToolbarEnabled: false,
-                          scrollGesturesEnabled: false,
-                          zoomControlsEnabled: false,
-                          zoomGesturesEnabled: false,
-                          myLocationButtonEnabled: false,
-                          onMapCreated: _onMiniMapCreated,
-                          initialCameraPosition: _getPosition(report),
-                          markers: _getMarker(report),
+                    !hasValidLocation ?
+                      Container()
+                    :
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: GoogleMap(
+                            rotateGesturesEnabled: false,
+                            mapToolbarEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomControlsEnabled: false,
+                            zoomGesturesEnabled: false,
+                            myLocationButtonEnabled: false,
+                            onMapCreated: _onMiniMapCreated,
+                            initialCameraPosition: _getPosition(location!),
+                            markers: _getMarker(location),
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -325,14 +330,17 @@ class _MyReportsListState extends State<ReportsList> {
                                 MyLocalizations.of(
                                     context, 'registered_location_txt') + ': ',
                                 fontSize: 14),
-                              Style.body(
-                                  '(' + report.getLocation().latitude.toStringAsFixed(5) +
-                                  ', ' +
-                                  report.getLocation().longitude.toStringAsFixed(5) + ')',
-                                fontSize: 12),
-                              Style.body(
-                                  ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',
+                              !hasValidLocation ?
+                                Container()
+                              :
+                                Style.body(
+                                    '(' + report.getLocation()!.latitude.toStringAsFixed(5) +
+                                    ', ' +
+                                    report.getLocation()!.longitude.toStringAsFixed(5) + ')',
                                   fontSize: 12),
+                                Style.body(
+                                    ' ${MyLocalizations.of(context, "near_from_txt")}: ${report.displayCity}',
+                                    fontSize: 12),
                             ],
                           ),
                         ),

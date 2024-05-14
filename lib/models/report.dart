@@ -169,13 +169,13 @@ class Report {
     return data;
   }
 
-  LatLng getLocation() {
+  LatLng? getLocation() {
     if (location_choice == 'current'){
       return LatLng(current_location_lat ?? 0, current_location_lon ?? 0);
     } else if (location_choice == 'selected'){
       return LatLng(selected_location_lat ?? 0, selected_location_lon ?? 0);
     } else {
-      return LatLng(0, 0);
+      return null;
     }
   }
 }
