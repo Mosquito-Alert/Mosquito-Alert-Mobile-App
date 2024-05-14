@@ -38,7 +38,10 @@ class _MyReportsListState extends State<ReportsList> {
   String getTitle(BuildContext context, Report report){
     switch(report.type) {
       case 'adult':
-        return MyLocalizations.of(context, report.responses![0]?.answer ?? 'Non identified') ?? '';
+        if (report.responses![0]?.answer == 'question_6_answer_64'){
+          return 'Non identified';
+        }
+        return MyLocalizations.of(context, report.responses![0]?.answer ?? '') ?? '';
       case 'bite':
         return '${report.responses![0]?.answer_value ?? ''} bites';
       case 'site':
