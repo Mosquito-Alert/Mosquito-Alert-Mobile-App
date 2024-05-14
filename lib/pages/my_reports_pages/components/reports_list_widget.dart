@@ -41,11 +41,11 @@ class _MyReportsListState extends State<ReportsList> {
         if (report.responses![0]?.answer == 'question_6_answer_64'){
           return 'Non identified';
         }
-        return MyLocalizations.of(context, report.responses![0]?.answer ?? '') ?? '';
+        return MyLocalizations.of(context, report.responses![0]?.answer ?? '');
       case 'bite':
         return '${report.responses![0]?.answer_value ?? ''} bites';
       case 'site':
-        return MyLocalizations.of(context, report.responses![0]?.answer ?? '') ?? '';
+        return MyLocalizations.of(context, report.responses![0]?.answer ?? '');
       default:
         return '';
     }
@@ -284,7 +284,7 @@ class _MyReportsListState extends State<ReportsList> {
                                     children: [
                                       Style.body(
                                         MyLocalizations.of(
-                                            context, 'more_info')! + ': ',
+                                            context, 'more_info') + ': ',
                                         fontSize: 12,
                                         textAlign: TextAlign.center),
                                       SizedBox(
@@ -323,7 +323,7 @@ class _MyReportsListState extends State<ReportsList> {
                             children: <Widget>[
                               Style.titleMedium(
                                 MyLocalizations.of(
-                                    context, 'registered_location_txt')! + ': ',
+                                    context, 'registered_location_txt') + ': ',
                                 fontSize: 14),
                               Style.body(
                                   '(' + report.getLocation().latitude.toStringAsFixed(5) +
@@ -372,7 +372,7 @@ class _MyReportsListState extends State<ReportsList> {
                               children: [
                                 Style.titleMedium(
                                     MyLocalizations.of(
-                                      context, 'identifier_small')! + ': ',
+                                      context, 'identifier_small') + ': ',
                                     fontSize: 14),
                                 SizedBox(
                                   height: 4,

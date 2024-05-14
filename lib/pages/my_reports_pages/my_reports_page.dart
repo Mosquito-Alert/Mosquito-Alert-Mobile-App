@@ -49,24 +49,24 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   width: 24,
                   height: 24,
                   filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_mosquito') ?? 'Mosquito'),
+                text: MyLocalizations.of(context, 'single_mosquito')),
               Tab(
                 icon: Image.asset(
                   'assets/img/ic_my_reports_bite.png',
                   width: 24,
                   height: 24,
                   filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_bite') ?? 'Bite'),
+                text: MyLocalizations.of(context, 'single_bite')),
               Tab(
                 icon: Image.asset(
                   'assets/img/ic_my_reports_breeding_site.png',
                   width: 24,
                   height: 24,
                   filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_breeding_site') ?? 'Sites'),
+                text: MyLocalizations.of(context, 'single_breeding_site')),
             ],
           ),
-          title: Text(MyLocalizations.of(context, 'your_reports_txt') ?? 'My reports'),
+          title: Text(MyLocalizations.of(context, 'your_reports_txt')),
         ),
         body: isLoading ?
           Center(child: CircularProgressIndicator())
