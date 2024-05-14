@@ -44,13 +44,25 @@ class _MyReportsPageState extends State<MyReportsPage> {
           bottom: TabBar(
             tabs: [
               Tab(
-                icon: Image.asset('assets/img/ic_my_reports_mosquito.png'),
+                icon: Image.asset(
+                  'assets/img/ic_my_reports_mosquito.png',
+                  width: 24,
+                  height: 24,
+                  filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_mosquito') ?? 'Mosquito'),
               Tab(
-                icon: Image.asset('assets/img/ic_my_reports_bite.png'),
+                icon: Image.asset(
+                  'assets/img/ic_my_reports_bite.png',
+                  width: 24,
+                  height: 24,
+                  filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_bite') ?? 'Bite'),
               Tab(
-                icon: Image.asset('assets/img/ic_my_reports_breeding_site.png'),
+                icon: Image.asset(
+                  'assets/img/ic_my_reports_breeding_site.png',
+                  width: 24,
+                  height: 24,
+                  filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_breeding_site') ?? 'Sites'),
             ],
           ),
