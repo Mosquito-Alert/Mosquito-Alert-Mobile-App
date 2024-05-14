@@ -1186,13 +1186,13 @@ class Utils {
         return reportType ?? '';
     }
 
-    return MyLocalizations.of(context, translationString) ?? reportType ?? '';
+    return MyLocalizations.of(context, translationString);
   }
     
-  static Future<String> getCityNameFromCoords(double lat, double lon) async {
+  static Future<String?> getCityNameFromCoords(double lat, double lon) async {
     var locale = await UserManager.getUserLocale();
     var placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: locale);
-    if (placemarks.isEmpty) { return ''; }
-    return placemarks.first.locality ?? '';
+    if (placemarks.isEmpty) { return null; }
+    return placemarks.first.locality;
   }
 }

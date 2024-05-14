@@ -79,16 +79,18 @@ class _MyReportsListState extends State<ReportsList> {
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
-                      WidgetSpan(
-                        child: Icon(Icons.location_on, size: 16),
-                      ),
-                      TextSpan(
-                        text: ' ${reports[index].displayCity ?? ''}\n',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
+                      if (reports[index].displayCity != null) ...[
+                        WidgetSpan(
+                          child: Icon(Icons.location_on, size: 16),
                         ),
-                      ),
+                        TextSpan(
+                          text: ' ${reports[index].displayCity}\n',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                       WidgetSpan(
                         child: Icon(Icons.calendar_today, size: 16),
                       ),
@@ -279,37 +281,6 @@ class _MyReportsListState extends State<ReportsList> {
                                 SizedBox(
                                   width: 12,
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Style.body(
-                                        MyLocalizations.of(
-                                            context, 'more_info') + ': ',
-                                        fontSize: 12,
-                                        textAlign: TextAlign.center),
-                                      SizedBox(
-                                        height: 2,
-                                      ),
-                                      IconButton(
-                                        icon: SvgPicture.asset(
-                                          'assets/img/sendmodule/ic_adn.svg',
-                                          color: Colors.black,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CampaignTutorialPage()),
-                                          );
-                                        })
-                                    ],
-                                  )),
                               ],
                             ),
                           ],
@@ -325,14 +296,14 @@ class _MyReportsListState extends State<ReportsList> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
+                            children: !hasValidLocation ?
+                            <Widget>[]
+                            :
+                            <Widget>[
                               Style.titleMedium(
                                 MyLocalizations.of(
                                     context, 'registered_location_txt') + ': ',
                                 fontSize: 14),
-                              !hasValidLocation ?
-                                Container()
-                              :
                                 Style.body(
                                     '(' + report.getLocation()!.latitude.toStringAsFixed(5) +
                                     ', ' +
