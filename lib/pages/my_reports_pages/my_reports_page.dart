@@ -43,9 +43,15 @@ class _MyReportsPageState extends State<MyReportsPage> {
           backgroundColor: Colors.white,
           bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.car_crash), text: MyLocalizations.of(context, 'single_mosquito') ?? 'Mosquito'),
-              Tab(icon: Icon(Icons.biotech), text: MyLocalizations.of(context, 'single_bite') ?? 'Bite'),
-              Tab(icon: Icon(Icons.location_on), text: MyLocalizations.of(context, 'single_breeding_site') ?? 'Sites'),
+              Tab(
+                icon: Image.asset('assets/img/ic_my_reports_mosquito.png'),
+                text: MyLocalizations.of(context, 'single_mosquito') ?? 'Mosquito'),
+              Tab(
+                icon: Image.asset('assets/img/ic_my_reports_bite.png'),
+                text: MyLocalizations.of(context, 'single_bite') ?? 'Bite'),
+              Tab(
+                icon: Image.asset('assets/img/ic_my_reports_breeding_site.png'),
+                text: MyLocalizations.of(context, 'single_breeding_site') ?? 'Sites'),
             ],
           ),
           title: Text(MyLocalizations.of(context, 'your_reports_txt') ?? 'My reports'),
