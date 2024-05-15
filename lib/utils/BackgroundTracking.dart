@@ -35,12 +35,12 @@ class BackgroundTracking{
 
     randomTimes.asMap().forEach((index, time) async {
       await Workmanager().registerOneOffTask(
-      'tracking_task_$index',
-      'trackingTask',
-      initialDelay: Duration(hours: time.hour, minutes: time.minute),
-      tag: 'trackingTask',
-      constraints: Constraints(networkType: NetworkType.connected),
-      backoffPolicy: BackoffPolicy.linear,
+        'tracking_task_$index',
+        'trackingTask',
+        initialDelay: Duration(hours: time.hour, minutes: time.minute),
+        tag: 'trackingTask',
+        constraints: Constraints(networkType: NetworkType.connected),
+        backoffPolicy: BackoffPolicy.linear,
       );
     });
   }

@@ -54,10 +54,10 @@ void callbackDispatcher() {
 
     switch (task) {
       case 'trackingTask':
-        BackgroundTracking.trackingTask();
+        await BackgroundTracking.trackingTask();
         break;
       case 'scheduleDailyTasks':
-        BackgroundTracking.scheduleMultipleTrackingTask(5);
+        await BackgroundTracking.scheduleMultipleTrackingTask(5);
         break;
     }
     return Future.value(true);
