@@ -10,13 +10,17 @@ class PreviewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Photos'),
+        title: Text('Report adult'),
         backgroundColor: Colors.white,
       ),
       body: ListView.builder(
         itemCount: photos.length,
         itemBuilder: (context, index) {
-          return Image.file(photos[index]);
+          return SizedBox(
+            height: 200,
+            width: 200,
+            child: Image.file(photos[index]),
+          );
         },
       ),
     );
