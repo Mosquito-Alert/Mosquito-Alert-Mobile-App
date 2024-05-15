@@ -20,8 +20,6 @@ import workmanager
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
     WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "trackingTask")
     WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "scheduleDailyTasks")
-    // Register a periodic task in iOS 13+
-    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "be.tramckrijte.workmanagerExample.iOSBackgroundAppRefresh", frequency: NSNumber(value: 86400))
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

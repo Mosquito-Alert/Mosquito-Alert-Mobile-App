@@ -42,7 +42,6 @@ void main({String env = 'prod'}) async {
     tag: 'scheduleDailyTasks',
     frequency: Duration(days: 1),
     initialDelay: timeUntilMidnight,
-    backoffPolicy: BackoffPolicy.linear,
   );
 
   runApp(MyApp());
