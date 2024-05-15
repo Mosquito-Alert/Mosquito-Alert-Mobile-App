@@ -41,11 +41,11 @@ class _MyReportsListState extends State<ReportsList> {
         if (report.responses![0]?.answer == 'question_6_answer_64'){
           return 'Non identified';
         }
-        return MyLocalizations.of(context, report.responses![0]?.answer ?? '');
+        return MyLocalizations.of(context, report.responses![0]?.answer);
       case 'bite':
-        return '${report.responses![0]?.answer_value ?? ''} bites';
+        return '${report.responses![0]?.answer_value} bites';
       case 'site':
-        return MyLocalizations.of(context, report.responses![0]?.answer ?? '');
+        return MyLocalizations.of(context, report.responses![0]?.answer);
       default:
         return '';
     }
