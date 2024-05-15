@@ -46,7 +46,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   double? index;
 
   List<Map> displayQuestions = [
-    {
+    /*{
       'question': {'id': 6, 'text': 'question_6'},
       'answers': [
         {
@@ -70,8 +70,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
           'text': 'question_6_answer_64'
         }
       ]
-    },
-    {
+    },*/
+    /*{
       'question': {'id': 7, 'text': 'question_7'},
       'answers': [
         [
@@ -141,7 +141,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           }
         ],
       ]
-    },
+    },*/
     {
       'question': {'id': 13, 'text': 'question_13'},
       'answers': [
@@ -177,24 +177,24 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
-      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),
-      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
-          widget.editReport != null),
+      /*MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
+          setShowCamera, _chooseTypeImage, _skipReport),*/
+      /*MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
+          widget.editReport != null),*/
       BitingLocationForm(
-          setValid, displayQuestions.elementAt(3)['question']['text']),
+          setValid, displayQuestions.elementAt(1)['question']['text']),
       QuestionsBreedingForm(
-          displayQuestions.elementAt(2), setValid, false, null, ''),
+          displayQuestions.elementAt(0), setValid, false, null, ''),
       CouldSeeForm(
-          addBitingReport, displayQuestions.elementAt(4), setValid, goNextPage),
+          addBitingReport, displayQuestions.elementAt(2), setValid, goNextPage),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
     _formsRepot = _initialformsRepot;
 
     _skipRepotForms = [
-      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),
+      /*MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
+          setShowCamera, _chooseTypeImage, _skipReport),*/
       OtherMosquitoInfo(),
     ];
 
@@ -533,7 +533,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            Utils.infoAdultCamera(context, getImage);
+            Utils.infoAdultCamera(context, getImage);  // TODO: Here
           },
           child: Text(
             MyLocalizations.of(context, 'camara')!,

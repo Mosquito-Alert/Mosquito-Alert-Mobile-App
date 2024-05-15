@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/new_adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
@@ -406,7 +407,7 @@ class _MainVCState extends State<MainVC> {
     );
   }
 
-  _createBiteReport() async {
+  Future<void> _createBiteReport() async {
     var createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
@@ -422,13 +423,14 @@ class _MainVCState extends State<MainVC> {
     }
   }
 
-  _createAdultReport() async {
+  Future<void> _createAdultReport() async {
     var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdultReportPage()),
+        //MaterialPageRoute(builder: (context) => AdultReportPage()),
+        MaterialPageRoute(builder: (context) => NewAdultReportPage()),
       );
     } else {
       print('Adult report was not created');
@@ -438,7 +440,7 @@ class _MainVCState extends State<MainVC> {
     }
   }
 
-  _createSiteReport() async {
+  Future<void> _createSiteReport() async {
     var createReport = await Utils.createNewReport('site');
     loadingStream.add(false);
     if (createReport) {
