@@ -4,8 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.example.mosquito_alert_app.scheduleDailyTasks</string>
-    	<string>com.example.mosquito_alert_app.trackingTask</string>
+		<string>trackingTask</string>
+		<string>scheduleDailyTasks</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
