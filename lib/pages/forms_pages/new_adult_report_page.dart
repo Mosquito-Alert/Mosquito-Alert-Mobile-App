@@ -13,7 +13,7 @@ class NewAdultReportPage extends StatefulWidget {
 
 class _NewAdultReportPageState extends State<NewAdultReportPage> {
   void _openCamera() async {
-    final List<File>? photos = await Navigator.push(
+    final photos = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WhatsappCamera(
@@ -23,14 +23,14 @@ class _NewAdultReportPageState extends State<NewAdultReportPage> {
     );
 
     if (photos != null && photos.isNotEmpty) {
-      // Pass the list of photos to the PreviewPage
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => PreviewPage(photos: photos),
         ),
       );
     }
+    Navigator.pop(context);
   }
 
   @override

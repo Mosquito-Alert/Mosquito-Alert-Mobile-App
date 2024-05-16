@@ -8,6 +8,7 @@ class PreviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: On this page goes the new reporting form
     return Scaffold(
       appBar: AppBar(
         title: Text('Report adult'),
