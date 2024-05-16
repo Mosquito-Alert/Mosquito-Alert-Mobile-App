@@ -15,6 +15,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_f
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/other_mosquito_info.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/new_adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -26,8 +27,9 @@ import 'components/biting_location_form.dart';
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
   final Function? loadData;
+  final List<File>? photos;
 
-  AdultReportPage({this.editReport, this.loadData});
+  AdultReportPage({this.editReport, this.loadData, this.photos});
 
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
@@ -46,102 +48,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
   double? index;
 
   List<Map> displayQuestions = [
-    /*{
-      'question': {'id': 6, 'text': 'question_6'},
-      'answers': [
-        {
-          'id': 61,
-          'img': 'assets/img/ic_invasive_aedes.png',
-          'text': 'question_6_answer_61'
-        },
-        {
-          'id': 62,
-          'img': 'assets/img/ic_common_mosquito.png',
-          'text': 'question_6_answer_62'
-        },
-        {
-          'id': 63,
-          'img': 'assets/img/ic_other_mosquito.png',
-          'text': 'question_6_answer_63'
-        },
-        {
-          'id': 64,
-          'img': 'assets/img/ic_dont_know.png',
-          'text': 'question_6_answer_64'
-        }
-      ]
-    },*/
-    /*{
-      'question': {'id': 7, 'text': 'question_7'},
-      'answers': [
-        [
-          {
-            'id': 711,
-            'img': 'assets/img/torax_711.png',
-            'text': 'question_7_answer_711'
-          },
-          {
-            'id': 712,
-            'img': 'assets/img/torax_712.png',
-            'text': 'question_7_answer_712'
-          },
-          {
-            'id': 713,
-            'img': 'assets/img/torax_713.png',
-            'text': 'question_7_answer_713'
-          },
-          {
-            'id': 714,
-            'img': 'assets/img/torax_714.png',
-            'text': 'question_7_answer_714'
-          },
-        ],
-        [
-          {
-            'id': 721,
-            'img': 'assets/img/abdomen_721.png',
-            'text': 'question_7_answer_721'
-          },
-          {
-            'id': 722,
-            'img': 'assets/img/abdomen_722.png',
-            'text': 'question_7_answer_722'
-          },
-          {
-            'id': 723,
-            'img': 'assets/img/abdomen_723.png',
-            'text': 'question_7_answer_723'
-          },
-          {
-            'id': 724,
-            'img': 'assets/img/abdomen_724.png',
-            'text': 'question_7_answer_724'
-          },
-        ],
-        [
-          {
-            'id': 731,
-            'img': 'assets/img/leg_731.png',
-            'text': 'question_7_answer_731'
-          },
-          {
-            'id': 732,
-            'img': 'assets/img/leg_732.png',
-            'text': 'question_7_answer_732'
-          },
-          {
-            'id': 733,
-            'img': 'assets/img/leg_733.png',
-            'text': 'question_7_answer_733'
-          },
-          {
-            'id': 734,
-            'img': 'assets/img/leg_734.png',
-            'text': 'question_7_answer_734'
-          }
-        ],
-      ]
-    },*/
     {
       'question': {'id': 13, 'text': 'question_13'},
       'answers': [
@@ -166,6 +72,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   bool showCamera = false;
   String? otherReport;
   late Report toEditReport;
+  List<File>? photos;
 
   @override
   void initState() {
@@ -178,9 +85,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
     index = 0.0;
     _initialformsRepot = [
       /*MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),*/
-      /*MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
+          setShowCamera, _chooseTypeImage, _skipReport),
+      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
           widget.editReport != null),*/
+      //NewAdultReportPage(),
       BitingLocationForm(
           setValid, displayQuestions.elementAt(1)['question']['text']),
       QuestionsBreedingForm(
@@ -200,7 +108,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     if (widget.editReport != null ||
         Utils.reportsList!.isNotEmpty && Utils.reportsList!.length == 1) {
-      _formsRepot!.removeAt(4);
+      _formsRepot!.removeAt(2);
     }
   }
 
@@ -381,7 +289,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   physics: NeverScrollableScrollPhysics(),
                   children: _formsRepot!,
                 ),
-                index! < 1.0 || (index == 4.0 && _formsRepot!.length == 6)
+                index! < 1.0 || (index == 4.0 && _formsRepot!.length == 4)
                     ? Container()
                     : index != _formsRepot!.length.toDouble() - 1
                         ? SafeArea(

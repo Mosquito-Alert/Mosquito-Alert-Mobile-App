@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/new_form_page.dart';
 import 'package:whatsapp_camera/whatsapp_camera.dart';
 
-class NewAdultReportPage extends StatefulWidget {
+class CameraPage extends StatefulWidget {
 
-  NewAdultReportPage();
+  CameraPage();
 
   @override
-  _NewAdultReportPageState createState() => _NewAdultReportPageState();
+  _CameraPageState createState() => _CameraPageState();
 }
 
-class _NewAdultReportPageState extends State<NewAdultReportPage> {
+class _CameraPageState extends State<CameraPage> {
   void _openCamera() async {
     final photos = await Navigator.push(
       context,
@@ -22,7 +23,7 @@ class _NewAdultReportPageState extends State<NewAdultReportPage> {
       ),
     );
 
-    if (photos != null && photos.isNotEmpty) {
+    if (photos != null && photos.length >= 1 && photos.length <= 3) {
       await Navigator.push(
         context,
         MaterialPageRoute(

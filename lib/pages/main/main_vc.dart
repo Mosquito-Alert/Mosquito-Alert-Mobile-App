@@ -430,7 +430,7 @@ class _MainVCState extends State<MainVC> {
       await Navigator.push(
         context,
         //MaterialPageRoute(builder: (context) => AdultReportPage()),
-        MaterialPageRoute(builder: (context) => NewAdultReportPage()),
+        MaterialPageRoute(builder: (context) => CameraPage()),
       );
     } else {
       print('Adult report was not created');
