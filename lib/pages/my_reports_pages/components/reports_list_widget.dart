@@ -89,11 +89,19 @@ class _MyReportsListState extends State<ReportsList> {
               elevation: 4.0,
               child: ListTile(    
                 leading: reports[index].type == 'bite' ? null :
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundImage: reports[index].photos != null && reports[index].photos!.isNotEmpty
-                      ? NetworkImage(reports[index].photos![0].photo ?? '')
-                      : null,
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: Colors.amberAccent,
+                      borderRadius: BorderRadius.circular(10),
+                      image: reports[index].photos != null && reports[index].photos!.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(reports[index].photos![0].photo ?? ''),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                    ),
                   ),
                 title: Text(getTitle(context, reports[index])),
                 subtitle: RichText(
