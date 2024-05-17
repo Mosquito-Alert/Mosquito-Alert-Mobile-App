@@ -154,22 +154,6 @@ class _MyReportsListState extends State<ReportsList> {
     miniMapController = controller;
   }
 
-  CameraPosition _getPosition(LatLng latlng) {
-    return CameraPosition(
-      target: latlng,
-      zoom: 15.0,
-    );
-  }
-
-  Set<Marker> _getMarker(LatLng latlng) {
-    var marker = Marker(
-      markerId: MarkerId('marker'),
-      position: latlng,
-    );
-
-    return <Marker>{marker};
-  }
-
   void _deleteReport(Report report) async {
     Navigator.pop(context);
     var res = await Utils.deleteReport(report);
@@ -232,8 +216,15 @@ class _MyReportsListState extends State<ReportsList> {
                             zoomGesturesEnabled: false,
                             myLocationButtonEnabled: false,
                             onMapCreated: _onMiniMapCreated,
-                            initialCameraPosition: _getPosition(location!),
-                            markers: _getMarker(location),
+                            initialCameraPosition:   
+                              CameraPosition(
+                                target: location!,
+                                zoom: 15.0,
+                              ),  
+                            markers: <Marker>{Marker(
+                              markerId: MarkerId('marker'),
+                              position: location,
+                            )},
                           ),
                         ),
                       ),
