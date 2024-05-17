@@ -25,11 +25,16 @@ class _MyReportsPageState extends State<MyReportsPage> {
   }
 
   void loadReports() async {
-    var myData = await ApiSingleton().getReportsList();    
+    var myReports = await ApiSingleton().getReportsList();
+
+    // Sort the reports by creation_time in descending order
+    myReports.sort((a, b) => b.creation_time!
+        .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
+
     setState(() {
-      adultReports = myData.where((report) => report.type == 'adult').toList();
-      biteReports = myData.where((report) => report.type == 'bite').toList();
-      siteReports = myData.where((report) => report.type == 'site').toList();
+      adultReports = myReports.where((report) => report.type == 'adult').toList();
+      biteReports = myReports.where((report) => report.type == 'bite').toList();
+      siteReports = myReports.where((report) => report.type == 'site').toList();
       isLoading = false;
     });
   }
