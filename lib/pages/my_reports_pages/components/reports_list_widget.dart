@@ -107,7 +107,7 @@ class _MyReportsListState extends State<ReportsList> {
                           text: ' ${reports[index].displayCity}\n',
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            color: Colors.black,
+                            color: Colors.grey,
                           ),
                         ),
                       ],
