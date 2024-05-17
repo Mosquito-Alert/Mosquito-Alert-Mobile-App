@@ -38,14 +38,34 @@ class _MyReportsListState extends State<ReportsList> {
   String getTitle(BuildContext context, Report report){
     switch(report.type) {
       case 'adult':
-        if (report.responses![0]?.answer == 'question_6_answer_64'){
+        var response_question_6 = report.responses?.firstWhere(
+          (element) => element!.question == 'question_6');
+
+        if (response_question_6 == null){
+          return '';
+        }
+
+        if (response_question_6.answer == 'question_6_answer_64'){
           return 'Non identified';
         }
-        return MyLocalizations.of(context, report.responses![0]?.answer);
+
+        return MyLocalizations.of(context, response_question_6.answer);
       case 'bite':
-        return '${report.responses![0]?.answer_value} bites';
+        var response_question_1 = report.responses?.firstWhere(
+          (element) => element!.question == 'question_1');
+
+        var numBites = response_question_1?.answer_value;
+        if (numBites == null){
+          return '';
+        }
+        if (numBites == '1'){
+          return '$numBites bite';
+        }
+        return '$numBites bites';
       case 'site':
-        return MyLocalizations.of(context, report.responses![0]?.answer);
+        var response_question_12 = report.responses?.firstWhere(
+          (element) => element!.question == 'question_12');
+        return MyLocalizations.of(context, response_question_12?.answer);
       default:
         return '';
     }
