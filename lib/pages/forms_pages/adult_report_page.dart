@@ -578,7 +578,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           context, () {
         Navigator.pop(context);
       },
-          title: 'Only one individual');
+        title: '${MyLocalizations.of(context, 'photo_required_alert')}:');
     } else {
       _pagesController!
           .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
