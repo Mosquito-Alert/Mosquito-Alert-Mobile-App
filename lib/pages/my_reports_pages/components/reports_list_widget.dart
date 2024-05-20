@@ -58,12 +58,12 @@ class _MyReportsListState extends State<ReportsList> {
 
         var numBites = response_question_1?.answer_value;
         if (numBites == null){
-          return '0 bites';
+          return '0 ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
         }
         if (numBites == '1'){
-          return '$numBites ${MyLocalizations.of(context, 'single_bite')}';
+          return '$numBites ${MyLocalizations.of(context, 'single_bite').toLowerCase()}';
         }
-        return '$numBites bites';
+        return '$numBites ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
       case 'site':
         var response_question_12 = report.responses?.firstWhere(
           (element) => element!.question == 'question_12');
