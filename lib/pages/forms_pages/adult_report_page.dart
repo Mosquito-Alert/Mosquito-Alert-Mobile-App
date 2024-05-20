@@ -15,7 +15,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_f
 import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/other_mosquito_info.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/new_adult_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/camera_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';

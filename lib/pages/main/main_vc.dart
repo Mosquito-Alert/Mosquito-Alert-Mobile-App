@@ -11,7 +11,8 @@ import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/new_adult_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/camera_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/new_questionaire.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
@@ -431,6 +432,7 @@ class _MainVCState extends State<MainVC> {
         context,
         //MaterialPageRoute(builder: (context) => AdultReportPage()),
         MaterialPageRoute(builder: (context) => CameraPage()),
+        //MaterialPageRoute(builder: (context) => Questionnaire()),
       );
     } else {
       print('Adult report was not created');

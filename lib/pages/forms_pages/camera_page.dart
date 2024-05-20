@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/new_form_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/new_questionaire.dart';
 import 'package:whatsapp_camera/whatsapp_camera.dart';
 
 class CameraPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _CameraPageState extends State<CameraPage> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PreviewPage(photos: photos),
+          builder: (context) => Questionnaire(photos: photos),
         ),
       );
     }
