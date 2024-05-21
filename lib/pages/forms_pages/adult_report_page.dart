@@ -26,11 +26,12 @@ import 'components/biting_location_form.dart';
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
   final Function? loadData;
+  final List<File>? photos;
 
-  AdultReportPage({this.editReport, this.loadData});
+  AdultReportPage({this.editReport, this.loadData, this.photos});
 
   @override
-  _AdultReportPageState createState() => _AdultReportPageState();
+  _AdultReportPageState createState() => _AdultReportPageState(photos: photos);
 }
 
 class _AdultReportPageState extends State<AdultReportPage> {
@@ -44,6 +45,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   StreamController<double> percentStream =
       StreamController<double>.broadcast();
   double? index;
+  final List<File>? photos;
 
   List<Map> displayQuestions = [
     {
@@ -166,6 +168,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
   bool showCamera = false;
   String? otherReport;
   late Report toEditReport;
+
+  _AdultReportPageState({required this.photos});
 
   @override
   void initState() {
@@ -299,6 +303,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (widget.editReport != null) {
       widget.loadData!();
     }
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
