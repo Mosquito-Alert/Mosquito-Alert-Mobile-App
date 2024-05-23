@@ -26,9 +26,9 @@ import 'components/biting_location_form.dart';
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
   final Function? loadData;
-  final List<File>? photos;
+  final List<File> photos;
 
-  AdultReportPage({this.editReport, this.loadData, this.photos});
+  AdultReportPage({this.editReport, this.loadData, required this.photos});
 
   @override
   _AdultReportPageState createState() => _AdultReportPageState(photos: photos);
@@ -45,7 +45,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   StreamController<double> percentStream =
       StreamController<double>.broadcast();
   double? index;
-  final List<File>? photos;
+  final List<File> photos;
 
   List<Map> displayQuestions = [
     {
@@ -181,10 +181,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
-      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),
+      /*MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
+          setShowCamera, _chooseTypeImage, _skipReport),*/
       MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
-          widget.editReport != null),
+          widget.editReport != null, photos),
       BitingLocationForm(
           setValid, displayQuestions.elementAt(3)['question']['text']),
       QuestionsBreedingForm(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
@@ -11,15 +12,19 @@ class MosquitoPartsForm extends StatefulWidget {
   final Function setValid;
   final StreamController<bool> showParts;
   final bool isEditing;
+  final List<File> photos;
 
   MosquitoPartsForm(
-      this.displayQuestion, this.setValid, this.showParts, this.isEditing);
+      this.displayQuestion, this.setValid, this.showParts, this.isEditing, this.photos);
   @override
-  _MosquitoPartsFormState createState() => _MosquitoPartsFormState();
+  _MosquitoPartsFormState createState() => _MosquitoPartsFormState(photos: photos);
 }
 
 class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
   List<Question?>? questions = [];
+  List<File> photos;
+
+  _MosquitoPartsFormState({required this.photos});
 
   @override
   void initState() {
@@ -47,7 +52,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
-              AddPhotoButton(widget.isEditing, false),
+              AddPhotoButton(widget.isEditing, false, photos),
               Style.bottomOffset,
             ],
           ),

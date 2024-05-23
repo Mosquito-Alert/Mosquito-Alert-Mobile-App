@@ -14,21 +14,25 @@ import 'package:permission_handler/permission_handler.dart';
 class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
+  final List<File> photos;
 
-  AddPhotoButton(this.isEditing, this.photoRequired);
+  AddPhotoButton(this.isEditing, this.photoRequired, this.photos);
 
   @override
-  _AddPhotoButtonState createState() => _AddPhotoButtonState();
+  _AddPhotoButtonState createState() => _AddPhotoButtonState(photos: photos);
 }
 
 class _AddPhotoButtonState extends State<AddPhotoButton> {
-  List<String?> images = [];
+  //List<String?> images = [];
+  List<File> photos;
+
+  _AddPhotoButtonState({required this.photos});
 
   @override
   void initState() {
     _permissionsPath();
     super.initState();
-    _initImages();
+    //_initImages();
   }
 
   _permissionsPath() async {
@@ -38,7 +42,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }
   }
 
-  _initImages() async {
+  /*_initImages() async {
     if (Utils.imagePath != null && Utils.imagePath!.isNotEmpty) {
       Utils.imagePath!.forEach((element) async {
         if (element['id'] == Utils.report!.version_UUID) {
@@ -53,7 +57,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         setState(() {});
       });
     }
-  }
+  }*/
 
   Future<File> urlToFile(String imageUrl) async {
     // generate random number.
@@ -75,7 +79,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return images.isEmpty
+    return photos!.isEmpty
         ? GestureDetector(
             onTap: () {
               _chooseTypeImage();
@@ -112,9 +116,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10),
-                itemCount: min(3, images.length + 1),
+                itemCount: min(3, photos!.length + 1),
                 itemBuilder: (context, index) {
-                  return index == (images.length)
+                  return index == (photos!.length)
                       ? GestureDetector(
                           onTap: () {
                             _chooseTypeImage();
@@ -138,12 +142,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               width: double.infinity,
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Image.file(
-                                    File(images[index]!),
-                                    fit: BoxFit.cover,
-                                    height: 100,
-                                    width: 100,
-                                  )),
+                                  child: Image.file(photos![index]),
+                                  ),
                             ),
                             Container(
                               height: double.infinity,
@@ -163,7 +163,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                                 alignment: Alignment.topLeft,
                                 child: IconButton(
                                   onPressed: () {
-                                    _deleteImage(images[index], index);
+                                    //_deleteImage(photos[index], index);
                                   },
                                   icon: Icon(
                                     Icons.close,
@@ -247,7 +247,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
   }
 
-  _deleteImage(String? img, int index) {
+  /*_deleteImage(String? img, int index) {
     if (widget.photoRequired && images.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'photo_required_alert'), context);
@@ -256,6 +256,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       setState(() {
         images.removeAt(index);
       });
+    }
+  }*/
+
+  _deletePhoto(File? photo, int index) {
+    if (widget.photoRequired && photos!.length == 1) {
+      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'photo_required_alert'), context);
     }
   }
 
@@ -273,7 +280,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       });
 
       setState(() {
-        images = [...images, ...paths];
+        //images = [...images, ...paths];
       });
     }    
   }
@@ -291,7 +298,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       final file = File(image.path);
       Utils.saveImgPath(file);
       setState(() {
-        images.add(image.path);
+        //images.add(image.path);
       });
     }
   }

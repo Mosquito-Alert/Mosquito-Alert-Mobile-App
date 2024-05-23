@@ -279,7 +279,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            AdultReportPage()),
+                                                            AdultReportPage(photos: [],)),
                                                   );
                                                 } else {
                                                   setState(() {

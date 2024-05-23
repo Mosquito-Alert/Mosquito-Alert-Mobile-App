@@ -160,7 +160,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         Utils.addOtherReport('adult');
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AdultReportPage()),
+          MaterialPageRoute(builder: (context) => AdultReportPage(photos: [],)),
         );
         break;
       default:
