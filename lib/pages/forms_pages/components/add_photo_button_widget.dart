@@ -41,28 +41,27 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),      
-      child: Column(children: [
-        SizedBox(
-          height: 40,
-        ),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
-          itemCount: min(3, photos.length + 1),
-          itemBuilder: (context, index) {
-            return index == (photos.length)
-              ? squareToAddPhoto()
-              : squareWithPhoto(index);
-          }
-        ),
-      ],
-      )
-    );
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemCount: min(3, photos.length + 1),
+                itemBuilder: (context, index) {
+                  return index == (photos.length)
+                      ? squareToAddPhoto()
+                      : squareWithPhoto(index);
+                }),
+          ],
+        ));
   }
 
   Widget squareToAddPhoto() {
@@ -72,8 +71,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 1),
-          borderRadius: BorderRadius.circular(15)),
+            border: Border.all(color: Colors.black, width: 1),
+            borderRadius: BorderRadius.circular(15)),
         child: Icon(
           Icons.add,
           size: 30,
@@ -82,7 +81,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     );
   }
 
-  Widget squareWithPhoto(int index){
+  Widget squareWithPhoto(int index) {
     return Stack(
       alignment: Alignment.topLeft,
       children: <Widget>[
@@ -92,7 +91,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Image.file(photos[index]),
-            ),
+          ),
         ),
         Container(
           height: double.infinity,
@@ -207,7 +206,8 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     );
 
     if (newFiles != null && newFiles.files.isNotEmpty) {
-      var selectedFiles = newFiles.files.map((file) => File(file.path!)).toList();
+      var selectedFiles =
+          newFiles.files.map((file) => File(file.path!)).toList();
 
       selectedFiles.forEach((file) {
         Utils.saveImgPath(file);
