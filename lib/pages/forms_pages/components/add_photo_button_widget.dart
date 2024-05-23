@@ -112,7 +112,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
             alignment: Alignment.topLeft,
             child: IconButton(
               onPressed: () {
-                _deletePhoto(photos[index], index);
+                _deletePhoto(index);
               },
               icon: Icon(
                 Icons.close,
@@ -194,10 +194,16 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
   }
 
-  void _deletePhoto(File? photo, int index) {
+  void _deletePhoto(int index) {
     if (widget.photoRequired && photos.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'photo_required_alert'), context);
+    } else {
+      if (index < photos.length) {
+        setState(() {
+          photos.removeAt(index);
+        });
+      }
     }
   }
 
