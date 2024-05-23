@@ -35,7 +35,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     //_initImages();
   }
 
-  _permissionsPath() async {
+  void _permissionsPath() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
@@ -79,7 +79,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return photos!.isEmpty
+    return photos.isEmpty
         ? GestureDetector(
             onTap: () {
               _chooseTypeImage();
@@ -116,9 +116,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10),
-                itemCount: min(3, photos!.length + 1),
+                itemCount: min(3, photos.length + 1),
                 itemBuilder: (context, index) {
-                  return index == (photos!.length)
+                  return index == (photos.length)
                       ? GestureDetector(
                           onTap: () {
                             _chooseTypeImage();
@@ -163,7 +163,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                                 alignment: Alignment.topLeft,
                                 child: IconButton(
                                   onPressed: () {
-                                    //_deleteImage(photos[index], index);
+                                    _deletePhoto(photos[index], index);
                                   },
                                   icon: Icon(
                                     Icons.close,
@@ -259,30 +259,29 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }
   }*/
 
-  _deletePhoto(File? photo, int index) {
-    if (widget.photoRequired && photos!.length == 1) {
+  void _deletePhoto(File? photo, int index) {
+    if (widget.photoRequired && photos.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'photo_required_alert'), context);
     }
   }
 
-  getGalleryImages() async {
+  void getGalleryImages() async {
     var newFiles = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
-    var paths = <String?>[];
 
-    if (newFiles != null &&
-        newFiles.files.isNotEmpty) {
-      newFiles.files.forEach((image) {
-        Utils.saveImgPath(File(image.path!));
-        paths.add(image.path);
+    if (newFiles != null && newFiles.files.isNotEmpty) {
+      var selectedFiles = newFiles.files.map((file) => File(file.path!)).toList();
+
+      selectedFiles.forEach((file) {
+        Utils.saveImgPath(file);
       });
 
       setState(() {
-        //images = [...images, ...paths];
+        photos.addAll(selectedFiles);
       });
-    }    
+    }
   }
 
   Future getImage(source) async {

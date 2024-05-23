@@ -52,7 +52,7 @@ class _MosquitoPartsFormState extends State<MosquitoPartsForm> {
               SizedBox(
                 height: 40,
               ),
-              AddPhotoButton(widget.isEditing, false, photos),
+              AddPhotoButton(widget.isEditing, true, photos),
               Style.bottomOffset,
             ],
           ),
