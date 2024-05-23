@@ -232,10 +232,13 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }
 
     final _picker = ImagePicker();
-    var image = await _picker.getImage(
+    var image = await _picker.pickImage(
         source: source, maxHeight: 1024, imageQuality: 60);
     if (image != null) {
       final file = File(image.path);
+      setState(() {
+        photos.add(file);
+      });
       Utils.saveImgPath(file);
     }
   }
