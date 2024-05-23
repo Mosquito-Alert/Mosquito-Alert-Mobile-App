@@ -56,9 +56,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
         {'id': 133, 'text': 'question_13_answer_133'},
       ]
     },
-    /*{  // TODO: question_15 duplicated of question_13 ?
-      'question': {'id': 15, 'text': 'question_15'},
-    },*/
     {
       'question': {'id': 8, 'text': 'question_8'},
       'answers': [
@@ -359,7 +356,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
           MyLocalizations.of(context, 'continue_txt'), () {
             var currentPage = _pagesController!.page;
 
-            if (currentPage == 3.0 && addBiting) {  // TODO: Remove?
+            if (currentPage == 3.0 && addBiting) {
               Utils.addOtherReport('bite');
               Navigator.push(
                 context,

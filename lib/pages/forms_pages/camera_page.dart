@@ -40,14 +40,6 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Take a picture'),
-        backgroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Text('Opening camera...'),
-      ),
-    );
+    return Scaffold();
   }
 }

@@ -4,11 +4,9 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AddPhotoButton extends StatefulWidget {
@@ -23,7 +21,6 @@ class AddPhotoButton extends StatefulWidget {
 }
 
 class _AddPhotoButtonState extends State<AddPhotoButton> {
-  //List<String?> images = [];
   List<File> photos;
 
   _AddPhotoButtonState({required this.photos});
@@ -32,7 +29,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   void initState() {
     _permissionsPath();
     super.initState();
-    //_initImages();
   }
 
   void _permissionsPath() async {
@@ -40,41 +36,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     if (!status.isGranted) {
       await Permission.storage.request();
     }
-  }
-
-  /*_initImages() async {
-    if (Utils.imagePath != null && Utils.imagePath!.isNotEmpty) {
-      Utils.imagePath!.forEach((element) async {
-        if (element['id'] == Utils.report!.version_UUID) {
-          if (element['image'].contains('http')) {
-            var file = await urlToFile(element['image']);
-            images.add(file.path);
-            element['image'] = file.path;
-          } else {
-            images.add(element['image']);
-          }
-        }
-        setState(() {});
-      });
-    }
-  }*/
-
-  Future<File> urlToFile(String imageUrl) async {
-    // generate random number.
-    var rng = Random();
-    // get temporary directory of device.
-    var tempDir = await getTemporaryDirectory();
-    // get temporary path from temporary directory.
-    var tempPath = tempDir.path;
-    // create a new file in temporary path with random file name.
-    var file = File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
-    // call http.get method and pass imageUrl into it to get response.
-    var response = await http.get(Uri.parse(imageUrl));
-    // write bodyBytes received in response to file.
-    await file.writeAsBytes(response.bodyBytes);
-    // now return the file which is created with random name in
-    // temporary directory and image bytes from response is written to // that file.
-    return file;
   }
 
   @override
@@ -164,7 +125,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     );
   }
 
-  _chooseTypeImage() {
+  void _chooseTypeImage() {
     var listForiOS = <Widget>[
       CupertinoActionSheetAction(
         onPressed: () {
@@ -233,18 +194,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
   }
 
-  /*_deleteImage(String? img, int index) {
-    if (widget.photoRequired && images.length == 1) {
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'photo_required_alert'), context);
-    } else {
-      Utils.deleteImage(img);
-      setState(() {
-        images.removeAt(index);
-      });
-    }
-  }*/
-
   void _deletePhoto(File? photo, int index) {
     if (widget.photoRequired && photos.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
@@ -282,9 +231,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     if (image != null) {
       final file = File(image.path);
       Utils.saveImgPath(file);
-      setState(() {
-        //images.add(image.path);
-      });
     }
   }
 }
