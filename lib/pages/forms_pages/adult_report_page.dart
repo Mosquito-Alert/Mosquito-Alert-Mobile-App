@@ -84,7 +84,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _initialformsRepot = [
       AddPhotoButton(true, true, photos),
       BitingLocationForm(
-          setValid, displayQuestions.elementAt(1)['question']['text']),
+          setValid, displayQuestions.elementAt(0)['question']['text']),
       QuestionsBreedingForm(
           displayQuestions.elementAt(0), setValid, false, null, ''),
       CouldSeeForm(
