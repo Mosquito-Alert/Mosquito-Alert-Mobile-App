@@ -22,6 +22,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'components/biting_location_form.dart';
 
+
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
   final Function? loadData;
@@ -48,102 +49,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   List<Map> displayQuestions = [
     {
-      'question': {'id': 6, 'text': 'question_6'},
-      'answers': [
-        {
-          'id': 61,
-          'img': 'assets/img/ic_invasive_aedes.png',
-          'text': 'question_6_answer_61'
-        },
-        {
-          'id': 62,
-          'img': 'assets/img/ic_common_mosquito.png',
-          'text': 'question_6_answer_62'
-        },
-        {
-          'id': 63,
-          'img': 'assets/img/ic_other_mosquito.png',
-          'text': 'question_6_answer_63'
-        },
-        {
-          'id': 64,
-          'img': 'assets/img/ic_dont_know.png',
-          'text': 'question_6_answer_64'
-        }
-      ]
-    },
-    {
-      'question': {'id': 7, 'text': 'question_7'},
-      'answers': [
-        [
-          {
-            'id': 711,
-            'img': 'assets/img/torax_711.png',
-            'text': 'question_7_answer_711'
-          },
-          {
-            'id': 712,
-            'img': 'assets/img/torax_712.png',
-            'text': 'question_7_answer_712'
-          },
-          {
-            'id': 713,
-            'img': 'assets/img/torax_713.png',
-            'text': 'question_7_answer_713'
-          },
-          {
-            'id': 714,
-            'img': 'assets/img/torax_714.png',
-            'text': 'question_7_answer_714'
-          },
-        ],
-        [
-          {
-            'id': 721,
-            'img': 'assets/img/abdomen_721.png',
-            'text': 'question_7_answer_721'
-          },
-          {
-            'id': 722,
-            'img': 'assets/img/abdomen_722.png',
-            'text': 'question_7_answer_722'
-          },
-          {
-            'id': 723,
-            'img': 'assets/img/abdomen_723.png',
-            'text': 'question_7_answer_723'
-          },
-          {
-            'id': 724,
-            'img': 'assets/img/abdomen_724.png',
-            'text': 'question_7_answer_724'
-          },
-        ],
-        [
-          {
-            'id': 731,
-            'img': 'assets/img/leg_731.png',
-            'text': 'question_7_answer_731'
-          },
-          {
-            'id': 732,
-            'img': 'assets/img/leg_732.png',
-            'text': 'question_7_answer_732'
-          },
-          {
-            'id': 733,
-            'img': 'assets/img/leg_733.png',
-            'text': 'question_7_answer_733'
-          },
-          {
-            'id': 734,
-            'img': 'assets/img/leg_734.png',
-            'text': 'question_7_answer_734'
-          }
-        ],
-      ]
-    },
-    {
       'question': {'id': 13, 'text': 'question_13'},
       'answers': [
         {'id': 131, 'text': 'question_13_answer_131'},
@@ -151,9 +56,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
         {'id': 133, 'text': 'question_13_answer_133'},
       ]
     },
-    {
+    /*{  // TODO: question_15 duplicated of question_13 ?
       'question': {'id': 15, 'text': 'question_15'},
-    },
+    },*/
     {
       'question': {'id': 8, 'text': 'question_8'},
       'answers': [
@@ -182,11 +87,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _initialformsRepot = [
       AddPhotoButton(true, true, photos),
       BitingLocationForm(
-          setValid, displayQuestions.elementAt(3)['question']['text']),
+          setValid, displayQuestions.elementAt(1)['question']['text']),
       QuestionsBreedingForm(
-          displayQuestions.elementAt(2), setValid, false, null, ''),
+          displayQuestions.elementAt(0), setValid, false, null, ''),
       CouldSeeForm(
-          addBitingReport, displayQuestions.elementAt(4), setValid, goNextPage),
+          addBitingReport, displayQuestions.elementAt(1), setValid, goNextPage),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
@@ -194,18 +99,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     _skipRepotForms = [
       OtherMosquitoInfo(),
-      AddPhotoButton(true, true, photos)  // TODO: What is this?
     ];
-
-    if (widget.editReport != null ||
-        Utils.reportsList!.isNotEmpty && Utils.reportsList!.length == 1) {
-      _formsRepot!.removeAt(4);
-    }
-  }
-
-  void setSkip3(skip) {
-    print(skip);
-    skipParts.add(skip);
   }
 
   void setShowCamera(data) {
@@ -332,9 +226,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     });
                     _onWillPop();
                   } else {
-                    if (currentPage == 2.0 &&
-                        !Utils.report!.responses!
-                            .any((element) => element!.answer_id == 61)) {
+                    if (currentPage == 2.0 && !Utils.report!.responses!.any((element) => element!.answer_id == 61)) {
                       setState(() {
                         index = 0;
                       });
@@ -382,99 +274,60 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   physics: NeverScrollableScrollPhysics(),
                   children: _formsRepot!,
                 ),
-                index! < 1.0 || (index == 4.0 && _formsRepot!.length == 6)
-                    ? Container()
-                    : index != _formsRepot!.length.toDouble() - 1
-                        ? SafeArea(
-                            child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: StreamBuilder<bool>(
-                                stream: validStream.stream,
-                                initialData: false,
-                                builder: (BuildContext ctxt,
-                                    AsyncSnapshot<bool> snapshot) {
-                                  return snapshot.data!
-                                      ? Container(
-                                          width: double.infinity,
-                                          height: 54,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
-                                          child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'), () {
-                                            var currentPage =
-                                                _pagesController!.page;
-
-                                            if (currentPage == 3.0 &&
-                                                addBiting) {
-                                              Utils.addOtherReport('bite');
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BitingReportPage()),
-                                              );
-                                            } else {
-                                              if (showCamera) {
-                                                _chooseTypeImage();
-                                              } else {
-                                                setState(() {
-                                                  index = currentPage! + 1;
-                                                });
-                                                _pagesController!
-                                                    .nextPage(
-                                                        duration: Duration(
-                                                            microseconds: 300),
-                                                        curve: Curves.ease)
-                                                    .then((value) => setValid(
-                                                        widget.editReport !=
-                                                            null));
-                                              }
-                                            }
-                                          }),
-                                        )
-                                      : Container(
-                                          width: double.infinity,
-                                          height: 54,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
-                                          child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'),
-                                              null),
-                                        );
-                                }),
-                          ))
-                        : SafeArea(
-                            child: _formsRepot!.length == 2
-                                ? Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                      MyLocalizations.of(
-                                          context, 'understand_txt'),
-                                      () {
-                                        Navigator.pop(context);
-                                        Utils.resetReport();
-                                        Utils.imagePath = null;
-                                      },
-                                    ),
-                                  )
-                                : Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                      MyLocalizations.of(context, 'send_data'),
-                                      () {
-                                        _createReport();
-                                      },
-                                    ),
-                                  ),
+                index! < 1.0
+                  ? continueButton()
+                  : index != _formsRepot!.length.toDouble() - 1
+                    ? SafeArea(
+                      child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: StreamBuilder<bool>(
+                        stream: validStream.stream,
+                        initialData: false,
+                        builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
+                          return snapshot.data!
+                            ? continueButton()
+                            : Container(
+                                width: double.infinity,
+                                height: 54,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 12),
+                                child: Style.button(
+                                    MyLocalizations.of(
+                                        context, 'continue_txt'),
+                                    null),
+                              );
+                        }),
+                    ))
+                    : SafeArea(
+                      child: _formsRepot!.length == 2
+                      ? Container(
+                          width: double.infinity,
+                          height: 54,
+                          margin: EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 12),
+                          child: Style.button(
+                            MyLocalizations.of(
+                                context, 'understand_txt'),
+                            () {
+                              Navigator.pop(context);
+                              Utils.resetReport();
+                              Utils.imagePath = null;
+                            },
                           ),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: 54,
+                          margin: EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 12),
+                          child: Style.button(
+                            MyLocalizations.of(context, 'send_data'),
+                            () {
+                              _createReport();
+                            },
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -492,6 +345,45 @@ class _AdultReportPageState extends State<AdultReportPage> {
           )
         ],
       ),
+    );
+  }
+
+  Widget continueButton(){
+    return Container(
+      width: double.infinity,
+      height: 54,
+      margin: EdgeInsets.symmetric(
+          vertical: 6, horizontal: 12),
+      child:
+        Style.button(
+          MyLocalizations.of(context, 'continue_txt'), () {
+            var currentPage = _pagesController!.page;
+
+            if (currentPage == 3.0 && addBiting) {  // TODO: Remove?
+              Utils.addOtherReport('bite');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        BitingReportPage()),
+              );
+            } else {
+              if (showCamera) {
+                _chooseTypeImage();
+              } else {
+                setState(() {
+                  index = currentPage! + 1;
+                });
+
+                _pagesController!
+                  .nextPage(
+                    duration: Duration(microseconds: 300),
+                    curve: Curves.ease)
+                  .then((value) => setValid(widget.editReport != null));
+              }
+            }
+          }
+        )
     );
   }
 
@@ -635,7 +527,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     }
   }
 
-  _showAlertOk() {
+  void _showAlertOk() {
     loadingStream.add(false);
 
     Utils.showAlert(
