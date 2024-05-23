@@ -10,9 +10,8 @@ import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/could_see_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_parts_form.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/mosquito_type_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/other_mosquito_info.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
@@ -181,10 +180,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
-      /*MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),*/
-      MosquitoPartsForm(displayQuestions.elementAt(1), setValid, skipParts,
-          widget.editReport != null, photos),
+      AddPhotoButton(true, true, photos),
       BitingLocationForm(
           setValid, displayQuestions.elementAt(3)['question']['text']),
       QuestionsBreedingForm(
@@ -197,9 +193,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _formsRepot = _initialformsRepot;
 
     _skipRepotForms = [
-      MosquitoTypeForm(setSkip3, displayQuestions.elementAt(0), setValid,
-          setShowCamera, _chooseTypeImage, _skipReport),
       OtherMosquitoInfo(),
+      AddPhotoButton(true, true, photos)  // TODO: What is this?
     ];
 
     if (widget.editReport != null ||

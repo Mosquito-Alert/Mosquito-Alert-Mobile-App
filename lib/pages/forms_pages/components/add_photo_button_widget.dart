@@ -79,103 +79,89 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return photos.isEmpty
-        ? GestureDetector(
-            onTap: () {
-              _chooseTypeImage();
-            },
-            child: Card(
-              margin: EdgeInsets.only(bottom: 15),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: GestureDetector(
-                onTap: () {
-                  _chooseTypeImage();
-                },
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Icon(
-                    Icons.add,
-                    size: 30,
-                  ),
-                ),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),      
+      child: Column(children: [
+        SizedBox(
+          height: 40,
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10),
+          itemCount: min(3, photos.length + 1),
+          itemBuilder: (context, index) {
+            return index == (photos.length)
+              ? squareToAddPhoto()
+              : squareWithPhoto(index);
+          }
+        ),
+      ],
+      )
+    );
+  }
+
+  Widget squareToAddPhoto() {
+    return GestureDetector(
+      onTap: () {
+        _chooseTypeImage();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(15)),
+        child: Icon(
+          Icons.add,
+          size: 30,
+        ),
+      ),
+    );
+  }
+
+  Widget squareWithPhoto(int index){
+    return Stack(
+      alignment: Alignment.topLeft,
+      children: <Widget>[
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Image.file(photos[index]),
+            ),
+        ),
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+              colors: [
+                Colors.black54,
+                Colors.transparent,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.center,
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              onPressed: () {
+                _deletePhoto(photos[index], index);
+              },
+              icon: Icon(
+                Icons.close,
+                color: Colors.white,
               ),
             ),
-          )
-        : Container(
-            margin: EdgeInsets.only(bottom: 15),
-            child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemCount: min(3, photos.length + 1),
-                itemBuilder: (context, index) {
-                  return index == (photos.length)
-                      ? GestureDetector(
-                          onTap: () {
-                            _chooseTypeImage();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Icon(
-                              Icons.add,
-                              size: 30,
-                            ),
-                          ),
-                        )
-                      : Stack(
-                          alignment: Alignment.topLeft,
-                          children: <Widget>[
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.file(photos![index]),
-                                  ),
-                            ),
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.black54,
-                                    Colors.transparent,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.center,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: IconButton(
-                                  onPressed: () {
-                                    _deletePhoto(photos[index], index);
-                                  },
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                }),
-          );
+          ),
+        ),
+      ],
+    );
   }
 
   _chooseTypeImage() {
