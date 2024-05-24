@@ -72,13 +72,17 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
   _AdultReportPageState({required this.photos});
 
+  void _initializeReport() async {
+    if (widget.editReport != null) {
+      toEditReport = await Report.fromJsonAsync(widget.editReport!.toJson());
+      Utils.setEditReport(toEditReport);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    if (widget.editReport != null) {
-      toEditReport = Report.fromJson(widget.editReport!.toJson());
-      Utils.setEditReport(toEditReport);
-    }
+    _initializeReport();
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
