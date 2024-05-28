@@ -20,9 +20,17 @@ class MyLocalizations {
 
   static Future<MyLocalizations> loadTranslations(Locale locale) async {
     var appTranslations = MyLocalizations(locale);
-    var jsonContent = await rootBundle.loadString(
-      'assets/language/${locale.languageCode}_${locale.countryCode}.json'
-    );
+    var jsonContent = '';
+    try {
+      jsonContent = await rootBundle.loadString(
+        'assets/language/${locale.languageCode}_${locale.countryCode}.json'
+      );
+    } catch (_) {
+      jsonContent = await rootBundle.loadString(
+        'assets/language/${locale.languageCode}.json'
+      );
+    }
+
     _localisedValues = json.decode(jsonContent);
     return appTranslations;
   }
