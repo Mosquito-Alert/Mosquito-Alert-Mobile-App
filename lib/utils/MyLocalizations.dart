@@ -20,7 +20,7 @@ class MyLocalizations {
 
   static Future<MyLocalizations> loadTranslations(Locale locale) async {
     var appTranslations = MyLocalizations(locale);
-    late var jsonContent;
+    String? jsonContent;
     try {
       jsonContent = await rootBundle.loadString(
         'assets/language/${locale.languageCode}_${locale.countryCode}.json'
