@@ -14,7 +14,7 @@ class MyLocalizations {
   }
 
   static Future<void> _loadEnglishTranslations() async {
-    var jsonContent = await rootBundle.loadString('assets/language/en.json');
+    var jsonContent = await rootBundle.loadString('assets/language/en_US.json');
     _englishValues = json.decode(jsonContent);
   }
 
