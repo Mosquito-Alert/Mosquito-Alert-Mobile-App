@@ -1,0 +1,28 @@
+/*
+ * Loco ios export: iOS InfoPlist.strings
+ * Project: Mosquito Alert
+ * Locale: gl_ES, Galician (Spain)
+ * Tagged: info-plist
+ * Exported by: Enric Pou
+ * Exported at: Thu, 02 May 2024 16:32:20 +0200
+ */
+
+/* loco:66339ba61600bb5f87001572
+ * A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Capturar e compartir fotos para proporcionar probas visuais nos teus informes.";
+
+/* loco:66339c0f9dc6f586f60faac2
+ * A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Permitir o acceso á localización para o xeoseguimento anónimo e de baixa resolución en segundo plano para mellorar o valor científico das túas observacións.";
+
+/* loco:66339c792a448f22630c2d62
+ * A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Usar o GPS para marcar a localización precisa nos teus informes.";
+
+/* loco:66339ccb3972ba9d6a0ee1f4
+ * A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Gardar fotos feitas coa aplicación na galería do teu dispositivo.";
+
+/* loco:66339d1180b2837b700d7446
+ * A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Acceder á túa galería de fotos para anexar imaxes existentes aos teus informes.";
