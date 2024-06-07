@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,6 +30,23 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   void initState() {
     _permissionsPath();
     super.initState();
+    // addAllPreviousPhotosToUtil(photos); // TODO: This makes it stop working (UI not appearing). Review
+  }
+
+  void addAllPreviousPhotosToUtil(List<File> photos){
+    // TODO: Insert photos into Utils.report because this is what is sent to the API
+    for (var i = 0; i < photos.length; i++){
+      addPhotoToUtil(photos[i]);
+    }
+  }
+
+  void addPhotoToUtil(File photo){
+    var p = Photo(id: null, photo: photo.path, uuid: null);
+    Utils.report!.photos!.add(p);
+  }
+
+  void removePhotoFromUtil(File photo){
+    Utils.report!.photos!.removeWhere((p) => p.photo == photo.path);
   }
 
   void _permissionsPath() async {
