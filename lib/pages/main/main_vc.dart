@@ -103,37 +103,11 @@ class _MainVCState extends State<MainVC> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               centerTitle: true,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.settings,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SettingsPage()),
-                  );
-                },
-              ),
               title: Image.asset(
                 'assets/img/ic_logo.png',
                 height: 40,
               ),
               actions: <Widget>[
-                IconButton(
-                  icon: SvgPicture.asset(
-                    'assets/img/sendmodule/ic_adn.svg',
-                    height: 26,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CampaignTutorialPage()),
-                    );
-                  },
-                ),
                 badges.Badge(
                   position: badges.BadgePosition.topEnd(top: 2, end: 2),
                   showBadge: unreadNotifications > 0,
@@ -151,6 +125,95 @@ class _MainVCState extends State<MainVC> {
                 )
               ],
             ),
+            drawer: Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/img/points_box.png'),
+                            ),
+                          ),
+                          child: StreamBuilder<int?>(
+                            stream: Utils
+                                .userScoresController
+                                .stream,
+                            initialData:
+                                UserManager.userScore,
+                            builder: (context, snapshot) {
+                              return Center(
+                                  child: AutoSizeText(
+                                snapshot.data != null &&
+                                        snapshot.hasData
+                                    ? snapshot.data
+                                        .toString()
+                                    : '',
+                                maxLines: 1,
+                                maxFontSize: 26,
+                                minFontSize: 16,
+                                style: TextStyle(
+                                    color:
+                                        Color(0xFF4B3D04),
+                                    fontWeight:
+                                        FontWeight.w500,
+                                    fontSize: 24),
+                              ));
+                            }),
+                        ),
+                      ],
+                    )
+                  ),
+                  ListTile(
+                    title: const Text('Home'),
+                    leading: Icon(Icons.home),
+                    onTap: () {
+
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('My reports'),
+                    leading: Icon(Icons.file_copy),
+                    onTap: () {
+
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Public map'),
+                    leading: Icon(Icons.map),
+                    onTap: () {
+
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Guide'),
+                    leading: Icon(Icons.science),
+                    onTap: () {
+
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Settings'),
+                    leading: Icon(Icons.settings),
+                    onTap: () {
+
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('About'),
+                    leading: Icon(Icons.info),
+                    onTap: () {
+
+                    },
+                  )
+                ],
+              )),
             body: LayoutBuilder(
               builder:
                   (BuildContext context, BoxConstraints viewportConstraints) {
