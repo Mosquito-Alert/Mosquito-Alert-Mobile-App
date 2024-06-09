@@ -30,7 +30,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   void initState() {
     _permissionsPath();
     super.initState();
-    // addAllPreviousPhotosToUtil(photos); // TODO: This makes it stop working (UI not appearing). Review
+    addAllPreviousPhotosToUtil(photos);
   }
 
   void addAllPreviousPhotosToUtil(List<File> photos){
@@ -42,6 +42,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   void addPhotoToUtil(File photo){
     var p = Photo(id: null, photo: photo.path, uuid: null);
+    if (Utils.report!.photos == null){
+      Utils.report!.photos ??= [];
+    }    
     Utils.report!.photos!.add(p);
   }
 
