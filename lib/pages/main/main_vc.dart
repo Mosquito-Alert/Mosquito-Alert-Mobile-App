@@ -189,80 +189,12 @@ class _MainVCState extends State<MainVC> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                StreamBuilder<String?>(
-                                                    stream: nameStream.stream,
-                                                    initialData: userName,
-                                                    builder: (context,
-                                                        AsyncSnapshot<String?>
-                                                            snapshot) {
-                                                      if (snapshot.hasData) {
-                                                        print(snapshot.data);
-                                                        return Style.title(
-                                                            "${MyLocalizations.of(context, "welcome_text")}, ${snapshot.data}.",
-                                                            fontSize: 20);
-                                                      } else {
-                                                        return Style.title(
-                                                            "${MyLocalizations.of(context, "welcome_text")}",
-                                                            fontSize: 20);
-                                                      }
-                                                    }),
-                                                SizedBox(
-                                                  height: 4,
-                                                ),
                                                 Style.body(
                                                     MyLocalizations.of(context,
                                                         'what_to_do_txt'),
                                                     fontSize: 14),
                                               ]),
-                                        ),
-                                        SizedBox(
-                                          width: 12,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => InfoPage(
-                                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
-                                            );
-                                          },
-                                          child: Container(
-                                            height: 60,
-                                            width: 60,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/img/points_box.png'),
-                                              ),
-                                            ),
-                                            child: StreamBuilder<int?>(
-                                                stream: Utils
-                                                    .userScoresController
-                                                    .stream,
-                                                initialData:
-                                                    UserManager.userScore,
-                                                builder: (context, snapshot) {
-                                                  return Center(
-                                                      child: AutoSizeText(
-                                                    snapshot.data != null &&
-                                                            snapshot.hasData
-                                                        ? snapshot.data
-                                                            .toString()
-                                                        : '',
-                                                    maxLines: 1,
-                                                    maxFontSize: 26,
-                                                    minFontSize: 16,
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xFF4B3D04),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 24),
-                                                  ));
-                                                }),
-                                          ),
-                                        ),
+                                        )                                      
                                       ]),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -272,33 +204,55 @@ class _MainVCState extends State<MainVC> {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      ListTile(
-                                        leading: Image.asset('assets/img/ic_bite_report.png'),
-                                        title: Text(MyLocalizations.of(context, 'report_biting_txt')),
-                                        onTap: () {
-                                          loadingStream.add(true);
-                                          _createBiteReport();
-                                        },
+                                      Container(
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse('40D28A73', radix: 16)),
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: ListTile(
+                                          leading: Image.asset('assets/img/ic_bite_report.png'),
+                                          title: Text(MyLocalizations.of(context, 'report_biting_txt')),
+                                          onTap: () {
+                                            loadingStream.add(true);
+                                            _createBiteReport();
+                                          },
+                                        ),
                                       ),
-                                      ListTile(
-                                        leading: Image.asset('assets/img/ic_mosquito_report.png'),
-                                        title: Text(MyLocalizations.of(context, 'report_adults_txt')),
-                                        onTap: () {
-                                          loadingStream.add(true);
-                                          _createAdultReport();
-                                        },
+                                      SizedBox(height: 15),
+                                      Container(
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse('40DFD458', radix: 16)),
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        child: ListTile(
+                                          leading: Image.asset('assets/img/ic_mosquito_report.png'),
+                                          title: Text(MyLocalizations.of(context, 'report_adults_txt')),
+                                          onTap: () {
+                                            loadingStream.add(true);
+                                            _createAdultReport();
+                                          },
+                                        ),
                                       ),
-                                      ListTile(
-                                        leading: Image.asset('assets/img/ic_breeding_report.png'),
-                                        title: Text(MyLocalizations.of(context, 'report_nest_txt')),
-                                        onTap: () {
-                                          loadingStream.add(true);
-                                          _createSiteReport();
-                                        },
+                                      SizedBox(height: 15),
+                                      Container(
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse('407D9393', radix: 16)),
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        child: ListTile(
+                                          leading: Image.asset('assets/img/ic_breeding_report.png'),
+                                          title: Text(MyLocalizations.of(context, 'report_nest_txt')),
+                                          onTap: () {
+                                            loadingStream.add(true);
+                                            _createSiteReport();
+                                          },
+                                        ),
                                       ),
                                     ],
-                                  ),
-
+                                  )
                                 ],
                               ),
                             ),
