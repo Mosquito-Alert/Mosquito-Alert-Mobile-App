@@ -269,114 +269,36 @@ class _MainVCState extends State<MainVC> {
                                         vertical: 6.0),
                                     child: Divider(),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      GestureDetector(
+                                      ListTile(
+                                        leading: Image.asset('assets/img/ic_bite_report.png'),
+                                        title: Text(MyLocalizations.of(context, 'report_biting_txt')),
                                         onTap: () {
                                           loadingStream.add(true);
                                           _createBiteReport();
                                         },
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.45,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: CustomCard(
-                                            img:
-                                                'assets/img/ic_bite_report.png',
-                                            title: MyLocalizations.of(
-                                                context, 'report_biting_txt'),
-                                          ),
-                                        ),
                                       ),
-                                      GestureDetector(
+                                      ListTile(
+                                        leading: Image.asset('assets/img/ic_mosquito_report.png'),
+                                        title: Text(MyLocalizations.of(context, 'report_adults_txt')),
                                         onTap: () {
                                           loadingStream.add(true);
                                           _createAdultReport();
                                         },
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.45,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: CustomCard(
-                                            img:
-                                                'assets/img/ic_mosquito_report.png',
-                                            title: MyLocalizations.of(
-                                                context, 'report_adults_txt'),
-                                          ),
-                                        ),
+                                      ),
+                                      ListTile(
+                                        leading: Image.asset('assets/img/ic_breeding_report.png'),
+                                        title: Text(MyLocalizations.of(context, 'report_nest_txt')),
+                                        onTap: () {
+                                          loadingStream.add(true);
+                                          _createSiteReport();
+                                        },
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.45,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              loadingStream.add(true);
-                                              _createSiteReport();
-                                            },
-                                            child: CustomCard(
-                                              img:
-                                                  'assets/img/ic_breeding_report.png',
-                                              title: MyLocalizations.of(
-                                                  context, 'report_nest_txt'),
-                                            ),
-                                          )),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.45,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MyReportsPage()),
-                                              );
-                                            },
-                                            child: CustomCard(
-                                              img:
-                                                  'assets/img/ic_my_reports.png',
-                                              title: MyLocalizations.of(
-                                                  context, 'your_reports_txt'),
-                                            ),
-                                          )),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+
                                 ],
                               ),
                             ),
