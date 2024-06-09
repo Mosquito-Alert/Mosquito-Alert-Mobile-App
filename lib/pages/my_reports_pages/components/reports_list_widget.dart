@@ -36,7 +36,8 @@ class _MyReportsListState extends State<ReportsList> {
   String getTitle(BuildContext context, Report report){
     switch(report.type) {
       case 'adult':
-        var response_question_6 = report.responses?.firstWhere(
+        // TODO: Question 6 is removed in this pull request
+        /*var response_question_6 = report.responses?.firstWhere(
           (element) => element!.question == 'question_6');
 
         if (response_question_6 == null){
@@ -51,7 +52,8 @@ class _MyReportsListState extends State<ReportsList> {
         if (translated_answer == ''){
           response_question_6.answer;
         }
-        return translated_answer;
+        return translated_answer;*/
+        return MyLocalizations.of(context, 'single_mosquito');
       case 'bite':
         var response_question_1 = report.responses?.firstWhere(
           (element) => element!.question == 'question_1');

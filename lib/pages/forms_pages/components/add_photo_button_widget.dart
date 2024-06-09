@@ -42,10 +42,11 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   void addPhotoToUtil(File photo){
     var p = Photo(id: null, photo: photo.path, uuid: null);
-    if (Utils.report!.photos == null){
-      Utils.report!.photos ??= [];
-    }    
+    Utils.report!.photos ??= [];
     Utils.report!.photos!.add(p);
+
+    //Utils.imagePath ??= [];
+    //Utils.imagePath?.add(p.photo);
   }
 
   void removePhotoFromUtil(File photo){
