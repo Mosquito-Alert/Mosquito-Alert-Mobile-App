@@ -186,16 +186,16 @@ class _MainVCState extends State<MainVC> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                        child: Style.bodySmall(snapshot.data,
-                                            color: Colors.black.withOpacity(0.7),
-                                            fontSize: 9)),
+                                      child: Style.bodySmall(snapshot.data,
+                                        color: Colors.black.withOpacity(0.7),
+                                        fontSize: 9)),
                                     GestureDetector(
                                       child: Icon(
                                         Icons.copy_rounded,
                                         size: 18,
                                       ),
                                       onTap: () {
-                                        final String? data = snapshot.data;
+                                        final data = snapshot.data;
                                         if (data != null) {
                                           Clipboard.setData(ClipboardData(text: data));
                                           ScaffoldMessenger.of(context).showSnackBar(
@@ -207,8 +207,7 @@ class _MainVCState extends State<MainVC> {
                                           // Display an error message for troubleshooting
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(
-                                                  'Error: Unable to copy to clipboard. Data is null.'),
+                                              content: Text('Error: Unable to copy to clipboard. Data is null.'),
                                             ),
                                           );
                                         }
@@ -219,41 +218,49 @@ class _MainVCState extends State<MainVC> {
                               );
                             }
                           },
-                        ),
-                    
+                        ),                    
                       ],
                     )
                   ),
-                  ListTile(
+                  // TODO: Does it make sense to have HomePage here when it's always the base widget?
+                  /*ListTile(
                     title: const Text('Home'),
                     leading: Icon(Icons.home),
                     onTap: () {
 
                     },
-                  ),
+                  ),*/
                   ListTile(
                     title: const Text('My reports'),
                     leading: Icon(Icons.file_copy),
                     onTap: () {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyReportsPage()),
+                      );
                     },
                   ),
                   ListTile(
                     title: const Text('Public map'),
                     leading: Icon(Icons.map),
                     onTap: () {
-
+                      // TODO: Public map
                     },
                   ),
                   ListTile(
                     title: const Text('Guide'),
                     leading: Icon(Icons.science),
                     onTap: () {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CampaignTutorialPage()),
+                      );
                     },
                   ),
                   ListTile(
-                    title: const Text('Settings'),
+                    title: Text(MyLocalizations.of(context, 'settings_title')),
                     leading: Icon(Icons.settings),
                     onTap: () {
                       Navigator.push(
@@ -267,7 +274,7 @@ class _MainVCState extends State<MainVC> {
                     title: const Text('About'),
                     leading: Icon(Icons.info),
                     onTap: () {
-
+                      // TODO: About page
                     },
                   )
                 ],
