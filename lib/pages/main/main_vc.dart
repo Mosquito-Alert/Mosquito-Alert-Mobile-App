@@ -6,7 +6,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
@@ -172,53 +171,22 @@ class _MainVCState extends State<MainVC> {
 
                         SizedBox(width: 12),
 
-                        // User UUID
-                        FutureBuilder(
-                          future: UserManager.getUUID(),
-                          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              print(snapshot.data);
-                              return Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Style.bodySmall(snapshot.data,
-                                        color: Colors.black.withOpacity(0.7),
-                                        fontSize: 9)),
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.copy_rounded,
-                                        size: 18,
-                                      ),
-                                      onTap: () {
-                                        final data = snapshot.data;
-                                        if (data != null) {
-                                          Clipboard.setData(ClipboardData(text: data));
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text('Copied to Clipboard'),
-                                            ),
-                                          );
-                                        } else {
-                                          // Display an error message for troubleshooting
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text('Error: Unable to copy to clipboard. Data is null.'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    )
-                                  ],
+                        Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 50.0, right: 135.0, bottom: 10.0),
+                              child: 
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  'Hello,',
+                                  style: TextStyle(fontSize: 22),
                                 ),
-                              );
-                            }
-                          },
-                        ),                    
+                              ),
+                            ),
+                            _uuidWithClipboard(),
+                          ],
+                        )
                       ],
                     )
                   ),
@@ -531,6 +499,55 @@ class _MainVCState extends State<MainVC> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _uuidWithClipboard(){
+    return FutureBuilder(
+      future: UserManager.getUUID(),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          print(snapshot.data);
+          return Row(
+            children: [
+              Text(snapshot.data ?? '',
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.7),
+                  fontSize: 9
+                )
+              ),
+              GestureDetector(
+                child: Icon(
+                  Icons.copy_rounded,
+                  size: 18,
+                ),
+                onTap: () {
+                  final data = snapshot.data;
+                  if (data != null) {
+                    Clipboard.setData(ClipboardData(text: data));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Copied to Clipboard'),
+                      ),
+                    );
+                  } else {
+                    // Display an error message for troubleshooting
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error: Unable to copy to clipboard. Data is null.'),
+                      ),
+                    );
+                  }
+                },
+              )
+            ],            
+          );
+        }
+      },
     );
   }
 
