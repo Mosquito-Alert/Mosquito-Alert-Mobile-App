@@ -180,75 +180,80 @@ class _MainVCState extends State<MainVC> {
                                     height: 24,
                                   ),
                                   Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 2,
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Style.body(
-                                                    MyLocalizations.of(context,
-                                                        'what_to_do_txt'),
-                                                    fontSize: 14),
-                                              ]),
-                                        )                                      
-                                      ]),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6.0),
-                                    child: Divider(),
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Style.body(
+                                                MyLocalizations.of(context, 'what_to_do_txt'),
+                                                fontSize: 16),
+                                          ]),
+                                      )                                      
+                                    ]),
+                                  SizedBox(height: 25),
+                                  Material(
+                                    elevation: 5.0,
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Container(
+                                      height: 60.0,
+                                      decoration: BoxDecoration(
+                                        color: Color(int.parse('40DFD458', radix: 16)),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      child: ListTile(
+                                        leading: Image.asset('assets/img/ic_mosquito_report.png'),
+                                        title: Text(MyLocalizations.of(context, 'report_adults_txt')),
+                                        onTap: () {
+                                          loadingStream.add(true);
+                                          _createAdultReport();
+                                        },
+                                      ),
+                                    ),
                                   ),
+                                  SizedBox(height: 15),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      Container(
-                                        height: 60.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(int.parse('40D28A73', radix: 16)),
-                                          borderRadius: BorderRadius.circular(100),
-                                        ),
-                                        child: ListTile(
-                                          leading: Image.asset('assets/img/ic_bite_report.png'),
-                                          title: Text(MyLocalizations.of(context, 'report_biting_txt')),
-                                          onTap: () {
-                                            loadingStream.add(true);
-                                            _createBiteReport();
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      Container(
-                                        height: 60.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(int.parse('40DFD458', radix: 16)),
-                                          borderRadius: BorderRadius.circular(25),
-                                        ),
-                                        child: ListTile(
-                                          leading: Image.asset('assets/img/ic_mosquito_report.png'),
-                                          title: Text(MyLocalizations.of(context, 'report_adults_txt')),
-                                          onTap: () {
-                                            loadingStream.add(true);
-                                            _createAdultReport();
-                                          },
+                                      Material(
+                                        elevation: 5.0,
+                                        borderRadius: BorderRadius.circular(25),
+                                        child: Container(
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                            color: Color(int.parse('40D28A73', radix: 16)),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          child: ListTile(
+                                            leading: Image.asset('assets/img/ic_bite_report.png'),
+                                            title: Text(MyLocalizations.of(context, 'report_biting_txt')),
+                                            onTap: () {
+                                              loadingStream.add(true);
+                                              _createBiteReport();
+                                            },
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 15),
-                                      Container(
-                                        height: 60.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(int.parse('407D9393', radix: 16)),
-                                          borderRadius: BorderRadius.circular(25),
-                                        ),
-                                        child: ListTile(
-                                          leading: Image.asset('assets/img/ic_breeding_report.png'),
-                                          title: Text(MyLocalizations.of(context, 'report_nest_txt')),
-                                          onTap: () {
-                                            loadingStream.add(true);
-                                            _createSiteReport();
-                                          },
+                                      Material(
+                                        elevation: 5.0,
+                                        borderRadius: BorderRadius.circular(25),
+                                        child: Container(
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                            color: Color(int.parse('407D9393', radix: 16)),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          child: ListTile(
+                                            leading: Image.asset('assets/img/ic_breeding_report.png'),
+                                            title: Text(MyLocalizations.of(context, 'report_nest_txt')),
+                                            onTap: () {
+                                              loadingStream.add(true);
+                                              _createSiteReport();
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
