@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -11,9 +10,7 @@ import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
-import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
@@ -194,70 +191,26 @@ class _MainVCState extends State<MainVC> {
                                       )                                      
                                     ]),
                                   SizedBox(height: 25),
-                                  Material(
-                                    elevation: 5.0,
-                                    borderRadius: BorderRadius.circular(25),
-                                    child: Container(
-                                      height: 60.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(int.parse('40DFD458', radix: 16)),
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      child: ListTile(
-                                        leading: Image.asset('assets/img/ic_mosquito_report.png'),
-                                        title: Text(MyLocalizations.of(context, 'single_mosquito')),
-                                        onTap: () {
-                                          loadingStream.add(true);
-                                          _createAdultReport();
-                                        },
-                                      ),
-                                    ),
+                                  CustomCard(
+                                    text: 'single_mosquito',
+                                    image_path: 'assets/img/ic_mosquito_report.png',
+                                    color: '40DFD458',
+                                    reportFunction: _createAdultReport
                                   ),
                                   SizedBox(height: 15),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      Material(
-                                        elevation: 5.0,
-                                        borderRadius: BorderRadius.circular(25),
-                                        child: Container(
-                                          height: 60.0,
-                                          decoration: BoxDecoration(
-                                            color: Color(int.parse('40D28A73', radix: 16)),
-                                            borderRadius: BorderRadius.circular(25),
-                                          ),
-                                          child: ListTile(
-                                            leading: Image.asset('assets/img/ic_bite_report.png'),
-                                            title: Text(MyLocalizations.of(context, 'single_bite')),
-                                            onTap: () {
-                                              loadingStream.add(true);
-                                              _createBiteReport();
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      Material(
-                                        elevation: 5.0,
-                                        borderRadius: BorderRadius.circular(25),
-                                        child: Container(
-                                          height: 60.0,
-                                          decoration: BoxDecoration(
-                                            color: Color(int.parse('407D9393', radix: 16)),
-                                            borderRadius: BorderRadius.circular(25),
-                                          ),
-                                          child: ListTile(
-                                            leading: Image.asset('assets/img/ic_breeding_report.png'),
-                                            title: Text(MyLocalizations.of(context, 'single_breeding_site')),
-                                            onTap: () {
-                                              loadingStream.add(true);
-                                              _createSiteReport();
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
+                                  CustomCard(
+                                    text: 'single_bite',
+                                    image_path: 'assets/img/ic_bite_report.png',
+                                    color: '40D28A73',
+                                    reportFunction: _createBiteReport
+                                  ),
+                                  SizedBox(height: 15),
+                                  CustomCard(
+                                    text: 'single_breeding_site',
+                                    image_path: 'assets/img/ic_breeding_report.png',
+                                    color: '407D9393',
+                                    reportFunction: _createSiteReport
+                                  ),
                                 ],
                               ),
                             ),
