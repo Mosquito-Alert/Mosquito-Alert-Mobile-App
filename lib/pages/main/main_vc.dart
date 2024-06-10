@@ -205,7 +205,7 @@ class _MainVCState extends State<MainVC> {
                                       ),
                                       child: ListTile(
                                         leading: Image.asset('assets/img/ic_mosquito_report.png'),
-                                        title: Text(MyLocalizations.of(context, 'report_adults_txt')),
+                                        title: Text(MyLocalizations.of(context, 'single_mosquito')),
                                         onTap: () {
                                           loadingStream.add(true);
                                           _createAdultReport();
@@ -228,7 +228,7 @@ class _MainVCState extends State<MainVC> {
                                           ),
                                           child: ListTile(
                                             leading: Image.asset('assets/img/ic_bite_report.png'),
-                                            title: Text(MyLocalizations.of(context, 'report_biting_txt')),
+                                            title: Text(MyLocalizations.of(context, 'single_bite')),
                                             onTap: () {
                                               loadingStream.add(true);
                                               _createBiteReport();
@@ -248,7 +248,7 @@ class _MainVCState extends State<MainVC> {
                                           ),
                                           child: ListTile(
                                             leading: Image.asset('assets/img/ic_breeding_report.png'),
-                                            title: Text(MyLocalizations.of(context, 'report_nest_txt')),
+                                            title: Text(MyLocalizations.of(context, 'single_breeding_site')),
                                             onTap: () {
                                               loadingStream.add(true);
                                               _createSiteReport();
