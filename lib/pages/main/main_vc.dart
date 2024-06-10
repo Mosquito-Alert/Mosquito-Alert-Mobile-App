@@ -22,6 +22,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/utils/version_control.dart';
+import 'package:package_info/package_info.dart';
 
 class MainVC extends StatefulWidget {
   @override
@@ -35,12 +36,14 @@ class _MainVCState extends State<MainVC> {
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   int unreadNotifications = 0;
+  var packageInfo;
 
   @override
   void initState() {
     super.initState();
     initAuthStatus();
     _getNotificationCount();
+    getPackageInfo();
   }
 
   @override
@@ -244,7 +247,24 @@ class _MainVCState extends State<MainVC> {
                     onTap: () {
                       // TODO: About page
                     },
-                  )
+                  ),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Style.bodySmall(
+                            packageInfo != null
+                                ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                                : '',
+                            fontSize: 8,
+                            textAlign: TextAlign.center),
+                      ],
+                    ),
+                  ),
                 ],
               )),
             body: LayoutBuilder(
@@ -500,6 +520,13 @@ class _MainVCState extends State<MainVC> {
         )
       ],
     );
+  }
+
+  void getPackageInfo() async {
+    var _packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      packageInfo = _packageInfo;
+    });
   }
 
   Widget _uuidWithClipboard(){

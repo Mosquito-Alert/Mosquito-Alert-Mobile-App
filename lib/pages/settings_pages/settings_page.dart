@@ -30,7 +30,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool isBgTrackingEnabled = false;
   String? hashtag;
-  var packageInfo;
 
   final languageCodes = [
     Language('bg_BG', 'Bulgarian'),
@@ -61,21 +60,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    super.initState();
-    getPackageInfo();
+    super.initState();    
     initializeBgTracking();
     getHashtag();
   }
 
   void initializeBgTracking() async {
     isBgTrackingEnabled = await UserManager.getTracking();
-  }
-
-  void getPackageInfo() async {
-    var _packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      packageInfo = _packageInfo;
-    });
   }
 
   void getHashtag() async {
@@ -256,22 +247,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SizedBox(
               height: 60,
-            ),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Style.title(MyLocalizations.of(context, 'app_name'),
-                      fontSize: 8, textAlign: TextAlign.center),
-                  Style.bodySmall(
-                      packageInfo != null
-                          ? '${packageInfo.version} (build ${packageInfo.buildNumber})'
-                          : '',
-                      fontSize: 8,
-                      textAlign: TextAlign.center),
-                ],
-              ),
             ),
             SizedBox(
               height: 60,
