@@ -5,6 +5,7 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
@@ -132,6 +133,7 @@ class _MainVCState extends State<MainVC> {
                   DrawerHeader(
                     child: Row(
                       children: <Widget>[
+                        // User score
                         Container(
                           height: 60,
                           width: 60,
@@ -167,6 +169,58 @@ class _MainVCState extends State<MainVC> {
                               ));
                             }),
                         ),
+
+                        SizedBox(width: 12),
+
+                        // User UUID
+                        FutureBuilder(
+                          future: UserManager.getUUID(),
+                          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              print(snapshot.data);
+                              return Expanded(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Style.bodySmall(snapshot.data,
+                                            color: Colors.black.withOpacity(0.7),
+                                            fontSize: 9)),
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.copy_rounded,
+                                        size: 18,
+                                      ),
+                                      onTap: () {
+                                        final String? data = snapshot.data;
+                                        if (data != null) {
+                                          Clipboard.setData(ClipboardData(text: data));
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Copied to Clipboard'),
+                                            ),
+                                          );
+                                        } else {
+                                          // Display an error message for troubleshooting
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'Error: Unable to copy to clipboard. Data is null.'),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                    
                       ],
                     )
                   ),
@@ -202,7 +256,11 @@ class _MainVCState extends State<MainVC> {
                     title: const Text('Settings'),
                     leading: Icon(Icons.settings),
                     onTap: () {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SettingsPage()),
+                      );
                     },
                   ),
                   ListTile(

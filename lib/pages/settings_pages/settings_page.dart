@@ -101,57 +101,6 @@ class _SettingsPageState extends State<SettingsPage> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
                   Widget>[
-            SizedBox(
-              height: 12,
-            ),
-            FutureBuilder(
-              future: UserManager.getUUID(),
-              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                print(snapshot.data);
-                return Row(
-                  children: [
-                    Style.body('ID'),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Expanded(
-                        child: Style.bodySmall(snapshot.data,
-                            color: Colors.black.withOpacity(0.7))),
-                    GestureDetector(
-                      child: Icon(
-                        Icons.copy_rounded,
-                        size: 18,
-                      ),
-                      onTap: () {
-                        final String? data = snapshot.data;
-                        if (data != null) {
-                          Clipboard.setData(ClipboardData(text: data));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Copied to Clipboard'),
-                            ),
-                          );
-                        } else {
-                          // Display an error message for troubleshooting
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Error: Unable to copy to clipboard. Data is null.'),
-                            ),
-                          );
-                        }
-                      },
-                    )
-                  ],
-                );
-              },
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              height: 10,
-            ),
             SettingsMenuWidget(
                 MyLocalizations.of(context, 'select_language_txt'), () {
               _openLanguagePickerDialog();
