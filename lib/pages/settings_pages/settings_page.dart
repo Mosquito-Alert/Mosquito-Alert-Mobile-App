@@ -241,16 +241,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           localHtml: true,
                         )),
               );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 60,
-            ),
-            SizedBox(
-              height: 60,
-            ),
+            })
           ]),
         ),
       ),
