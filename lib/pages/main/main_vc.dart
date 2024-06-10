@@ -257,11 +257,11 @@ class _MainVCState extends State<MainVC> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Style.bodySmall(
-                            packageInfo != null
-                                ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                                : '',
-                            fontSize: 8,
-                            textAlign: TextAlign.center),
+                          packageInfo != null
+                              ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                              : '',
+                          fontSize: 8,
+                          textAlign: TextAlign.center),
                       ],
                     ),
                   ),
