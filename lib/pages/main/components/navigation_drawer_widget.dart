@@ -19,6 +19,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   var packageInfo;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -39,83 +40,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
-            child: Row(
-              children: <Widget>[
-                // User score
-                Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/img/points_box.png'),
-                    ),
-                  ),
-                  child: StreamBuilder<int?>(
-                    stream: Utils.userScoresController.stream,
-                    initialData: UserManager.userScore,
-                    builder: (context, snapshot) {
-                      return Center(
-                        child: AutoSizeText(
-                          snapshot.data != null && snapshot.hasData
-                            ? snapshot.data.toString()
-                            : '',
-                          maxLines: 1,
-                          maxFontSize: 26,
-                          minFontSize: 16,
-                          style: TextStyle(
-                            color: Color(0xFF4B3D04),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24),
-                        )
-                      );
-                    }
-                  ),
-                ),
 
-                SizedBox(width: 12),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
-                      child: Text(
-                        MyLocalizations.of(context, 'welcome_text'),
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                    _uuidWithClipboard(),
-                  ],
-                )
-              ],
-            )
-          ),
-          ListTile(
-            title: Text(MyLocalizations.of(context, 'home_tab')),
-            leading: Icon(Icons.home),
-            onTap: () {
-
-            },
-          ),
-          ListTile(
-            title: const Text('My reports'),
-            leading: Icon(Icons.file_copy),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyReportsPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: Text(MyLocalizations.of(context, 'public_map_tab')),
-            leading: Icon(Icons.map),
-            onTap: () {
-              // TODO: Public map
-            },
-          ),
           ListTile(
             title: Text(MyLocalizations.of(context, 'guide_tab')),
             leading: Icon(Icons.science),
@@ -163,10 +88,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
           ),
         ],
-      ));
+      )
+    );
   }
 
-    Widget _uuidWithClipboard(){
+  Widget _buildListTile({required Widget title, required Widget leading, required int index, required Function onTap}) {
+    return ListTile(
+      title: title,
+      leading: leading,
+      tileColor: _selectedIndex == index ? Colors.orange : null,
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+        onTap();
+      },
+    );
+  }
+
+
+  Widget _uuidWithClipboard(){
     return FutureBuilder(
       future: UserManager.getUUID(),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
