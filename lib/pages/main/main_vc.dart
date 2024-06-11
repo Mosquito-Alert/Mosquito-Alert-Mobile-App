@@ -5,7 +5,6 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
@@ -13,16 +12,14 @@ import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
+import 'package:mosquito_alert_app/pages/main/components/navigation_drawer_widget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/utils/version_control.dart';
-import 'package:package_info/package_info.dart';
 
 class MainVC extends StatefulWidget {
   @override
@@ -36,14 +33,12 @@ class _MainVCState extends State<MainVC> {
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   int unreadNotifications = 0;
-  var packageInfo;
 
   @override
   void initState() {
     super.initState();
     initAuthStatus();
     _getNotificationCount();
-    getPackageInfo();
   }
 
   @override
@@ -128,145 +123,7 @@ class _MainVCState extends State<MainVC> {
                 )
               ],
             ),
-            drawer: Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  DrawerHeader(
-                    child: Row(
-                      children: <Widget>[
-                        // User score
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/img/points_box.png'),
-                            ),
-                          ),
-                          child: StreamBuilder<int?>(
-                            stream: Utils
-                                .userScoresController
-                                .stream,
-                            initialData:
-                                UserManager.userScore,
-                            builder: (context, snapshot) {
-                              return Center(
-                                  child: AutoSizeText(
-                                snapshot.data != null &&
-                                        snapshot.hasData
-                                    ? snapshot.data
-                                        .toString()
-                                    : '',
-                                maxLines: 1,
-                                maxFontSize: 26,
-                                minFontSize: 16,
-                                style: TextStyle(
-                                    color:
-                                        Color(0xFF4B3D04),
-                                    fontWeight:
-                                        FontWeight.w500,
-                                    fontSize: 24),
-                              ));
-                            }),
-                        ),
-
-                        SizedBox(width: 12),
-
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 50.0, right: 135.0, bottom: 10.0),
-                              child: 
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  'Hello,',
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ),
-                            ),
-                            _uuidWithClipboard(),
-                          ],
-                        )
-                      ],
-                    )
-                  ),
-                  // TODO: Does it make sense to have HomePage here when it's always the base widget?
-                  /*ListTile(
-                    title: const Text('Home'),
-                    leading: Icon(Icons.home),
-                    onTap: () {
-
-                    },
-                  ),*/
-                  ListTile(
-                    title: const Text('My reports'),
-                    leading: Icon(Icons.file_copy),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyReportsPage()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Public map'),
-                    leading: Icon(Icons.map),
-                    onTap: () {
-                      // TODO: Public map
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Guide'),
-                    leading: Icon(Icons.science),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CampaignTutorialPage()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: Text(MyLocalizations.of(context, 'settings_title')),
-                    leading: Icon(Icons.settings),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SettingsPage()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('About'),
-                    leading: Icon(Icons.info),
-                    onTap: () {
-                      // TODO: About page
-                    },
-                  ),
-                  SizedBox(
-                    height: 100,
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Style.bodySmall(
-                          packageInfo != null
-                              ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                              : '',
-                          fontSize: 8,
-                          textAlign: TextAlign.center),
-                      ],
-                    ),
-                  ),
-                ],
-              )),
+            drawer: CustomDrawer(),
             body: LayoutBuilder(
               builder:
                   (BuildContext context, BoxConstraints viewportConstraints) {
@@ -519,62 +376,6 @@ class _MainVCState extends State<MainVC> {
           ),
         )
       ],
-    );
-  }
-
-  void getPackageInfo() async {
-    var _packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      packageInfo = _packageInfo;
-    });
-  }
-
-  Widget _uuidWithClipboard(){
-    return FutureBuilder(
-      future: UserManager.getUUID(),
-      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          print(snapshot.data);
-          return Row(
-            children: [
-              Text(snapshot.data ?? '',
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.7),
-                  fontSize: 9
-                )
-              ),
-              GestureDetector(
-                child: Icon(
-                  Icons.copy_rounded,
-                  size: 18,
-                ),
-                onTap: () {
-                  final data = snapshot.data;
-                  if (data != null) {
-                    Clipboard.setData(ClipboardData(text: data));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Copied to Clipboard'),
-                      ),
-                    );
-                  } else {
-                    // Display an error message for troubleshooting
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error: Unable to copy to clipboard. Data is null.'),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],            
-          );
-        }
-      },
     );
   }
 
