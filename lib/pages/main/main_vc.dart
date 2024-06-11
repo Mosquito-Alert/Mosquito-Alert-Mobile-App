@@ -15,6 +15,7 @@ import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
+import 'package:mosquito_alert_app/pages/public_map.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -276,7 +277,9 @@ class _MainVCState extends State<MainVC> {
                                       GestureDetector(
                                         onTap: () {
                                           loadingStream.add(true);
-                                          _createBiteReport();
+                                          //_createBiteReport();
+                                          // TODO: Remove this from the final PR, it's only for debugging
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PublicMap()));
                                         },
                                         child: Container(
                                           width: MediaQuery.of(context)
@@ -290,8 +293,7 @@ class _MainVCState extends State<MainVC> {
                                           child: CustomCard(
                                             img:
                                                 'assets/img/ic_bite_report.png',
-                                            title: MyLocalizations.of(
-                                                context, 'report_biting_txt'),
+                                            title: 'DEBUG PUBLIC MAP'//MyLocalizations.of(context, 'report_biting_txt'),
                                           ),
                                         ),
                                       ),
