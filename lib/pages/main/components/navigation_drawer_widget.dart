@@ -52,11 +52,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     ),
                   ),
                   child: StreamBuilder<int?>(
-                    stream: Utils
-                        .userScoresController
-                        .stream,
-                    initialData:
-                        UserManager.userScore,
+                    stream: Utils.userScoresController.stream,
+                    initialData: UserManager.userScore,
                     builder: (context, snapshot) {
                       return Center(
                         child: AutoSizeText(
@@ -79,16 +76,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 SizedBox(width: 12),
 
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 50.0, right: 135.0, bottom: 10.0),
-                      child: 
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          'Hello,',
-                          style: TextStyle(fontSize: 22),
-                        ),
+                      padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
+                      child: Text(
+                        MyLocalizations.of(context, 'welcome_text'),
+                        style: TextStyle(fontSize: 22),
                       ),
                     ),
                     _uuidWithClipboard(),
@@ -97,14 +91,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ],
             )
           ),
-          // TODO: Does it make sense to have HomePage here when it's always the base widget?
-          /*ListTile(
-            title: const Text('Home'),
+          ListTile(
+            title: Text(MyLocalizations.of(context, 'home_tab')),
             leading: Icon(Icons.home),
             onTap: () {
 
             },
-          ),*/
+          ),
           ListTile(
             title: const Text('My reports'),
             leading: Icon(Icons.file_copy),
@@ -117,14 +110,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            title: const Text('Public map'),
+            title: Text(MyLocalizations.of(context, 'public_map_tab')),
             leading: Icon(Icons.map),
             onTap: () {
               // TODO: Public map
             },
           ),
           ListTile(
-            title: const Text('Guide'),
+            title: Text(MyLocalizations.of(context, 'guide_tab')),
             leading: Icon(Icons.science),
             onTap: () {
               Navigator.push(
@@ -146,7 +139,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            title: const Text('About'),
+            title: Text(MyLocalizations.of(context, 'info_tab')),
             leading: Icon(Icons.info),
             onTap: () {
               // TODO: About page
