@@ -164,7 +164,7 @@ class _MainVCState extends State<MainVC> {
             _buildCustomTile(4, Icons.settings, 'settings_title'),
             _buildCustomTile(5, Icons.info, 'info_tab'),
             SizedBox(
-              height: 100,
+              height: 60,
             ),
             Center(
               child: Column(
@@ -236,27 +236,28 @@ class _MainVCState extends State<MainVC> {
   }
 
   Widget _buildCustomTile(int index, IconData icon, String title){
-    return Container(
-      decoration: BoxDecoration(
-        color: _selectedIndex == index ? Color.fromARGB(120, 255, 153, 0) : Colors.transparent,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: ListTile(
-        title: Text(
-          MyLocalizations.of(context, title),
-          style: TextStyle(color: Colors.black)
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: _selectedIndex == index ? Color.fromARGB(120, 255, 153, 0) : Colors.transparent,
+          borderRadius: BorderRadius.circular(50.0),
         ),
-        leading: Icon(
-          icon,
-          color: Colors.black,
+        child: ListTile(
+          title: Text(
+            MyLocalizations.of(context, title),
+            style: TextStyle(color: Colors.black)
+          ),
+          leading: Icon(
+            icon,
+            color: Colors.black,
+          ),
+          selected: _selectedIndex == index,
+          onTap: () {
+            _onItemTapped(index);
+            Navigator.pop(context);
+          },
         ),
-        selected: _selectedIndex == index,
-        onTap: () {
-          // Update the state of the app
-          _onItemTapped(index);
-          // Then close the drawer
-          Navigator.pop(context);
-        },
       ),
     );
   }
