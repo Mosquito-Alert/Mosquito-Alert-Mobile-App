@@ -38,10 +38,6 @@ class _PublicMapState extends State<PublicMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mosquito Alert Map'),
-        backgroundColor: Colors.white,
-      ),
       body: SafeArea(
         child: Stack(
           children: [
