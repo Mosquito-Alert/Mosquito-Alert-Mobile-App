@@ -6,6 +6,7 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
+import 'package:mosquito_alert_app/pages/map/punlic_map.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
@@ -59,7 +60,7 @@ class _MainVCState extends State<MainVC> {
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     MyReportsPage(),
-    MyReportsPage(),  // TODO: Public map
+    PublicMap(),
     TutorialPage(true),
     SettingsPage(),
     SettingsPage(),
