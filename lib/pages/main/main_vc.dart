@@ -14,6 +14,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path/path.dart';
 
 
 
@@ -157,12 +158,12 @@ class _MainVCState extends State<MainVC> {
                 ],
               )
             ),
-            _buildCustomTile(0, Icons.home, 'home_tab'),
-            _buildCustomTile(1, Icons.file_copy, 'your_reports_txt'),
-            _buildCustomTile(2, Icons.map, 'public_map_tab'),
-            _buildCustomTile(3, Icons.science, 'guide_tab'),
-            _buildCustomTile(4, Icons.settings, 'settings_title'),
-            _buildCustomTile(5, Icons.info, 'info_tab'),
+            _buildCustomTile(0, Icons.home, 'home_tab', context),
+            _buildCustomTile(1, Icons.file_copy, 'your_reports_txt', context),
+            _buildCustomTile(2, Icons.map, 'public_map_tab', context),
+            _buildCustomTile(3, Icons.science, 'guide_tab', context),
+            _buildCustomTile(4, Icons.settings, 'settings_title', context),
+            _buildCustomTile(5, Icons.info, 'info_tab', context),
             SizedBox(
               height: 60,
             ),
@@ -171,12 +172,14 @@ class _MainVCState extends State<MainVC> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Style.bodySmall(
-                    packageInfo != null
-                        ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                        : '',
-                    fontSize: 8,
-                    textAlign: TextAlign.center),
+                  Text(packageInfo != null
+                    ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                    : '',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 8.0
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -235,7 +238,7 @@ class _MainVCState extends State<MainVC> {
     );
   }
 
-  Widget _buildCustomTile(int index, IconData icon, String title){
+  Widget _buildCustomTile(int index, IconData icon, String title, context){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
