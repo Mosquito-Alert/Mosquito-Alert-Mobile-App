@@ -4,7 +4,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
-import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
@@ -61,8 +60,8 @@ class _MainVCState extends State<MainVC> {
     MyReportsPage(),
     MyReportsPage(),  // TODO: Public map
     TutorialPage(true),
-    SettingsPage(),
-    SettingsPage(),
+    SettingsPage(),  // TODO: Create new settings page
+    SettingsPage(),  // TODO: Create info page
   ];
 
   void _onItemTapped(int index) {
@@ -158,62 +157,12 @@ class _MainVCState extends State<MainVC> {
                 ],
               )
             ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'home_tab')),
-              leading: Icon(Icons.home),
-              selected: _selectedIndex == 0,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(0);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'your_reports_txt')),
-              leading: Icon(Icons.file_copy),
-              selected: _selectedIndex == 1,
-              onTap: () {
-                _onItemTapped(1);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'public_map_tab')),
-              leading: Icon(Icons.map),
-              selected: _selectedIndex == 2,
-              onTap: () {
-                _onItemTapped(2);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'guide_tab')),
-              leading: Icon(Icons.science),
-              selected: _selectedIndex == 3,
-              onTap: () {
-                _onItemTapped(3);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'settings_title')),
-              leading: Icon(Icons.settings),
-              selected: _selectedIndex == 4,
-              onTap: () {
-                _onItemTapped(4);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(MyLocalizations.of(context, 'info_tab')),
-              leading: Icon(Icons.info),
-              selected: _selectedIndex == 5,
-              onTap: () {
-                _onItemTapped(5);
-                Navigator.pop(context);
-              },
-            ),
+            _buildCustomTile(0, Icons.home, 'home_tab'),
+            _buildCustomTile(1, Icons.file_copy, 'your_reports_txt'),
+            _buildCustomTile(2, Icons.map, 'public_map_tab'),
+            _buildCustomTile(3, Icons.science, 'guide_tab'),
+            _buildCustomTile(4, Icons.settings, 'settings_title'),
+            _buildCustomTile(5, Icons.info, 'info_tab'),
             SizedBox(
               height: 100,
             ),
@@ -283,6 +232,32 @@ class _MainVCState extends State<MainVC> {
           ],            
         );
       }
+    );
+  }
+
+  Widget _buildCustomTile(int index, IconData icon, String title){
+    return Container(
+      decoration: BoxDecoration(
+        color: _selectedIndex == index ? Color.fromARGB(120, 255, 153, 0) : Colors.transparent,
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: ListTile(
+        title: Text(
+          MyLocalizations.of(context, title),
+          style: TextStyle(color: Colors.black)
+        ),
+        leading: Icon(
+          icon,
+          color: Colors.black,
+        ),
+        selected: _selectedIndex == index,
+        onTap: () {
+          // Update the state of the app
+          _onItemTapped(index);
+          // Then close the drawer
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
