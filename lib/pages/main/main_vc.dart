@@ -4,6 +4,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
+import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
@@ -12,9 +13,7 @@ import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
-import 'package:path/path.dart';
 
 
 
@@ -29,18 +28,24 @@ class _MainVCState extends State<MainVC> {
   int _selectedIndex = 0;
   int unreadNotifications = 0;
   var packageInfo;
+  String? userUuid;
 
   @override
   void initState() {
     super.initState();
     _getNotificationCount();
+    _getData();
     getPackageInfo();
   }
 
-  void _getNotificationCount() async {
+  Future<void> _getNotificationCount() async {
     List<MyNotification> notifications = await ApiSingleton().getNotifications();
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
     updateNotificationCount(unacknowledgedCount);
+  }
+
+  Future<void> _getData() async {
+    userUuid = await UserManager.getUUID();
   }
 
   void updateNotificationCount(int newCount) {
@@ -110,33 +115,43 @@ class _MainVCState extends State<MainVC> {
               child: Row(
                 children: <Widget>[
                   // User score
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/img/points_box.png'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InfoPage(
+                                "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                      );
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/img/points_box.png'),
+                        ),
                       ),
-                    ),
-                    child: StreamBuilder<int?>(
-                      stream: Utils.userScoresController.stream,
-                      initialData: UserManager.userScore,
-                      builder: (context, snapshot) {
-                        return Center(
-                          child: AutoSizeText(
-                            snapshot.data != null && snapshot.hasData
-                              ? snapshot.data.toString()
-                              : '',
-                            maxLines: 1,
-                            maxFontSize: 26,
-                            minFontSize: 16,
-                            style: TextStyle(
-                              color: Color(0xFF4B3D04),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 24),
-                          )
-                        );
-                      }
+                      child: StreamBuilder<int?>(
+                        stream: Utils.userScoresController.stream,
+                        initialData: UserManager.userScore,
+                        builder: (context, snapshot) {
+                          return Center(
+                            child: AutoSizeText(
+                              snapshot.data != null && snapshot.hasData
+                                ? snapshot.data.toString()
+                                : '',
+                              maxLines: 1,
+                              maxFontSize: 26,
+                              minFontSize: 16,
+                              style: TextStyle(
+                                color: Color(0xFF4B3D04),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24),
+                            )
+                          );
+                        }
+                      ),
                     ),
                   ),
 
