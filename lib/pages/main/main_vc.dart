@@ -56,7 +56,7 @@ class _MainVCState extends State<MainVC> {
     });
   }
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     MyReportsPage(),
     MyReportsPage(),  // TODO: Public map
