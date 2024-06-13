@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:language_picker/language_picker.dart';
 
 import 'package:language_picker/languages.dart';
-import 'package:mosquito_alert_app/pages/info_pages/info_page.dart';
+import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/partners_page.dart';
@@ -226,7 +226,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, 'url_scoring_1'))),
+                        InfoPageInWebview(MyLocalizations.of(context, 'url_scoring_1'))),
               );
             }),
             SizedBox(
@@ -237,7 +237,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InfoPage(
+                    builder: (context) => InfoPageInWebview(
                         MyLocalizations.of(context, 'url_about_project'))),
               );
             }),
@@ -250,7 +250,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        InfoPage(MyLocalizations.of(context, 'url_about_us'))),
+                        InfoPageInWebview(MyLocalizations.of(context, 'url_about_us'))),
               );
             }),
             SizedBox(
@@ -270,7 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InfoPage(
+                    builder: (context) => InfoPageInWebview(
                           MyLocalizations.of(context, 'terms_link'),
                           localHtml: true,
                         )),
@@ -283,7 +283,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InfoPage(
+                    builder: (context) => InfoPageInWebview(
                           MyLocalizations.of(context, 'privacy_link'),
                           localHtml: true,
                         )),
@@ -296,7 +296,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InfoPage(
+                    builder: (context) => InfoPageInWebview(
                           MyLocalizations.of(context, 'lisence_link'),
                           localHtml: true,
                         )),

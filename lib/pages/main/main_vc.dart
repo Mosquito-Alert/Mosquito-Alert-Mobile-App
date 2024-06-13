@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -62,7 +63,7 @@ class _MainVCState extends State<MainVC> {
     MyReportsPage(),  // TODO: Public map
     TutorialPage(true),
     SettingsPage(),  // TODO: Create new settings page
-    SettingsPage(),  // TODO: Create info page
+    NewInfoPage(),
   ];
 
   void _onItemTapped(int index) {
