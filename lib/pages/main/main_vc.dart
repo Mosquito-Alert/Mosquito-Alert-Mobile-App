@@ -61,7 +61,7 @@ class _MainVCState extends State<MainVC> {
     MyReportsPage(),
     MyReportsPage(),  // TODO: Public map
     TutorialPage(true),
-    SettingsPage(),  // TODO: Create new settings page
+    SettingsPage(),
     SettingsPage(),  // TODO: Create info page
   ];
 
