@@ -234,14 +234,14 @@ class _MainVCState extends State<MainVC> {
                   Clipboard.setData(ClipboardData(text: data));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Copied to Clipboard'),
+                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
                     ),
                   );
                 } else {
                   // Display an error message for troubleshooting
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error: Unable to copy to clipboard. Data is null.'),
+                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
                     ),
                   );
                 }
@@ -258,7 +258,7 @@ class _MainVCState extends State<MainVC> {
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedIndex == index ? Color.fromARGB(120, 255, 153, 0) : Colors.transparent,
+          color: _selectedIndex == index ? Colors.orange.shade100 : Colors.transparent,
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: ListTile(
@@ -270,6 +270,7 @@ class _MainVCState extends State<MainVC> {
             icon,
             color: Colors.black,
           ),
+          minLeadingWidth: 0,
           selected: _selectedIndex == index,
           onTap: () {
             _onItemTapped(index);
