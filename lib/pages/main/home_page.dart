@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initAuthStatus();
-    //_getNotificationCount();
   }
 
   @override
@@ -96,31 +95,6 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: <Widget>[
         Scaffold(
-            /*appBar: AppBar(
-              backgroundColor: Colors.white,
-              centerTitle: true,
-              title: Image.asset(
-                'assets/img/ic_logo.png',
-                height: 40,
-              ),
-              actions: <Widget>[
-                badges.Badge(
-                  position: badges.BadgePosition.topEnd(top: 2, end: 2),
-                  showBadge: unreadNotifications > 0,
-                  badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
-                  child: IconButton(
-                    padding: EdgeInsets.only(top: 6),
-                    icon: Icon(Icons.notifications, size: 32, ), 
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
-                      );
-                    },
-                  )
-                )
-              ],
-            ),*/
             drawer: CustomDrawer(),
             body: LayoutBuilder(
               builder:
@@ -167,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                                                         AsyncSnapshot<String?>
                                                             snapshot) {
                                                       if (snapshot.hasData) {
-                                                        print(snapshot.data);
                                                         return Style.title(
                                                             "${MyLocalizations.of(context, "welcome_text")}, ${snapshot.data}.",
                                                             fontSize: 20);

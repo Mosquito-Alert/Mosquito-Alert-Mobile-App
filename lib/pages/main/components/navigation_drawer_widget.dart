@@ -176,7 +176,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
           return Text('Error: ${snapshot.error}');
         }
 
-        print(snapshot.data);
         return Row(
           children: [
             Text(snapshot.data ?? '',

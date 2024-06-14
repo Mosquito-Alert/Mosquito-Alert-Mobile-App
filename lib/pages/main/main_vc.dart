@@ -214,7 +214,6 @@ class _MainVCState extends State<MainVC> {
           return Text('Error: ${snapshot.error}');
         }
 
-        print(snapshot.data);
         return Row(
           children: [
             Text(
