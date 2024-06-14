@@ -76,18 +76,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  /*void _getNotificationCount() async {
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
-    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    updateNotificationCount(unacknowledgedCount);
-  }*/
-
-  /*void updateNotificationCount(int newCount) {
-    setState(() {
-      unreadNotifications = newCount;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Stack(
