@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
@@ -13,6 +17,7 @@ import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/version_control.dart';
 import 'package:package_info/package_info.dart';
 
 
@@ -36,16 +41,18 @@ class _MainVCState extends State<MainVC> {
     _getNotificationCount();
     _getData();
     getPackageInfo();
+    initAuthStatus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<void> _getNotificationCount() async {
     List<MyNotification> notifications = await ApiSingleton().getNotifications();
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
     updateNotificationCount(unacknowledgedCount);
-  }
-
-  Future<void> _getData() async {
-    userUuid = await UserManager.getUUID();
   }
 
   void updateNotificationCount(int newCount) {
@@ -59,6 +66,29 @@ class _MainVCState extends State<MainVC> {
     setState(() {
       packageInfo = _packageInfo;
     });
+  }
+
+    void initAuthStatus() async {
+
+    if (Platform.isIOS) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+    VersionControl.getInstance().packageApiKey =
+        'uqFb4yrdZCPFXsvXrJHBbJg5B5TqvSCYmxR7aPuN2uCcCKyu9FDVWettvbtNV9HKm';
+    VersionControl.getInstance().packageLanguageCode = 'es';
+    var check = await VersionControl.getInstance().checkVersion(context);
+    if (check != null && check) {
+      await _getData();
+    }
+  }
+
+  Future<void> _getData() async {
+    await UserManager.startFirstTime(context);
+    userUuid = await UserManager.getUUID();
+    UserManager.userScore = await ApiSingleton().getUserScores();
+    await UserManager.setUserScores(UserManager.userScore);
+    await Utils.loadFirebase();
+    await Utils.getLocation(context);
   }
 
   static final List<Widget> _widgetOptions = <Widget>[
