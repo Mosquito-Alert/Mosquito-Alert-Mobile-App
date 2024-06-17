@@ -295,7 +295,7 @@ class _MainVCState extends State<MainVC> {
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedIndex == index ? Colors.orange.shade100 : Colors.transparent,
+          color: _selectedIndex == index ? Colors.orange.shade200 : Colors.transparent,
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: ListTile(
