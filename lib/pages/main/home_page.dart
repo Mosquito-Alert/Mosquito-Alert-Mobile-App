@@ -3,14 +3,11 @@ import 'dart:io';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/utils/version_control.dart';
@@ -21,9 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
-  int unreadNotifications = 0;
 
   @override
   void initState() {
@@ -46,35 +41,11 @@ class _HomePageState extends State<HomePage> {
     VersionControl.getInstance().packageApiKey =
         'uqFb4yrdZCPFXsvXrJHBbJg5B5TqvSCYmxR7aPuN2uCcCKyu9FDVWettvbtNV9HKm';
     VersionControl.getInstance().packageLanguageCode = 'es';
-    var check = await VersionControl.getInstance().checkVersion(context);
-    if (check != null && check) {
-      _getData();
-    }
+    await VersionControl.getInstance().checkVersion(context);
 
     loadingStream.add(false);
   }
 
-  void _getData() async {
-    await UserManager.startFirstTime(context);
-    userUuid = await UserManager.getUUID();
-    UserManager.userScore = await ApiSingleton().getUserScores();
-    await UserManager.setUserScores(UserManager.userScore);
-    await Utils.loadFirebase();
-
-    await Utils.getLocation(context);
-  }
-
-  void _getNotificationCount() async {
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
-    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
-    updateNotificationCount(unacknowledgedCount);
-  }
-
-  void updateNotificationCount(int newCount) {
-    setState(() {
-      unreadNotifications = newCount;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
