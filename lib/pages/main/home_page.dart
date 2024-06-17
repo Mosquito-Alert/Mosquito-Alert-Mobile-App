@@ -4,9 +4,9 @@ import 'dart:math';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/camera_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdultReportPage()),
+        MaterialPageRoute(builder: (context) => CameraPage()),
       );
     } else {
       print('Adult report was not created');
