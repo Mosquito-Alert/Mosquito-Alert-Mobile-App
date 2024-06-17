@@ -7,14 +7,14 @@ import 'package:mosquito_alert_app/pages/settings_pages/partners_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class NewInfoPage extends StatefulWidget {
-  NewInfoPage();
+class InfoPage extends StatefulWidget {
+  InfoPage();
 
   @override
-  _NewInfoPageState createState() => _NewInfoPageState();
+  _InfoPageState createState() => _InfoPageState();
 }
 
-class _NewInfoPageState extends State<NewInfoPage> {
+class _InfoPageState extends State<InfoPage> {
   @override
   void initState() {
     super.initState();
@@ -42,15 +42,6 @@ class _NewInfoPageState extends State<NewInfoPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GalleryPage()),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            SettingsMenuWidget(MyLocalizations.of(context, 'tutorial_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TutorialPage(true)),
               );
             }),
             SizedBox(
