@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Të përdor GPS për etiketim të saktë të vendndodhjes në raportet tuaja.",
     "NSPhotoLibraryAddUsageDescription": "Të ruaj fotot e marra me aplikacionin në galerinë e pajisjes suaj.",
     "NSPhotoLibraryUsageDescription": "Të hyjë në galerinë tuaj të fotografive për të bashkëngjitur imazhet ekzistuese në raportet tuaja.",
-    "plural_bite": "Kafshime"
+    "plural_bite": "Kafshime",
+    "non_identified_specie": "Lloje e paidentifikuar",
+    "home_tab": "Home",
+    "copied_to_clipboard_success": "Kopjuar në kujtesën e fragmenteve.",
+    "copied_to_clipboard_error": "Gabim: Nuk mund të kopjohet në kujtesën e fragmenteve. Të dhënat janë nule.",
+    "public_map_tab": "Hartë publike",
+    "guide_tab": "Udhëzues",
+    "info_tab": "Info",
+    "what_to_do_txt_1": "A keni vënë re ndonjë aktivitet të mushkonjave? Shpërndajeni tani!",
+    "what_to_do_txt_2": "Çfarë aktiviteti kundër mushkonjave keni parë?",
+    "what_to_do_txt_3": "Çfarë keni parë sot?",
+    "what_to_do_txt_4": "A keni ndonjë shenjë të mushkonjave aty pranë? Është koha juaj!",
+    "what_to_do_txt_5": "Shikimet e mushkonjave? Le ta kapim!"
 }

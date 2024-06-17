@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "GPS használata a pontos helymegjelöléshez a jelentésekben.",
     "NSPhotoLibraryAddUsageDescription": "Az alkalmazással készített fényképek mentése a készülék galériájába.",
     "NSPhotoLibraryUsageDescription": "Hozzáférés a fotógalériához, hogy meglévő képeket csatolhasson a jelentésekhez.",
-    "plural_bite": "szúnyogcsípés"
+    "plural_bite": "szúnyogcsípés",
+    "non_identified_specie": "Nem azonosított faj",
+    "home_tab": "Kezdőlap",
+    "copied_to_clipboard_success": "Vágólapra másolva.",
+    "copied_to_clipboard_error": "Hiba: Nem lehet másolni a vágólapra. Az adatok nullák.",
+    "public_map_tab": "Nyilvános térképre",
+    "guide_tab": "Útmutató",
+    "info_tab": "Információ",
+    "what_to_do_txt_1": "Ti észrevettetek szúnyogtevékenységet? Oszd meg most!",
+    "what_to_do_txt_2": "Milyen szúnyogtevékenységet észleltetek?",
+    "what_to_do_txt_3": "Mit láttál ma?",
+    "what_to_do_txt_4": "Szúnyogok jelei a közelben? Itt az idő!",
+    "what_to_do_txt_5": "Szúnyog észlelések? Kapjuk el!"
 }

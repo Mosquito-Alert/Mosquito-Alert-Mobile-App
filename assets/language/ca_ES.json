@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Utilitzar el GPS per a l'etiquetatge d'ubicació precisa als vostres informes.",
     "NSPhotoLibraryAddUsageDescription": "Desar les fotos fetes amb l'aplicació a la galeria del dispositiu.",
     "NSPhotoLibraryUsageDescription": "Accedir a la teva galeria de fotos per adjuntar imatges existents als teus informes.",
-    "plural_bite": "Picades"
+    "plural_bite": "Picades",
+    "non_identified_specie": "Espècie no identificada",
+    "home_tab": "Inici",
+    "copied_to_clipboard_success": "S'ha copiat al porta-retalls.",
+    "copied_to_clipboard_error": "Error: no es pot copiar al porta-retalls. Les dades són nul·les.",
+    "public_map_tab": "Mapa públic",
+    "guide_tab": "Guia",
+    "info_tab": "Informació",
+    "what_to_do_txt_1": "Has notat alguna activitat de mosquits? Comparteix-la ara!",
+    "what_to_do_txt_2": "Quina activitat dels mosquits has detectat?",
+    "what_to_do_txt_3": "Què has vist avui?",
+    "what_to_do_txt_4": "Algun signe de mosquits a prop? És el teu moment!",
+    "what_to_do_txt_5": "Presència de mosquits? Som-hi!"
 }

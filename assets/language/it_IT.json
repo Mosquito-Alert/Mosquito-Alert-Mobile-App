@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Usare il GPS per etichettare con precisione la posizione nei segnalazioni.",
     "NSPhotoLibraryAddUsageDescription": "Salvare le foto scattate con l'applicazione nella galleria del dispositivo.",
     "NSPhotoLibraryUsageDescription": "Accedere alla galleria fotografica per allegare le immagini esistenti ai segnalazioni.",
-    "plural_bite": "Puntura"
+    "plural_bite": "Puntura",
+    "non_identified_specie": "Specie non identificata",
+    "home_tab": "Home",
+    "copied_to_clipboard_success": "Copiato negli appunti.",
+    "copied_to_clipboard_error": "Errore: impossibile copiare negli appunti. I dati sono nulli.",
+    "public_map_tab": "Mappa pubblica",
+    "guide_tab": "Guida",
+    "info_tab": "Informazioni",
+    "what_to_do_txt_1": "Avete notato qualche attività di zanzare? Condividetelo ora!",
+    "what_to_do_txt_2": "Quale attività di zanzare avete notato?",
+    "what_to_do_txt_3": "Cosa avete visto oggi?",
+    "what_to_do_txt_4": "Ci sono segni di zanzare nelle vicinanze? È il vostro momento!",
+    "what_to_do_txt_5": "Avvistamenti di zanzare? Catturiamole!"
 }

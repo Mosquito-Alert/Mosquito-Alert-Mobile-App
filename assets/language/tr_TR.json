@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Raporlarınızda hassas konum etiketlemesi için GPS kullanın.",
     "NSPhotoLibraryAddUsageDescription": "Uygulama ile çekilen fotoğrafları cihazınızın galerisine kaydedin.",
     "NSPhotoLibraryUsageDescription": "Mevcut görüntüleri raporlarınıza eklemek için fotoğraf galerinize erişin.",
-    "plural_bite": "sivrisinek ısırığı"
+    "plural_bite": "sivrisinek ısırığı",
+    "non_identified_specie": "Tanımlanamayan tür",
+    "home_tab": "Ana Sayfa",
+    "copied_to_clipboard_success": "Panoya kopyalandı.",
+    "copied_to_clipboard_error": "Hata: Panoya kopyalanamıyor. Veriler boş.",
+    "public_map_tab": "Genel harita",
+    "guide_tab": "Kılavuz",
+    "info_tab": "Bilgi",
+    "what_to_do_txt_1": "Siz herhangi bir sivrisinek aktivitesi fark ettiniz mi? Şimdi paylaşın!",
+    "what_to_do_txt_2": "Hangi sivrisinek aktivitesini gördünüz?",
+    "what_to_do_txt_3": "Bugün ne gördünüz?",
+    "what_to_do_txt_4": "Yakınlarda sivrisinek belirtisi var mı? Sıra sizde!",
+    "what_to_do_txt_5": "Sivrisinek mi gördünüz? Hadi yakalayalım!"
 }

@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Korištenje GPS-a za precizno označavanje lokacije u vašim izvješćima.",
     "NSPhotoLibraryAddUsageDescription": "Spremanje fotografija snimljenih aplikacijom u galeriju vašeg uređaja.",
     "NSPhotoLibraryUsageDescription": "Pristup vašoj galeriji fotografija za prilaganje postojećih slika vašim izvješćima.",
-    "plural_bite": ""
+    "plural_bite": "",
+    "non_identified_specie": "Neidentificirana vrsta",
+    "home_tab": "Početna",
+    "copied_to_clipboard_success": "Kopirano u međuspremnik.",
+    "copied_to_clipboard_error": "Pogreška: Nije moguće kopirati u međuspremnik. Podaci su nulti.",
+    "public_map_tab": "Javna karta",
+    "guide_tab": "Vodič",
+    "info_tab": "Informacije",
+    "what_to_do_txt_1": "Jeste li primijetili aktivnost komaraca? Podijelite sada!",
+    "what_to_do_txt_2": "Koju aktivnost komaraca ste uočili?",
+    "what_to_do_txt_3": "Što ste vidjeli danas?",
+    "what_to_do_txt_4": "Ima li komaraca u blizini? Vaše je vrijeme!",
+    "what_to_do_txt_5": "Opažanja komaraca? Uhvatimo ga!"
 }

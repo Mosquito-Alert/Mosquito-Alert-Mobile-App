@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "GPS gebruiken voor nauwkeurige locatietags in je rapporten.",
     "NSPhotoLibraryAddUsageDescription": "Foto's die met de app zijn gemaakt op te slaan in de galerij van je apparaat.",
     "NSPhotoLibraryUsageDescription": "Toegang tot je fotogalerij om bestaande afbeeldingen aan je rapporten toe te voegen.",
-    "plural_bite": "Muggenbeten"
+    "plural_bite": "Muggenbeten",
+    "non_identified_specie": "Niet geïdentificeerde soort",
+    "home_tab": "Home",
+    "copied_to_clipboard_success": "Gekopieerd naar het klembord.",
+    "copied_to_clipboard_error": "Fout: kan niet naar het klembord kopiëren. Gegevens zijn nul.",
+    "public_map_tab": "Openbare kaart",
+    "guide_tab": "Gids",
+    "info_tab": "Info",
+    "what_to_do_txt_1": "Heb jij muggenactiviteit opgemerkt? Deel het nu!",
+    "what_to_do_txt_2": "Welke muggenactiviteit heb je gezien?",
+    "what_to_do_txt_3": "Wat heb je vandaag gezien?",
+    "what_to_do_txt_4": "Een teken van muggen in de buurt? Het is jouw tijd!",
+    "what_to_do_txt_5": "Muggen gezien? Laten we ze vangen!"
 }

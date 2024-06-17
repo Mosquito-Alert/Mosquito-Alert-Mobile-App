@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Utilizați GPS pentru a marca cu precizie locația în rapoartele dvs.",
     "NSPhotoLibraryAddUsageDescription": "Să salvați fotografiile realizate cu aplicația în galeria dispozitivului dumneavoastră.",
     "NSPhotoLibraryUsageDescription": "Să accesez galeria dvs. foto pentru a atașa imagini existente la rapoarte.",
-    "plural_bite": "mușcături de țânțar"
+    "plural_bite": "mușcături de țânțar",
+    "non_identified_specie": "Specie neidentificată",
+    "home_tab": "Acasă",
+    "copied_to_clipboard_success": "Copiat în clipboard.",
+    "copied_to_clipboard_error": "Eroare: nu se poate copia în clipboard. Datele sunt nule.",
+    "public_map_tab": "Hartă publică",
+    "guide_tab": "Ghid",
+    "info_tab": "Informații",
+    "what_to_do_txt_1": "Ați observat vreo activitate a țânțarilor? Împărtășește-o acum!",
+    "what_to_do_txt_2": "Ce activitate a țânțarilor ați observat?",
+    "what_to_do_txt_3": "Ce ați văzut astăzi?",
+    "what_to_do_txt_4": "Vreun semn de țânțari în apropiere? E timpul tău!",
+    "what_to_do_txt_5": "Țânțari? Să-l prindem!"
 }

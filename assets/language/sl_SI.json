@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Uporabljati GPS za natančno označevanje lokacije v poročilih.",
     "NSPhotoLibraryAddUsageDescription": "Shranjevanje fotografij, posnetih z aplikacijo, v galerijo naprave.",
     "NSPhotoLibraryUsageDescription": "Dostopajte do svoje galerije fotografij in priložite obstoječe slike svojim poročilom.",
-    "plural_bite": "ugriz komarja"
+    "plural_bite": "ugriz komarja",
+    "non_identified_specie": "Neidentificirana vrsta",
+    "home_tab": "Domov",
+    "copied_to_clipboard_success": "Kopirano v odložišče.",
+    "copied_to_clipboard_error": "Napaka: ni mogoče kopirati v odložišče. Podatki so nični.",
+    "public_map_tab": "Javni zemljevid",
+    "guide_tab": "Vodnik",
+    "info_tab": "Informacije",
+    "what_to_do_txt_1": "Ste opazili aktivnost komarjev? Delite zdaj!",
+    "what_to_do_txt_2": "Kakšno aktivnost komarjev ste opazili?",
+    "what_to_do_txt_3": "Kaj ste videli danes?",
+    "what_to_do_txt_4": "Je v bližini kakšen znak komarjev? Vaš čas je!",
+    "what_to_do_txt_5": "Opazovanje komarjev? Ujemimo ga!"
 }

@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Usar o GPS para marcar a localización precisa nos teus informes.",
     "NSPhotoLibraryAddUsageDescription": "Gardar fotos feitas coa aplicación na galería do teu dispositivo.",
     "NSPhotoLibraryUsageDescription": "Acceder á túa galería de fotos para anexar imaxes existentes aos teus informes.",
-    "plural_bite": "Picaduras"
+    "plural_bite": "Picaduras",
+    "non_identified_specie": "Especie non identificada",
+    "home_tab": "Inicio",
+    "copied_to_clipboard_success": "Copiouse no portapapeis.",
+    "copied_to_clipboard_error": "Erro: non se puido copiar no portapapeis. Os datos son nulos.",
+    "public_map_tab": "Mapa público",
+    "guide_tab": "Guía",
+    "info_tab": "Información",
+    "what_to_do_txt_1": "Notaches algunha actividade de mosquitos? Compárteo agora!",
+    "what_to_do_txt_2": "Que actividade dos mosquitos detectaches?",
+    "what_to_do_txt_3": "Que viches hoxe?",
+    "what_to_do_txt_4": "Algún sinal de mosquitos preto? É o teu momento!",
+    "what_to_do_txt_5": "Avistamentos de mosquitos? Imos collelo!"
 }

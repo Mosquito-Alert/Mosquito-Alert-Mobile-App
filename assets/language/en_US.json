@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Use GPS for precise location tagging in your reports.",
     "NSPhotoLibraryAddUsageDescription": "Save photos taken with the app to your device's gallery.",
     "NSPhotoLibraryUsageDescription": "Access your photo gallery to attach existing images to your reports.",
-    "plural_bite": "Bites"
+    "plural_bite": "Bites",
+    "non_identified_specie": "Non identified specie",
+    "home_tab": "Home",
+    "copied_to_clipboard_success": "Copied to clipboard.",
+    "copied_to_clipboard_error": "Error: Unable to copy to clipboard. Data is null.",
+    "public_map_tab": "Public map",
+    "guide_tab": "Guide",
+    "info_tab": "Info",
+    "what_to_do_txt_1": "Have you noticed any mosquito activity? Share it now!",
+    "what_to_do_txt_2": "What mosquito activity have you spotted?",
+    "what_to_do_txt_3": "What have you seen today?",
+    "what_to_do_txt_4": "Any sign of mosquitoes nearby? It's your time!",
+    "what_to_do_txt_5": "Mosquito sightings? Let's catch it!"
 }

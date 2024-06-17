@@ -334,5 +334,17 @@
     "NSLocationWhenInUseUsageDescription": "Använda GPS för exakt platsmärkning i dina rapporter.",
     "NSPhotoLibraryAddUsageDescription": "Spara foton som tagits med appen i enhetens galleri.",
     "NSPhotoLibraryUsageDescription": "Få tillgång till ditt fotogalleri för att bifoga befintliga bilder till dina rapporter.",
-    "plural_bite": "myggbett"
+    "plural_bite": "myggbett",
+    "non_identified_specie": "Ej identifierad art",
+    "home_tab": "Hem",
+    "copied_to_clipboard_success": "Kopierade till urklipp.",
+    "copied_to_clipboard_error": "Fel: Det gick inte att kopiera till urklipp. Data är null.",
+    "public_map_tab": "Offentlig karta",
+    "guide_tab": "Guide",
+    "info_tab": "Info",
+    "what_to_do_txt_1": "Har du märkt någon myggaktivitet? Dela med dig av det nu!",
+    "what_to_do_txt_2": "Vilken myggaktivitet har du sett?",
+    "what_to_do_txt_3": "Vad har du sett idag?",
+    "what_to_do_txt_4": "Finns det tecken på myggor i närheten? Nu är det din tur!",
+    "what_to_do_txt_5": "Myggobservationer? Låt oss fånga den!"
 }
