@@ -21,9 +21,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? userName;
-
-  StreamController<String?> nameStream = StreamController<String?>.broadcast();
   String? userUuid;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   int unreadNotifications = 0;
@@ -32,12 +29,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initAuthStatus();
-    _getNotificationCount();
   }
 
   @override
   void dispose() {
-    nameStream.close();
     loadingStream.close();
     super.dispose();
   }
@@ -67,12 +62,6 @@ class _HomePageState extends State<HomePage> {
     await Utils.loadFirebase();
 
     await Utils.getLocation(context);
-    if (UserManager.user != null) {
-      nameStream.add(UserManager.user!.email);
-      setState(() {
-        userName = UserManager.user!.email;
-      });
-    }
   }
 
   void _getNotificationCount() async {
