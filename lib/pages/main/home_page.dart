@@ -335,7 +335,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _createBiteReport() async {
+  Future<void> _createBiteReport() async {
     var createReport = await Utils.createNewReport('bite');
     loadingStream.add(false);
     if (createReport) {
@@ -351,7 +351,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _createAdultReport() async {
+  Future<void> _createAdultReport() async {
     var createReport = await Utils.createNewReport('adult');
     loadingStream.add(false);
     if (createReport) {
@@ -367,7 +367,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _createSiteReport() async {
+  Future<void> _createSiteReport() async {
     var createReport = await Utils.createNewReport('site');
     loadingStream.add(false);
     if (createReport) {
