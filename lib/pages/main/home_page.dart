@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Style.body(
-                                              MyLocalizations.of(context, 'what_to_do_txt'),
+                                              MyLocalizations.of(context, getRandomWhatToDoText()),
                                               fontSize: 16),
                                         ]),
                                     )                                      
@@ -143,6 +144,12 @@ class _HomePageState extends State<HomePage> {
         )
       ],
     );
+  }
+
+  String getRandomWhatToDoText() {
+    var rnd = Random();
+    var i = rnd.nextInt(5) + 1;
+    return 'what_to_do_txt_$i';
   }
 
   Future<void> _createBiteReport() async {
