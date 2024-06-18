@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/partners_page.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class InfoPage extends StatefulWidget {
