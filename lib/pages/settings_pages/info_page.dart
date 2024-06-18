@@ -31,19 +31,7 @@ class _InfoPageState extends State<InfoPage> {
         child: Container(
           margin: EdgeInsets.all(15),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                  Widget>[
-
-            SizedBox(
-              height: 35,
-            ),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, 'mosquitos_gallery_txt'), () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GalleryPage()),
-              );
-            }),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
             SizedBox(
               height: 10,
             ),
