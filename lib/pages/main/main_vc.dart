@@ -123,7 +123,7 @@ class _MainVCState extends State<MainVC> {
             badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
             child: IconButton(
               padding: EdgeInsets.only(top: 6),
-              icon: Icon(Icons.notifications, size: 32, ), 
+              icon: Icon(Icons.notifications, size: 24),
               onPressed: () {
                 Navigator.push(
                   context,
