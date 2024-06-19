@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:whatsapp_camera/whatsapp_camera.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/camera_whatsapp.dart';
+//import 'package:whatsapp_camera/whatsapp_camera.dart';
 
 class CameraPage extends StatefulWidget {
 
