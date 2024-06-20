@@ -118,7 +118,7 @@ class _MainVCState extends State<MainVC> {
         ),
         actions: <Widget>[
           badges.Badge(
-            position: badges.BadgePosition.topEnd(top: 2, end: 2),
+            position: badges.BadgePosition.topEnd(top: 4, end: 4),
             showBadge: unreadNotifications > 0,
             badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
             child: IconButton(
