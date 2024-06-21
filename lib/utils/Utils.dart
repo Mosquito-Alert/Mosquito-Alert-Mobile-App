@@ -393,7 +393,7 @@ class Utils {
     }
 
     var imageString =
-        json.encode({'image': image, 'verison_UUID': version_UUID});
+        json.encode({'image': image, 'version_UUID': version_UUID});
     savedImages.add(imageString);
     await UserManager.setImageList(savedImages);
   }
@@ -424,9 +424,9 @@ class Utils {
       for (var i = 0; i < savedImages.length; i++) {
         Map image = json.decode(savedImages[i]);
         isCreated = await ApiSingleton()
-            .saveImage(image['image'], image['verison_UUID']);
+            .saveImage(image['image'], image['version_UUID']);
         if (!isCreated) {
-          await saveLocalImage(image['image'], image['verison_UUID']);
+          await saveLocalImage(image['image'], image['version_UUID']);
         } else {
           await File(image['image']).delete();
         }

@@ -181,27 +181,23 @@ class Report {
 }
 
 class Photo {
-  int? id;
   String? photo;
-  String? uuid;
+  String? report_uuid;
 
   Photo({
-    this.id,
-    this.photo,
-    this.uuid,
+    required this.photo,
+    required this.report_uuid,
   });
 
   Photo.fromJson(Map<dynamic, dynamic> json) {
-    id = json['id'];
     photo = json['photo'];
-    uuid = json['uuid'];
+    report_uuid = json['report_uuid'];
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['id'] = id;
     data['photo'] = photo;
-    data['uuid'] = uuid;
+    data['report_uuid'] = report_uuid;
     return data;
   }
 }
