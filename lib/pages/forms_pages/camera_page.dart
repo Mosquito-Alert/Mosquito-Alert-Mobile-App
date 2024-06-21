@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/camera_whatsapp.dart';
@@ -13,7 +15,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   void _openCamera() async {
-    final photos = await Navigator.push(
+    final List<File> photos = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WhatsappCamera(
@@ -22,7 +24,7 @@ class _CameraPageState extends State<CameraPage> {
       ),
     );
 
-    if (photos != null && photos.length >= 1 && photos.length <= 3) {
+    if (photos.isNotEmpty && photos.length <= 3) {
       await Navigator.push(
         context,
         MaterialPageRoute(
