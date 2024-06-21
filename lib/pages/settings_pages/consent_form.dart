@@ -251,10 +251,11 @@ class _ConsentFormState extends State<ConsentForm> {
                     width: double.infinity,
                     child: Style.button(
                       MyLocalizations.of(context, 'continue_txt'),
-                      () {
+                      snapshot.data as bool
+                      ? () {
                         Navigator.pop(context);
                       }
-                    ),
+                      : null),
                   );
                 })
           ],
