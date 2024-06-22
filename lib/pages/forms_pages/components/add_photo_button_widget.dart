@@ -1,11 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/whatsapp_camera.dart/camera_whatsapp.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -92,7 +89,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
             ? GestureDetector(
                 onTap: () {
                   getImageWhatsapp();
-                  _chooseTypeImage();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -156,10 +152,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     );
   }
 
-  void _chooseTypeImage() {
-    
-  }
-
   void _deleteImage(String? img, int index) {
     if (widget.photoRequired && images.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
@@ -168,45 +160,6 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       Utils.deleteImage(img);
       setState(() {
         images.removeAt(index);
-      });
-    }
-  }
-
-  void getGalleryImages() async {
-    // TODO: Here
-    var newFiles = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    var paths = <String?>[];
-
-    if (newFiles != null &&
-        newFiles.files.isNotEmpty) {
-      newFiles.files.forEach((image) {
-        Utils.saveImgPath(File(image.path!));
-        paths.add(image.path);
-      });
-
-      setState(() {
-        images = [...images, ...paths];
-      });
-    }    
-  }
-
-  Future getImage(source) async {
-    // TODO: Here
-    if (await Permission.camera.isPermanentlyDenied && Platform.isIOS) {
-      await openAppSettings();
-      return;
-    }
-
-    final _picker = ImagePicker();
-    var image = await _picker.getImage(
-        source: source, maxHeight: 1024, imageQuality: 60);
-    if (image != null) {
-      final file = File(image.path);
-      Utils.saveImgPath(file);
-      setState(() {
-        images.add(image.path);
       });
     }
   }
