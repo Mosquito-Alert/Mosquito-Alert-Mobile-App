@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/whatsapp_camera.dart/camera_whatsapp.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path_provider/path_provider.dart';
@@ -90,6 +91,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           return index == (images.length)
             ? GestureDetector(
                 onTap: () {
+                  getImageWhatsapp();
                   _chooseTypeImage();
                 },
                 child: Container(
@@ -155,72 +157,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   void _chooseTypeImage() {
-    var listForiOS = <Widget>[
-      CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Text(
-          MyLocalizations.of(context, 'gallery'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-      CupertinoActionSheetAction(
-        onPressed: () {
-          if (Utils.report!.type == 'adult') {
-            Utils.infoAdultCamera(context, getImage);
-          } else if (Utils.report!.type == 'site') {
-            Utils.infoBreedingCamera(context, getImage);
-          }
-          Navigator.pop(context);
-        },
-        child: Text(
-          MyLocalizations.of(context, 'camara'),
-          style: TextStyle(color: Colors.blue),
-        ),
-      ),
-    ];
-    var listForAndroid = <Widget>[
-      InkWell(
-        onTap: () {
-          if (Utils.report!.type == 'adult') {
-            Utils.infoAdultCamera(context, getImage);
-          } else if (Utils.report!.type == 'site') {
-            Utils.infoBreedingCamera(context, getImage);
-          }
-          Navigator.pop(context);
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'camara'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-      Divider(height: 1.0),
-      InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          getGalleryImages();
-        },
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'gallery'),
-              style: TextStyle(color: Colors.blue, fontSize: 15)),
-        ),
-      ),
-    ];
-
-    Utils.modalDetailTrackingforPlatform(
-        Theme.of(context).platform == TargetPlatform.iOS
-            ? listForiOS
-            : listForAndroid,
-        Theme.of(context).platform,
-        context, () {
-      Navigator.pop(context);
-    }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
+    
   }
 
   void _deleteImage(String? img, int index) {
@@ -236,6 +173,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   void getGalleryImages() async {
+    // TODO: Here
     var newFiles = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
@@ -255,6 +193,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   Future getImage(source) async {
+    // TODO: Here
     if (await Permission.camera.isPermanentlyDenied && Platform.isIOS) {
       await openAppSettings();
       return;
@@ -270,5 +209,19 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         images.add(image.path);
       });
     }
+  }
+
+  Future<void> getImageWhatsapp() async{
+    List<File> files = await Navigator.push(
+     context,
+     MaterialPageRoute(
+       builder: (context) => const WhatsappCamera(multiple: false,)),
+    );
+
+    var file = files[0];
+    Utils.saveImgPath(file);
+    setState(() {
+      images.add(file.path);
+    });
   }
 }
