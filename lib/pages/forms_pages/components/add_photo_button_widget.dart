@@ -186,7 +186,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           getGalleryImages();
         },
         child: Text(
-          MyLocalizations.of(context, 'gallery')!,
+          MyLocalizations.of(context, 'gallery'),
           style: TextStyle(color: Colors.blue),
         ),
       ),
@@ -218,7 +218,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'camara')!,
+          child: Text(MyLocalizations.of(context, 'camara'),
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
