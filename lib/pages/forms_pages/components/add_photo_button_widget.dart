@@ -31,14 +31,14 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     _initImages();
   }
 
-  _permissionsPath() async {
+  Future<void> _permissionsPath() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
     }
   }
 
-  _initImages() async {
+  Future<void> _initImages() async {
     if (Utils.imagePath != null && Utils.imagePath!.isNotEmpty) {
       Utils.imagePath!.forEach((element) async {
         if (element['id'] == Utils.report!.version_UUID) {
@@ -75,107 +75,83 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   @override
   Widget build(BuildContext context) {
-    return images.isEmpty
-        ? GestureDetector(
-            onTap: () {
-              _chooseTypeImage();
-            },
-            child: Card(
-              margin: EdgeInsets.only(bottom: 15),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: GestureDetector(
+    return Container(
+      margin: EdgeInsets.all(15),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: min(3, images.length + 1),
+        itemBuilder: (context, index) {
+          return index == (images.length)
+            ? GestureDetector(
                 onTap: () {
                   _chooseTypeImage();
                 },
                 child: Container(
-                  height: 100,
-                  width: 100,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1),
+                      border:
+                          Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(15)),
                   child: Icon(
                     Icons.add,
                     size: 30,
                   ),
                 ),
-              ),
-            ),
-          )
-        : Container(
-            margin: EdgeInsets.only(bottom: 15),
-            child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-                itemCount: min(3, images.length + 1),
-                itemBuilder: (context, index) {
-                  return index == (images.length)
-                      ? GestureDetector(
-                          onTap: () {
-                            _chooseTypeImage();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Icon(
-                              Icons.add,
-                              size: 30,
-                            ),
-                          ),
-                        )
-                      : Stack(
-                          alignment: Alignment.topLeft,
-                          children: <Widget>[
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.file(
-                                    File(images[index]!),
-                                    fit: BoxFit.cover,
-                                    height: 100,
-                                    width: 100,
-                                  )),
-                            ),
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.black54,
-                                    Colors.transparent,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.center,
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: IconButton(
-                                  onPressed: () {
-                                    _deleteImage(images[index], index);
-                                  },
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                }),
-          );
+              )
+            :
+            Stack(
+              alignment: Alignment.topLeft,
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.file(
+                      File(images[index]!),
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
+                    )
+                  ),
+                ),
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black54,
+                        Colors.transparent,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.center,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        _deleteImage(images[index], index);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+      ),
+    );
   }
 
   _chooseTypeImage() {
