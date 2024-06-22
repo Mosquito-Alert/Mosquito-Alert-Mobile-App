@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
@@ -14,7 +10,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breedi
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class BreedingReportPage extends StatefulWidget {
   final Report? editReport;
@@ -110,7 +105,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _initialFormsReport = List.from(_formsRepot);
   }
 
-  skipPage3(skip) {
+  void skipPage3(skip) {
     var list = List<Widget>.from(_initialFormsReport);
     if (skip) {
       list.removeAt(2);
@@ -126,23 +121,23 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     }
   }
 
-  addOtherReport(String? reportType) {
+  void addOtherReport(String? reportType) {
     setState(() {
       otherReport = reportType;
     });
   }
 
-  setShowCamera(data) {
+  void setShowCamera(data) {
     setState(() {
       showCamera = data;
     });
   }
 
-  setValid(isValid) {
+  void setValid(isValid) {
     validStream.add(isValid);
   }
 
-  goNextPage() {
+  void goNextPage() {
     _pagesController!
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) => setValid(widget.editReport != null));
@@ -151,7 +146,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     });
   }
 
-  navigateOtherReport() async {
+  void navigateOtherReport() async {
     switch (otherReport) {
       case 'bite':
         Utils.addOtherReport('bite');
@@ -335,61 +330,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     );
   }
 
-  _chooseTypeImage() {
+  void _chooseTypeImage() {
     _pagesController!
         .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
         .then((value) => setValid(widget.editReport != null));
   }
 
-  getGalleryImages() async {
-    var pickFiles = await FilePicker.platform.pickFiles(type: FileType.image);
-
-    if (pickFiles != null &&
-        pickFiles.files.isNotEmpty) {
-      setShowCamera(false);
-      await _pagesController!
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-          .then((value) => setValid(widget.editReport != null));
-      setState(() {
-        index = _pagesController!.page! + 1;
-      });
-    }
-
-    if (pickFiles != null &&
-        pickFiles.files.isNotEmpty) {
-      pickFiles.files.forEach((image) {
-        Utils.saveImgPath(File(image.path!));
-      });
-    }      
-  }
-
-  Future getImage(source) async {
-    if (await Permission.camera.isPermanentlyDenied && Platform.isIOS) {
-      await openAppSettings();
-      return;
-    }
-
-    final _picker = ImagePicker();
-    var image = await _picker.getImage(
-      source: source,
-      maxHeight: 1024,
-      imageQuality: 60,
-    );
-
-    if (image != null) {
-      final file = File(image.path);
-      Utils.saveImgPath(file);
-      setShowCamera(false);
-      await _pagesController!
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-          .then((value) => setValid(widget.editReport != null));
-      setState(() {
-        index = _pagesController!.page! + 1;
-      });
-    }
-  }
-
-  _showAlertOk() {
+  void _showAlertOk() {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, 'app_name'),
@@ -410,7 +357,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     );
   }
 
-  _showAlertKo() {
+  void _showAlertKo() {
     loadingStream.add(false);
     Utils.showAlert(
       MyLocalizations.of(context, 'app_name'),
@@ -429,7 +376,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     );
   }
 
-  _onWillPop() {
+  void _onWillPop() {
     if (Utils.report!.responses!.isNotEmpty) {
       Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'close_report_no_save_txt'), () {
