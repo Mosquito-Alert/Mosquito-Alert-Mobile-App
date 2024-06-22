@@ -138,7 +138,7 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
     );
   }
 
-  addQuestion(answer, answerId) {
+  void addQuestion(answer, answerId) {
     setState(() {
       question!.answer = answer;
       question!.answer_id = answerId;
