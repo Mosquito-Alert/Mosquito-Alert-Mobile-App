@@ -351,7 +351,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     );
   }
 
-    Widget continueButton(){
+  Widget continueButton(){
     return Container(
       width: double.infinity,
       height: 54,

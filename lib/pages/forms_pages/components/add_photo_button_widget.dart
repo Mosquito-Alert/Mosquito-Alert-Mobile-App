@@ -154,7 +154,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     );
   }
 
-  _chooseTypeImage() {
+  void _chooseTypeImage() {
     var listForiOS = <Widget>[
       CupertinoActionSheetAction(
         onPressed: () {
@@ -176,7 +176,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
           Navigator.pop(context);
         },
         child: Text(
-          MyLocalizations.of(context, 'camara')!,
+          MyLocalizations.of(context, 'camara'),
           style: TextStyle(color: Colors.blue),
         ),
       ),
@@ -207,7 +207,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.all(20),
-          child: Text(MyLocalizations.of(context, 'gallery')!,
+          child: Text(MyLocalizations.of(context, 'gallery'),
               style: TextStyle(color: Colors.blue, fontSize: 15)),
         ),
       ),
@@ -223,7 +223,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }, title: '${MyLocalizations.of(context, 'bs_info_adult_title')}:');
   }
 
-  _deleteImage(String? img, int index) {
+  void _deleteImage(String? img, int index) {
     if (widget.photoRequired && images.length == 1) {
       Utils.showAlert(MyLocalizations.of(context, 'app_name'),
           MyLocalizations.of(context, 'photo_required_alert'), context);
@@ -235,7 +235,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }
   }
 
-  getGalleryImages() async {
+  void getGalleryImages() async {
     var newFiles = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
