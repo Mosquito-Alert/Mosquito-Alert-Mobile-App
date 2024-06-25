@@ -83,6 +83,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Style.title(MyLocalizations.of(context, 'bs_info_adult_title')),
+          Style.body('(Waiting for final translations) Only one insect per photo - Only one insect per report'),
           SizedBox(height: 15),
           GridView.builder(
             shrinkWrap: true,
