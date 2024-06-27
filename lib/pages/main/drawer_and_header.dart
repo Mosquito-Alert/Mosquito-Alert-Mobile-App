@@ -34,18 +34,26 @@ class _MainVCState extends State<MainVC> {
   int unreadNotifications = 0;
   var packageInfo;
   String? userUuid;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _getNotificationCount();
-    getPackageInfo();
-    initAuthStatus();
+    _startAsyncTasks();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _startAsyncTasks() async {
+    await _getNotificationCount();
+    await getPackageInfo();
+    await initAuthStatus();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> _getNotificationCount() async {
@@ -60,28 +68,26 @@ class _MainVCState extends State<MainVC> {
     });
   }
 
-  void getPackageInfo() async {
+  Future<bool> getPackageInfo() async {
     var _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       packageInfo = _packageInfo;
     });
+    return true;
   }
 
-  void initAuthStatus() async {
+  Future<bool> initAuthStatus() async {
     if (Platform.isIOS) {
       await AppTrackingTransparency.requestTrackingAuthorization();
     }
 
-    await _getData();
-  }
-
-  Future<void> _getData() async {
     await UserManager.startFirstTime(context);
     userUuid = await UserManager.getUUID();
     UserManager.userScore = await ApiSingleton().getUserScores();
     await UserManager.setUserScores(UserManager.userScore);
     await Utils.loadFirebase();
     await Utils.getLocation(context);
+    return true;
   }
 
   static final List<Widget> _widgetOptions = <Widget>[
@@ -128,7 +134,9 @@ class _MainVCState extends State<MainVC> {
         ],
       ),
       body: Center(
-        child: _widgetOptions[_selectedIndex],
+        child: isLoading
+          ? CircularProgressIndicator()
+          : _widgetOptions[_selectedIndex],
       ),
       drawer: Drawer(
         child: Column(
