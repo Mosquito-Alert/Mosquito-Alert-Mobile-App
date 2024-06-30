@@ -38,7 +38,7 @@ class ApiSingleton {
   static const reports = '/reports/';
 
   //Session
-  static const sessions = '/sessions';
+  static const sessions = '/sessions/';
   static const sessionUpdate = '/session_update/';
 
   //Images
