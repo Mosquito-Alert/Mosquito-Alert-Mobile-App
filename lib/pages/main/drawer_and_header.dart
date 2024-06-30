@@ -48,12 +48,13 @@ class _MainVCState extends State<MainVC> {
   }
 
   void _startAsyncTasks() async {
-    await _getNotificationCount();
-    await getPackageInfo();
-    await initAuthStatus();
+    await UserManager.startFirstTime(context);
     setState(() {
       isLoading = false;
     });
+    await _getNotificationCount();
+    await getPackageInfo();
+    await initAuthStatus();
   }
 
   Future<void> _getNotificationCount() async {
@@ -81,7 +82,6 @@ class _MainVCState extends State<MainVC> {
       await AppTrackingTransparency.requestTrackingAuthorization();
     }
 
-    await UserManager.startFirstTime(context);
     userUuid = await UserManager.getUUID();
     UserManager.userScore = await ApiSingleton().getUserScores();
     await UserManager.setUserScores(UserManager.userScore);
