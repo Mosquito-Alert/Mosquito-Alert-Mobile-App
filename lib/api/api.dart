@@ -230,7 +230,7 @@ class ApiSingleton {
   Future<dynamic> createSession(Session session) async {
     try {
       final response = await http
-          .post(Uri.parse('$serverUrl$sessions/'),
+          .post(Uri.parse('$serverUrl$sessions'),
               headers: headers,
               body: json.encode(
                 session.toJson(),
