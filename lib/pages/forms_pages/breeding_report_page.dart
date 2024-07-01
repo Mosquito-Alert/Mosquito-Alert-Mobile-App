@@ -71,7 +71,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   late Report toEditReport;
 
   double index = 1.0;
-  double displayContinue = 1;
+  double displayContinue = 1.0;
   bool _atLeastOnePhotoAttached = false;
 
   void _initializeReport() async {
@@ -111,15 +111,15 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   void skipPage3(skip) {
     var list = List<Widget>.from(_initialFormsReport);
     if (skip) {
-      list.removeAt(2);
+      list.removeAt(3);
       setState(() {
         _formsRepot = list;
-        displayContinue = 1.0;
+        displayContinue = 2.0;
       });
     } else {
       setState(() {
         _formsRepot = List.from(_initialFormsReport);
-        displayContinue = 2.0;
+        displayContinue = 3.0;
       });
     }
   }
@@ -287,7 +287,14 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                               setState(() {
                                                 index = currentPage! + 1;
                                               });
-                                            } else if (currentPage == 3.0 &&
+                                            } /*else if (currentPage == 1.0 && _atLeastOnePhotoAttached){
+                                              _pagesController!
+                                                .nextPage(
+                                                    duration: Duration(microseconds: 300),
+                                                    curve: Curves.ease)
+                                                .then((value) => setValid(widget.editReport != null));
+                                            }*/
+                                            else if (currentPage == 4.0 &&
                                                     otherReport == 'adult' ||
                                                 otherReport == 'bite') {
                                               navigateOtherReport();
