@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/whatsapp_camera.dart/view_image.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:file_picker/file_picker.dart';
@@ -194,6 +195,23 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                 controller.captureImage(file);
                 Navigator.pop(context, controller.selectedImages);
               },
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: Container(
+                width: 0.6 * MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Text(MyLocalizations.of(context, 'ensure_single_mosquito_photos')),
+                )                
+              ),
             ),
           ),
           Padding(
