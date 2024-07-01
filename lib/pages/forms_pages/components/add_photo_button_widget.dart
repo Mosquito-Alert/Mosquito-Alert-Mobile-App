@@ -182,6 +182,10 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
        builder: (context) => const WhatsappCamera(multiple: false,)),
     );
 
+    if(files == null){
+      return;
+    }
+
     var file = files[0];
     Utils.saveImgPath(file);
     setState(() {
