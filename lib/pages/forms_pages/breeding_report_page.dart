@@ -5,6 +5,7 @@ import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/biting_location_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breeding_form.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -70,7 +71,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   late Report toEditReport;
 
   double index = 1.0;
-  double displayContinue = 2;
+  double displayContinue = 1;
+  bool _atLeastOnePhotoAttached = false;
 
   void _initializeReport() async {
     if (widget.editReport != null) {
@@ -88,6 +90,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _formsRepot = [
       QuestionsBreedingForm(displayQuestions.elementAt(0), setValid, true,
           _chooseTypeImage, 'assets/img/bottoms/breeding_1.png'),
+      AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached),
       QuestionsBreedingForm(
         displayQuestions.elementAt(1),
         setValid,
@@ -119,6 +122,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         displayContinue = 2.0;
       });
     }
+  }
+
+  void _checkAtLeastOnePhotoAttached(){
+    setState(() {
+      _atLeastOnePhotoAttached = true;
+    });
   }
 
   void addOtherReport(String? reportType) {
@@ -238,7 +247,20 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   children: _formsRepot,
                 ),
                 index <= displayContinue
-                    ? Container()
+                  ? index == 1 && _atLeastOnePhotoAttached ?
+                    Container(
+                      width: double.infinity,
+                      height: 54,
+                      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                      child: Style.button(
+                        MyLocalizations.of(context, 'continue_txt'), () {
+                          _pagesController!
+                            .nextPage(
+                                duration: Duration(microseconds: 300),
+                                curve: Curves.ease)
+                            .then((value) => setValid(widget.editReport != null));
+                          }
+                        )) : Container()
                     : index != _formsRepot.length.toDouble() - 1
                         ? SafeArea(
                             child: Align(
