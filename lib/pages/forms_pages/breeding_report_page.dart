@@ -88,8 +88,12 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _pagesController = PageController();
 
     _formsRepot = [
-      QuestionsBreedingForm(displayQuestions.elementAt(0), setValid, true,
-          _chooseTypeImage, 'assets/img/bottoms/breeding_1.png'),
+      QuestionsBreedingForm(
+        displayQuestions.elementAt(0),
+        setValid,
+        true,
+        goNextPage,
+        'assets/img/bottoms/breeding_1.png'),
       AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached),
       QuestionsBreedingForm(
         displayQuestions.elementAt(1),
@@ -254,13 +258,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                       child: Style.button(
                         MyLocalizations.of(context, 'continue_txt'), () {
-                          _pagesController!
-                            .nextPage(
-                                duration: Duration(microseconds: 300),
-                                curve: Curves.ease)
-                            .then((value) => setValid(widget.editReport != null));
-                          }
-                        )) : Container()
+                          goNextPage();
+                        }
+                      )
+                    ) : Container()
                     : index != _formsRepot.length.toDouble() - 1
                         ? SafeArea(
                             child: Align(
@@ -268,50 +269,29 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                             child: StreamBuilder<bool>(
                                 stream: validStream.stream,
                                 initialData: false,
-                                builder: (BuildContext ctxt,
-                                    AsyncSnapshot<bool> snapshot) {
+                                builder: (BuildContext ctxt, AsyncSnapshot<bool> snapshot) {
                                   return snapshot.data!
                                       ? Container(
                                           width: double.infinity,
                                           height: 54,
                                           margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
+                                            vertical: 6,
+                                            horizontal: 12),
                                           child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'), () {
-                                            var currentPage =
-                                                _pagesController!.page;
+                                            MyLocalizations.of(context, 'continue_txt'), () {
+                                              var currentPage =_pagesController!.page;
 
-                                            if (currentPage == 0.0) {
-                                              _chooseTypeImage();
-                                              setState(() {
-                                                index = currentPage! + 1;
-                                              });
-                                            } /*else if (currentPage == 1.0 && _atLeastOnePhotoAttached){
-                                              _pagesController!
-                                                .nextPage(
-                                                    duration: Duration(microseconds: 300),
-                                                    curve: Curves.ease)
-                                                .then((value) => setValid(widget.editReport != null));
-                                            }*/
-                                            else if (currentPage == 4.0 &&
-                                                    otherReport == 'adult' ||
-                                                otherReport == 'bite') {
-                                              navigateOtherReport();
-                                            } else {
-                                              setState(() {
-                                                index = currentPage! + 1;
-                                              });
-                                              _pagesController!
-                                                  .nextPage(
-                                                      duration: Duration(
-                                                          microseconds: 300),
-                                                      curve: Curves.ease)
-                                                  .then((value) => setValid(
-                                                      widget.editReport !=
-                                                          null));
+                                              if (currentPage == 0.0) {
+                                                goNextPage();
+                                              } else if (currentPage == 4.0) {
+                                                if (otherReport == 'adult' || otherReport == 'bite') {
+                                                  navigateOtherReport();
+                                                }
+                                              } else {
+                                                goNextPage();
+                                              }
                                             }
-                                          }),
+                                          ),
                                         )
                                       : Container(
                                           width: double.infinity,
@@ -357,12 +337,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         ],
       ),
     );
-  }
-
-  void _chooseTypeImage() {
-    _pagesController!
-        .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease)
-        .then((value) => setValid(widget.editReport != null));
   }
 
   void _showAlertOk() {
