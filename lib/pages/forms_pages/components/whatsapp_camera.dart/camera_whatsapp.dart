@@ -129,7 +129,7 @@ class WhatsappCamera extends StatefulWidget {
   ///```
   ///
   final bool multiple;
-  final String infoBadgeText;
+  final String infoBadgeTextKey;
 
   /// how use:
   ///```dart
@@ -141,7 +141,7 @@ class WhatsappCamera extends StatefulWidget {
   ///
   ///```
   ///
-  const WhatsappCamera({key, this.multiple = true, this.infoBadgeText = ''});
+  const WhatsappCamera({key, this.multiple = true, this.infoBadgeTextKey = ''});
 
   @override
   State<WhatsappCamera> createState() => _WhatsappCameraState();
@@ -199,7 +199,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
             ),
           ),
           Visibility(
-            visible: widget.infoBadgeText != '',
+            visible: widget.infoBadgeTextKey != '',
             child:Align(
               alignment: Alignment.topCenter,
               child: Padding(
@@ -213,7 +213,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                   child: Center(
                     heightFactor: 1.5,
                     child: Text(
-                      widget.infoBadgeText,
+                      MyLocalizations.of(context, widget.infoBadgeTextKey),
                       style: TextStyle(color: Colors.white)),
                   )
                 ),
