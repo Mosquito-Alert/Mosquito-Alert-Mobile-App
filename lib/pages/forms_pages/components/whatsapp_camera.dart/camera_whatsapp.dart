@@ -200,17 +200,19 @@ class _WhatsappCameraState extends State<WhatsappCamera>
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 100),
+              padding: const EdgeInsets.only(top: 70),
               child: Container(
-                width: 0.6 * MediaQuery.of(context).size.width,
+                width: 0.5 * MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text(MyLocalizations.of(context, 'ensure_single_mosquito_photos')),
-                )                
+                child: Center(
+                  heightFactor: 1.5,
+                  child: Text(
+                    MyLocalizations.of(context, 'one_mosquito_reminder_badge'),
+                    style: TextStyle(color: Colors.white)),
+                )
               ),
             ),
           ),
