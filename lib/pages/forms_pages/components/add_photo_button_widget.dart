@@ -186,7 +186,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
       MaterialPageRoute(
         builder: (context) => WhatsappCamera(
           multiple: false,
-          subtitle: getTextOnTopOfCamera(),
+          infoBadgeText: getTextOnTopOfCamera(),
         )
       ),
     );
