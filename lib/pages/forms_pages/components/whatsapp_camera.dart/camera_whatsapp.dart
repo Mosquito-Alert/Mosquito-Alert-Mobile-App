@@ -45,7 +45,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
 
   _timer() {
     Timer.periodic(const Duration(seconds: 2), (t) async {
-      Permission.camera.isGranted.then((value) {
+      await Permission.camera.isGranted.then((value) {
         if (value) {
           getPhotosToGallery();
           t.cancel();
@@ -206,7 +206,17 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                   onPressed: (() => Navigator.pop(context)),
                   icon: const Icon(Icons.close),
                 ),
-                IconButton(
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 32, right: 64),
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.black.withOpacity(0.6),
+                child: IconButton(
                   color: Colors.white,
                   onPressed: () async {
                     await controller.openGallery().then((value) {
@@ -217,7 +227,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                   },
                   icon: const Icon(Icons.image),
                 ),
-              ],
+              ),
             ),
           ),
           Positioned(
@@ -250,7 +260,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   onTap: () async {
-                                    controller
+                                    await controller
                                         .selectImage(controller.images[index])
                                         .then((value) {
                                       Navigator.pop(
@@ -282,7 +292,8 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                           ),
                         ],
                       );
-                    }),
+                    }
+                  ),
               ),
             ),
           ),
@@ -489,7 +500,7 @@ class _ImageItem extends StatelessWidget {
               color: Colors.white,
               icon: const Icon(Icons.zoom_out_map_outlined),
               onPressed: () async {
-                image.getFile().then((value) {
+                await image.getFile().then((value) {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) {
                       return Hero(

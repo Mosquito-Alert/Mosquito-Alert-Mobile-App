@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/models/question.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/image_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/small_question_option_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -67,9 +66,6 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                 SizedBox(
                   height: 35,
                 ),
-                widget.displayQuestion['question']['id'] == 10
-                    ? AddPhotoButton(true, true, 'site')
-                    : Container(),
                 Style.title(MyLocalizations.of(
                     context, widget.displayQuestion['question']['text'])),
                 SizedBox(
