@@ -14,7 +14,7 @@ class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
   final Function _atLeastOnePhotoAttached;
-  final String infoBadgeTextKey;
+  final String? infoBadgeTextKey;
 
   AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.infoBadgeTextKey);
 
