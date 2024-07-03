@@ -14,9 +14,10 @@ class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
   final Function _atLeastOnePhotoAttached;
+  final String? subtitleKey;
   final String? infoBadgeTextKey;
 
-  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.infoBadgeTextKey);
+  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.subtitleKey, this.infoBadgeTextKey);
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -82,6 +83,10 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Style.title(MyLocalizations.of(context, 'bs_info_adult_title')),
+          Visibility(
+            visible: widget.subtitleKey != null,
+            child: Style.body(MyLocalizations.of(context, widget.subtitleKey))
+          ),
           SizedBox(height: 15),
           GridView.builder(
             shrinkWrap: true,
