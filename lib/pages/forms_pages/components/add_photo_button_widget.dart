@@ -14,8 +14,9 @@ class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
   final Function _atLeastOnePhotoAttached;
+  final bool isAdultReport;
 
-  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached);
+  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.isAdultReport);
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -172,10 +173,14 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   Future<void> getImageWhatsapp() async{
-    List<File>? files = await Navigator.push(
-     context,
-     MaterialPageRoute(
-       builder: (context) => const WhatsappCamera(multiple: false,)),
+    var files = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WhatsappCamera(
+          multiple: false,
+          isAdultReport: widget.isAdultReport,
+        )
+      ),
     );
 
     if(files == null){

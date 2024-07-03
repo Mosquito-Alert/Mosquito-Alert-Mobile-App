@@ -129,6 +129,7 @@ class WhatsappCamera extends StatefulWidget {
   ///```
   ///
   final bool multiple;
+  final bool isAdultReport;
 
   /// how use:
   ///```dart
@@ -140,7 +141,7 @@ class WhatsappCamera extends StatefulWidget {
   ///
   ///```
   ///
-  const WhatsappCamera({key, this.multiple = true});
+  const WhatsappCamera({key, this.multiple = true, required this.isAdultReport});
 
   @override
   State<WhatsappCamera> createState() => _WhatsappCameraState();
@@ -197,22 +198,25 @@ class _WhatsappCameraState extends State<WhatsappCamera>
               },
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 70),
-              child: Container(
-                width: 0.5 * MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(10),
+          Visibility(
+            visible: widget.isAdultReport,
+            child:Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 70),
+                child: Container(
+                  width: 0.5 * MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    heightFactor: 1.5,
+                    child: Text(
+                      MyLocalizations.of(context, 'one_mosquito_reminder_badge'),
+                      style: TextStyle(color: Colors.white)),
+                  )
                 ),
-                child: Center(
-                  heightFactor: 1.5,
-                  child: Text(
-                    MyLocalizations.of(context, 'one_mosquito_reminder_badge'),
-                    style: TextStyle(color: Colors.white)),
-                )
               ),
             ),
           ),
