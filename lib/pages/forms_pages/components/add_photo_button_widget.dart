@@ -14,9 +14,9 @@ class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
   final Function _atLeastOnePhotoAttached;
-  final bool isAdultReport;
+  final String type;
 
-  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.isAdultReport);
+  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.type);
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -172,13 +172,21 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     }
   }
 
+  String getTextOnTopOfCamera(){
+    if(widget.type == 'adult'){
+      return MyLocalizations.of(context, 'one_mosquito_reminder_badge');
+    }
+    
+    return '';
+  }
+
   Future<void> getImageWhatsapp() async{
     var files = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WhatsappCamera(
           multiple: false,
-          isAdultReport: widget.isAdultReport,
+          subtitle: getTextOnTopOfCamera(),
         )
       ),
     );

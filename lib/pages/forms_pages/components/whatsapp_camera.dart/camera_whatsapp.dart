@@ -129,7 +129,7 @@ class WhatsappCamera extends StatefulWidget {
   ///```
   ///
   final bool multiple;
-  final bool isAdultReport;
+  final String subtitle;
 
   /// how use:
   ///```dart
@@ -141,7 +141,7 @@ class WhatsappCamera extends StatefulWidget {
   ///
   ///```
   ///
-  const WhatsappCamera({key, this.multiple = true, required this.isAdultReport});
+  const WhatsappCamera({key, this.multiple = true, required this.subtitle});
 
   @override
   State<WhatsappCamera> createState() => _WhatsappCameraState();
@@ -199,7 +199,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
             ),
           ),
           Visibility(
-            visible: widget.isAdultReport,
+            visible: widget.subtitle != '',
             child:Align(
               alignment: Alignment.topCenter,
               child: Padding(
@@ -213,7 +213,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                   child: Center(
                     heightFactor: 1.5,
                     child: Text(
-                      MyLocalizations.of(context, 'one_mosquito_reminder_badge'),
+                      widget.subtitle,
                       style: TextStyle(color: Colors.white)),
                   )
                 ),
