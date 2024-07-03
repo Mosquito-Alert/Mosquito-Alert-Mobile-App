@@ -14,9 +14,9 @@ class AddPhotoButton extends StatefulWidget {
   final bool isEditing;
   final bool photoRequired;
   final Function _atLeastOnePhotoAttached;
-  final bool isAdultReport;
+  final String? subtitle;
 
-  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.isAdultReport);
+  AddPhotoButton(this.isEditing, this.photoRequired, this._atLeastOnePhotoAttached, this.subtitle);
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -83,8 +83,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         children: [
           Style.title(MyLocalizations.of(context, 'bs_info_adult_title')),
           Visibility(
-            visible: widget.isAdultReport,
-            child: Style.body(MyLocalizations.of(context, 'ensure_single_mosquito_photos'))),          
+            visible: widget.subtitle != null,
+            child: Style.body(MyLocalizations.of(context, widget.subtitle))
+          ),
           SizedBox(height: 15),
           GridView.builder(
             shrinkWrap: true,
@@ -176,7 +177,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
   }
 
   Future<void> getImageWhatsapp() async{
-    List<File>? files = await Navigator.push(
+    var files = await Navigator.push(
      context,
      MaterialPageRoute(
        builder: (context) => const WhatsappCamera(multiple: false,)),
