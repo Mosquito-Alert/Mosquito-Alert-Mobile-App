@@ -207,7 +207,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                 child: Container(
                   width: 0.5 * MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: Colors.orange,
+                    color: Colors.orange.shade300,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
