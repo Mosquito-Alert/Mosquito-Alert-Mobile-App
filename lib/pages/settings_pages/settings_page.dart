@@ -24,7 +24,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isBgTrackingEnabled = false;
-  String? hashtag;
+  List<String>? hashtags;
   var packageInfo;
 
   final languageCodes = [
@@ -59,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     getPackageInfo();
     initializeBgTracking();
-    getHashtag();
+    getHashtags();
   }
 
   void initializeBgTracking() async {
@@ -73,8 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  void getHashtag() async {
-    hashtag = await UserManager.getHashtag();
+  void getHashtags() async {
+    hashtags = await UserManager.getHashtags();
     setState(() {});
   }
 
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             SettingsMenuWidget(
-                hashtag == null
+                hashtags == null
                     ? MyLocalizations.of(context, 'enable_auto_hashtag')
                     : MyLocalizations.of(context, 'disable_auto_hashtag'), () {
               _manageHashtag();
@@ -193,12 +193,12 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   _manageHashtag() async {
-    if (hashtag != null) {
+    if (hashtags != null) {
       await Utils.showAlertYesNo(
         MyLocalizations.of(context, 'app_name'),
         MyLocalizations.of(context, 'disable_auto_hashtag_text'),
         () async {
-          hashtag = null;
+          hashtags = null;
           updateHashtag();
         },
         context,
@@ -208,7 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     var controller = TextEditingController();
     if (Platform.isIOS) {
-      hashtag = await showDialog(
+      hashtags = await showDialog(
           context: context,
           builder: (context) {
             return CupertinoAlertDialog(
@@ -270,7 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           });
     } else {
-      hashtag = await showDialog(
+      hashtags = await showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -333,7 +333,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void updateHashtag() async {
-    await UserManager.setHashtag(hashtag);
+    await UserManager.setHashtags(hashtags);
 
     setState(() {});
   }
