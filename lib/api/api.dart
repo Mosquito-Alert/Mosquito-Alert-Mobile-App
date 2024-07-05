@@ -361,7 +361,7 @@ class ApiSingleton {
         body.addAll({'app_language': report.app_language});
       }
 
-      var hashtag = await UserManager.getHashtag();
+      var hashtag = await UserManager.getHashtags();
       if ((report.note != null && report.note != '') || hashtag != null) {
         body.addAll({
           'note':
