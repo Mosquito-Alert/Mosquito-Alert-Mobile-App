@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:language_picker/language_picker.dart';
 
 import 'package:language_picker/languages.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/components/hashtag.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -130,6 +131,18 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SizedBox(
               height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+                border: Border.all(color: Colors.black.withOpacity(0.1))
+              ),
+              child: ListTile(
+                title: Style.body('Auto-tag reports'),
+                subtitle: StringMultilineTags(),
+              ),
             ),
           ]),
         ),
