@@ -363,7 +363,7 @@ class ApiSingleton {
 
       var hashtag = await UserManager.getHashtags();
       if ((report.note != null && report.note != '') || hashtag != null) {
-        var combinedHashtags = hashtag != null ? hashtag.join(' ') : null;
+        var combinedHashtags = hashtag != null ? hashtag.join(', ') : null;
         body.addAll({
           'note':
               '${report.note != null && report.note != "" ? report.note : ''}${report.note != null && report.note != "" && combinedHashtags != null ? ' ' : ''}${combinedHashtags != null ? '$combinedHashtags' : ''}'
