@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
 
@@ -12,6 +13,12 @@ class StringMultilineTags extends StatefulWidget {
 class _StringMultilineTagsState extends State<StringMultilineTags> {
   late double _distanceToField;
   late StringTagController _stringTagController;
+  late List<String> hashtags;
+
+  void getHashtags() async {
+    hashtags = await UserManager.getHashtags() ?? [];
+    setState(() {});
+  }
 
   @override
   void didChangeDependencies() {
@@ -23,6 +30,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
   void initState() {
     super.initState();
     _stringTagController = StringTagController();
+    getHashtags();
   }
 
   @override
@@ -39,6 +47,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
         children: [
           TextFieldTags<String>(
             textfieldTagsController: _stringTagController,
+            initialTags: hashtags,
             textSeparators: const [' ', ','],
             letterCase: LetterCase.normal,
             inputFieldBuilder: (context, inputFieldValues) {
@@ -64,74 +73,72 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                         width: 3.0,
                       ),
                     ),
-                    hintText: inputFieldValues.tags.isNotEmpty
-                      ? ''
-                      : 'Enter tag...',
+                    hintText: inputFieldValues.tags.isNotEmpty ? '' : 'Enter tag...',
                     errorText: inputFieldValues.error,
                     prefixIconConstraints: BoxConstraints(maxWidth: _distanceToField * 0.8),
-                    prefixIcon: inputFieldValues.tags.isNotEmpty
-                      ? SingleChildScrollView(
-                          controller: inputFieldValues.tagScrollController,
-                          scrollDirection: Axis.vertical,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 8,
-                              bottom: 8,
-                              left: 8,
-                            ),
-                            child: Wrap(
-                              runSpacing: 4.0,
-                              spacing: 4.0,
-                              children:
-                                  inputFieldValues.tags.map((String tag) {
-                                return Container(
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20.0),
-                                    ),
-                                    color: Color.fromARGB(255, 74, 137, 92),
-                                  ),
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 5.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      InkWell(
-                                        child: Text(
-                                          '#$tag',
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        onTap: () {
-                                          //print("$tag selected");
-                                        },
-                                      ),
-                                      const SizedBox(width: 4.0),
-                                      InkWell(
-                                        child: const Icon(
-                                          Icons.cancel,
-                                          size: 14.0,
-                                          color: Color.fromARGB(
-                                              255, 233, 233, 233),
-                                        ),
-                                        onTap: () {
-                                          inputFieldValues.onTagRemoved(tag);
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }).toList()
-                            ),
+                    prefixIcon: inputFieldValues.tags.isEmpty ? null :
+                      SingleChildScrollView(
+                        controller: inputFieldValues.tagScrollController,
+                        scrollDirection: Axis.vertical,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 8,
+                            left: 8,
                           ),
-                        )
-                      : null,
+                          child: Wrap(
+                            runSpacing: 4.0,
+                            spacing: 4.0,
+                            children: inputFieldValues.tags.map((String tag) {
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20.0),
+                                  ),
+                                  color: Color.fromARGB(255, 74, 137, 92),
+                                ),
+                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    InkWell(
+                                      child: Text(
+                                        '#$tag',
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4.0),
+                                    InkWell(
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        size: 14.0,
+                                        color: Color.fromARGB(
+                                            255, 233, 233, 233),
+                                      ),
+                                      onTap: () {
+                                        inputFieldValues.onTagRemoved(tag);
+                                        hashtags.remove(tag);
+                                        UserManager.setHashtags(hashtags);
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
+                            }).toList()
+                          ),
+                        ),
+                      )
                   ),
                   onChanged: inputFieldValues.onTagChanged,
-                  onSubmitted: inputFieldValues.onTagSubmitted,
+                  onSubmitted: (String newTag){
+                    inputFieldValues.onTagSubmitted;
+                    if (!hashtags.contains(newTag)) {
+                      hashtags.add(newTag);
+                      UserManager.setHashtags(hashtags);
+                    }
+                  }
                 ),
               );
             },

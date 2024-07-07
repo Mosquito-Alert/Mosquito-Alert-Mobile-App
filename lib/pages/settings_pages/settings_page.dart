@@ -22,7 +22,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isBgTrackingEnabled = false;
-  List<String>? hashtags;
   var packageInfo;
 
   final languageCodes = [
@@ -57,7 +56,6 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     getPackageInfo();
     initializeBgTracking();
-    getHashtags();
   }
 
   void initializeBgTracking() async {
@@ -69,11 +67,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       packageInfo = _packageInfo;
     });
-  }
-
-  void getHashtags() async {
-    hashtags = await UserManager.getHashtags();
-    setState(() {});
   }
 
   @override
