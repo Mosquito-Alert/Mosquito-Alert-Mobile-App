@@ -363,6 +363,7 @@ class ApiSingleton {
 
       var hashtag = await UserManager.getHashtags();
       if ((report.note != null && report.note != '') || hashtag != null) {
+        // TODO: Convert List<String> to String
         body.addAll({
           'note':
               '${report.note != null && report.note != "" ? report.note : ''}${report.note != null && report.note != "" && hashtag != null ? ' ' : ''}${hashtag != null ? '$hashtag' : ''}'

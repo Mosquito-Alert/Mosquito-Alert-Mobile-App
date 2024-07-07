@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/language_picker.dart';
 
@@ -134,18 +131,6 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: 10,
             ),
-            SettingsMenuWidget(
-                hashtags == null
-                    ? MyLocalizations.of(context, 'enable_auto_hashtag')
-                    : MyLocalizations.of(context, 'disable_auto_hashtag'), () {
-              _manageHashtag();
-            }),
-            SizedBox(
-              height: 35,
-            ),
-            SizedBox(
-              height: 60,
-            ),
           ]),
         ),
       ),
@@ -170,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
             hintText: MyLocalizations.of(context, 'search_txt')),
         isSearchable: true,
         title:
-            Text(MyLocalizations.of(context, 'select_language_txt')!),
+            Text(MyLocalizations.of(context, 'select_language_txt')),
         onValuePicked: (Language language) => setState(() {
               var languageCodes = language.isoCode.split('_');
 
@@ -186,155 +171,9 @@ class _SettingsPageState extends State<SettingsPage> {
         itemBuilder: (Language language) {
           return Row(
             children: <Widget>[
-              Text(MyLocalizations.of(context, language.isoCode)!),
+              Text(MyLocalizations.of(context, language.isoCode)),
             ],
           );
         })),
   );
-
-  _manageHashtag() async {
-    if (hashtags != null) {
-      await Utils.showAlertYesNo(
-        MyLocalizations.of(context, 'app_name'),
-        MyLocalizations.of(context, 'disable_auto_hashtag_text'),
-        () async {
-          hashtags = null;
-          updateHashtag();
-        },
-        context,
-      );
-      return;
-    }
-
-    var controller = TextEditingController();
-    if (Platform.isIOS) {
-      hashtags = await showDialog(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: Text(MyLocalizations.of(context, 'app_name')!),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(MyLocalizations.of(
-                          context, 'enable_auto_hashtag_text')!),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: 150,
-                        child: TextField(
-                          controller: controller,
-                          expands: true,
-                          minLines: null,
-                          maxLines: null,
-                          textAlign: TextAlign.start,
-                          textAlignVertical: TextAlignVertical.top,
-                          decoration: InputDecoration(
-                            hintText: MyLocalizations.of(
-                                context, 'enable_auto_hashtag_hint'),
-                            hintMaxLines: 5,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Style.colorPrimary, width: 1.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Style.colorPrimary, width: 1.0),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(MyLocalizations.of(context, 'cancel')!),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text(MyLocalizations.of(context, 'save')!),
-                  onPressed: () {
-                    Navigator.of(context).pop(controller.text);
-                  },
-                ),
-              ],
-            );
-          });
-    } else {
-      hashtags = await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(MyLocalizations.of(context, 'app_name')!),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(MyLocalizations.of(
-                        context, 'enable_auto_hashtag_text')!),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 150,
-                      child: TextField(
-                        controller: controller,
-                        expands: true,
-                        minLines: null,
-                        maxLines: null,
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.top,
-                        decoration: InputDecoration(
-                          hintText: MyLocalizations.of(
-                              context, 'enable_auto_hashtag_hint'),
-                          hintMaxLines: 5,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Style.colorPrimary, width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Style.colorPrimary, width: 1.0),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(MyLocalizations.of(context, 'cancel')!),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text(MyLocalizations.of(context, 'save')),
-                  onPressed: () {
-                    Navigator.of(context).pop(controller.text);
-                  },
-                ),
-              ],
-            );
-          });
-    }
-
-    updateHashtag();
-  }
-
-  void updateHashtag() async {
-    await UserManager.setHashtags(hashtags);
-
-    setState(() {});
-  }
 }
