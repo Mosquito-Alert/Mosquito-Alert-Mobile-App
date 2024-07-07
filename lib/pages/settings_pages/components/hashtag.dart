@@ -14,10 +14,13 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
   late double _distanceToField;
   late StringTagController _stringTagController;
   late List<String> hashtags;
+  bool isLoading = true;
 
   void getHashtags() async {
     hashtags = await UserManager.getHashtags() ?? [];
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -45,104 +48,107 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         children: [
-          TextFieldTags<String>(
-            textfieldTagsController: _stringTagController,
-            initialTags: hashtags,
-            textSeparators: const [' ', ','],
-            letterCase: LetterCase.normal,
-            inputFieldBuilder: (context, inputFieldValues) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: TextField(
-                  onTap: () {
-                    _stringTagController.getFocusNode?.requestFocus();
-                  },
-                  controller: inputFieldValues.textEditingController,
-                  focusNode: inputFieldValues.focusNode,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color.fromARGB(255, 74, 137, 92),
-                        width: 3.0,
-                      ),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color.fromARGB(255, 74, 137, 92),
-                        width: 3.0,
-                      ),
-                    ),
-                    hintText: inputFieldValues.tags.isNotEmpty ? '' : 'Enter tag...',
-                    errorText: inputFieldValues.error,
-                    prefixIconConstraints: BoxConstraints(maxWidth: _distanceToField * 0.8),
-                    prefixIcon: inputFieldValues.tags.isEmpty ? null :
-                      SingleChildScrollView(
-                        controller: inputFieldValues.tagScrollController,
-                        scrollDirection: Axis.vertical,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 8,
-                            left: 8,
-                          ),
-                          child: Wrap(
-                            runSpacing: 4.0,
-                            spacing: 4.0,
-                            children: inputFieldValues.tags.map((String tag) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20.0),
-                                  ),
-                                  color: Color.fromARGB(255, 74, 137, 92),
-                                ),
-                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    InkWell(
-                                      child: Text(
-                                        '#$tag',
-                                        style: const TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4.0),
-                                    InkWell(
-                                      child: const Icon(
-                                        Icons.cancel,
-                                        size: 14.0,
-                                        color: Color.fromARGB(
-                                            255, 233, 233, 233),
-                                      ),
-                                      onTap: () {
-                                        inputFieldValues.onTagRemoved(tag);
-                                        hashtags.remove(tag);
-                                        UserManager.setHashtags(hashtags);
-                                      },
-                                    )
-                                  ],
-                                ),
-                              );
-                            }).toList()
-                          ),
+          if (isLoading)
+            CircularProgressIndicator()
+          else
+            TextFieldTags<String>(
+              textfieldTagsController: _stringTagController,
+              initialTags: hashtags,
+              textSeparators: const [' ', ','],
+              letterCase: LetterCase.normal,
+              inputFieldBuilder: (context, inputFieldValues) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: TextField(
+                    onTap: () {
+                      _stringTagController.getFocusNode?.requestFocus();
+                    },
+                    controller: inputFieldValues.textEditingController,
+                    focusNode: inputFieldValues.focusNode,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 74, 137, 92),
+                          width: 3.0,
                         ),
-                      )
-                  ),
-                  onChanged: inputFieldValues.onTagChanged,
-                  onSubmitted: (String newTag){
-                    inputFieldValues.onTagSubmitted;
-                    if (!hashtags.contains(newTag)) {
-                      hashtags.add(newTag);
-                      UserManager.setHashtags(hashtags);
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 74, 137, 92),
+                          width: 3.0,
+                        ),
+                      ),
+                      hintText: inputFieldValues.tags.isNotEmpty ? '' : 'Enter tag...',
+                      errorText: inputFieldValues.error,
+                      prefixIconConstraints: BoxConstraints(maxWidth: _distanceToField * 0.8),
+                      prefixIcon: inputFieldValues.tags.isEmpty ? null :
+                        SingleChildScrollView(
+                          controller: inputFieldValues.tagScrollController,
+                          scrollDirection: Axis.vertical,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 8,
+                              bottom: 8,
+                              left: 8,
+                            ),
+                            child: Wrap(
+                              runSpacing: 4.0,
+                              spacing: 4.0,
+                              children: inputFieldValues.tags.map((String tag) {
+                                return Container(
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20.0),
+                                    ),
+                                    color: Color.fromARGB(255, 74, 137, 92),
+                                  ),
+                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      InkWell(
+                                        child: Text(
+                                          '#$tag',
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4.0),
+                                      InkWell(
+                                        child: const Icon(
+                                          Icons.cancel,
+                                          size: 14.0,
+                                          color: Color.fromARGB(
+                                              255, 233, 233, 233),
+                                        ),
+                                        onTap: () {
+                                          inputFieldValues.onTagRemoved(tag);
+                                          hashtags.remove(tag);
+                                          UserManager.setHashtags(hashtags);
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }).toList()
+                            ),
+                          ),
+                        )
+                    ),
+                    onChanged: inputFieldValues.onTagChanged,
+                    onSubmitted: (String newTag){
+                      inputFieldValues.onTagSubmitted;
+                      if (!hashtags.contains(newTag)) {
+                        hashtags.add(newTag);
+                        UserManager.setHashtags(hashtags);
+                      }
                     }
-                  }
-                ),
-              );
-            },
-          ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );
