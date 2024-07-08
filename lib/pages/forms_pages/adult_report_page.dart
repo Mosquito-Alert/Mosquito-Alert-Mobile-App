@@ -259,7 +259,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   children: _formsRepot!,
                 ),
                 index! < 1.0
-                  ? continueButtonPhotos(index)
+                  ? continueButtonPhotos()
                   : index != _formsRepot!.length.toDouble() - 1
                     ? SafeArea(
                       child: Align(
@@ -336,7 +336,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
     });
   }
 
-  Widget continueButtonPhotos(double? index){
+  Widget continueButtonPhotos(){
+    if(!_atLeastOnePhotoAttached){
+      return Container();
+    }
+
     return Container(
       width: double.infinity,
       height: 54,
