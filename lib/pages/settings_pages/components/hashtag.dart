@@ -75,7 +75,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                       ),
                       focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromARGB(255, 74, 137, 92),
+                          color: Colors.grey,
                           width: 3.0,
                         ),
                       ),
@@ -101,7 +101,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(20.0),
                                     ),
-                                    color: Color.fromARGB(255, 74, 137, 92),
+                                    color: Colors.orange,
                                   ),
                                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
