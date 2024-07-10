@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
@@ -79,7 +80,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                           width: 3.0,
                         ),
                       ),
-                      hintText: inputFieldValues.tags.isNotEmpty ? '' : 'Enter tag...',
+                      hintText: inputFieldValues.tags.isNotEmpty ? '' : MyLocalizations.of(context, 'auto_tagging_settings_title'),
                       errorText: inputFieldValues.error,
                       prefixIconConstraints: BoxConstraints(maxWidth: _distanceToField * 0.8),
                       prefixIcon: inputFieldValues.tags.isEmpty ? null :

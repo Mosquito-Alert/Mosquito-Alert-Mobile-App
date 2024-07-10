@@ -133,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 border: Border.all(color: Colors.black.withOpacity(0.1))
               ),
               child: ListTile(
-                title: Style.body('Auto-tag reports'),
+                title: Style.body(MyLocalizations.of(context, 'auto_tagging_settings_title')),
                 subtitle: StringMultilineTags(),
               ),
             ),
