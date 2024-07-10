@@ -126,17 +126,18 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 10,
             ),
             Container(
-              padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.white,
-                border: Border.all(color: Colors.black.withOpacity(0.1))
+                border: Border.all(color: Colors.black.withOpacity(0.1)),
               ),
-              child: ListTile(
-                title: Style.body(MyLocalizations.of(context, 'auto_tagging_settings_title')),
-                subtitle: StringMultilineTags(),
+              child: ExpansionTile(
+                title: Text(MyLocalizations.of(context, 'auto_tagging_settings_title')),
+                children: [
+                  StringMultilineTags(),
+                ],
               ),
-            ),
+            )
           ]),
         ),
       ),
