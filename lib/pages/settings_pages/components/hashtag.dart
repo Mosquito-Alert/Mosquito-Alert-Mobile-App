@@ -80,7 +80,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                           width: 3.0,
                         ),
                       ),
-                      hintText: inputFieldValues.tags.isNotEmpty ? '' : MyLocalizations.of(context, 'auto_tagging_settings_title'),
+                      hintText: inputFieldValues.tags.isNotEmpty ? '' : MyLocalizations.of(context, 'auto_tagging_settings_placeholder'),
                       errorText: inputFieldValues.error,
                       prefixIconConstraints: BoxConstraints(maxWidth: _distanceToField * 0.8),
                       prefixIcon: inputFieldValues.tags.isEmpty ? null :
