@@ -178,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
                           child: Text(
-                            MyLocalizations.of(context, 'background_tracking_subtitle'),
+                            MyLocalizations.of(context, 'enable_auto_hashtag_text'),
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.grey[600]),
