@@ -23,6 +23,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool isBgTrackingEnabled = false;
   var packageInfo;
+  int numTagsAdded = 0;
 
   final languageCodes = [
     Language('bg_BG', 'Bulgarian'),
@@ -56,6 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     getPackageInfo();
     initializeBgTracking();
+    initializeTagsNum();
   }
 
   void initializeBgTracking() async {
@@ -66,6 +68,19 @@ class _SettingsPageState extends State<SettingsPage> {
     var _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       packageInfo = _packageInfo;
+    });
+  }
+
+  void initializeTagsNum() async {
+    var hashtags = await UserManager.getHashtags();
+    setState(() {
+      numTagsAdded = hashtags?.length ?? 0;
+    });
+  }
+
+  void updateTagsNum(int newValue) {
+    setState(() {
+      numTagsAdded = newValue;
     });
   }
 
@@ -131,10 +146,39 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: Colors.white,
                 border: Border.all(color: Colors.black.withOpacity(0.1)),
               ),
-              child: ExpansionTile(
-                title: Text(MyLocalizations.of(context, 'auto_tagging_settings_title')),
+              child: Row(
                 children: [
-                  StringMultilineTags(),
+                  Expanded(
+                    child: ExpansionTile(
+                      title: Row(
+                        children: [
+                            Text(
+                              MyLocalizations.of(context, 'auto_tagging_settings_title'),
+                            ),
+                          if (numTagsAdded > 0)
+                            Container(
+                              margin: EdgeInsets.only(left: 8.0),
+                              padding: EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey,
+                              ),
+                              child: Text(
+                                '$numTagsAdded',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      children: [
+                        StringMultilineTags(updateTagsNum: updateTagsNum),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )

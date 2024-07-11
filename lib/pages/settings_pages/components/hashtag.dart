@@ -5,7 +5,8 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 
 class StringMultilineTags extends StatefulWidget {
-  const StringMultilineTags({Key? key}) : super(key: key);
+  const StringMultilineTags({Key? key, required this.updateTagsNum}) : super(key: key);
+  final void Function(int) updateTagsNum;
 
   @override
   State<StringMultilineTags> createState() => _StringMultilineTagsState();
@@ -128,6 +129,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                                           inputFieldValues.onTagRemoved(tag);
                                           hashtags.remove(tag);
                                           UserManager.setHashtags(hashtags);
+                                          widget.updateTagsNum(hashtags.length);
                                         },
                                       )
                                     ],
@@ -144,6 +146,7 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
                         inputFieldValues.onTagSubmitted(newTag);
                         hashtags.add(newTag);
                         UserManager.setHashtags(hashtags);
+                        widget.updateTagsNum(hashtags.length);
                       }
                     }
                   ),
