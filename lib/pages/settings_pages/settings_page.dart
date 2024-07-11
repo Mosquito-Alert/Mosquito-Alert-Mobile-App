@@ -175,6 +175,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                       ),
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(
+                            MyLocalizations.of(context, 'background_tracking_subtitle'),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600]),
+                          ),
+                        ),
                         StringMultilineTags(updateTagsNum: updateTagsNum),
                       ],
                     ),
