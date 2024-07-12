@@ -155,6 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Text(
                               MyLocalizations.of(context, 'auto_tagging_settings_title'),
                             ),
+                            Spacer(flex: 1),
                           if (numTagsAdded > 0)
                             Container(
                               margin: EdgeInsets.only(left: 8.0),
