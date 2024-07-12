@@ -59,6 +59,7 @@ dev_dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  test: ^1.24.3
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.png"

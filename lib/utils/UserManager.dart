@@ -204,7 +204,26 @@ class UserManager {
     return prefs.getStringList('imagesList');
   }
 
+  static Future<void> migrateHashtagToHashtags() async {  
+    final prefs = await SharedPreferences.getInstance();  
+
+    // Check if the old variable exists  
+    if (!prefs.containsKey('hashtag')) { return; }
+
+    var oldHashtag = prefs.getString('hashtag');  
+
+    if (oldHashtag == null){ return; }
+
+    // Users were adding the hashtag manually to the strings
+    if (oldHashtag.startsWith('#')) {
+      oldHashtag = oldHashtag.substring(1);
+    }
+
+    await prefs.setStringList('hashtags', [oldHashtag]);
+  }
+
   static Future<List<String>?> getHashtags() async {
+    await UserManager.migrateHashtagToHashtags();
     var prefs = await SharedPreferences.getInstance();
     return prefs.getStringList('hashtags');
   }
