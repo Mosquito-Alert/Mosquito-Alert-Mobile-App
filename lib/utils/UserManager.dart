@@ -220,6 +220,8 @@ class UserManager {
     }
 
     await prefs.setStringList('hashtags', [oldHashtag]);
+    // Remove the old variable  
+    await prefs.remove('hashtag');  
   }
 
   static Future<List<String>?> getHashtags() async {

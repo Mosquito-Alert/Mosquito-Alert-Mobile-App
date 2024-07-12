@@ -9,6 +9,9 @@ void main() {
   ];
 
   testWidgets('Migration from hashtag to hashtags', (tester) async {
+    // Set mock initial values for SharedPreferences
+    SharedPreferences.setMockInitialValues({});
+
     // Create a mock instance of SharedPreferences
     final prefs = await SharedPreferences.getInstance();
 
