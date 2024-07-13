@@ -1203,7 +1203,7 @@ class Utils {
     var myReports = await ApiSingleton().getReportsList();
     var numReports = myReports.length;
 
-    if (numReports == 3 || numReports == 4){
+    if (numReports % 3 == 0 || numReports == 4){
       final inAppReview = InAppReview.instance;
 
       if (await inAppReview.isAvailable()) {
