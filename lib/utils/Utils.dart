@@ -1203,12 +1203,28 @@ class Utils {
     var myReports = await ApiSingleton().getReportsList();
     var numReports = myReports.length;
 
-    if (numReports % 3 == 0 || numReports == 4){
-      final inAppReview = InAppReview.instance;
+    if (numReports < 3) { return; }
 
-      if (await inAppReview.isAvailable()) {
-          await inAppReview.requestReview();
-      }
+    var shouldRequestReview = false;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final lastReportCount = await UserManager.getLastReportCount() ?? 0;
+    final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
+
+    if (numReports == 3 || numReports == 4 || numReports >= lastReportCount + 3){
+      shouldRequestReview = true;
+    } else if (now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000){
+      shouldRequestReview = true;
+    }
+
+    if (!shouldRequestReview) { return; }
+
+    final inAppReview = InAppReview.instance;
+
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+
+      await UserManager.setLastReviewRequest(now);
+      await UserManager.setLastReportCount(lastReportCount);
     }
   }
 }
