@@ -1203,8 +1203,6 @@ class Utils {
     var myReports = await ApiSingleton().getReportsList();
     var numReports = myReports.length;
 
-    if (numReports < 3) { return; }
-
     final now = DateTime.now().millisecondsSinceEpoch;
     final lastReportCount = await UserManager.getLastReportCount() ?? 0;
     final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
