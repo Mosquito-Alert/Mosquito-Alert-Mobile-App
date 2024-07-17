@@ -26,16 +26,15 @@ class CustomCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 5.0),
                 child: Image.asset(image_path, width: 70, height: 70),
-              ),              
+              ),
               SizedBox(width: 15),
               Expanded(
-                  child: Text(
-                    MyLocalizations.of(context, text),
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
+                child: Text(
+                  MyLocalizations.of(context, text),
+                  style: TextStyle(
+                    fontSize: 18,
                   ),
-               
+                ),               
               ),
             ],
           ),
