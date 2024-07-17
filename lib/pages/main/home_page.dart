@@ -76,21 +76,21 @@ class _HomePageState extends State<HomePage> {
                                     )                                      
                                   ]
                                 ),
-                                SizedBox(height: 50),
+                                SizedBox(height: 30),
                                 CustomCard(
                                   text: 'single_mosquito',
                                   image_path: 'assets/img/ic_mosquito_report.png',
                                   color: '40DFD458',
                                   reportFunction: _createAdultReport
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: 10),
                                 CustomCard(
                                   text: 'single_bite',
                                   image_path: 'assets/img/ic_bite_report.png',
                                   color: '40D28A73',
                                   reportFunction: _createBiteReport
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: 10),
                                 CustomCard(
                                   text: 'single_breeding_site',
                                   image_path: 'assets/img/ic_breeding_report.png',
