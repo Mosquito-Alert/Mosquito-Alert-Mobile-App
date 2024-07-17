@@ -1205,16 +1205,11 @@ class Utils {
 
     if (numReports < 3) { return; }
 
-    var shouldRequestReview = false;
     final now = DateTime.now().millisecondsSinceEpoch;
     final lastReportCount = await UserManager.getLastReportCount() ?? 0;
     final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
 
-    if (numReports == 3 || numReports == 4 || numReports >= lastReportCount + 3){
-      shouldRequestReview = true;
-    } else if (now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000){
-      shouldRequestReview = true;
-    }
+    var shouldRequestReview = (numReports == 3 || numReports == 4 || numReports >= lastReportCount + 3 || now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000);
 
     if (!shouldRequestReview) { return; }
 
@@ -1224,7 +1219,7 @@ class Utils {
       await inAppReview.requestReview();
 
       await UserManager.setLastReviewRequest(now);
-      await UserManager.setLastReportCount(lastReportCount);
+      await UserManager.setLastReportCount(numReports);
     }
   }
 }
