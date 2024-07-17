@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -118,8 +119,8 @@ class _HomePageState extends State<HomePage> {
                                       child: Row(
                                         children: <Widget>[
                                           Padding(
-                                            padding: EdgeInsets.only(left: 15.0),
-                                            child: Icon(Icons.map, size: 50,),
+                                            padding: EdgeInsets.only(left: 10.0),
+                                            child: SvgPicture.asset('assets/img/maps/public-map-icon.svg', width: 50,),
                                           ),
                                           SizedBox(width: 15),
                                           Expanded(
