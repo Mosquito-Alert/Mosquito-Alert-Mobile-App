@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
@@ -20,7 +21,9 @@ import 'UserManager.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   var isSupported = await FlutterAppBadger.isAppBadgeSupported();
   if (isSupported){
-    await FlutterAppBadger.updateBadgeCount(3);
+    List<MyNotification> notifications = await ApiSingleton().getNotifications();
+    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
+    await FlutterAppBadger.updateBadgeCount(unacknowledgedCount);
   }
 }
 
