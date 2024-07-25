@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -20,11 +21,16 @@ import 'UserManager.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   var isSupported = await FlutterAppBadger.isAppBadgeSupported();
-  if (isSupported){
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
+  if (!isSupported){ return; }
+  
+  //await Firebase.initializeApp();
+  //List<dynamic> notifications = await ApiSingleton().getNotifications();
+
+  /*if (notifications is List<MyNotification>){
     var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
     await FlutterAppBadger.updateBadgeCount(unacknowledgedCount);
-  }
+  }*/
+  await FlutterAppBadger.updateBadgeCount(5);
 }
 
 class PushNotificationsManager {
