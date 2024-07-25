@@ -18,7 +18,10 @@ import '../pages/notification_pages/notifications_page.dart';
 import 'UserManager.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await FlutterAppBadger.updateBadgeCount(1);
+  var isSupported = await FlutterAppBadger.isAppBadgeSupported();
+  if (isSupported){
+    await FlutterAppBadger.updateBadgeCount(3);
+  }
 }
 
 class PushNotificationsManager {
