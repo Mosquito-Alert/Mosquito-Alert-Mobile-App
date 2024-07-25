@@ -53,6 +53,7 @@ dependencies:
   photo_gallery: ^1.1.1
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
+  flutter_app_badger: ^1.5.0
 
 dev_dependencies:
   pedantic: ^1.11.1 #Discontinued

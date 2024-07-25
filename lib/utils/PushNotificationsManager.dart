@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
@@ -15,6 +16,10 @@ import '../api/api.dart';
 import '../main.dart';
 import '../pages/notification_pages/notifications_page.dart';
 import 'UserManager.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await FlutterAppBadger.updateBadgeCount(1);
+}
 
 class PushNotificationsManager {
   PushNotificationsManager._();
@@ -42,6 +47,8 @@ class PushNotificationsManager {
           .listen((RemoteMessage remoteMessage) {
         openMessageScreen(remoteMessage.data);
       });
+
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
       var token = await _firebaseMessaging
           .getToken()
