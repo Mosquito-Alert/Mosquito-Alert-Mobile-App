@@ -5,6 +5,10 @@ on:
     push:
         tags:
             - '*'
+    workflow_run:
+        workflows: ["Synchronize Github Tags with Localise tags"]
+        types:
+            - completed
 
 permissions:
     contents: write
@@ -12,6 +16,7 @@ permissions:
 
 jobs:
     update-locales:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
 
         steps:
