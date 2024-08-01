@@ -41,6 +41,6 @@ jobs:
               with:
                   url: 'https://localise.biz/api/tags/${{ github.ref_name }}.json'
                   method: 'POST'
-                  customHeaders: '{"Authorization": "Loco ${{ env.API_KEY }}"}'
+                  customHeaders: '{"Authorization": "Loco ${{ secrets.LOCALISE_FULL_API_KEY }}"}'
                   contentType: "application/x-www-form-urlencoded"
                   data: '{"data": "${{ secrets.LOCALISE_FULL_API_KEY }}"}'
