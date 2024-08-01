@@ -30,7 +30,7 @@ jobs:
                 # pip install -r requirements.txt  # install your dependencies
 
             - name: Run update_locales.py
-              run: python update_locales.py --api_key ${{ secrets.API_KEY }} --tags ${{ github.ref_name }}
+              run: python update_locales.py --api_key ${{ secrets.LOCALISE_EXPORT_API_KEY }} --tags ${{ github.ref_name }}
 
             - name: Create Pull Request
               id: cpr
