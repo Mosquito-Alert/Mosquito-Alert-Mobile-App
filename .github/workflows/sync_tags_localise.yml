@@ -1,6 +1,7 @@
 name: Synchronize Github Tags with Localise tags
 
 on:
+    workflow_call:
     workflow_dispatch:
     push:
         tags:
