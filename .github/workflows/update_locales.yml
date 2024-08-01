@@ -13,6 +13,7 @@ permissions:
 jobs:
     sync_localise:
         uses: ./.github/workflows/sync_tags_localise.yml 
+        secrets: inherit  # pass all secrets
 
     update-locales:
         needs: [sync_localise]  # require sync_localise to pass before deploy runs
