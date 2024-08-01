@@ -3,6 +3,8 @@ name: Update Locales
 on:
     workflow_dispatch:
     push:
+        tags:
+            - '*'
 
 permissions:
     contents: write
