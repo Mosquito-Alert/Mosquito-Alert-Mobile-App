@@ -17,22 +17,18 @@ jobs:
 
             - name: Delete tag in localise if exist.
               uses: fjogeleit/http-request-action@v1
-              env:
-                API_KEY: ${{ secrets.LOCALISE_FULL_API_KEY }}
               with:
                   url: 'https://localise.biz/api/tags/${{ github.ref_name }}.json'
                   method: 'DELETE'
-                  customHeaders: '{"Authorization": "Loco ${{ env.API_KEY }}"}'
+                  customHeaders: '{"Authorization": "Loco ${{ secrets.LOCALISE_FULL_API_KEY }}"}'
                   ignoreStatusCodes: '404'   # 404: tag not in project
 
             - name: Create tag in localise.
               uses: fjogeleit/http-request-action@v1
-              env:
-                API_KEY: ${{ secrets.LOCALISE_FULL_API_KEY }}
               with:
                   url: 'https://localise.biz/api/tags'
                   method: 'POST'
-                  customHeaders: '{"Authorization": "Loco ${{ env.API_KEY }}"}'
+                  customHeaders: '{"Authorization": "Loco ${{ secrets.LOCALISE_FULL_API_KEY }}"}'
                   contentType: "application/x-www-form-urlencoded"
                   data: '{"name": "${{ github.ref_name }}"}'
 
@@ -42,11 +38,9 @@ jobs:
 
             - name: Apply the tag to all related assets.
               uses: fjogeleit/http-request-action@v1
-              env:
-                API_KEY: ${{ secrets.LOCALISE_FULL_API_KEY }}
               with:
                   url: 'https://localise.biz/api/tags/${{ github.ref_name }}.json'
                   method: 'POST'
                   customHeaders: '{"Authorization": "Loco ${{ env.API_KEY }}"}'
                   contentType: "application/x-www-form-urlencoded"
-                  data: '{"data": "${{ env.ASSET_LIST }}"}'
+                  data: '{"data": "${{ secrets.LOCALISE_FULL_API_KEY }}"}'
