@@ -230,8 +230,37 @@ class _MyReportsListState extends State<ReportsList> {
                     SizedBox(
                       height: 20,
                     ),
-                    Style.titleMedium(
-                      Utils.getTranslatedReportType(context, report.type)),
+                    Row(                      
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Style.titleMedium(Utils.getTranslatedReportType(context, report.type)),
+                        IconButton(
+                          onPressed: () {
+                            showMenu(
+                              context: context,
+                              position: RelativeRect.fromLTRB(100, 100, 0, 0),
+                              items: [
+                                PopupMenuItem(
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Utils.showAlertYesNo(
+                                        MyLocalizations.of(context, 'delete_report_title'),
+                                        MyLocalizations.of(context, 'delete_report_txt'), () {
+                                          _deleteReport(report);
+                                        }, context);
+                                    },
+                                    child: Text(
+                                      MyLocalizations.of(context, 'delete'),
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                          icon: Icon(Icons.more_vert),
+                        ),
+                    ],),
                     SizedBox(
                       height: 20,
                     ),
@@ -501,25 +530,6 @@ class _MyReportsListState extends State<ReportsList> {
                                 ],
                               )
                             : Container(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                                child: Style.noBgButton(
-                                    MyLocalizations.of(context, 'delete'),
-                                    () {
-                              Utils.showAlertYesNo(
-                                  MyLocalizations.of(
-                                      context, 'delete_report_title'),
-                                  MyLocalizations.of(
-                                      context, 'delete_report_txt'), () {
-                                _deleteReport(report);
-                              }, context);
-                            }, textColor: Colors.red))
-                          ],
-                        ),
                         SizedBox(
                           height: 10,
                         ),
