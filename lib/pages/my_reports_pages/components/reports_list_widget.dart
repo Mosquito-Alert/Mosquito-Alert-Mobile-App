@@ -234,7 +234,7 @@ class _MyReportsListState extends State<ReportsList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Title',
+                          Utils.getTranslatedReportType(context, report.type),
                           style: TextStyle(fontSize: 18),
                         ),
                         PopupMenuButton<int>(
