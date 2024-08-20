@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:workmanager/workmanager.dart';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -91,6 +91,10 @@ class _MyAppState extends State<MyApp> {
           Utils.syncReports();
           break;
         case ConnectivityResult.none:
+        case ConnectivityResult.bluetooth:
+        case ConnectivityResult.ethernet:
+        case ConnectivityResult.vpn:
+        case ConnectivityResult.other:
           break;
       }
     });
@@ -106,7 +110,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
-    subscription.cancel();
+    //subscription.cancel();
   }
 
   @override

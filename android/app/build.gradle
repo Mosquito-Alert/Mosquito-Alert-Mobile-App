@@ -37,6 +37,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def googlemapsKey = properties.getProperty('googlemaps.Key')
 
 android {
+    namespace "ceab.movelab.tigatrapp"
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
