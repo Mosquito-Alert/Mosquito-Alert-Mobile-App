@@ -80,7 +80,7 @@ class ApiSingleton {
   static Future<void> initialize(String env) async {
     final config = await AppConfig.forEnvironment(env: env);
     baseUrl = config.baseUrl;
-    serverUrl = '$baseUrl/api';
+    serverUrl = baseUrl;
     await UserManager.setServerUrl(serverUrl);
   }
 
