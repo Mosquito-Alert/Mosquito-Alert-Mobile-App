@@ -38,10 +38,6 @@ class ApiSingleton {
   //Reports
   static const reports = '/reports/';
 
-  //Session
-  static const sessions = '/sessions/';
-  static const sessionUpdate = '/session_update/';
-
   //Images
   static const photos = '/photos/';
 
@@ -81,7 +77,7 @@ class ApiSingleton {
   static Future<void> initialize(String env) async {
     final config = await AppConfig.forEnvironment(env: env);
     baseUrl = config.baseUrl;
-    serverUrl = '$baseUrl/api';
+    serverUrl = baseUrl;
     await UserManager.setServerUrl(serverUrl);
   }
 
@@ -155,104 +151,6 @@ class ApiSingleton {
       return UserManager.userScore;
     } catch (e) {
       return 1;
-    }
-  }
-
-  //Sessions
-  Future<dynamic> getLastSession(String? userUUID) async {
-    try {
-      final response = await http
-          .get(
-        Uri.parse('$serverUrl$sessions?user=$userUUID'),
-        headers: headers,
-      )
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-
-      if (response.statusCode != 200) {
-        print(
-            'Request: ${response.request.toString()} -> Response: ${response.body}');
-        return ApiResponse.fromJson(json.decode(response.body));
-      } else {
-        List<dynamic> jsonAnswer = json.decode(response.body);
-        var allSessions = <Session>[];
-
-        for (var item in jsonAnswer) {
-          allSessions.add(Session.fromJson(item));
-        }
-
-        if (allSessions.isEmpty) {
-          return 0;
-        }
-
-        return allSessions[0].session_ID;
-      }
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  Future<dynamic> createSession(Session session) async {
-    try {
-      final response = await http
-          .post(Uri.parse('$serverUrl$sessions'),
-              headers: headers,
-              body: json.encode(
-                session.toJson(),
-              ))
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-      ;
-
-      if (response.statusCode != 201) {
-        print(
-            'Request: ${response.request.toString()} -> Response: ${response.body}');
-        return ApiResponse.fromJson(json.decode(response.body));
-      }
-
-      var body = json.decode(response.body);
-      return body['id'];
-    } catch (e) {
-      // print(e);
-      return false;
-    }
-  }
-
-  Future<dynamic> closeSession(Session session) async {
-    try {
-      final response = await http
-          .put(Uri.parse('$serverUrl$sessionUpdate${session.session_ID}/'),
-              headers: headers,
-              body: json.encode({'session_end_time': session.session_end_time}))
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-      ;
-
-      if (response.statusCode != 200) {
-        print(
-            'Request: ${response.request.toString()} -> Response: ${response.body}');
-        return ApiResponse.fromJson(json.decode(response.body));
-      }
-
-      return true;
-    } catch (e) {
-      return false;
     }
   }
 
