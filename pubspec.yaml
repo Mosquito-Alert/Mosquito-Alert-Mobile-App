@@ -23,12 +23,9 @@ dependencies:
   firebase_messaging: ^14.3.0
   firebase_core: ^2.8.0
   auto_size_text: ^3.0.0
-  file_picker: ^5.2.10
   device_info_plus: ^9.1.2
   package_info: ^2.0.2 #Discontinued
   url_launcher: ^6.2.4
-  photo_view: ^0.14.0
-  percent_indicator: ^4.2.3
   intro_slider: ^3.0.5
   permission_handler: ^11.0.1
   language_picker: ^0.4.3
@@ -42,9 +39,6 @@ dependencies:
   battery_plus: ^2.1.4+1
   badges: ^3.1.2
   cached_network_image: ^3.3.1
-  camera_camera: ^3.0.0
-  flutter_sliding_up_panel: ^2.1.1
-  photo_gallery: ^2.2.1
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
 
