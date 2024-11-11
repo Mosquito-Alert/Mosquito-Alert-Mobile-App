@@ -3,13 +3,13 @@ description: A new Flutter project.
 version: 2.3.0+1732
 
 environment:
-  sdk: '>=2.15.0 <3.0.0'
+  sdk: '>=2.15.0 <4.0.0'
 
 dependencies:
   app_tracking_transparency: ^2.0.6
   auto_size_text: ^3.0.0
   badges: ^3.1.2
-  battery_plus: ^2.2.0
+  battery_plus: ^6.0.0
   cached_network_image: ^3.3.1
   connectivity: ^3.0.6
   device_info_plus: ^9.1.2
@@ -23,7 +23,7 @@ dependencies:
   flutter_svg: ^1.1.6
   geocoding: ^2.2.2
   geolocator: ^10.1.1
-  google_maps_flutter: ^2.9.0
+  google_maps_flutter: ^2.6.1
   http: ^0.13.5
   image_picker: ^1.1.2
   in_app_review: ^2.0.9
@@ -31,13 +31,13 @@ dependencies:
   language_picker: ^0.4.5
   overlay_support: ^2.1.0
   package_info: ^2.0.2
-  path_provider: ^2.1.5
+  path_provider: ^2.1.4
   permission_handler: ^11.3.1
   random_string: ^2.3.1
-  shared_preferences: ^2.3.3
+  shared_preferences: ^2.2.3
   textfield_tags: ^3.0.1
   uuid: ^4.5.1
-  webview_flutter: ^4.10.0
+  webview_flutter: ^4.8.0
   workmanager: ^0.5.2
 
 dev_dependencies:
@@ -47,7 +47,6 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  test: ^1.25.7
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.png"
