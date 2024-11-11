@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -49,7 +48,6 @@ class PushNotificationsManager {
 
       if (token != null) {
         await registerFCMToken(token);
-        await getTopicsSubscribed();
         Utils.initializedCheckData['firebase'] = true;
         _initialized = true;
       }
@@ -156,76 +154,5 @@ class PushNotificationsManager {
   static Future<void> registerFCMToken(String fcmToken) async {
     var userId = await UserManager.getUUID();
     var result = ApiSingleton().setFirebaseToken(userId, fcmToken);
-    await subscribeToGlobal();
-  }
-
-  static Future<void> subscribeToGlobal() async {
-    var topic = 'global';
-    await subscribeToTopic(topic);
-  }
-
-  static Future<void> subscribeToReportResult(Report report) async {
-    try {
-      if (report.country != null) {
-        await subscribeToTopic('${report.country}');
-      }
-      if (report.nuts2 != null) {
-        await subscribeToTopic('${report.nuts2}');
-      }
-      if (report.nuts3 != null) {
-        await subscribeToTopic('${report.nuts3}');
-      }
-        } catch (e) {
-      print('Report subscription failed for reason: $e');
-    }
-  }
-
-  static Future<void> subscribeToLanguage() async {
-    var languageId = await UserManager.getLanguage();
-    await subscribeToTopic(languageId);
-  }
-
-  static Future<void> subscribeToTopic(String? topic) async {
-    if (_initialized) {
-      var userId = await UserManager.getUUID();
-      if (userId != null && !_checkIfSubscribed(topic)) {
-        var result = await ApiSingleton().subscribeToTopic(userId, topic);
-        if (result) {
-          await _firebaseMessaging.subscribeToTopic(topic!);
-        } else if (topic == 'global') {
-          await _firebaseMessaging.subscribeToTopic('global');
-        }
-      }
-    }
-  }
-
-  static Future<void> unsubscribeToTopic(String topic) async {
-    var userId = await UserManager.getUUID();
-    if (userId != null && _checkIfSubscribed(topic)) {
-      var result = await ApiSingleton().unsubscribeFromTopic(userId, topic);
-      if (result) {
-        await _firebaseMessaging.unsubscribeFromTopic(topic);
-      }
-    }
-  }
-
-  static Future<List<Topic>?> getTopicsSubscribed() async {
-    var userId = await UserManager.getUUID();
-    if (userId != null) {
-      var result = await ApiSingleton().getTopicsSubscribed(userId);
-      if (result != null) {
-        currentTopics = result;
-      }
-    }
-    return null;
-  }
-
-  static bool _checkIfSubscribed(String? topicCode) {
-    for (var topic in currentTopics) {
-      if (topic.topicCode == topicCode) {
-        return true;
-      }
-    }
-    return false;
   }
 }

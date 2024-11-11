@@ -13,7 +13,6 @@ import 'package:mosquito_alert_app/models/partner.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
-import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/app_config.dart';
@@ -291,8 +290,6 @@ class ApiSingleton {
 
       var jsonAnswer = json.decode(response.body);
       var newReport = await Report.fromJsonAsync(jsonAnswer);
-
-      await PushNotificationsManager.subscribeToReportResult(newReport);
 
       await getUserScores();
       return newReport;
@@ -623,35 +620,6 @@ class ApiSingleton {
     } catch (e) {
       print('unsubscribeFromTopic, failed for $e.');
       return false;
-    }
-  }
-
-  Future<List<Topic>?> getTopicsSubscribed(String userIdentifier) async {
-    try {
-      final response = await http
-          .get(Uri.parse('$serverUrl$get_my_topics?user=$userIdentifier'),
-              headers: headers)
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as List;
-        var topicList = <Topic>[];
-        for (dynamic top in data) {
-          var topic = Topic.fromJson(top);
-          topicList.add(topic);
-        }
-        return topicList;
-      }
-      print('getTopicsSubscribed, failed.');
-      return null;
-    } catch (e) {
-      print('getTopicsSubscribed, failed for $e');
-      return null;
     }
   }
 
