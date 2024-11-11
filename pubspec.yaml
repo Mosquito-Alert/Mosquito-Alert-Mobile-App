@@ -8,12 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.5
   flutter_svg: ^1.1.6
   google_maps_flutter: ^2.2.6
-  material_segmented_control: ^4.1.1
   path_provider: ^2.0.15
-  path: ^1.8.1
   uuid: ^4.1.0
   shared_preferences: ^2.2.3
   http: ^0.13.5
@@ -29,13 +26,10 @@ dependencies:
   file_picker: ^5.2.10
   device_info_plus: ^9.1.2
   package_info: ^2.0.2 #Discontinued
-  flutter_launcher_icons: ^0.11.0
   url_launcher: ^6.2.4
   photo_view: ^0.14.0
   percent_indicator: ^4.2.3
-  flutter_widget_from_html_core: ^0.8.5+3
   intro_slider: ^3.0.5
-  flutter_material_pickers: ^3.3.0
   permission_handler: ^11.0.1
   language_picker: ^0.4.3
   connectivity: ^3.0.6 #Discontinued
@@ -61,6 +55,8 @@ dev_dependencies:
   flutter_localizations:
     sdk: flutter
   test: ^1.24.3
+  dependency_validator: ^4.1.1
+  flutter_launcher_icons: ^0.11.0
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.png"
