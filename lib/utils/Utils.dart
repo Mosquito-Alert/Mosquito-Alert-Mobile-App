@@ -15,8 +15,6 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/models/response.dart';
-import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';

@@ -12,7 +12,6 @@ import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/partner.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
-import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
