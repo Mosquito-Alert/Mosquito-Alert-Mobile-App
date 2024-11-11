@@ -41,9 +41,6 @@ class ApiSingleton {
   //Notifications
   static const notifications = '/user_notifications/';
   static const mark_notification_as_read = '/mark_notif_as_ack/';
-  static const subscribe_to_topic = '/subscribe_to_topic/';
-  static const unsub_from_topic = '/unsub_from_topic/';
-  static const get_my_topics = '/topics_subscribed/';
   static const firebaseToken = '/token/';
 
   //Fixes
@@ -564,61 +561,6 @@ class ApiSingleton {
       return false;
     } catch (e) {
       print('markNotificationAsRead, failed for $e');
-      return false;
-    }
-  }
-
-  Future<bool> subscribeToTopic(
-      String userIdentifier, String? topicIdentifier) async {
-    try {
-      final response = await http
-          .post(
-              Uri.parse(
-                  '$serverUrl$subscribe_to_topic?user=$userIdentifier&code=$topicIdentifier'),
-              headers: headers)
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-      if (response.statusCode == 201) {
-        print('Succes subscribing to $topicIdentifier.');
-
-        return true;
-      }
-      print(
-          'subscribeToTopic $topicIdentifier, failed (code ${response.statusCode})');
-      return false;
-    } catch (e) {
-      print('subscribeToTopic $topicIdentifier, failed for $e');
-      return false;
-    }
-  }
-
-  Future<bool> unsubscribeFromTopic(
-      String userIdentifier, String topicIdentifier) async {
-    try {
-      final response = await http
-          .post(
-              Uri.parse(
-                  '$serverUrl$unsub_from_topic?user=$userIdentifier&code=$topicIdentifier'),
-              headers: headers)
-          .timeout(
-        Duration(seconds: _timeoutTimerInSeconds),
-        onTimeout: () {
-          print('Request timed out');
-          return Future.error('Request timed out');
-        },
-      );
-      if (response.statusCode == 204) {
-        return true;
-      }
-      print('unsubscribeFromTopic, failed.');
-      return false;
-    } catch (e) {
-      print('unsubscribeFromTopic, failed for $e.');
       return false;
     }
   }
