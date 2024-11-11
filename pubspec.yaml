@@ -36,6 +36,7 @@ dependencies:
   random_string: ^2.3.1
   shared_preferences: ^2.2.3
   textfield_tags: ^3.0.1
+  url_launcher: ^6.2.4
   uuid: ^4.5.1
   webview_flutter: ^4.8.0
   workmanager: ^0.5.2
