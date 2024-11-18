@@ -3,9 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/map/public_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -179,7 +176,7 @@ class _HomePageState extends State<HomePage> {
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BitingReportPage()),
+        MaterialPageRoute(builder: (context) => CircularProgressIndicator()),
       );
     } else {
       print('Bite report was not created');
@@ -193,7 +190,7 @@ class _HomePageState extends State<HomePage> {
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdultReportPage()),
+        MaterialPageRoute(builder: (context) => CircularProgressIndicator()),
       );
     } else {
       print('Adult report was not created');
@@ -207,7 +204,7 @@ class _HomePageState extends State<HomePage> {
     if (createReport) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BreedingReportPage()),
+        MaterialPageRoute(builder: (context) => CircularProgressIndicator()),
       );
     } else {
       print('Site report was not created');
