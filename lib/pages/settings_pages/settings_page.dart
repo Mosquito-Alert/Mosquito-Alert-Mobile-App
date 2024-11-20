@@ -51,6 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Language('sr_RS', 'Serbian'),
     Language('sv_SE', 'Swedish'),
     Language('tr_TR', 'Turkish (Turkey)'),
+    Language('vi_VN', 'Vietnamese'),
   ];
 
   @override
