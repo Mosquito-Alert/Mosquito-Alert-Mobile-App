@@ -3,47 +3,47 @@ description: A new Flutter project.
 version: 2.3.0+1732
 
 environment:
-  sdk: '>=2.15.0 <3.0.0'
+  sdk: '>=2.15.0 <4.0.0'
 
 dependencies:
-  app_tracking_transparency: ^2.0.4
+  app_tracking_transparency: ^2.0.6
   auto_size_text: ^3.0.0
   badges: ^3.1.2
-  battery_plus: ^2.1.4+1
+  battery_plus: ^6.0.0
   cached_network_image: ^3.3.1
   connectivity: ^3.0.6
   device_info_plus: ^9.1.2
-  dio: ^5.3.3
-  firebase_auth: ^4.3.1
-  firebase_core: ^2.8.0
-  firebase_messaging: ^14.3.0
+  dio: ^5.7.0
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.32.0
+  firebase_messaging: ^14.7.10
   flutter:
     sdk: flutter
   flutter_html: ^3.0.0-alpha.6
   flutter_svg: ^1.1.6
-  geocoding: ^2.1.1
+  geocoding: ^2.2.2
   geolocator: ^10.1.1
-  google_maps_flutter: ^2.2.6
+  google_maps_flutter: ^2.6.1
   http: ^0.13.5
-  image_picker: ^1.0.8
+  image_picker: ^1.1.2
   in_app_review: ^2.0.9
-  intro_slider: ^3.0.5
-  language_picker: ^0.4.3
+  intro_slider: ^3.0.10
+  language_picker: ^0.4.5
   overlay_support: ^2.1.0
   package_info: ^2.0.2
-  path_provider: ^2.0.15
-  permission_handler: ^11.0.1
+  path_provider: ^2.1.4
+  permission_handler: ^11.3.1
   random_string: ^2.3.1
   shared_preferences: ^2.2.3
   textfield_tags: ^3.0.1
   url_launcher: ^6.2.4
-  uuid: ^4.1.0
-  webview_flutter: ^4.5.0
+  uuid: ^4.5.1
+  webview_flutter: ^4.8.0
   workmanager: ^0.5.2
 
 dev_dependencies:
   dependency_validator: ^4.1.1
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.14.1
   flutter_localizations:
     sdk: flutter
   flutter_test:
