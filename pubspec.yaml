@@ -48,6 +48,8 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  pedantic: ^1.11.1
+  test: ^1.24.3
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.png"
