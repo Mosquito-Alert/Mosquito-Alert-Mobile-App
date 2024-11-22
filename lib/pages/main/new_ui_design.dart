@@ -30,9 +30,23 @@ class _NewUIDesignState extends State<NewUIDesign> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: Stack(
-        children: [
-          BottomNavigationBar(
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, -4),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -54,11 +68,11 @@ class _NewUIDesignState extends State<NewUIDesign> {
             ],
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.grey[350],
           ),
-          _buildUnderlineIndicator(),
-        ],
+        ),
       ),
+      bottomSheet: _buildUnderlineIndicator(),
     );
   }
 
