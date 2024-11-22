@@ -50,19 +50,23 @@ class _NewUIDesignState extends State<NewUIDesign> {
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home, color: _selectedIndex == 0 ? Colors.orange : Colors.black),
+                icon: Icon(Icons.home, color: Colors.black),
+                activeIcon: Icon(Icons.home, color: Colors.orange),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.map, color: _selectedIndex == 1 ? Colors.orange : Colors.black),
+                icon: Icon(Icons.map, color: Colors.black),
+                activeIcon: Icon(Icons.map, color: Colors.orange),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.file_copy, color: _selectedIndex == 2 ? Colors.orange : Colors.black),
+                icon: Icon(Icons.file_copy, color: Colors.black),
+                activeIcon: Icon(Icons.file_copy, color: Colors.orange),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person, color: _selectedIndex == 3 ? Colors.orange : Colors.black),
+                icon: Icon(Icons.person, color: Colors.black),
+                activeIcon: Icon(Icons.person, color: Colors.orange),
                 label: '',
               ),
             ],
@@ -71,19 +75,6 @@ class _NewUIDesignState extends State<NewUIDesign> {
             backgroundColor: Colors.grey[350],
           ),
         ),
-      ),
-      bottomSheet: _buildUnderlineIndicator(),
-    );
-  }
-
-  Widget _buildUnderlineIndicator() {
-    return Positioned(
-      bottom: 0,
-      left: _selectedIndex * MediaQuery.of(context).size.width / 4.0,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 4.0,
-        height: 2.0,
-        color: Colors.orange,
       ),
     );
   }
