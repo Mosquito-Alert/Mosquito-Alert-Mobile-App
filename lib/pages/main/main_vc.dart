@@ -4,12 +4,12 @@ import 'package:mosquito_alert_app/pages/map/public_map.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 
-class NewUIDesign extends StatefulWidget {
+class MainVC extends StatefulWidget {
   @override
-  _NewUIDesignState createState() => _NewUIDesignState();
+  _MainVCState createState() => _MainVCState();
 }
 
-class _NewUIDesignState extends State<NewUIDesign> {
+class _MainVCState extends State<MainVC> {
   int _selectedIndex = 0;
 
   late final List<Widget> _pages = <Widget>[

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mosquito_alert_app/pages/main/new_ui_design.dart';
+import 'package:mosquito_alert_app/pages/main/main_vc.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -118,8 +118,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.orange,
       ),
       navigatorKey: navigatorKey,
-      //home: MainVC(),
-      home: NewUIDesign(),
+      home: MainVC(),
       localizationsDelegates: [
         _newLocaleDelegate,
         GlobalMaterialLocalizations.delegate,
