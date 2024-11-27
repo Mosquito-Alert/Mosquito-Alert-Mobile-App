@@ -108,15 +108,13 @@ class _SettingsPageState extends State<SettingsPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // TODO: Account
-            SizedBox(height: 10),            
+                // TODO: Account          
             Divider(),
             Text(MyLocalizations.of(context, "settings_title").toUpperCase()),
             SettingsMenuWidget(
                 MyLocalizations.of(context, 'select_language_txt'), () {
               _openLanguagePickerDialog();
             }),
-            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
               decoration: BoxDecoration(
@@ -147,7 +145,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ),
-            SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
@@ -203,7 +200,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             Divider(),
             Text("SUPPORT (Hardcoded)"),
-            SizedBox(height: 30),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'info_scores_txt'), () {
                 Navigator.push(
@@ -214,7 +210,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'about_the_project_txt'), () {
                 Navigator.push(
@@ -225,7 +220,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'partners_txt'), () {
                 Navigator.push(
@@ -234,7 +228,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => PartnersPage()),
               );
             }),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'coordination_txt'), () {
                 Navigator.push(
@@ -245,7 +238,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'mailing_mosquito_samples'), () {
                 Navigator.push(
@@ -255,7 +247,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            //SizedBox(height: 30),
             Divider(),
             Text("LEGAL (Hardcoded)"),
             SettingsMenuWidget(
@@ -271,7 +262,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'privacy_txt'), () {
                 Navigator.push(
@@ -285,7 +275,6 @@ class _SettingsPageState extends State<SettingsPage> {
               );
               }
             ),
-            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'license_txt'), () {
                 Navigator.push(
