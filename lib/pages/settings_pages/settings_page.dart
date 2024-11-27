@@ -115,88 +115,73 @@ class _SettingsPageState extends State<SettingsPage> {
                 MyLocalizations.of(context, 'select_language_txt'), () {
               _openLanguagePickerDialog();
             }),
-            Container(
-              padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.white,
-                border: Border.all(color: Colors.black.withOpacity(0.1))
-              ),
-              child: SwitchListTile(
-                title: Style.body(MyLocalizations.of(context, 'background_tracking_title')),
-                subtitle: Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    MyLocalizations.of(context, 'background_tracking_subtitle'),
-                    style: TextStyle(fontSize: 11),
-                  ),
+            SwitchListTile(
+              title: Style.body(MyLocalizations.of(context, 'background_tracking_title')),
+              subtitle: Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  MyLocalizations.of(context, 'background_tracking_subtitle'),
+                  style: TextStyle(fontSize: 11),
                 ),
-                value: isBgTrackingEnabled,
-                activeColor: Colors.orange,
-                onChanged: (bool value) async {
-                  await UserManager.setTracking(value);
-                  var trackingStatus = await UserManager.getTracking();
-                  setState(() {
-                    isBgTrackingEnabled = trackingStatus;
-                  });
-                  if (!isBgTrackingEnabled){
-                    await Workmanager().cancelByTag('trackingTask');
-                  }
-                },
               ),
+              value: isBgTrackingEnabled,
+              activeColor: Colors.orange,
+              onChanged: (bool value) async {
+                await UserManager.setTracking(value);
+                var trackingStatus = await UserManager.getTracking();
+                setState(() {
+                  isBgTrackingEnabled = trackingStatus;
+                });
+                if (!isBgTrackingEnabled){
+                  await Workmanager().cancelByTag('trackingTask');
+                }
+              },
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.white,
-                border: Border.all(color: Colors.black.withOpacity(0.1)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ExpansionTile(
-                      initiallyExpanded: numTagsAdded! > 0,
-                      title: Row(
-                        children: [
-                            Text(
-                              MyLocalizations.of(context, 'auto_tagging_settings_title'),
-                            ),
-                            Spacer(flex: 1),
-                          if (numTagsAdded! > 0)
-                            Container(
-                              margin: EdgeInsets.only(left: 8.0),
-                              padding: EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey,
-                              ),
-                              child: Text(
-                                '$numTagsAdded',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: ExpansionTile(
+                    initiallyExpanded: numTagsAdded! > 0,
+                    title: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Text(
-                            MyLocalizations.of(context, 'enable_auto_hashtag_text'),
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600]),
+                          Text(
+                            MyLocalizations.of(context, 'auto_tagging_settings_title'),
                           ),
-                        ),
-                        StringMultilineTags(updateTagsNum: updateTagsNum),
+                          Spacer(flex: 1),
+                        if (numTagsAdded! > 0)
+                          Container(
+                            margin: EdgeInsets.only(left: 8.0),
+                            padding: EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                            ),
+                            child: Text(
+                              '$numTagsAdded',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(
+                          MyLocalizations.of(context, 'enable_auto_hashtag_text'),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[600]),
+                        ),
+                      ),
+                      StringMultilineTags(updateTagsNum: updateTagsNum),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Divider(),
             Text("SUPPORT (Hardcoded)"),
