@@ -33,6 +33,9 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: <Widget>[
         Scaffold(
+          appBar: AppBar(
+            title: Text(MyLocalizations.of(context, "home_tab")),
+          ),
           body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
