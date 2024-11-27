@@ -108,7 +108,10 @@ class _SettingsPageState extends State<SettingsPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-            SizedBox(height: 10),
+                // TODO: Account
+            SizedBox(height: 10),            
+            Divider(),
+            Text(MyLocalizations.of(context, "settings_title").toUpperCase()),
             SettingsMenuWidget(
                 MyLocalizations.of(context, 'select_language_txt'), () {
               _openLanguagePickerDialog();
@@ -198,6 +201,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+            Divider(),
+            Text("SUPPORT (Hardcoded)"),
             SizedBox(height: 30),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'info_scores_txt'), () {
@@ -250,7 +255,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(height: 30),
+            //SizedBox(height: 30),
+            Divider(),
+            Text("LEGAL (Hardcoded)"),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'terms_of_use_txt'), () {
                 Navigator.push(
