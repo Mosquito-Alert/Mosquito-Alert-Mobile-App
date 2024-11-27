@@ -108,16 +108,12 @@ class _SettingsPageState extends State<SettingsPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SettingsMenuWidget(
                 MyLocalizations.of(context, 'select_language_txt'), () {
               _openLanguagePickerDialog();
             }),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
               decoration: BoxDecoration(
@@ -148,9 +144,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
@@ -215,9 +209,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'about_the_project_txt'), () {
                 Navigator.push(
@@ -228,9 +220,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               }
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SettingsMenuWidget(
               MyLocalizations.of(context, 'partners_txt'), () {
                 Navigator.push(
