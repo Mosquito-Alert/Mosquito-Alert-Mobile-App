@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(15),
+          margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
           child: isLoading ? 
             Container(
                 height: MediaQuery.sizeOf(context).height * 0.8,
@@ -114,10 +114,18 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  child: Icon(Icons.person, size: 40),
-                  backgroundColor: Colors.transparent,
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 6,
+                    )),
+                  child: CircleAvatar(
+                    radius: 25,
+                    child: Icon(Icons.person, size: 40),
+                    backgroundColor: Colors.transparent,
+                  ),
                 ),
               ],
             ),
@@ -139,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   size: 15,
                 ),
                 SizedBox(width: 5),
-                Text('147'),
+                Text('147 (Hardcoded)'), // TODO: Get real points
               ],
             ),
             SizedBox(height: 10,),
