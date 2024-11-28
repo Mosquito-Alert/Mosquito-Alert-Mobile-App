@@ -27,6 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   var packageInfo;
   late int? numTagsAdded;
   bool isLoading = true;
+  int userScore = 0;
 
   final languageCodes = [
     Language('bg_BG', 'Bulgarian', 'Bulgarian'),
@@ -61,6 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
     getPackageInfo();
     initializeBgTracking();
     initializeTagsNum();
+    initializeUserScore();
   }
 
   void initializeBgTracking() async {
@@ -85,6 +87,13 @@ class _SettingsPageState extends State<SettingsPage> {
   void updateTagsNum(int newValue) {
     setState(() {
       numTagsAdded = newValue;
+    });
+  }
+
+  void initializeUserScore() async {
+    var _userScore = await UserManager.getUserScores();
+    setState((){
+      userScore = _userScore ?? 0;
     });
   }
 
@@ -147,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   size: 15,
                 ),
                 SizedBox(width: 5),
-                Text('147 (Hardcoded)'), // TODO: Get real points
+                Text('$userScore'),
               ],
             ),
             SizedBox(height: 10,),
