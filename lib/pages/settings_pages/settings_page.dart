@@ -282,7 +282,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   MaterialPageRoute(
                     builder: (context) => CampaignTutorialPage()),
                 );
-              }
+              },              
+              addDivider: false,
             ),
             Divider(),
             Text("LEGAL (Hardcoded)"),
