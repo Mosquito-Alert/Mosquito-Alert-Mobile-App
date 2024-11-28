@@ -180,6 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                           Text(
                             MyLocalizations.of(context, 'auto_tagging_settings_title'),
+                            style: TextStyle(fontSize: 14),
                           ),
                           Spacer(flex: 1),
                         if (numTagsAdded! > 0)
