@@ -94,6 +94,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       key: key,
+      appBar: AppBar(
+        title: Text("Account (Hardcoded)"),
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(15),
@@ -108,7 +111,38 @@ class _SettingsPageState extends State<SettingsPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // TODO: Account          
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  child: Icon(Icons.person, size: 40),
+                  backgroundColor: Colors.transparent,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Anonymous',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.star,
+                  color: Colors.orange,
+                  size: 15,
+                ),
+                SizedBox(width: 5),
+                Text('147'),
+              ],
+            ),
+            SizedBox(height: 10,),
             Divider(),
             Text(MyLocalizations.of(context, "settings_title").toUpperCase()),
             SettingsMenuWidget(
