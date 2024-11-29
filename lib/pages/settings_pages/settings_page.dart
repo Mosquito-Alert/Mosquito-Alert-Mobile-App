@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:language_picker/language_picker.dart';
@@ -114,226 +113,9 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
-          child: isLoading ? 
-            Container(
-                height: MediaQuery.sizeOf(context).height * 0.8,
-                child: Center(
-                  child: CircularProgressIndicator()
-                ),
-            )            
-          :
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 6,
-                    )),
-                  child: CircleAvatar(
-                    radius: 25,
-                    child: Icon(Icons.person, size: 40),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Anonymous',
-                  style: TextStyle(fontSize: 24),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                  size: 15,
-                ),
-                SizedBox(width: 5),
-                Text('$userScore'),
-              ],
-            ),
-            SizedBox(height: 10,),
-            Divider(),
-            Text(MyLocalizations.of(context, "settings_title").toUpperCase()),
-            SettingsMenuWidget(
-                MyLocalizations.of(context, 'select_language_txt'), () {
-              _openLanguagePickerDialog();
-            }),
-            SwitchListTile(
-              title: Style.body(MyLocalizations.of(context, 'background_tracking_title')),
-              subtitle: Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  MyLocalizations.of(context, 'background_tracking_subtitle'),
-                  style: TextStyle(fontSize: 11),
-                ),
-              ),
-              value: isBgTrackingEnabled,
-              activeColor: Colors.orange,
-              onChanged: (bool value) async {
-                await UserManager.setTracking(value);
-                var trackingStatus = await UserManager.getTracking();
-                setState(() {
-                  isBgTrackingEnabled = trackingStatus;
-                });
-                if (!isBgTrackingEnabled){
-                  await Workmanager().cancelByTag('trackingTask');
-                }
-              },
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: ExpansionTile(
-                    initiallyExpanded: numTagsAdded! > 0,
-                    title: Row(
-                      children: [
-                          Text(
-                            MyLocalizations.of(context, 'auto_tagging_settings_title'),
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          Spacer(flex: 1),
-                        if (numTagsAdded! > 0)
-                          Container(
-                            margin: EdgeInsets.only(left: 8.0),
-                            padding: EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey,
-                            ),
-                            child: Text(
-                              '$numTagsAdded',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Text(
-                          MyLocalizations.of(context, 'enable_auto_hashtag_text'),
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey[600]),
-                        ),
-                      ),
-                      StringMultilineTags(updateTagsNum: updateTagsNum),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Divider(),
-            Text("SUPPORT (Hardcoded)"),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'info_scores_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InfoPageInWebview(
-                      MyLocalizations.of(context, 'url_scoring_1'))),
-                );
-              }
-            ),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'about_the_project_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InfoPageInWebview(
-                      MyLocalizations.of(context, 'url_about_project'))),
-                );
-              }
-            ),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'partners_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PartnersPage()),
-              );
-            }),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'coordination_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => InfoPageInWebview(
-                          MyLocalizations.of(context, 'url_about_us'))),
-                );
-              }
-            ),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'mailing_mosquito_samples'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CampaignTutorialPage()),
-                );
-              },              
-              addDivider: false,
-            ),
-            Divider(),
-            Text("LEGAL (Hardcoded)"),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'terms_of_use_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InfoPageInWebview(
-                      MyLocalizations.of(context, 'terms_link'),
-                      localHtml: true,
-                    )
-                  ),
-                );
-              }
-            ),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'privacy_txt'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InfoPageInWebview(
-                      MyLocalizations.of(context, 'privacy_link'),
-                      localHtml: true,
-                    )
-                  ),
-              );
-              }
-            ),
-            SettingsMenuWidget(
-              MyLocalizations.of(context, 'license_txt'), () {
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InfoPageInWebview(
-                    MyLocalizations.of(context, 'lisence_link'),
-                    localHtml: true,
-                  )
-                ),
-              );
-              }
-            ),
-            uuidWithCopyToClipboard(),
-            versionNumber(),
-          ]),
+          child: isLoading
+            ? _buildLoadingIndicator(context)
+            : _buildAccountContent(context),          
         ),
       ),
     );
@@ -377,6 +159,246 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         })),
   );
+
+  Widget _buildLoadingIndicator(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget _buildAccountContent(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildProfileHeader(context),
+        SizedBox(height: 10),
+        Divider(),
+        _buildSettingsSection(context),
+        Divider(),
+        _buildSupportSection(context),
+        Divider(),
+        _buildLegalSection(context),
+        Divider(),
+        uuidWithCopyToClipboard(),
+        versionNumber(),
+      ],
+    );
+  }
+
+  Widget _buildProfileHeader(BuildContext context) {
+    return Column(
+      children: [
+        _buildAvatar(),
+        _buildUserName(),
+        _buildUserScore(),
+      ],
+    );
+  }
+
+  Widget _buildAvatar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.black,
+              width: 6,
+            ),
+          ),
+          child: CircleAvatar(
+            radius: 25,
+            child: Icon(Icons.person, size: 40),
+            backgroundColor: Colors.transparent,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserName() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Anonymous',
+          style: TextStyle(fontSize: 24),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserScore() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.star,
+          color: Colors.orange,
+          size: 15,
+        ),
+        SizedBox(width: 5),
+        Text('$userScore'),
+      ],
+    );
+  }
+
+  Widget _buildSettingsSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(MyLocalizations.of(context, "settings_title").toUpperCase()),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'select_language_txt'),
+          _openLanguagePickerDialog,
+        ),
+        _buildBackgroundTrackingSwitch(context),
+        _buildAutoTaggingSettings(context),
+      ],
+    );
+  }
+
+  Widget _buildBackgroundTrackingSwitch(BuildContext context) {
+    return SwitchListTile(
+      title: Style.body(MyLocalizations.of(context, 'background_tracking_title')),
+      subtitle: Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: Text(
+          MyLocalizations.of(context, 'background_tracking_subtitle'),
+          style: TextStyle(fontSize: 11),
+        ),
+      ),
+      value: isBgTrackingEnabled,
+      activeColor: Colors.orange,
+      onChanged: (bool value) async {
+        await UserManager.setTracking(value);
+        var trackingStatus = await UserManager.getTracking();
+        setState(() {
+          isBgTrackingEnabled = trackingStatus;
+        });
+        if (!isBgTrackingEnabled) {
+          await Workmanager().cancelByTag('trackingTask');
+        }
+      },
+    );
+  }
+
+  Widget _buildAutoTaggingSettings(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ExpansionTile(
+            initiallyExpanded: numTagsAdded! > 0,
+            title: Row(
+              children: [
+                Text(
+                  MyLocalizations.of(context, 'auto_tagging_settings_title'),
+                  style: TextStyle(fontSize: 14),
+                ),
+                Spacer(),
+                if (numTagsAdded! > 0)
+                  Container(
+                    margin: EdgeInsets.only(left: 8.0),
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey,
+                    ),
+                    child: Text(
+                      '$numTagsAdded',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(
+                  MyLocalizations.of(context, 'enable_auto_hashtag_text'),
+                  style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                ),
+              ),
+              StringMultilineTags(updateTagsNum: updateTagsNum),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSupportSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("SUPPORT (Hardcoded)"),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'info_scores_txt'),
+          () => _navigateToWebview(context, 'url_scoring_1'),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'about_the_project_txt'),
+          () => _navigateToWebview(context, 'url_about_project'),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'partners_txt'),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PartnersPage()),
+          ),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'coordination_txt'),
+          () => _navigateToWebview(context, 'url_about_us'),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'mailing_mosquito_samples'),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CampaignTutorialPage()),
+          ),
+          addDivider: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegalSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("LEGAL (Hardcoded)"),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'terms_of_use_txt'),
+          () => _navigateToWebview(context, 'terms_link'),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'privacy_txt'),
+          () => _navigateToWebview(context, 'privacy_link'),
+        ),
+        SettingsMenuWidget(
+          MyLocalizations.of(context, 'license_txt'),
+          () => _navigateToWebview(context, 'lisence_link'),
+          addDivider: false,
+        ),
+      ],
+    );
+  }
+
+  void _navigateToWebview(BuildContext context, String urlKey) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InfoPageInWebview(MyLocalizations.of(context, urlKey)),
+      ),
+    );
+  }
 
   Widget uuidWithCopyToClipboard(){
     return FutureBuilder(
