@@ -396,20 +396,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 'UUID: ',
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.7),
-                  fontSize: 8,
+                  fontSize: 11,
                 ),
               ),
               Text(
                 snapshot.data ?? '',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 8,
+                  fontSize: 11,
                 ),
               ),
               GestureDetector(
                 child: Icon(
                   Icons.copy_rounded,
-                  size: 12,
+                  size: 11,
                 ),
                 onTap: () {
                   final data = snapshot.data;
@@ -448,7 +448,7 @@ class _SettingsPageState extends State<SettingsPage> {
             : '',
           style: TextStyle(
             color: Colors.grey,
-            fontSize: 8.0,                  
+            fontSize: 11.0,                  
           ),
         ),
       ),
