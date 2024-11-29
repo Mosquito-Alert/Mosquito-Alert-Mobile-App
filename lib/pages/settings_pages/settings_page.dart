@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:language_picker/language_picker.dart';
 
 import 'package:language_picker/languages.dart';
@@ -27,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   var packageInfo;
   late int? numTagsAdded;
   bool isLoading = true;
+  late String userUuid;
   int userScore = 0;
 
   final languageCodes = [
@@ -62,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
     getPackageInfo();
     initializeBgTracking();
     initializeTagsNum();
-    initializeUserScore();
+    initializeUser();
   }
 
   void initializeBgTracking() async {
@@ -90,9 +93,11 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  void initializeUserScore() async {
+  void initializeUser() async {
+    var _userUuid = await UserManager.getUUID();
     var _userScore = await UserManager.getUserScores();
     setState((){
+      userUuid = _userUuid ?? '';
       userScore = _userScore ?? 0;
     });
   }
@@ -326,6 +331,8 @@ class _SettingsPageState extends State<SettingsPage> {
               );
               }
             ),
+            uuidWithCopyToClipboard(),
+            versionNumber(),
           ]),
         ),
       ),
@@ -370,4 +377,81 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         })),
   );
+
+  Widget uuidWithCopyToClipboard(){
+    return FutureBuilder(
+      future: UserManager.getUUID(),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        return Center(
+          child: Row(
+            mainAxisSize:MainAxisSize.min,
+            children: [
+              Text(
+                'UUID: ',
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.7),
+                  fontSize: 8,
+                ),
+              ),
+              Text(
+                snapshot.data ?? '',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 8,
+                ),
+              ),
+              GestureDetector(
+                child: Icon(
+                  Icons.copy_rounded,
+                  size: 12,
+                ),
+                onTap: () {
+                  final data = snapshot.data;
+                  if (data != null) {
+                    Clipboard.setData(ClipboardData(text: data));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
+                      ),
+                    );
+                  } else {
+                    // Display an error message for troubleshooting
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
+                      ),
+                    );
+                  }
+                },
+              )
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  Widget versionNumber(){
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: Text(
+          packageInfo != null
+            ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+            : '',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 8.0,                  
+          ),
+        ),
+      ),
+    );
+  }
 }
