@@ -116,6 +116,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.orange,
+        fontFamily: 'Nunito',
       ),
       navigatorKey: navigatorKey,
       home: MainVC(),
