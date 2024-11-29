@@ -26,8 +26,10 @@ class SettingsMenuWidget extends StatelessWidget {
           dense: true,          
         ),
         if (addDivider)
-          Container( padding: EdgeInsets.only(left: 10.0, right: 10.0),
-            child: Divider(thickness: 0.5,),
+          Divider(
+            thickness: 0.5,
+            indent: 5.0,
+            endIndent: 5.0,
           )
       ],
     );
