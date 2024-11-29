@@ -112,21 +112,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport(
-        child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        fontFamily: 'Nunito',
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Nunito',
+        ),
+        navigatorKey: navigatorKey,
+        home: MainVC(),
+        localizationsDelegates: [
+          _newLocaleDelegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: application.supportedLocales(),
       ),
-      navigatorKey: navigatorKey,
-      home: MainVC(),
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: application.supportedLocales(),
-    ));
+    );
   }
 }
