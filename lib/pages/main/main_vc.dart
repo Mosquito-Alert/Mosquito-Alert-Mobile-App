@@ -19,53 +19,38 @@ class _MainVCState extends State<MainVC> {
     SettingsPage(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40.0),
-          topRight: Radius.circular(40.0),
-        ),
-        child: BottomAppBar(
-          color: Colors.grey[350],
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildIconButton(Icons.home, 0),
-              _buildIconButton(Icons.map, 1),
-              _buildIconButton(Icons.file_copy, 2),
-              _buildIconButton(Icons.person, 3),
-            ],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        indicatorColor: Colors.amber,
+        selectedIndex: _selectedIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home (HC)'
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIconButton(IconData icon, int index) {
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(
-            icon,
-            size: 30,
-            color: _selectedIndex == index ? Colors.orange : Colors.black,
+          NavigationDestination(
+            selectedIcon: Icon(Icons.map),
+            icon: Icon(Icons.map_outlined),
+            label: 'Map (HC)',
           ),
-          SizedBox(height: 5),
-          Container(
-            width: 30,
-            height: 2,
-            color: _selectedIndex == index ? Colors.orange : Colors.transparent,
+          NavigationDestination(
+            selectedIcon: Icon(Icons.file_copy),
+            icon: Icon(Icons.file_copy_outlined),
+            label: 'My reports (HC)',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
+            label: 'Account (HC)',
           )
         ],
       )
