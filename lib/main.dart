@@ -116,6 +116,18 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Nunito',
+          textTheme: TextTheme(
+            titleMedium: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 25.0,
+              color: Color(0xFF000000)
+            ),
+            bodyMedium: TextStyle(
+
+              fontSize: 16.0
+            ),
+          ),
+          primarySwatch: Colors.blue
         ),
         navigatorKey: navigatorKey,
         home: MainVC(),

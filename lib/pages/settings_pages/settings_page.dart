@@ -108,7 +108,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       key: key,
       appBar: AppBar(
-        title: Text("Account (Hardcoded)"),
+        title: Text(
+          "Account (Hardcoded)",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -224,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           'Anonymous',
-          style: TextStyle(fontSize: 24),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
     );
