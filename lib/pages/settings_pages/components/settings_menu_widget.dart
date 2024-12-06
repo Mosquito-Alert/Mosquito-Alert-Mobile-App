@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
 
 class SettingsMenuWidget extends StatelessWidget {
-  final String? text;
+  final String text;
   final Function onTap;
   final bool addDivider;
 
@@ -16,7 +15,10 @@ class SettingsMenuWidget extends StatelessWidget {
           onTap: () {
             onTap();
           },
-          title: Style.body(text),
+          title: Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           trailing: Icon(
             Icons.arrow_forward_ios,
             color: Colors.black,
