@@ -12,7 +12,6 @@ import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info/package_info.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -127,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void _openLanguagePickerDialog() => showDialog(
     context: context,
     builder: (context) => Theme(
-      data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
+      data: Theme.of(context).copyWith(primaryColor: Theme.of(context).primaryColor),
       child: LanguagePickerDialog(
         languages: languageCodes.map(
           (language) => Language(
@@ -138,12 +137,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   (a, b) => a.name.compareTo(b.name)
                 ),
         titlePadding: EdgeInsets.all(8.0),
-        searchCursorColor: Style.colorPrimary,
+        searchCursorColor: Theme.of(context).primaryColor,
         searchInputDecoration: InputDecoration(
-            hintText: MyLocalizations.of(context, 'search_txt')),
+            hintText: MyLocalizations.of(context, 'search_txt')), // TODO: Change style but it's raw string
         isSearchable: true,
         title:
-            Text(MyLocalizations.of(context, 'select_language_txt')),
+            Text(
+              MyLocalizations.of(context, 'select_language_txt'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
         onValuePicked: (Language language) => setState(() {
               var languageCodes = language.isoCode.split('_');
 
@@ -157,7 +159,10 @@ class _SettingsPageState extends State<SettingsPage> {
         itemBuilder: (Language language) {
           return Row(
             children: <Widget>[
-              Text(MyLocalizations.of(context, language.isoCode)),
+              Text(
+                MyLocalizations.of(context, language.isoCode),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ],
           );
         })),
@@ -243,7 +248,10 @@ class _SettingsPageState extends State<SettingsPage> {
           size: 15,
         ),
         SizedBox(width: 5),
-        Text('$userScore'),
+        Text(
+          '$userScore',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
       ],
     );
   }
@@ -265,12 +273,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildBackgroundTrackingSwitch(BuildContext context) {
     return SwitchListTile(
-      title: Style.body(MyLocalizations.of(context, 'background_tracking_title')),
+      title: Text(
+        MyLocalizations.of(context, 'background_tracking_title'),
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
       subtitle: Padding(
         padding: EdgeInsets.only(top: 8.0),
         child: Text(
           MyLocalizations.of(context, 'background_tracking_subtitle'),
-          style: TextStyle(fontSize: 11),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ),
       value: isBgTrackingEnabled,
@@ -298,7 +309,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   MyLocalizations.of(context, 'auto_tagging_settings_title'),
-                  style: TextStyle(fontSize: 14),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Spacer(),
                 if (numTagsAdded! > 0)
@@ -311,11 +322,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     child: Text(
                       '$numTagsAdded',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ),
               ],
@@ -325,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(
                   MyLocalizations.of(context, 'enable_auto_hashtag_text'),
-                  style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
               StringMultilineTags(updateTagsNum: updateTagsNum),
@@ -376,7 +383,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("LEGAL (Hardcoded)"),
+        Text(
+          "LEGAL (Hardcoded)",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         SettingsMenuWidget(
           MyLocalizations.of(context, 'terms_of_use_txt'),
           () => _navigateToWebview(context, 'terms_link'),
@@ -419,17 +429,11 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Text(
                 'UUID: ',
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.7),
-                  fontSize: 11,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
               Text(
                 snapshot.data ?? '',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 11,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
               GestureDetector(
                 child: Icon(
@@ -442,14 +446,20 @@ class _SettingsPageState extends State<SettingsPage> {
                     Clipboard.setData(ClipboardData(text: data));
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
+                        content: Text(
+                          MyLocalizations.of(context, 'copied_to_clipboard_success'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                     );
                   } else {
                     // Display an error message for troubleshooting
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
+                        content: Text(
+                          MyLocalizations.of(context, 'copied_to_clipboard_error'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                     );
                   }
@@ -471,10 +481,7 @@ class _SettingsPageState extends State<SettingsPage> {
           packageInfo != null
             ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
             : '',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 11.0,                  
-          ),
+          style: Theme.of(context).textTheme.labelSmall,
         ),
       ),
     );
