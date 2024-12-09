@@ -34,7 +34,10 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text(MyLocalizations.of(context, "home_tab")),
+            title: Text(
+              MyLocalizations.of(context, "home_tab"),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints viewportConstraints) {

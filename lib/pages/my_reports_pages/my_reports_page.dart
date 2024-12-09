@@ -71,7 +71,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 text: MyLocalizations.of(context, 'single_breeding_site')),
             ],
           ),
-          title: Text(MyLocalizations.of(context, 'your_reports_txt')),
+          title: Text(
+            MyLocalizations.of(context, 'your_reports_txt'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         body: isLoading ?
           Center(child: CircularProgressIndicator())

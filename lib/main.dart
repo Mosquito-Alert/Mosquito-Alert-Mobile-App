@@ -112,20 +112,48 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport(
-        child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,        
+        theme: ThemeData(
+          fontFamily: 'Nunito',
+          textTheme: TextTheme(            
+            titleMedium: TextStyle(
+              color: Color(0xFF000000),
+              fontSize: 25.0,
+              fontWeight: FontWeight.w400,
+            ),
+            bodyMedium: TextStyle(
+              color: Color(0xFF000000),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w400,
+            ),
+            bodySmall: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 11.0,
+              fontWeight: FontWeight.w400,
+            ),
+            labelMedium: TextStyle(
+              color: Colors.white,
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold,
+            ),
+            labelSmall: TextStyle(
+              color: Color(0xFF979797),
+              fontSize: 10.0,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+        navigatorKey: navigatorKey,
+        home: MainVC(),
+        localizationsDelegates: [
+          _newLocaleDelegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: application.supportedLocales(),
       ),
-      navigatorKey: navigatorKey,
-      home: MainVC(),
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: application.supportedLocales(),
-    ));
+    );
   }
 }
