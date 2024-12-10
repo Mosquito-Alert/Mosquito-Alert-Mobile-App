@@ -115,6 +115,21 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,        
         theme: ThemeData(
+          colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Color(0xFFEDB20C),
+            onPrimary: Colors.black, 
+            secondary: Color(0xFF7A3B69),
+            onSecondary: Colors.white,
+            error: Color(0xFFE94F37),
+            onError: Colors.white,
+            background: Colors.white,
+            onBackground: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
+            // TODO: info #A3D9FF
+            // TODO: positive #5BBA6F
+          ),
           fontFamily: 'Nunito',
           textTheme: TextTheme(            
             titleMedium: TextStyle(
