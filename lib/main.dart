@@ -63,6 +63,7 @@ void callbackDispatcher() {
   });
 }
 
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -115,6 +116,21 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,        
         theme: ThemeData(
+          colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Color(0xFFEDB20C),
+            onPrimary: Colors.black, 
+            secondary: Color(0xFF7A3B69),
+            onSecondary: Colors.white,
+            error: Color(0xFFE94F37),
+            onError: Colors.white,
+            background: Colors.white,
+            onBackground: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
+            tertiary: Color(0xFFA3D9FF),  // Info color
+            outline: Color(0xFF5BBA6F)  // Positive color
+          ),
           fontFamily: 'Nunito',
           textTheme: TextTheme(            
             titleMedium: TextStyle(
