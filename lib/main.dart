@@ -63,6 +63,7 @@ void callbackDispatcher() {
   });
 }
 
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -127,8 +128,8 @@ class _MyAppState extends State<MyApp> {
             onBackground: Colors.black,
             surface: Colors.white,
             onSurface: Colors.black,
-            // TODO: info #A3D9FF
-            // TODO: positive #5BBA6F
+            tertiary: Color(0xFFA3D9FF),  // Info color
+            outline: Color(0xFF5BBA6F)  // Positive color
           ),
           fontFamily: 'Nunito',
           textTheme: TextTheme(            
