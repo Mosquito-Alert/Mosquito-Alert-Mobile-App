@@ -20,7 +20,6 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info/package_info.dart';
 
-
 class MainVC extends StatefulWidget {
   const MainVC({key});
 
@@ -57,11 +56,25 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
-    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
+    List<MyNotification> notifications =
+        await ApiSingleton().getNotifications();
+    var unacknowledgedCount = notifications
+        .where((notification) => notification.acknowledged == false)
+        .length;
     updateNotificationCount(unacknowledgedCount);
   }
 
+/*
+  Future<void> _getNotificationCount() async {
+    var response = await ApiSingleton().getNotifications();
+    List<MyNotification> notifications = List<MyNotification>.from(
+        response.map((item) => MyNotification.fromJson(item)));
+    var unacknowledgedCount = notifications
+        .where((notification) => notification.acknowledged == false)
+        .length;
+    updateNotificationCount(unacknowledgedCount);
+  }
+*/
   void updateNotificationCount(int newCount) {
     setState(() {
       unreadNotifications = newCount;
@@ -115,193 +128,202 @@ class _MainVCState extends State<MainVC> {
         ),
         actions: <Widget>[
           badges.Badge(
-            position: badges.BadgePosition.topEnd(top: 4, end: 4),
-            showBadge: unreadNotifications > 0,
-            badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
-            child: IconButton(
-              padding: EdgeInsets.only(top: 6),
-              icon: Icon(Icons.notifications, size: 24),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
-                );
-              },
-            )
-          )
+              position: badges.BadgePosition.topEnd(top: 4, end: 4),
+              showBadge: unreadNotifications > 0,
+              badgeContent: Text('$unreadNotifications',
+                  style: TextStyle(color: Colors.white)),
+              child: IconButton(
+                padding: EdgeInsets.only(top: 6),
+                icon: Icon(Icons.notifications, size: 24),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationsPage(
+                            onNotificationUpdate: updateNotificationCount)),
+                  );
+                },
+              ))
         ],
       ),
       body: Center(
         child: isLoading
-          ? CircularProgressIndicator()
-          : _widgetOptions[_selectedIndex],
+            ? CircularProgressIndicator()
+            : _widgetOptions[_selectedIndex],
       ),
       drawer: Drawer(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  DrawerHeader(
+          child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
                     child: Row(
-                      children: <Widget>[
-                        // User score
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => InfoPageInWebview("${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
-                            );
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/img/points_box.png'),
-                              ),
-                            ),
-                            child: StreamBuilder<int?>(
-                              stream: Utils.userScoresController.stream,
-                              initialData: UserManager.userScore,
-                              builder: (context, snapshot) {
-                                return Center(
-                                  child: AutoSizeText(
-                                    snapshot.data != null && snapshot.hasData
-                                      ? snapshot.data.toString()
-                                      : '',
-                                    maxLines: 1,
-                                    maxFontSize: 26,
-                                    minFontSize: 16,
-                                    style: TextStyle(
-                                      color: Color(0xFF4B3D04),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 24),
-                                  )
-                                );
-                              }
-                            ),
+                  children: <Widget>[
+                    // User score
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InfoPageInWebview(
+                                  "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                        );
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/img/points_box.png'),
                           ),
                         ),
+                        child: StreamBuilder<int?>(
+                            stream: Utils.userScoresController.stream,
+                            initialData: UserManager.userScore,
+                            builder: (context, snapshot) {
+                              return Center(
+                                  child: AutoSizeText(
+                                snapshot.data != null && snapshot.hasData
+                                    ? snapshot.data.toString()
+                                    : '',
+                                maxLines: 1,
+                                maxFontSize: 26,
+                                minFontSize: 16,
+                                style: TextStyle(
+                                    color: Color(0xFF4B3D04),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 24),
+                              ));
+                            }),
+                      ),
+                    ),
 
-                        SizedBox(width: 12),
+                    SizedBox(width: 12),
 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
-                              child: Text(
-                                MyLocalizations.of(context, 'welcome_text'),
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            _uuidWithClipboard(),
-                          ],
-                        )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
+                          child: Text(
+                            MyLocalizations.of(context, 'welcome_text'),
+                            style: TextStyle(fontSize: 22),
+                          ),
+                        ),
+                        _uuidWithClipboard(),
                       ],
                     )
-                  ),
-                  _buildCustomTile(0, Icons.home, 'home_tab', context),
-                  _buildCustomTile(1, Icons.file_copy, 'your_reports_txt', context),
-                  _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
-                  _buildCustomTile(3, Icons.info, 'info_tab', context),
-                  _buildCustomTile(4, Icons.settings, 'settings_title', context),
-                ],
-              ),
+                  ],
+                )),
+                _buildCustomTile(0, Icons.home, 'home_tab', context),
+                _buildCustomTile(
+                    1, Icons.file_copy, 'your_reports_txt', context),
+                _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
+                _buildCustomTile(3, Icons.info, 'info_tab', context),
+                _buildCustomTile(4, Icons.settings, 'settings_title', context),
+              ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Text(
-                  packageInfo != null
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                packageInfo != null
                     ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
                     : '',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 8.0,                  
-                  ),
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 8.0,
                 ),
               ),
             ),
-          ],
-        )        
-      ),
+          ),
+        ],
+      )),
     );
   }
 
-  Widget _uuidWithClipboard(){
+  Widget _uuidWithClipboard() {
     return FutureBuilder(
-      future: UserManager.getUUID(),
-      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
+        future: UserManager.getUUID(),
+        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
 
-        return Row(
-          children: [
-            Text(
-              'ID: ',
-              style: TextStyle(
-                color: Colors.black.withOpacity(0.7),
-                fontSize: 8,
+          // Get the UUID string
+          String uuid = snapshot.data ?? '';
+          // Create abbreviated version: first 8 chars + ... + last 6 chars
+          String abbreviatedUuid = uuid.length > 14
+              ? '${uuid.substring(0, 8)}...${uuid.substring(uuid.length - 12)}'
+              : uuid;
+
+          return Row(
+            children: [
+              Text(
+                'ID: ',
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.7),
+                  fontSize: 8,
+                ),
               ),
-            ),
-            Text(
-              snapshot.data ?? '',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 8,
+              Text(
+                abbreviatedUuid,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 8,
+                ),
               ),
-            ),
-            GestureDetector(
-              child: Icon(
-                Icons.copy_rounded,
-                size: 12,
-              ),
-              onTap: () {
-                final data = snapshot.data;
-                if (data != null) {
-                  Clipboard.setData(ClipboardData(text: data));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
-                    ),
-                  );
-                } else {
-                  // Display an error message for troubleshooting
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
-                    ),
-                  );
-                }
-              },
-            )
-          ],            
-        );
-      }
-    );
+              GestureDetector(
+                child: Icon(
+                  Icons.copy_rounded,
+                  size: 12,
+                ),
+                onTap: () {
+                  final data = snapshot.data;
+                  if (data != null) {
+                    Clipboard.setData(ClipboardData(
+                        text:
+                            data)); // Copy the full UUID, not the abbreviated version
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(
+                            context, 'copied_to_clipboard_success')),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(
+                            context, 'copied_to_clipboard_error')),
+                      ),
+                    );
+                  }
+                },
+              )
+            ],
+          );
+        });
   }
 
-  Widget _buildCustomTile(int index, IconData icon, String title, context){
+  Widget _buildCustomTile(int index, IconData icon, String title, context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedIndex == index ? Colors.orange.shade200 : Colors.transparent,
+          color: _selectedIndex == index
+              ? Colors.orange.shade200
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: ListTile(
-          title: Text(
-            MyLocalizations.of(context, title),
-            style: TextStyle(color: Colors.black)
-          ),
+          title: Text(MyLocalizations.of(context, title),
+              style: TextStyle(color: Colors.black)),
           leading: Icon(
             icon,
             color: Colors.black,
