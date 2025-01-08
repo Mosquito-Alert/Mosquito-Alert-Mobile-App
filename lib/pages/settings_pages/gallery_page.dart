@@ -80,7 +80,6 @@ class _GalleryPageState extends State<GalleryPage> {
       Slide(
         title: '',
         description: MyLocalizations.of(context, 'gallery_info_09'),
-        widgetDescription: MarkdownBody(data: MyLocalizations.of(context, 'gallery_info_09')),
         pathImage: 'assets/img/gallery/guia_9.png',
       ),
     );
