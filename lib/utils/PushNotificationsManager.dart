@@ -49,11 +49,13 @@ class PushNotificationsManager {
       //   .timeout(Duration(seconds: 10), onTimeout: () => null);
 
       if (Platform.isIOS) {
-        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        debugPrint('APNS Token: $apnsToken');
+        await FirebaseMessaging.instance.getAPNSToken();
+        //debugPrint('APNS Token: $apnsToken');
       } else {}
 
-      String? token = await FirebaseMessaging.instance.getToken();
+      var token = await FirebaseMessaging.instance
+          .getToken()
+          .timeout(Duration(seconds: 10), onTimeout: () => null);
 
       if (token != null) {
         await registerFCMToken(token);

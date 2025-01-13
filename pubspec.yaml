@@ -22,11 +22,11 @@ dependencies:
   geocoding: ^2.1.1
   dio: ^5.3.3
   image_picker: ^0.8.7+1
-  firebase_auth: ^4.3.1
-  firebase_messaging: ^14.3.0
-  firebase_core: ^2.8.0
+  firebase_auth: ^5.4.0
+  firebase_messaging: ^15.2.0
+  firebase_core: ^3.10.0
   auto_size_text: ^3.0.0
-  file_picker: ^5.2.10
+  file_picker: ^8.0.3
   device_info: ^2.0.3 #Discontinued
   package_info: ^2.0.2 #Discontinued
   flutter_launcher_icons: ^0.11.0
@@ -35,14 +35,14 @@ dependencies:
   percent_indicator: ^4.2.3
   flutter_widget_from_html_core: ^0.8.5+3
   intro_slider: ^3.0.5
-  flutter_material_pickers: ^3.3.0
+  flutter_material_pickers: ^3.7.0
   permission_handler: ^11.0.1
-  language_picker: ^0.4.3
+  language_picker: ^0.4.5
   connectivity: ^3.0.6 #Discontinued
   overlay_support: ^2.1.0
   app_tracking_transparency: ^2.0.4
 
-  flutter_html: ^3.0.0-alpha.6
+  flutter_html: ^3.0.0-beta.2
   webview_flutter: ^4.5.0
   workmanager: ^0.5.2
   battery_plus: ^2.1.4+1
