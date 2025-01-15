@@ -121,7 +121,7 @@ class _GalleryPageState extends State<GalleryPage> {
         width: double.infinity,
         height: double.infinity,
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 40),
+          margin: EdgeInsets.only(bottom: 60.0),
           child: ListView(
             children: <Widget>[
               GestureDetector(
@@ -133,9 +133,12 @@ class _GalleryPageState extends State<GalleryPage> {
               )),
               Container(
                 margin: EdgeInsets.all(20.0),
-                child: MarkdownBody(
-                  data: currentSlide.description!,
-                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 0.0),
+                  child: MarkdownBody(
+                    data: currentSlide.description!,
+                  ),
+                )
               ),
             ],
           ),
