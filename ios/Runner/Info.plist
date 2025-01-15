@@ -4,6 +4,12 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
+		<string>com.transistorsoft.fetch</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
 		<string>trackingTask</string>
 		<string>scheduleDailyTasks</string>
 	</array>
@@ -11,8 +17,6 @@
 	<true/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,6 +31,32 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>bg-BG</string>
+		<string>bn-BD</string>
+		<string>ca-ES</string>
+		<string>de-DE</string>
+		<string>el-GR</string>
+		<string>en-US</string>
+		<string>es-ES</string>
+		<string>es-UY</string>
+		<string>fr-FR</string>
+		<string>gl-ES</string>
+		<string>hr-HR</string>
+		<string>hu-HU</string>
+		<string>it-IT</string>
+		<string>lb-LU</string>
+		<string>mk-MK</string>
+		<string>nl-NL</string>
+		<string>pt-PT</string>
+		<string>ro-RO</string>
+		<string>sl-SI</string>
+		<string>sq-AL</string>
+		<string>sr-RS</string>
+		<string>sv-SE</string>
+		<string>tr-TR</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -212,6 +242,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
 </plist>
