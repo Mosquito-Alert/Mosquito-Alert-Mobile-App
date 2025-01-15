@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
-import 'package:flutter_html/style.dart' as html_style;
+import 'package:flutter_html/src/style.dart' as html_style;
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
@@ -17,8 +17,11 @@ import '../../utils/UserManager.dart';
 
 class NotificationsPage extends StatefulWidget {
   final String? notificationId;
+  final Function(int)? onNotificationUpdate;
 
-  const NotificationsPage({Key? key, this.notificationId}) : super(key: key);
+  const NotificationsPage(
+      {Key? key, this.notificationId, this.onNotificationUpdate})
+      : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
@@ -32,17 +35,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     loadingStream.add(true);
-    _getData();
+    _getData().then((_) {
+      _updateUnreadNotificationCount();
+    });
   }
 
-  void _getData() async {
+  Future<void> _getData() async {
     List<MyNotification> response = await ApiSingleton().getNotifications();
 
     setState(() {
       notifications = response;
       _checkOpenNotification();
     });
-      loadingStream.add(false);
+    loadingStream.add(false);
   }
 
   void _checkOpenNotification() {
@@ -176,15 +181,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         data: notification.expert_html!
                             .replaceAll('<p><a', '<a')
                             .replaceAll('</a></p>', '</a>'),
-                        onLinkTap: (String? url, html.RenderContext context,
-                            Map<String, String> attributes, _) async {
-                          await launch(url!, forceSafariVC: true);
+                        onLinkTap: (url, context, attributes) async {
+                          await launchUrl(url as Uri,
+                              mode: LaunchMode.inAppWebView);
                         },
                         style: {
                           'a': html.Style(
                               backgroundColor: Colors.transparent,
                               color: Colors.blueAccent,
-                              padding: EdgeInsets.all(12),
+                              padding: html.HtmlPaddings.all(12),
                               margin: html_style.Margins(
                                   bottom: html_style.Margin(12.0),
                                   right: html_style.Margin(12.0),
@@ -194,15 +199,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               textAlign: TextAlign.center,
                               fontSize: html.FontSize(16.0)),
                         },
-                        tagsList: html.Html.tags..addAll(['bird', 'flutter']),
+                        //TagsList: html.Html.tags..addAll(['bird', 'flutter']),
+                        onlyRenderTheseTags: {'bird', 'flutter'},
                       )),
-
                       SizedBox(
                         height: 10,
                       ),
                       Style.bodySmall(
                           DateFormat('dd-MM-yyyy HH:mm').format(
-                              DateTime.parse(notification.date_comment!).toLocal()),
+                              DateTime.parse(notification.date_comment!)
+                                  .toLocal()),
                           color: Colors.grey)
                     ],
                   ),
@@ -213,7 +219,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         });
   }
 
-  _updateNotification(id) async {
+  Future<void> _updateNotification(id) async {
     var userId = await UserManager.getUUID();
     var res = await ApiSingleton().markNotificationAsRead(userId, id);
 
@@ -222,6 +228,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
       setState(() {
         notifications[index].acknowledged = true;
       });
+      _updateUnreadNotificationCount();
+    }
+  }
+
+  void _updateUnreadNotificationCount() {
+    var unacknowledgedCount = notifications
+        .where((notification) => notification.acknowledged == false)
+        .length;
+    if (widget.onNotificationUpdate != null) {
+      widget.onNotificationUpdate!(unacknowledgedCount);
     }
   }
 }
