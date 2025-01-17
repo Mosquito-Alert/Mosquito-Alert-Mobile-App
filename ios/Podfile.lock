@@ -8,7 +8,7 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
-  - device_info (0.0.1):
+  - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
@@ -97,6 +97,11 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
   - Flutter (1.0.0)
+  - flutter_image_compress_common (1.0.0):
+    - Flutter
+    - Mantle
+    - SDWebImage
+    - SDWebImageWebPCoder
   - geocoding_ios (1.0.5):
     - Flutter
   - geolocator_apple (1.2.0):
@@ -137,10 +142,23 @@ PODS:
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (4.2.0)
-  - image_picker_ios (0.0.1):
-    - Flutter
   - in_app_review (0.2.0):
     - Flutter
+  - libwebp (1.3.2):
+    - libwebp/demux (= 1.3.2)
+    - libwebp/mux (= 1.3.2)
+    - libwebp/sharpyuv (= 1.3.2)
+    - libwebp/webp (= 1.3.2)
+  - libwebp/demux (1.3.2):
+    - libwebp/webp
+  - libwebp/mux (1.3.2):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.3.2)
+  - libwebp/webp (1.3.2):
+    - libwebp/sharpyuv
+  - Mantle (2.2.0):
+    - Mantle/extobjc (= 2.2.0)
+  - Mantle/extobjc (2.2.0)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
@@ -161,6 +179,9 @@ PODS:
   - SDWebImage (5.19.0):
     - SDWebImage/Core (= 5.19.0)
   - SDWebImage/Core (5.19.0)
+  - SDWebImageWebPCoder (0.14.6):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.17)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -180,16 +201,16 @@ DEPENDENCIES:
   - battery_plus (from `.symlinks/plugins/battery_plus/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
-  - device_info (from `.symlinks/plugins/device_info/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
-  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -218,11 +239,14 @@ SPEC REPOS:
     - GoogleMaps
     - GoogleUtilities
     - GTMSessionFetcher
+    - libwebp
+    - Mantle
     - nanopb
     - PromisesObjC
     - Reachability
     - RecaptchaInterop
     - SDWebImage
+    - SDWebImageWebPCoder
     - SwiftyGif
 
 EXTERNAL SOURCES:
@@ -234,8 +258,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
-  device_info:
-    :path: ".symlinks/plugins/device_info/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_auth:
@@ -246,14 +270,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_image_compress_common:
+    :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   geocoding_ios:
     :path: ".symlinks/plugins/geocoding_ios/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
-  image_picker_ios:
-    :path: ".symlinks/plugins/image_picker_ios/ios"
   in_app_review:
     :path: ".symlinks/plugins/in_app_review/ios"
   package_info:
@@ -277,10 +301,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
-  battery_plus: 7851ab482c336dd101ae735dc9363f01e1223c7c
+  battery_plus: 3b68b6e7710fe49c022999753d22760e6dbbc471
   camera_avfoundation: 8b8d780bcfb6a4a02b0fbe2b4bd17b5b71946e68
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
-  device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
+  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
@@ -297,15 +321,17 @@ SPEC CHECKSUMS:
   FirebaseInstallations: efc0946fc756e4d22d8113f7c761948120322e8c
   FirebaseMessaging: e1aca1fcc23e8b9eddb0e33f375ff90944623021
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
+  flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
+  geocoding_ios: d7460f56e80e118d57678efe5c2cdc888739ff18
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   google_maps_flutter_ios: 53f75334bad87ccd0473f4b0142756169846b42b
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMaps: 20d7b12be49a14287f797e88e0e31bc4156aaeb4
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   GTMSessionFetcher: 4cb0aa086996858328a1fca61f9bfe81cfdfdfa9
-  image_picker_ios: 58b9c4269cb176f89acea5e5d043c9358f2d25f8
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
+  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
@@ -315,13 +341,14 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
-  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
   workmanager: 0afdcf5628bbde6924c21af7836fed07b42e30e6
 
 PODFILE CHECKSUM: 4a031495e87b314ab6aedae44be4448fdb4ded4b
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2

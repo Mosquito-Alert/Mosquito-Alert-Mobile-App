@@ -54,7 +54,7 @@ class _MainVCState extends State<MainVC> {
     await getPackageInfo();
     await initAuthStatus();
   }
-
+/*
   Future<void> _getNotificationCount() async {
     List<MyNotification> notifications =
         await ApiSingleton().getNotifications();
@@ -63,8 +63,8 @@ class _MainVCState extends State<MainVC> {
         .length;
     updateNotificationCount(unacknowledgedCount);
   }
+*/
 
-/*
   Future<void> _getNotificationCount() async {
     var response = await ApiSingleton().getNotifications();
     List<MyNotification> notifications = List<MyNotification>.from(
@@ -74,7 +74,7 @@ class _MainVCState extends State<MainVC> {
         .length;
     updateNotificationCount(unacknowledgedCount);
   }
-*/
+
   void updateNotificationCount(int newCount) {
     setState(() {
       unreadNotifications = newCount;
