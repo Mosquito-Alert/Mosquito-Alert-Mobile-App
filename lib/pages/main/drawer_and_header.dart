@@ -159,70 +159,62 @@ class _MainVCState extends State<MainVC> {
               padding: EdgeInsets.zero,
               children: [
                 DrawerHeader(
-                    child: Stack(
-                  children: [
-                    // Main row with score box and welcome text
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // Score box container
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => InfoPageInWebview(
-                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
-                            );
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/img/points_box.png'),
-                              ),
-                            ),
-                            child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
-                                builder: (context, snapshot) {
-                                  return Center(
-                                      child: AutoSizeText(
-                                    snapshot.data != null && snapshot.hasData
-                                        ? snapshot.data.toString()
-                                        : '',
-                                    maxLines: 1,
-                                    maxFontSize: 26,
-                                    minFontSize: 16,
-                                    style: TextStyle(
-                                        color: Color(0xFF4B3D04),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                  ));
-                                }),
+                    child: Row(
+                  children: <Widget>[
+                    // User score
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InfoPageInWebview(
+                                  "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                        );
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/img/points_box.png'),
                           ),
                         ),
+                        child: StreamBuilder<int?>(
+                            stream: Utils.userScoresController.stream,
+                            initialData: UserManager.userScore,
+                            builder: (context, snapshot) {
+                              return Center(
+                                  child: AutoSizeText(
+                                snapshot.data != null && snapshot.hasData
+                                    ? snapshot.data.toString()
+                                    : '',
+                                maxLines: 1,
+                                maxFontSize: 26,
+                                minFontSize: 16,
+                                style: TextStyle(
+                                    color: Color(0xFF4B3D04),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 24),
+                              ));
+                            }),
+                      ),
+                    ),
 
-                        SizedBox(width: 12),
+                    SizedBox(width: 12),
 
-                        // Welcome text in its original position
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 15.0),
+                          padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
                           child: Text(
                             MyLocalizations.of(context, 'welcome_text'),
                             style: TextStyle(fontSize: 22),
                           ),
                         ),
+                        _uuidWithClipboard(),
                       ],
-                    ),
-
-                    // ID text positioned under the score box
-                    Positioned(
-                      top: 64, // Just below the 60px height of score box
-                      left: 0,
-                      child: _uuidWithClipboard(),
-                    ),
+                    )
                   ],
                 )),
                 _buildCustomTile(0, Icons.home, 'home_tab', context),
@@ -264,6 +256,13 @@ class _MainVCState extends State<MainVC> {
             return Text('Error: ${snapshot.error}');
           }
 
+          // Get the UUID string
+          String uuid = snapshot.data ?? '';
+          // Create abbreviated version: first 8 chars + ... + last 6 chars
+          String abbreviatedUuid = uuid.length > 14
+              ? '${uuid.substring(0, 8)}...${uuid.substring(uuid.length - 12)}'
+              : uuid;
+
           return Row(
             children: [
               Text(
@@ -274,7 +273,7 @@ class _MainVCState extends State<MainVC> {
                 ),
               ),
               Text(
-                snapshot.data ?? '',
+                abbreviatedUuid,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 8,
@@ -288,7 +287,9 @@ class _MainVCState extends State<MainVC> {
                 onTap: () {
                   final data = snapshot.data;
                   if (data != null) {
-                    Clipboard.setData(ClipboardData(text: data));
+                    Clipboard.setData(ClipboardData(
+                        text:
+                            data)); // Copy the full UUID, not the abbreviated version
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(MyLocalizations.of(
@@ -296,7 +297,6 @@ class _MainVCState extends State<MainVC> {
                       ),
                     );
                   } else {
-                    // Display an error message for troubleshooting
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(MyLocalizations.of(
