@@ -1,3 +1,7 @@
+.fvm/
+.fvmrc
+.vscode/settings.json
+
 # Miscellaneous
 *.class
 *.log

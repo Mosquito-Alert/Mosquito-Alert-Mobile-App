@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
@@ -26,37 +28,41 @@ void main({String env = 'prod'}) async {
     print('$err');
   }
 
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false
-  );
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
   // Start background tracking at midnight to ensure 5 random samples per day
   var now = DateTime.now().toLocal();
   var nextMidnight = DateTime(now.year, now.month, now.day + 1);
   var timeUntilMidnight = nextMidnight.difference(now);
 
-  await Workmanager().registerPeriodicTask(
-    'scheduleDailyTasks',
-    'scheduleDailyTasks',
-    tag: 'scheduleDailyTasks',
-    frequency: Duration(days: 1),
-    initialDelay: timeUntilMidnight,
-  );
-
+  if (Platform.isAndroid) {
+    await Workmanager().registerPeriodicTask(
+      'scheduleDailyTasks',
+      'scheduleDailyTasks',
+      tag: 'scheduleDailyTasks',
+      frequency: Duration(days: 1),
+      initialDelay: timeUntilMidnight,
+    );
+  }
   runApp(MyApp());
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Firebase.initializeApp();
+    try {
+      await Firebase.initializeApp();
+    } catch (err) {
+      print('$err');
+    }
 
     switch (task) {
       case 'trackingTask':
         await BackgroundTracking.trackingTask();
+        print('Executing background task: $task');
         break;
       case 'scheduleDailyTasks':
         await BackgroundTracking.scheduleMultipleTrackingTask(5);
+        print('Executing background task: $task');
         break;
     }
     return Future.value(true);

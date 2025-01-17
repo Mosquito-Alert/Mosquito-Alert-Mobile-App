@@ -1,0 +1,28 @@
+/*
+ * Loco ios export: iOS InfoPlist.strings
+ * Project: Mosquito Alert
+ * Locale: mk_MK, Macedonian (Macedonia)
+ * Tagged: info-plist
+ * Exported by: Enric Pou
+ * Exported at: Thu, 02 May 2024 16:32:17 +0200
+ */
+
+/* loco:66339ba61600bb5f87001572
+ * A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Снимам и споделувам фотографии за да дадам визуелни докази во вашите извештаи.";
+
+/* loco:66339c0f9dc6f586f60faac2
+ * A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Дозволи пристап до локацијата за анонимно и гео-следење во заднина со ниска резолуција за да ја подобри научната вредност на вашите набљудувања.";
+
+/* loco:66339c792a448f22630c2d62
+ * A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Користете GPS за прецизно означување на локацијата во вашите извештаи.";
+
+/* loco:66339ccb3972ba9d6a0ee1f4
+ * A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Зачувување фотографии направени со апликацијата во галеријата на вашиот уред.";
+
+/* loco:66339d1180b2837b700d7446
+ * A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Пристапете до вашата фотогалерија за да прикачите постоечки слики на вашите извештаи.";
