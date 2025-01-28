@@ -122,12 +122,12 @@ if __name__ == "__main__":
     )
     # Create InfoPlist.strings in root folder (contain the translation of the app)
     update_locales(
-        path=lambda locale_code, extension: Path('./ios/Runner/Resources') / f'InfoPlist.{extension}',
+        path=lambda locale_code, extension: Path('./ios/Runner/') / f'InfoPlist.{extension}',
         lang_filter=lambda x: x['code'] == 'en_US',
         **ios_plist_kwargs
     )
     # For each locale, create a new path and add its corresponding InfoPlist.strings.
     update_locales(
-        path=lambda locale_code, extension: Path('./ios/Runner/Resources') / f'{locale_code.replace("_", "-")}.lproj' / f'InfoPlist.{extension}',
+        path=lambda locale_code, extension: Path('./ios/Runner/') / f'{locale_code.replace("_", "-")}.lproj' / f'InfoPlist.{extension}',
         **ios_plist_kwargs
     )
