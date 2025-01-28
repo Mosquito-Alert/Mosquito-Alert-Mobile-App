@@ -15,6 +15,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		A15CAEE927FF2A6C00B58C49 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A15CAEE827FF2A6C00B58C49 /* GoogleService-Info.plist */; };
 		CBEE9EEC3942A9EA462A0D76 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B158E259F03D4EFBF5656A77 /* Pods_Runner.framework */; };
+		E7AEDE5F2D445B3C00FC352B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E7AEDE5D2D445B3C00FC352B /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +51,28 @@
 		A15CAEE827FF2A6C00B58C49 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B158E259F03D4EFBF5656A77 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B50AE7B29F6E0C07E4E4AF8B /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		E7AEDE5E2D445B3C00FC352B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE622D446A9500FC352B /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE632D446AE600FC352B /* bn-BD */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bn-BD"; path = "bn-BD.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE642D446B0500FC352B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE652D446B1900FC352B /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE662D446B8600FC352B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE672D446CAF00FC352B /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE682D446CD800FC352B /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE692D446CE500FC352B /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE6A2D446D0000FC352B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE6B2D446D1C00FC352B /* lb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lb; path = lb.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE6C2D446D5800FC352B /* mk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mk; path = mk.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE6D2D446D6200FC352B /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE6E2D446D7E00FC352B /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE6F2D446D9200FC352B /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE702D446D9A00FC352B /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE712D446DB700FC352B /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE722D446E3F00FC352B /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE732D446E6F00FC352B /* sr-RS */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sr-RS"; path = "sr-RS.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE742D446E8600FC352B /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E7AEDE752D48F29600FC352B /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE772D48F5E100FC352B /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +144,7 @@
 			children = (
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				97C147021CF9000F007C117D /* Info.plist */,
+				E7AEDE5D2D445B3C00FC352B /* InfoPlist.strings */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 			);
@@ -200,6 +224,28 @@
 			knownRegions = (
 				en,
 				Base,
+				ca,
+				"bg-BG",
+				"bn-BD",
+				de,
+				el,
+				fr,
+				gl,
+				hr,
+				hu,
+				it,
+				lb,
+				mk,
+				nl,
+				"pt-PT",
+				ro,
+				sl,
+				sq,
+				sv,
+				"sr-RS",
+				tr,
+				"ca-ES",
+				"es-ES",
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -217,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
+				E7AEDE5F2D445B3C00FC352B /* InfoPlist.strings in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
@@ -427,6 +474,35 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		E7AEDE5D2D445B3C00FC352B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E7AEDE5E2D445B3C00FC352B /* en */,
+				E7AEDE622D446A9500FC352B /* bg-BG */,
+				E7AEDE632D446AE600FC352B /* bn-BD */,
+				E7AEDE642D446B0500FC352B /* de */,
+				E7AEDE652D446B1900FC352B /* el */,
+				E7AEDE662D446B8600FC352B /* fr */,
+				E7AEDE672D446CAF00FC352B /* gl */,
+				E7AEDE682D446CD800FC352B /* hr */,
+				E7AEDE692D446CE500FC352B /* hu */,
+				E7AEDE6A2D446D0000FC352B /* it */,
+				E7AEDE6B2D446D1C00FC352B /* lb */,
+				E7AEDE6C2D446D5800FC352B /* mk */,
+				E7AEDE6D2D446D6200FC352B /* nl */,
+				E7AEDE6E2D446D7E00FC352B /* pt-PT */,
+				E7AEDE6F2D446D9200FC352B /* ro */,
+				E7AEDE702D446D9A00FC352B /* sl */,
+				E7AEDE712D446DB700FC352B /* sq */,
+				E7AEDE722D446E3F00FC352B /* sv */,
+				E7AEDE732D446E6F00FC352B /* sr-RS */,
+				E7AEDE742D446E8600FC352B /* tr */,
+				E7AEDE752D48F29600FC352B /* ca-ES */,
+				E7AEDE772D48F5E100FC352B /* es-ES */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -435,6 +511,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -525,6 +602,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -580,6 +658,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";

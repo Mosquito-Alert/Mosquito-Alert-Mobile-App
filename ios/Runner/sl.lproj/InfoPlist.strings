@@ -1,0 +1,30 @@
+/* 
+  InfoPlist.strings
+  Runner
+  Project: Mosquito Alert
+  Locale: sl_SI, Slovenian
+  Tagged: info-plist
+  Created by Otis Johnson on 25/1/25.
+  Copyright © 2025 The Chromium Authors. All rights reserved.
+*/
+
+/* A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Uporabljamo vašo kamero za zajemanje in deljenje fotografij kot vizualni dokaz v vaših poročilih.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Dovolite dostop do lokacije za anonimno in nizko ločljivostno sledenje v ozadju, da izboljšamo znanstveno vrednost vaših opazovanj.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Uporabljamo vaš GPS za natančno označevanje lokacije v vaših poročilih.";
+
+/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Shranite fotografije, posnete z aplikacijo, v galerijo naprave.";
+
+/* A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Dostopajte do vaše galerije fotografij za priložitev obstoječih slik vašim poročilom.";
+
+/* A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Uporabljamo obvestila, da vas obveščamo o statusu vaših poročil.";
+
+/* A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Uporabljamo identifikator vaše naprave, da vas spremljamo med sejami in ustrezno shranimo vaša poročila.";

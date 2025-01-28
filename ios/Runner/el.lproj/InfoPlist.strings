@@ -1,0 +1,30 @@
+/* 
+  InfoPlist.strings
+  Runner
+  Project: Mosquito Alert
+  Locale: el_GR, Greek
+  Tagged: info-plist
+  Created by Otis Johnson on 25/1/25.
+  Copyright © 2025 The Chromium Authors. All rights reserved.
+*/
+
+/* A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Χρησιμοποιούμε την κάμερά σας για να τραβάμε και να μοιραζόμαστε φωτογραφίες ως οπτικές αποδείξεις στις αναφορές σας.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Επιτρέψτε την πρόσβαση στην τοποθεσία για ανώνυμη και χαμηλής ανάλυσης παρακολούθηση γεωγραφικών δεδομένων στο παρασκήνιο, για να βελτιωθεί η επιστημονική αξία των παρατηρήσεών σας.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Χρησιμοποιούμε το GPS σας για ακριβή γεωγραφική επισήμανση στις αναφορές σας.";
+
+/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Αποθηκεύστε τις φωτογραφίες που τραβάτε με την εφαρμογή στη συλλογή της συσκευής σας.";
+
+/* A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Πρόσβαση στη συλλογή φωτογραφιών σας για να επισυνάψετε υπάρχουσες εικόνες στις αναφορές σας.";
+
+/* A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Χρησιμοποιούμε ειδοποιήσεις για να σας ενημερώνουμε σχετικά με την κατάσταση των αναφορών σας.";
+
+/* A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Χρησιμοποιούμε το αναγνωριστικό της συσκευής σας για να σας παρακολουθούμε κατά τη διάρκεια των συνεδριών και να αποθηκεύουμε τις αναφορές σας ανάλογα.";

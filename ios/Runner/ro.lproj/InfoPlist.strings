@@ -1,0 +1,30 @@
+/* 
+  InfoPlist.strings
+  Runner
+  Project: Mosquito Alert
+  Locale: ro_RO, Romanian
+  Tagged: info-plist
+  Created by Otis Johnson on 25/1/25.
+  Copyright © 2025 The Chromium Authors. All rights reserved.
+*/
+
+/* A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Folosim camera pentru a captura și partaja fotografii ca dovezi vizuale în rapoartele tale.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Permite accesul la locație pentru urmărire geografică anonimă și cu rezoluție redusă în fundal, pentru a îmbunătăți valoarea științifică a observațiilor tale.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Folosim GPS-ul pentru a adăuga etichete de localizare precisă în rapoartele tale.";
+
+/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Salvează fotografiile realizate cu aplicația în galeria dispozitivului tău.";
+
+/* A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Accesează galeria foto pentru a atașa imagini existente la rapoartele tale.";
+
+/* A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Folosim notificări pentru a te ține la curent cu privire la starea rapoartelor tale.";
+
+/* A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Folosim identificatorul dispozitivului tău pentru a te urmări între sesiuni și pentru a salva rapoartele tale în mod corespunzător.";

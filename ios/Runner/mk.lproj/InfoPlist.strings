@@ -1,0 +1,30 @@
+/* 
+  InfoPlist.strings
+  Runner
+  Project: Mosquito Alert
+  Locale: mk_MK, Macedonian
+  Tagged: info-plist
+  Created by Otis Johnson on 25/1/25.
+  Copyright © 2025 The Chromium Authors. All rights reserved.
+*/
+
+/* A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Ја користиме вашата камера за снимање и споделување фотографии како визуелен доказ во вашите извештаи.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Овозможете пристап до локацијата за анонимно и со ниска резолуција следење во позадина за подобрување на научната вредност на вашите набљудувања.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Го користиме вашиот GPS за прецизно означување на локацијата во вашите извештаи.";
+
+/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Зачувајте ги фотографиите направени со апликацијата во галеријата на вашиот уред.";
+
+/* A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Пристапете до вашата галерија на фотографии за да прикачите постоечки слики на вашите извештаи.";
+
+/* A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Користиме известувања за да ве информираме за статусот на вашите извештаи.";
+
+/* A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Го користиме идентификаторот на вашиот уред за да ве следиме низ сесиите и соодветно да ги зачуваме вашите извештаи.";

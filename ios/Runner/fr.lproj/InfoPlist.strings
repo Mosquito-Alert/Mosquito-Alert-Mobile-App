@@ -1,0 +1,30 @@
+/* 
+  InfoPlist.strings
+  Runner
+  Project: Mosquito Alert
+  Locale: fr_FR, French
+  Tagged: info-plist
+  Created by Otis Johnson on 25/1/25.
+  Copyright © 2025 The Chromium Authors. All rights reserved.
+*/
+
+/* A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Nous utilisons votre appareil photo pour capturer et partager des photos en tant que preuves visuelles dans vos rapports.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Autorisez l'accès à la localisation pour un suivi géographique anonyme et en basse résolution en arrière-plan afin d'améliorer la valeur scientifique de vos observations.";
+
+/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Nous utilisons votre GPS pour marquer précisément les emplacements dans vos rapports.";
+
+/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Enregistrez les photos prises avec l'application dans la galerie de votre appareil.";
+
+/* A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Accédez à votre galerie de photos pour ajouter des images existantes à vos rapports.";
+
+/* A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Nous utilisons des notifications pour vous tenir informé de l'état de vos rapports.";
+
+/* A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Nous utilisons l'identifiant de votre appareil pour vous suivre à travers les sessions et enregistrer vos rapports en conséquence.";
