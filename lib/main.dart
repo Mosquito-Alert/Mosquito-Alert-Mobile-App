@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:app_badge_plus/app_badge_plus.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:workmanager/workmanager.dart';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,13 @@ void main({String env = 'prod'}) async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApiSingleton.initialize(env);
 
+  var badgeSupported = await AppBadgePlus.isSupported();
+  if (badgeSupported){
+    print('+++++ AppBadgePlus YES supported');
+  } else{    
+    print('----- AppBadgePlus NOT supported');
+  }
+  await AppBadgePlus.updateBadge(5);
   try {
     await Firebase.initializeApp();
   } catch (err) {
