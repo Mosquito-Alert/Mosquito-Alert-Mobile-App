@@ -1,30 +1,36 @@
-/* 
-  InfoPlist.strings
-  Runner
-  Project: Mosquito Alert
-  Locale: lb_LU, Luxembourgish
-  Tagged: info-plist
-  Created by Otis Johnson on 25/1/25.
-  Copyright © 2025 The Chromium Authors. All rights reserved.
-*/
+/*
+ * Loco ios export: Xcode InfoPlist.strings
+ * Project: Mosquito Alert
+ * Locale: lb_LU, Letzeburgesch (Luxembourg)
+ * Tagged: info-plist
+ * Exported by: Enric Pou
+ * Exported at: Thu, 30 Jan 2025 15:07:01 +0100
+ */
 
-/* A message that tells the user why the app is requesting access to the device’s camera. */
-NSCameraUsageDescription = "Mir benotzen deng Kamera fir Fotoen opzehuelen an ze deelen als visuell Beweiser an dengem Bericht.";
+/* loco:66339ba61600bb5f87001572
+ * A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Fotoen opzehuelen an ze deelen fir visuell Beweiser an Äre Berichter ze bidden.";
 
-/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
-NSLocationAlwaysAndWhenInUseUsageDescription = "Erlaab de Zougang zu der Positioun fir anonym a niddereg Opléisung Hannergrond-Geotracking fir de wëssenschaftleche Wäert vun dengem Observatiounen ze verbesseren.";
+/* loco:66339c0f9dc6f586f60faac2
+ * A message that tells the user why the app is requesting access to the user’s location information at all times. */
+NSLocationAlwaysAndWhenInUseUsageDescription = "Erlaabt Locationzougang fir anonym an niddereg Opléisung Hannergrond Geo-Tracking fir de wëssenschaftleche Wäert vun Ären Observatiounen ze verbesseren.";
 
-/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
-NSLocationWhenInUseUsageDescription = "Mir benotzen däin GPS fir genee Positiounsinformatioun an dengem Bericht anzefügen.";
+/* loco:66339c792a448f22630c2d62
+ * A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "GPS ze benotzen fir präzis Location Tagging an Äre Berichter.";
 
-/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
-NSPhotoLibraryAddUsageDescription = "Späicheren d'Fotoen, déi mat der App gemaach goufen, an der Galerie vun dengem Apparat.";
+/* loco:66339ccb3972ba9d6a0ee1f4
+ * A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Fotoen, déi mat der App gemaach goufen, an d'Galerie vun Ärem Apparat ze späicheren.";
 
-/* A message that tells the user why the app is requesting access to the user’s photo library. */
-NSPhotoLibraryUsageDescription = "Greif op d'deng Fotogalerie zou fir bestoend Biller an deng Berichter unzehänken.";
+/* loco:66339d1180b2837b700d7446
+ * A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Zougang zu Ärer Fotogalerie fir existent Biller op Är Berichter ze befestigen.";
 
-/* A message that tells the user why the app is requesting permission to send notifications. */
-NSUserNotificationsUsageDescription = "Mir benotzen Notifikatiounen fir dech iwwert de Status vun dengem Bericht z'informéieren.";
+/* loco:679b86631fb7c762a90b8312
+ * A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Mir benotzen Notifikatiounen fir Iech iwwer de Status vun Äre Bäiträg aktualiséiert ze halen.";
 
-/* A message that tells the user why the app is requesting permission to track the user across sessions. */
-NSUserTrackingUsageDescription = "Mir benotzen den Identifizéierer vun dengem Apparat fir dech tëscht Sessions ze verfollegen an deng Berichter entspriechend ze späicheren.";
+/* loco:679b868034f40c577d0e1d22
+ * A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Mir benotzen Ären Apparat Identifizéierer fir Iech iwwer Sessiounen ze verfolgen an Är Contributiounen deementspriechend ze späicheren.";

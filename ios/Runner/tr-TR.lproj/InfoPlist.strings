@@ -1,30 +1,36 @@
-/* 
-  InfoPlist.strings
-  Runner
-  Project: Mosquito Alert
-  Locale: tr_TR, Turkish
-  Tagged: info-plist
-  Created by Otis Johnson on 25/1/25.
-  Copyright © 2025 The Chromium Authors. All rights reserved.
-*/
+/*
+ * Loco ios export: Xcode InfoPlist.strings
+ * Project: Mosquito Alert
+ * Locale: tr_TR, Turkish (Turkey)
+ * Tagged: info-plist
+ * Exported by: Enric Pou
+ * Exported at: Thu, 30 Jan 2025 15:06:59 +0100
+ */
 
-/* A message that tells the user why the app is requesting access to the device’s camera. */
-NSCameraUsageDescription = "Kameranızı, raporlarınıza görsel kanıt sağlamak için fotoğraf çekmek ve paylaşmak amacıyla kullanıyoruz.";
+/* loco:66339ba61600bb5f87001572
+ * A message that tells the user why the app is requesting access to the device’s camera. */
+NSCameraUsageDescription = "Raporlarınızda görsel kanıt sağlamak için fotoğraf çekin ve paylaşın.";
 
-/* A message that tells the user why the app is requesting access to the user’s location information at all times. */
+/* loco:66339c0f9dc6f586f60faac2
+ * A message that tells the user why the app is requesting access to the user’s location information at all times. */
 NSLocationAlwaysAndWhenInUseUsageDescription = "Gözlemlerinizin bilimsel değerini artırmak için anonim ve düşük çözünürlüklü arka plan coğrafi izleme için konum erişimine izin verin.";
 
-/* A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
-NSLocationWhenInUseUsageDescription = "Raporlarınıza kesin konum etiketi eklemek için GPS'inizi kullanıyoruz.";
+/* loco:66339c792a448f22630c2d62
+ * A message that tells the user why the app is requesting access to the user’s location information while the app is running in the foreground. */
+NSLocationWhenInUseUsageDescription = "Raporlarınızda hassas konum etiketlemesi için GPS kullanın.";
 
-/* A message that tells the user why the app is requesting add-only access to the user’s photo library. */
-NSPhotoLibraryAddUsageDescription = "Uygulamayla çekilen fotoğrafları cihazınızın galerisine kaydedin.";
+/* loco:66339ccb3972ba9d6a0ee1f4
+ * A message that tells the user why the app is requesting add-only access to the user’s photo library. */
+NSPhotoLibraryAddUsageDescription = "Uygulama ile çekilen fotoğrafları cihazınızın galerisine kaydedin.";
 
-/* A message that tells the user why the app is requesting access to the user’s photo library. */
-NSPhotoLibraryUsageDescription = "Raporlarınıza mevcut görselleri eklemek için fotoğraf galerisine erişin.";
+/* loco:66339d1180b2837b700d7446
+ * A message that tells the user why the app is requesting access to the user’s photo library. */
+NSPhotoLibraryUsageDescription = "Mevcut görüntüleri raporlarınıza eklemek için fotoğraf galerinize erişin.";
 
-/* A message that tells the user why the app is requesting permission to send notifications. */
-NSUserNotificationsUsageDescription = "Raporlarınızın durumu hakkında sizi bilgilendirmek için bildirimleri kullanıyoruz.";
+/* loco:679b86631fb7c762a90b8312
+ * A message that tells the user why the app is requesting permission to send notifications. */
+NSUserNotificationsUsageDescription = "Katkılarınızın durumu hakkında sizi güncel tutmak için bildirimleri kullanıyoruz.";
 
-/* A message that tells the user why the app is requesting permission to track the user across sessions. */
-NSUserTrackingUsageDescription = "Oturumlar arasında sizi izlemek ve raporlarınızı uygun şekilde kaydetmek için cihaz kimliğinizi kullanıyoruz.";
+/* loco:679b868034f40c577d0e1d22
+ * A message that tells the user why the app is requesting permission to track the user across sessions. */
+NSUserTrackingUsageDescription = "Oturumlar arasında sizi takip etmek ve katkılarınızı buna göre kaydetmek için cihaz tanımlayıcınızı kullanırız.";
