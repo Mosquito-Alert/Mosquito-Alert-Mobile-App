@@ -6,6 +6,7 @@ environment:
   sdk: '>=2.15.0 <3.0.0'
 
 dependencies:
+  app_badge_plus: ^1.1.2
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.5
@@ -37,7 +38,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.15.1
   intro_slider: ^3.0.10
   flutter_material_pickers: ^3.3.0
-  permission_handler: ^11.0.1
+  permission_handler: ^11.3.1
   language_picker: ^0.4.3
   connectivity: ^3.0.6 #Discontinued
   overlay_support: ^2.1.0

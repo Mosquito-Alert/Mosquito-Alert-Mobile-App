@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:app_badge_plus/app_badge_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:flutter_html/style.dart' as html_style;
@@ -11,6 +12,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/UserManager.dart';
@@ -36,6 +38,27 @@ class _NotificationsPageState extends State<NotificationsPage> {
     _getData().then((_) {
       _updateUnreadNotificationCount();
     });
+    requestPermission();
+  }
+
+  void requestPermission() async {
+    var badgeSupported = await AppBadgePlus.isSupported();
+    if (badgeSupported){
+      print('+++++ AppBadgePlus YES supported');
+      {
+      //var status = await Permission.accessNotificationPolicy.status;
+      var status = await Permission.notification.status;
+      var new_status = await Permission.accessNotificationPolicy.request();
+
+      if (new_status.isGranted) {
+        // Permission granted, you can set the badge
+        await AppBadgePlus.updateBadge(6);
+      } else {
+        print('Notification permission denied');
+      }
+      }
+    }
+
   }
 
   Future<void> _getData() async {
