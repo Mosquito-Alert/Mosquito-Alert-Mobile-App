@@ -116,8 +116,7 @@ class _MainVCState extends State<MainVC> {
           badges.Badge(
             position: badges.BadgePosition.topEnd(top: 4, end: 4),
             showBadge: unreadNotifications > 0,
-            badgeContent: Text('$unreadNotifications',
-                style: TextStyle(color: Colors.white)),
+            badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
             child: IconButton(
               padding: EdgeInsets.only(top: 6),
               icon: Icon(Icons.notifications, size: 24),
@@ -125,9 +124,10 @@ class _MainVCState extends State<MainVC> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
-                  );
-                },
-              ))
+                );
+              },
+            )
+          )
         ],
       ),
       body: Center(
@@ -143,64 +143,65 @@ class _MainVCState extends State<MainVC> {
                 padding: EdgeInsets.zero,
                 children: [
                   DrawerHeader(
-                      child: Row(
-                    children: <Widget>[
-                      // User score
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => InfoPageInWebview(
-                                    "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
-                          );
-                        },
-                        child: Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/img/points_box.png'),
+                    child: Row(
+                      children: <Widget>[
+                        // User score
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => InfoPageInWebview(
+                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                            );
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/img/points_box.png'),
+                              ),
                             ),
+                            child: StreamBuilder<int?>(
+                                stream: Utils.userScoresController.stream,
+                                initialData: UserManager.userScore,
+                                builder: (context, snapshot) {
+                                  return Center(
+                                      child: AutoSizeText(
+                                    snapshot.data != null && snapshot.hasData
+                                        ? snapshot.data.toString()
+                                        : '',
+                                    maxLines: 1,
+                                    maxFontSize: 26,
+                                    minFontSize: 16,
+                                    style: TextStyle(
+                                        color: Color(0xFF4B3D04),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 24),
+                                  ));
+                                }),
                           ),
-                          child: StreamBuilder<int?>(
-                              stream: Utils.userScoresController.stream,
-                              initialData: UserManager.userScore,
-                              builder: (context, snapshot) {
-                                return Center(
-                                    child: AutoSizeText(
-                                  snapshot.data != null && snapshot.hasData
-                                      ? snapshot.data.toString()
-                                      : '',
-                                  maxLines: 1,
-                                  maxFontSize: 26,
-                                  minFontSize: 16,
-                                  style: TextStyle(
-                                      color: Color(0xFF4B3D04),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 24),
-                                ));
-                              }),
                         ),
-                      ),
 
-                      SizedBox(width: 12),
+                        SizedBox(width: 12),
 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
-                            child: Text(
-                              MyLocalizations.of(context, 'welcome_text'),
-                              style: TextStyle(fontSize: 22),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
+                              child: Text(
+                                MyLocalizations.of(context, 'welcome_text'),
+                                style: TextStyle(fontSize: 22),
+                              ),
                             ),
-                          ),
-                          _uuidWithClipboard(),
-                        ],
-                      )
-                    ],
-                  )),
+                            _uuidWithClipboard(),
+                          ],
+                        )
+                      ],
+                    )
+                  ),
                   _buildCustomTile(0, Icons.home, 'home_tab', context),
                   _buildCustomTile(
                       1, Icons.file_copy, 'your_reports_txt', context),
