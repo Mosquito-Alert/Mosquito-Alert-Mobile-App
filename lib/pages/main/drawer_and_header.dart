@@ -151,8 +151,7 @@ class _MainVCState extends State<MainVC> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => InfoPageInWebview(
-                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                                  builder: (context) => InfoPageInWebview("${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
                             );
                           },
                           child: Container(
@@ -164,11 +163,11 @@ class _MainVCState extends State<MainVC> {
                               ),
                             ),
                             child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
-                                builder: (context, snapshot) {
-                                  return Center(
-                                      child: AutoSizeText(
+                              stream: Utils.userScoresController.stream,
+                              initialData: UserManager.userScore,
+                              builder: (context, snapshot) {
+                                return Center(
+                                  child: AutoSizeText(
                                     snapshot.data != null && snapshot.hasData
                                         ? snapshot.data.toString()
                                         : '',
@@ -176,11 +175,13 @@ class _MainVCState extends State<MainVC> {
                                     maxFontSize: 26,
                                     minFontSize: 16,
                                     style: TextStyle(
-                                        color: Color(0xFF4B3D04),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
-                                  ));
-                                }),
+                                      color: Color(0xFF4B3D04),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24),
+                                  )
+                                );
+                              }
+                            ),
                           ),
                         ),
 
@@ -203,8 +204,7 @@ class _MainVCState extends State<MainVC> {
                     )
                   ),
                   _buildCustomTile(0, Icons.home, 'home_tab', context),
-                  _buildCustomTile(
-                      1, Icons.file_copy, 'your_reports_txt', context),
+                  _buildCustomTile(1, Icons.file_copy, 'your_reports_txt', context),
                   _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
                   _buildCustomTile(3, Icons.info, 'info_tab', context),
                   _buildCustomTile(4, Icons.settings, 'settings_title', context),
@@ -217,8 +217,8 @@ class _MainVCState extends State<MainVC> {
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: Text(
                   packageInfo != null
-                      ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                      : '',
+                    ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                    : '',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 8.0,
@@ -273,20 +273,16 @@ class _MainVCState extends State<MainVC> {
               onTap: () {
                 final data = snapshot.data;
                 if (data != null) {
-                  Clipboard.setData(ClipboardData(
-                      text:
-                          data)); // Copy the full UUID, not the abbreviated version
+                  Clipboard.setData(ClipboardData(text: data)); // Copy the full UUID, not the abbreviated version
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(MyLocalizations.of(
-                          context, 'copied_to_clipboard_success')),
+                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(MyLocalizations.of(
-                          context, 'copied_to_clipboard_error')),
+                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
                     ),
                   );
                 }
