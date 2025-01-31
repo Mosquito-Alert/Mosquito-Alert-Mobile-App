@@ -19,6 +19,9 @@ import workmanager
 
     GeneratedPluginRegistrant.register(with: self)
     UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
+
+    WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "trackingTask")
+    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "scheduleDailyTasks", frequency: NSNumber(value: 24 * 60 * 60))
  
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
