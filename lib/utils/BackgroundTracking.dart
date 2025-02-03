@@ -51,10 +51,11 @@ class BackgroundTracking {
       return Future.value(true);
     }
 
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     var battery = Battery();
-    await ApiSingleton().sendFixes(position.latitude, position.longitude,
-        DateTime.now().toUtc().toIso8601String(), await battery.batteryLevel);
+    await ApiSingleton().sendFixes(position.latitude,
+                                   position.longitude,
+                                   DateTime.now().toUtc().toIso8601String(),
+                                   await battery.batteryLevel);
   }
 }

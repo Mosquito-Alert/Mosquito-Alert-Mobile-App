@@ -169,8 +169,8 @@ class _MainVCState extends State<MainVC> {
                                 return Center(
                                   child: AutoSizeText(
                                     snapshot.data != null && snapshot.hasData
-                                        ? snapshot.data.toString()
-                                        : '',
+                                      ? snapshot.data.toString()
+                                      : '',
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
@@ -290,7 +290,8 @@ class _MainVCState extends State<MainVC> {
             )
           ],
         );
-      });
+      }
+    );
   }
 
   Widget _buildCustomTile(int index, IconData icon, String title, context) {

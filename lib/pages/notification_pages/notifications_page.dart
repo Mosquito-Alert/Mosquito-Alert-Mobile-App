@@ -19,9 +19,7 @@ class NotificationsPage extends StatefulWidget {
   final String? notificationId;
   final Function(int)? onNotificationUpdate;
 
-  const NotificationsPage(
-      {Key? key, this.notificationId, this.onNotificationUpdate})
-      : super(key: key);
+  const NotificationsPage({Key? key, this.notificationId, this.onNotificationUpdate}) : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
@@ -199,16 +197,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               textAlign: TextAlign.center,
                               fontSize: html.FontSize(16.0)),
                         },
-                        //TagsList: html.Html.tags..addAll(['bird', 'flutter']),
-                        onlyRenderTheseTags: {'bird', 'flutter'},
                       )),
                       SizedBox(
                         height: 10,
                       ),
                       Style.bodySmall(
                           DateFormat('dd-MM-yyyy HH:mm').format(
-                              DateTime.parse(notification.date_comment!)
-                                  .toLocal()),
+                              DateTime.parse(notification.date_comment!).toLocal()),
                           color: Colors.grey)
                     ],
                   ),
