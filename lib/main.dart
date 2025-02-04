@@ -28,25 +28,25 @@ void main({String env = 'prod'}) async {
     print('$err');
   }
 
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 
   // Start background tracking at midnight to ensure 5 random samples per day
   var now = DateTime.now().toLocal();
   var nextMidnight = DateTime(now.year, now.month, now.day + 1);
   var timeUntilMidnight = nextMidnight.difference(now);
 
-  if (Platform.isAndroid) {
-    await Workmanager().registerPeriodicTask(
-      'scheduleDailyTasks',
-      'scheduleDailyTasks',
-      tag: 'scheduleDailyTasks',
-      frequency: Duration(days: 1),
-      initialDelay: timeUntilMidnight,
-    );
-  }
+  await Workmanager().registerPeriodicTask(
+    'scheduleDailyTasks',
+    'scheduleDailyTasks',
+    tag: 'scheduleDailyTasks',
+    frequency: Duration(days: 1),
+    initialDelay: timeUntilMidnight,
+  );
+
   runApp(MyApp());
 }
 
+@pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {

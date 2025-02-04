@@ -34,7 +34,7 @@ class BackgroundTracking {
 
     randomTimes.asMap().forEach((index, time) async {
       await Workmanager().registerOneOffTask(
-        'trackingTask_$index',
+        'tracking_task_$index',
         'trackingTask',
         initialDelay: Duration(hours: time.hour, minutes: time.minute),
         tag: 'trackingTask',
