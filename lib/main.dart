@@ -64,6 +64,9 @@ void callbackDispatcher() {
         await BackgroundTracking.scheduleMultipleTrackingTask(5);
         print('Executing background task: $task');
         break;
+      case Workmanager.iOSBackgroundTask:  // TODO: Debugging purposes
+        stderr.writeln('The iOS background fetch was triggered');
+        break;
     }
     return Future.value(true);
   });
