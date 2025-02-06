@@ -1,9 +1,9 @@
-name: Static analysis
+name: Analyze, test and build
 on:
   pull_request:
 
 jobs:
-  static_analysis:
+  static_analysis_and_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -22,3 +22,6 @@ jobs:
  
     - name: Test
       run: flutter test
+    
+    - name: Build appbundle
+      run: flutter build appbundle
