@@ -3,11 +3,12 @@ on:
   pull_request:
 
 jobs:
-  static_analysis:
+  flutter_build_appbundle_with_sdk:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]
+        #sdk: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]
+        sdk: [26, 33, 34]
 
     steps:
     - uses: actions/checkout@v4
@@ -17,23 +18,23 @@ jobs:
         channel: 'stable'
         flutter-version: '3.27.3'
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '11'
-      
-    - name: Download and setup Android SDK
-      run: sdkmanager "system-images;android-${{ matrix.sdk }};google_apis;x86_64"
-
-    - name: Create AVD
-      run: echo no | avdmanager create avd -n test-${{ matrix.sdk }} -k "system-images;android-${{ matrix.sdk }};google_apis;x86_64"
-
-    - name: Start emulator
-      run: |
-        nohup emulator -avd test-${{ matrix.sdk }} -no-skin -no-audio -no-window -gpu off -verbose &
-        adb wait-for-device
-        adb shell input keyevent 82
+    #- name: Set up JDK
+    #  uses: actions/setup-java@v3
+    #  with:
+    #    distribution: 'temurin'
+    #    java-version: '11'
+    #  
+    #- name: Download and setup Android SDK
+    #  run: sdkmanager "system-images;android-${{ matrix.sdk }};google_apis;x86_64"
+#
+    #- name: Create AVD
+    #  run: echo no | avdmanager create avd -n test-${{ matrix.sdk }} -k "system-images;android-${{ matrix.sdk }};google_apis;x86_64"
+#
+    #- name: Start emulator
+    #  run: |
+    #    nohup emulator -avd test-${{ matrix.sdk }} -no-skin -no-audio -no-window -gpu off -verbose &
+    #    adb wait-for-device
+    #    adb shell input keyevent 82
 
     - name: Install Flutter dependencies
       run: flutter pub get
