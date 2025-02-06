@@ -27,30 +27,30 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isLoading = true;
 
   final languageCodes = [
-    Language('bg_BG', 'Bulgarian', 'bg'),
-    Language('bn_BD', 'Bengali', 'bn'),
-    Language('ca_ES', 'Catalan', 'ca'),
-    Language('de_DE', 'German', 'de'),
-    Language('el_GR', 'Greek', 'el'),
-    Language('en_US', 'English', 'en'),
-    Language('es_ES', 'Spanish', 'es'),
-    Language('es_UY', 'Spanish (Uruguay)', 'es'),
-    Language('eu_ES', 'Basque', 'eu'),
-    Language('fr_FR', 'French', 'fr'),
-    Language('gl_ES', 'Galician', 'gl'),
-    Language('hr_HR', 'Croatian', 'hr'),
-    Language('hu_HU', 'Hungarian', 'hu'),
-    Language('it_IT', 'Italian', 'it'),
-    Language('lb_LU', 'Luxembourgish (Luxembourg)', 'lb'),
-    Language('mk_MK', 'Macedonian (Former Yugoslav Republic of Macedonia)', 'mk'),
-    Language('nl_NL', 'Dutch', 'nl'),
-    Language('pt_PT', 'Protuguese', 'pt'),
-    Language('ro_RO', 'Romanian', 'ro'),
-    Language('sl_SI', 'Slovenian (Slovenia)', 'sl'),
-    Language('sq_AL', 'Albanian', 'sq'),
-    Language('sr_RS', 'Serbian', 'sr'),
-    Language('sv_SE', 'Swedish', 'sv'),
-    Language('tr_TR', 'Turkish (Turkey)', 'tr'),
+    Language('bg_BG', 'Bulgarian', 'Bulgarian'),
+    Language('bn_BD', 'Bengali', 'Bengali'),
+    Language('ca_ES', 'Catalan', 'Catalan'),
+    Language('de_DE', 'German', 'German'),
+    Language('el_GR', 'Greek', 'Greek'),
+    Language('en_US', 'English', 'English'),
+    Language('es_ES', 'Spanish', 'Spanish'),
+    Language('es_UY', 'Spanish (Uruguay)', 'Spanish (Uruguay)'),
+    Language('eu_ES', 'Basque', 'Basque'),
+    Language('fr_FR', 'French', 'French'),
+    Language('gl_ES', 'Galician', 'Galician'),
+    Language('hr_HR', 'Croatian', 'Croatian'),
+    Language('hu_HU', 'Hungarian', 'Hungarian'),
+    Language('it_IT', 'Italian', 'Italian'),
+    Language('lb_LU', 'Luxembourgish (Luxembourg)', 'Luxembourgish (Luxembourg)'),
+    Language('mk_MK', 'Macedonian (Former Yugoslav Republic of Macedonia)', 'Macedonian (Former Yugoslav Republic of Macedonia)'),
+    Language('nl_NL', 'Dutch', 'Dutch'),
+    Language('pt_PT', 'Protuguese', 'Protuguese'),
+    Language('ro_RO', 'Romanian', 'Romanian'),
+    Language('sl_SI', 'Slovenian (Slovenia)', 'Slovenian (Slovenia)'),
+    Language('sq_AL', 'Albanian', 'Albanian'),
+    Language('sr_RS', 'Serbian', 'Serbian'),
+    Language('sv_SE', 'Swedish', 'Swedish'),
+    Language('tr_TR', 'Turkish (Turkey)', 'Turkish (Turkey)'),
   ];
 
   @override
@@ -224,7 +224,7 @@ class _SettingsPageState extends State<SettingsPage> {
           (language) => Language(
             language.isoCode,
             MyLocalizations.of(context, language.isoCode),
-            language.isoCode.split('_')[0]
+            language.nativeName
           )).toList()..sort(
             (a, b) => a.name.compareTo(b.name)
             ),
