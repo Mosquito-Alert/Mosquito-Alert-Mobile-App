@@ -3,7 +3,7 @@ on:
   pull_request:
 
 jobs:
-  static_analysis_and_test:
+  analyze_test_build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
