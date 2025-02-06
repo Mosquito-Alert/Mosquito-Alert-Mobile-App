@@ -49,7 +49,6 @@ android {
     }
 
     lintOptions {
-        warningMode 'all'
         disable 'InvalidPackage'
         checkReleaseBuilds false
         abortOnError false
