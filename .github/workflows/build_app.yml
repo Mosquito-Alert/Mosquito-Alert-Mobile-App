@@ -17,7 +17,7 @@ jobs:
 
     - name: Build appbundle
       run: flutter build appbundle --verbose
-"""
+
   ios:
     runs-on: macos-latest
     steps:
@@ -32,4 +32,3 @@ jobs:
 
     - name: Build ios
       run: flutter build ios --release --no-codesign
-"""
