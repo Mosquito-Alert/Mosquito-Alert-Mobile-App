@@ -1,9 +1,9 @@
-name: Analyze, test and build
+name: Static analysis + test
 on:
   pull_request:
 
 jobs:
-  analyze_test_build:
+  static_analysis_and_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
