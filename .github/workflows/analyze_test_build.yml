@@ -22,6 +22,3 @@ jobs:
  
     - name: Test
       run: flutter test
-    
-    - name: Build appbundle
-      run: flutter build appbundle
