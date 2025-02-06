@@ -12,7 +12,9 @@ jobs:
       with:
         channel: 'stable'
         flutter-version: '3.19.5'
-    
+  
+    - run: flutter pub get
+
     - name: Build appbundle
       run: flutter build appbundle --stacktrace
 
@@ -25,6 +27,8 @@ jobs:
       with:
         channel: 'stable'
         flutter-version: '3.19.5'
-    
+
+    - run: flutter pub get
+
     - name: Build ios
       run: flutter build ios --release --no-codesign
