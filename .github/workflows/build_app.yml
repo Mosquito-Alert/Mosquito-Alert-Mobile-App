@@ -16,7 +16,7 @@ jobs:
     - run: flutter pub get
 
     - name: Build appbundle
-      run: flutter build appbundle --stacktrace
+      run: flutter build appbundle
 
   ios:
     runs-on: ubuntu-latest
@@ -31,4 +31,4 @@ jobs:
     - run: flutter pub get
 
     - name: Build ios
-      run: flutter build ios --release --no-codesign
+      run: flutter build ios
