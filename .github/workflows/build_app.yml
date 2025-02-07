@@ -16,7 +16,7 @@ jobs:
     - run: flutter pub get
 
     - name: Build appbundle
-      run: flutter build appbundle --debug --verbose
+      run: flutter build appbundle --debug
       #env:
       #  GOOGLEMAPS_KEY: ${{ secrets.GOOGLEMAPS_KEY }}
 
