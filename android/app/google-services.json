@@ -1,0 +1,11 @@
+{
+    "project_info": {
+      "project_number": "1",
+      "firebase_url": "https://mosquitoalert.firebaseio.com",
+      "project_id": "mosquitoalert",
+      "storage_bucket": "mosquitoalert.appspot.com"
+    },
+    "client": [
+    ],
+    "configuration_version": "1"
+  }
