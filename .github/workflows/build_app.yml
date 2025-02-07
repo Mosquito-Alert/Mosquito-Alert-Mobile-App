@@ -17,6 +17,8 @@ jobs:
 
     - name: Build appbundle
       run: flutter build appbundle --verbose
+      #env:
+      #  GOOGLEMAPS_KEY: ${{ secrets.GOOGLEMAPS_KEY }}
 
   ios:
     runs-on: macos-latest
