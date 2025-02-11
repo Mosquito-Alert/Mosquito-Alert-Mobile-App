@@ -45,6 +45,7 @@ coverage/
 android/JRBP_Keystore
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.*
+android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
