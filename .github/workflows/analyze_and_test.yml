@@ -13,19 +13,8 @@ jobs:
         channel: 'stable'
         flutter-version: '3.27.3'   
 
-    - name: Statically analyze the Dart code for any errors/warnings, ignoring "info" level warnings
-      run: |
-        output=$(flutter analyze 2>&1)
-        echo "$output"
-        if echo "$output" | grep -q -E 'error|warning'; 
-        then
-          echo "Analysis found errors or warnings:"
-          echo "$output"
-          exit 1
-        else
-          echo "No errors or warnings found."
-          exit 0
-        fi
+    - name: Analyze Dart
+      uses: zgosalvez/github-actions-analyze-dart@v3
 
     - name: Test
       run: flutter test
