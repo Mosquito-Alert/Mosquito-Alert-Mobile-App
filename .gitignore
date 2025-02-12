@@ -34,6 +34,7 @@ coverage/
 **/web/**/lib/generated_plugin_registrant.dart
 
 # Android related
+android/app/google-services.json
 **/gradle-wrapper.jar
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
@@ -45,7 +46,6 @@ coverage/
 android/JRBP_Keystore
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.*
-android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
