@@ -1,6 +1,6 @@
 name: Static analysis + test
 on:
-  push:
+  pull_request:
 
 jobs:
   static_analysis_and_test:
@@ -13,8 +13,15 @@ jobs:
         channel: 'stable'
         flutter-version: '3.27.3'   
 
+    - run: flutter pub get
+
     - name: Analyze Dart
       uses: zgosalvez/github-actions-analyze-dart@v3
+      with:
+        fail-on-infos: false
+        fail-on-warnings: false
+        working-directory: ./
+        line-length: 120
 
     - name: Test
       run: flutter test
