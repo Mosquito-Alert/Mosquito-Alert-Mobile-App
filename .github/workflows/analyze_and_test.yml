@@ -19,7 +19,7 @@ jobs:
       uses: zgosalvez/github-actions-analyze-dart@v3
       with:
         fail-on-infos: false
-        fail-on-warnings: false
+        fail-on-warnings: true
         working-directory: ./
         line-length: 120
 
