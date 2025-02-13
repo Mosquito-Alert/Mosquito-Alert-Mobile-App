@@ -15,11 +15,9 @@ jobs:
 
     - name: Statically analyze the Dart code for any errors/warnings, ignoring "info" level warnings
       run: |
-        if flutter analyze 2>&1 | grep -q -E 'error|warning';
-        then
-          echo "Analysis found errors or warnings:"
-          flutter analyze
-          exit 1
+        flutter analyze 2>&1 | tee flutter_analyze.log
+        if grep -q -E -i 'error|warning' flutter_analyze.log; then
+            exit 1
         else
           echo "No errors or warnings found."
           exit 0
