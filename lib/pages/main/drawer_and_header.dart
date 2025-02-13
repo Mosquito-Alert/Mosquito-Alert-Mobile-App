@@ -20,6 +20,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info/package_info.dart';
 
+
 class MainVC extends StatefulWidget {
   const MainVC({key});
 
@@ -242,13 +243,6 @@ class _MainVCState extends State<MainVC> {
           return Text('Error: ${snapshot.error}');
         }
 
-        // Get the UUID string
-        String uuid = snapshot.data ?? '';
-        // Create abbreviated version: first 8 chars + ... + last 6 chars
-        String abbreviatedUuid = uuid.length > 14
-          ? '${uuid.substring(0, 8)}...${uuid.substring(uuid.length - 12)}'
-          : uuid;
-
         return Row(
           children: [
             Text(
@@ -277,7 +271,7 @@ class _MainVCState extends State<MainVC> {
               onTap: () {
                 final data = snapshot.data;
                 if (data != null) {
-                  Clipboard.setData(ClipboardData(text: data)); // Copy the full UUID, not the abbreviated version
+                  Clipboard.setData(ClipboardData(text: data));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),

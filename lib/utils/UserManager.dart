@@ -82,27 +82,6 @@ class UserManager {
   }
 
   static Future<void> setTracking(bool new_value) async {
-    /*var prefs = await SharedPreferences.getInstance();
-
-    if (new_value == true) {
-      print('enable bg tracking');
-      var status = await Permission.locationAlways.status;
-      var request_status = await Permission.locationAlways.request();
-
-      print('request_status: $request_status');
-
-      if (!status.isGranted) {
-        status = await Permission.locationAlways.request();
-      }
-
-      if (status.isGranted) {
-        await prefs.setBool('trackingEnabled', true);
-      }
-    } else {
-      print('disable bg tracking');
-      await prefs.setBool('trackingEnabled', false);
-    }*/
-
     var prefs = await SharedPreferences.getInstance();
 
     if (new_value == true) {
@@ -273,16 +252,12 @@ class UserManager {
   static Future<void> migrateHashtagToHashtags() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Check if the old variable exists
-    if (!prefs.containsKey('hashtag')) {
-      return;
-    }
+    // Check if the old variable exists  
+    if (!prefs.containsKey('hashtag')) { return; }
 
     var oldHashtag = prefs.getString('hashtag');
 
-    if (oldHashtag == null) {
-      return;
-    }
+    if (oldHashtag == null){ return; }
 
     // Users were adding the hashtag manually to the strings
     if (oldHashtag.startsWith('#')) {

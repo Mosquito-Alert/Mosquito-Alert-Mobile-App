@@ -45,11 +45,12 @@ class PushNotificationsManager {
 
       if (Platform.isIOS) {
         await FirebaseMessaging.instance.getAPNSToken();
-      } else {}
+      }
 
       var token = await FirebaseMessaging.instance
           .getToken()
           .timeout(Duration(seconds: 10), onTimeout: () => null);
+
       if (token != null) {
         await registerFCMToken(token);
         await getTopicsSubscribed();
