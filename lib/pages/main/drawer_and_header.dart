@@ -258,11 +258,15 @@ class _MainVCState extends State<MainVC> {
                 fontSize: 8,
               ),
             ),
-            Text(
-              abbreviatedUuid,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 8,
+            Container(
+              width: 150,
+              child: Text(
+                snapshot.data ?? '',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 8,
+                ),
               ),
             ),
             GestureDetector(
