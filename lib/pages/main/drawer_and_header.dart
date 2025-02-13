@@ -20,7 +20,6 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info/package_info.dart';
 
-
 class MainVC extends StatefulWidget {
   const MainVC({key});
 
@@ -222,18 +221,18 @@ class _MainVCState extends State<MainVC> {
                     : '',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 8.0,                  
+                    fontSize: 8.0,
                   ),
                 ),
               ),
             ),
           ],
-        )        
+        )
       ),
     );
   }
 
-  Widget _uuidWithClipboard(){
+  Widget _uuidWithClipboard() {
     return FutureBuilder(
       future: UserManager.getUUID(),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
@@ -242,6 +241,13 @@ class _MainVCState extends State<MainVC> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
+
+        // Get the UUID string
+        String uuid = snapshot.data ?? '';
+        // Create abbreviated version: first 8 chars + ... + last 6 chars
+        String abbreviatedUuid = uuid.length > 14
+          ? '${uuid.substring(0, 8)}...${uuid.substring(uuid.length - 12)}'
+          : uuid;
 
         return Row(
           children: [
@@ -271,14 +277,13 @@ class _MainVCState extends State<MainVC> {
               onTap: () {
                 final data = snapshot.data;
                 if (data != null) {
-                  Clipboard.setData(ClipboardData(text: data));
+                  Clipboard.setData(ClipboardData(text: data)); // Copy the full UUID, not the abbreviated version
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
                     ),
                   );
                 } else {
-                  // Display an error message for troubleshooting
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
@@ -287,13 +292,13 @@ class _MainVCState extends State<MainVC> {
                 }
               },
             )
-          ],            
+          ],
         );
       }
     );
   }
 
-  Widget _buildCustomTile(int index, IconData icon, String title, context){
+  Widget _buildCustomTile(int index, IconData icon, String title, context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
