@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
@@ -50,7 +52,11 @@ void main({String env = 'prod'}) async {
 @pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Firebase.initializeApp();
+    try {
+      await Firebase.initializeApp();
+    } catch (err) {
+      print('$err');
+    }
 
     switch (task) {
       case 'trackingTask':
