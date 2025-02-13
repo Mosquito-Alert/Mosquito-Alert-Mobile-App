@@ -9,7 +9,7 @@ import 'package:workmanager/workmanager.dart';
 
 
 class BackgroundTracking{
-  static List<TimeOfDay> getRandomTimes(int numSamples){
+  static List<TimeOfDay> getRandomTimes(int numSamples) {
     var random = Random();
     var randomTimes = <TimeOfDay>[];
 

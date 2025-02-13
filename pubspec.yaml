@@ -31,7 +31,6 @@ dependencies:
   device_info_plus: ^9.1.2
   package_info: ^2.0.2 #Discontinued
   url_launcher: ^6.3.1
-  url_launcher_ios: ^6.3.2
   photo_view: ^0.15.0
   percent_indicator: ^4.2.3
   intro_slider: ^3.0.10
