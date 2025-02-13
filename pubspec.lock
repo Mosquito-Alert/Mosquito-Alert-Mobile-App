@@ -1384,7 +1384,7 @@ packages:
     source: hosted
     version: "6.3.14"
   url_launcher_ios:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher_ios
       sha256: "16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626"
