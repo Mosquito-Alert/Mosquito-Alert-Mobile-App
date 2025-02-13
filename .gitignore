@@ -87,6 +87,4 @@ android/JRBP_Keystore
 svc-keyfile.json
 
 # Lockfiles
-Podfile.lock
-pubspec.lock
 yarn.lock

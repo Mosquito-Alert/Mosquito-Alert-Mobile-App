@@ -85,19 +85,55 @@ class UserManager {
   static Future<void> setTracking(bool new_value) async {
     var prefs = await SharedPreferences.getInstance();
 
-    if (new_value == true){
+    if (new_value == true) {
       print('enable bg tracking');
-      var status = await Permission.locationAlways.status;
-      if (!status.isGranted){
-        status = await Permission.locationAlways.request();
+
+      // Step 1: Check the status of locationWhenInUse permission
+      var whenInUseStatus = await Permission.locationWhenInUse.status;
+      print('whenInUseStatus 1: $whenInUseStatus');
+
+      // Step 2: If locationWhenInUse is not granted, request it
+      if (!whenInUseStatus.isGranted) {
+        whenInUseStatus = await Permission.locationWhenInUse.request();
+        print('whenInUseStatus 2: $whenInUseStatus');
       }
 
-      if (status.isGranted){
-        await prefs.setBool('trackingEnabled', true);
+      // Step 3: If locationWhenInUse is granted, request locationAlways permission
+      if (whenInUseStatus.isGranted) {
+        print('whenInUseStatus 3: $whenInUseStatus');
+        var alwaysStatus = await Permission.locationAlways.status;
+        print('alwaysStatus 1: $alwaysStatus');
+
+        // Step 4: If locationAlways is not granted, request it
+        if (!alwaysStatus.isGranted) {
+          print('alwaysStatus 2: $alwaysStatus');
+          alwaysStatus = await Permission.locationAlways.request();
+          print('alwaysStatus 3: $alwaysStatus');
+        }
+        print('alwaysStatus 4: $alwaysStatus');
+        print('whenInUseStatus 4: $whenInUseStatus');
+        // Step 5: Handle the result of the locationAlways request
+        if (alwaysStatus.isGranted) {
+          print('Location Always permission granted. Enabling tracking...');
+          await prefs.setBool('trackingEnabled', true);
+        } else if (alwaysStatus.isPermanentlyDenied) {
+          print(
+              'Location Always permission permanently denied. Redirecting to app settings...');
+          await openAppSettings(); // Open app settings for the user to manually enable the permission
+        } else {
+          print('Location Always permission denied. Tracking not enabled.');
+        }
+      } else if (whenInUseStatus.isPermanentlyDenied) {
+        print(
+            'Location When In Use permission permanently denied. Redirecting to app settings...');
+        await openAppSettings(); // Open app settings for the user to manually enable the permission
+      } else {
+        print('Location When In Use permission denied. Tracking not enabled.');
       }
     } else {
-        print('disable bg tracking');
-        await prefs.setBool('trackingEnabled', false);
+      // Disable tracking
+      print('disable bg tracking');
+      await prefs.setBool('trackingEnabled', false);
     }
   }
 
