@@ -28,7 +28,10 @@ void main({String env = 'prod'}) async {
     print('$err');
   }
 
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false
+  );
 
   // Start background tracking at midnight to ensure 5 random samples per day
   var now = DateTime.now().toLocal();
@@ -58,14 +61,9 @@ void callbackDispatcher() {
     switch (task) {
       case 'trackingTask':
         await BackgroundTracking.trackingTask();
-        print('Executing background task: $task');
         break;
       case 'scheduleDailyTasks':
         await BackgroundTracking.scheduleMultipleTrackingTask(5);
-        print('Executing background task: $task');
-        break;
-      case Workmanager.iOSBackgroundTask:  // TODO: Debugging purposes
-        stderr.writeln('The iOS background fetch was triggered');
         break;
     }
     return Future.value(true);
