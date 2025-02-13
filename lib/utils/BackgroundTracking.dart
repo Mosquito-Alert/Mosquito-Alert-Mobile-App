@@ -7,8 +7,9 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:workmanager/workmanager.dart';
 
-class BackgroundTracking {
-  static List<TimeOfDay> getRandomTimes(int numSamples) {
+
+class BackgroundTracking{
+  static List<TimeOfDay> getRandomTimes(int numSamples){
     var random = Random();
     var randomTimes = <TimeOfDay>[];
 
@@ -26,7 +27,7 @@ class BackgroundTracking {
     var permission = await Geolocator.checkPermission();
     var isBgTrackingEnabled = await UserManager.getTracking();
 
-    if (permission != LocationPermission.always || !isBgTrackingEnabled) {
+    if (permission != LocationPermission.always || !isBgTrackingEnabled){
       return Future.value(true);
     }
 
@@ -47,7 +48,7 @@ class BackgroundTracking {
     var permission = await Geolocator.checkPermission();
     var isBgTrackingEnabled = await UserManager.getTracking();
 
-    if (permission != LocationPermission.always || !isBgTrackingEnabled) {
+    if (permission != LocationPermission.always || !isBgTrackingEnabled){
       return Future.value(true);
     }
 

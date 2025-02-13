@@ -24,7 +24,6 @@ class PushNotificationsManager {
       PushNotificationsManager._();
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
-
   static bool _initialized = false;
   static List<Topic> currentTopics = <Topic>[];
 
@@ -44,19 +43,13 @@ class PushNotificationsManager {
         openMessageScreen(remoteMessage.data);
       });
 
-      //var token = await _firebaseMessaging
-      //  .getAPNSToken()
-      //   .timeout(Duration(seconds: 10), onTimeout: () => null);
-
       if (Platform.isIOS) {
         await FirebaseMessaging.instance.getAPNSToken();
-        // debugPrint('APNS Token: $apnsToken');
       } else {}
 
       var token = await FirebaseMessaging.instance
           .getToken()
           .timeout(Duration(seconds: 10), onTimeout: () => null);
-      debugPrint('FB Token: $token');
       if (token != null) {
         await registerFCMToken(token);
         await getTopicsSubscribed();
