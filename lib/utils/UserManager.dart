@@ -60,8 +60,7 @@ class UserManager {
   }
 
   static Future<User?>? fetchUser() async {
-    user = _auth
-        .currentUser;
+    user = _auth.currentUser;
 
     if (user == null) {
       return null;
@@ -83,21 +82,78 @@ class UserManager {
   }
 
   static Future<void> setTracking(bool new_value) async {
-    var prefs = await SharedPreferences.getInstance();
+    /*var prefs = await SharedPreferences.getInstance();
 
-    if (new_value == true){
+    if (new_value == true) {
       print('enable bg tracking');
       var status = await Permission.locationAlways.status;
-      if (!status.isGranted){
+      var request_status = await Permission.locationAlways.request();
+
+      print('request_status: $request_status');
+
+      if (!status.isGranted) {
         status = await Permission.locationAlways.request();
       }
 
-      if (status.isGranted){
+      if (status.isGranted) {
         await prefs.setBool('trackingEnabled', true);
       }
     } else {
-        print('disable bg tracking');
-        await prefs.setBool('trackingEnabled', false);
+      print('disable bg tracking');
+      await prefs.setBool('trackingEnabled', false);
+    }*/
+
+    var prefs = await SharedPreferences.getInstance();
+
+    if (new_value == true) {
+      print('enable bg tracking');
+
+      // Step 1: Check the status of locationWhenInUse permission
+      var whenInUseStatus = await Permission.locationWhenInUse.status;
+      print('whenInUseStatus 1: $whenInUseStatus');
+
+      // Step 2: If locationWhenInUse is not granted, request it
+      if (!whenInUseStatus.isGranted) {
+        whenInUseStatus = await Permission.locationWhenInUse.request();
+        print('whenInUseStatus 2: $whenInUseStatus');
+      }
+
+      // Step 3: If locationWhenInUse is granted, request locationAlways permission
+      if (whenInUseStatus.isGranted) {
+        print('whenInUseStatus 3: $whenInUseStatus');
+        var alwaysStatus = await Permission.locationAlways.status;
+        print('alwaysStatus 1: $alwaysStatus');
+
+        // Step 4: If locationAlways is not granted, request it
+        if (!alwaysStatus.isGranted) {
+          print('alwaysStatus 2: $alwaysStatus');
+          alwaysStatus = await Permission.locationAlways.request();
+          print('alwaysStatus 3: $alwaysStatus');
+        }
+        print('alwaysStatus 4: $alwaysStatus');
+        print('whenInUseStatus 4: $whenInUseStatus');
+        // Step 5: Handle the result of the locationAlways request
+        if (alwaysStatus.isGranted) {
+          print('Location Always permission granted. Enabling tracking...');
+          await prefs.setBool('trackingEnabled', true);
+        } else if (alwaysStatus.isPermanentlyDenied) {
+          print(
+              'Location Always permission permanently denied. Redirecting to app settings...');
+          await openAppSettings(); // Open app settings for the user to manually enable the permission
+        } else {
+          print('Location Always permission denied. Tracking not enabled.');
+        }
+      } else if (whenInUseStatus.isPermanentlyDenied) {
+        print(
+            'Location When In Use permission permanently denied. Redirecting to app settings...');
+        await openAppSettings(); // Open app settings for the user to manually enable the permission
+      } else {
+        print('Location When In Use permission denied. Tracking not enabled.');
+      }
+    } else {
+      // Disable tracking
+      print('disable bg tracking');
+      await prefs.setBool('trackingEnabled', false);
     }
   }
 
@@ -144,12 +200,12 @@ class UserManager {
     await prefs.setString('serverUrl', serverUrl);
   }
 
-  static Future<void> setLastReviewRequest(int lastReviewRequest) async{
+  static Future<void> setLastReviewRequest(int lastReviewRequest) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lastReviewRequest', lastReviewRequest);
   }
 
-  static Future<void> setLastReportCount(int lastReportCount) async{
+  static Future<void> setLastReportCount(int lastReportCount) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lastReportCount', lastReportCount);
   }
@@ -214,15 +270,19 @@ class UserManager {
     return prefs.getStringList('imagesList');
   }
 
-  static Future<void> migrateHashtagToHashtags() async {  
-    final prefs = await SharedPreferences.getInstance();  
+  static Future<void> migrateHashtagToHashtags() async {
+    final prefs = await SharedPreferences.getInstance();
 
-    // Check if the old variable exists  
-    if (!prefs.containsKey('hashtag')) { return; }
+    // Check if the old variable exists
+    if (!prefs.containsKey('hashtag')) {
+      return;
+    }
 
-    var oldHashtag = prefs.getString('hashtag');  
+    var oldHashtag = prefs.getString('hashtag');
 
-    if (oldHashtag == null){ return; }
+    if (oldHashtag == null) {
+      return;
+    }
 
     // Users were adding the hashtag manually to the strings
     if (oldHashtag.startsWith('#')) {
@@ -230,8 +290,8 @@ class UserManager {
     }
 
     await prefs.setStringList('hashtags', [oldHashtag]);
-    // Remove the old variable  
-    await prefs.remove('hashtag');  
+    // Remove the old variable
+    await prefs.remove('hashtag');
   }
 
   static Future<List<String>?> getHashtags() async {
@@ -245,12 +305,12 @@ class UserManager {
     return prefs.getString('serverUrl') ?? '';
   }
 
-  static Future<int?> getLastReviewRequest() async{
+  static Future<int?> getLastReviewRequest() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getInt('lastReviewRequest');
   }
 
-  static Future<int?> getLastReportCount() async{
+  static Future<int?> getLastReportCount() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getInt('lastReportCount');
   }
