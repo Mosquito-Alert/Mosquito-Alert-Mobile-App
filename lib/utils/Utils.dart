@@ -982,7 +982,7 @@ class Utils {
         stringLanguange == 'ro') {
       language = ui.window.locale;
     }
-  
+
     return language;
   }
 
