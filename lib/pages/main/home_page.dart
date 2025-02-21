@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
                                           Padding(
                                             padding: EdgeInsets.only(left: 10.0),
                                             child: SvgPicture.asset('assets/img/maps/public-map-icon.svg', width: 50,),
+                                            key: const ValueKey("testing"),
                                           ),
                                           SizedBox(width: 15),
                                           Expanded(

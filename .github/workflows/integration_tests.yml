@@ -1,0 +1,36 @@
+name: Integration testing
+
+on:
+    push:
+
+jobs:
+    test:
+        name: Run integration tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+              api-level: [34]
+        steps:
+        - uses: actions/checkout@v4
+
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+            flutter-version: '3.27.3'
+    
+        - name: Get Dependencies
+          run: flutter pub get
+    
+        - name: Decode google-services.json
+          run: echo $GOOGLE_SERVICES_JSON | base64 --decode > android/app/google-services.json
+          env:
+            GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_ANDROID_BASE64 }}
+    
+        - name: Run integration tests
+          uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: ${{ matrix.api-level }}
+            target: google_apis
+            arch: x86_64
+            profile: Nexus 6
+            script: "flutter test integration_test/dummy_test.dart"
