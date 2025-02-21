@@ -51,6 +51,13 @@ jobs:
             fail-fast: false
         runs-on: macos-latest
         steps:
+            - uses: actions/checkout@v4
+
+            - uses: subosito/flutter-action@v2
+              with:
+                channel: 'stable'
+                flutter-version: '3.27.3'
+
             - name: Decode google-services.json secrets
               env:
                 GOOGLESERVICES_INFO_PLIST_JSON: ${{ secrets.GOOGLESERVICE_INFO_PLIST_IOS_BASE64 }}
