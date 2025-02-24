@@ -51,9 +51,6 @@ jobs:
             fail-fast: false
         runs-on: macos-latest
         steps:
-          - name: "List all simulators"
-            run: "xcrun instruments -s"
-
           - name: "Start Simulator"
             uses: futureware-tech/simulator-action@v4
             with:
