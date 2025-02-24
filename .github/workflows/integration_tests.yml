@@ -85,6 +85,5 @@ jobs:
                 erase_before_boot: true
                 shutdown_after_job: true
 
-            - run: "flutter clean"
             - name: "Run Flutter tests"
               run: "flutter test integration_test/dummy_test.dart" 
