@@ -61,6 +61,8 @@ dev_dependencies:
   flutter_localizations:
     sdk: flutter
   test: ^1.24.3
+  integration_test:
+    sdk: flutter
 
 flutter_icons:
   image_path_android: "assets/img/ic_launcher.webp"
