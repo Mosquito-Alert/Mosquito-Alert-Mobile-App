@@ -1,9 +1,10 @@
-.fvm/
-.fvmrc
+.fvm/*
+!.fvm/fvm_config.json
 .vscode/settings.json
 
 # Miscellaneous
 *.class
+*.lock
 *.log
 *.pyc
 *.swp
