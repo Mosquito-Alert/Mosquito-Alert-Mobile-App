@@ -160,7 +160,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   )),
               child: Container(
                 margin:
-                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 80),
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,24 +177,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         data: notification.expert_html!
                             .replaceAll('<p><a', '<a')
                             .replaceAll('</a></p>', '</a>'),
-                        style: {
-                          'a': html.Style(
-                              backgroundColor: Colors.transparent,
-                              color: Colors.blueAccent,
-                              padding: html.HtmlPaddings.all(12.0),
-                              margin: html.Margins(
-                                  bottom: html.Margin(12.0),
-                                  right: html.Margin(12.0),
-                                  top: html.Margin(12.0),
-                                  left: html.Margin(12.0)),
-                              textDecoration: TextDecoration.underline,
-                              textAlign: TextAlign.center,
-                              fontSize: html.FontSize(16.0)),
-                        },
                       )),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Style.bodySmall(
                           DateFormat('dd-MM-yyyy HH:mm').format(
                               DateTime.parse(notification.date_comment!).toLocal()),
