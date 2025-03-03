@@ -76,7 +76,7 @@ flutter_launcher_icons:
   adaptive_icon_foreground: "assets/img/mosquito_alert_logo_transparent.png"
   adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground_inset: 25
-  adaptive_icon_monochrome: "assets/img/mosquito_alert_logo_monochrome_2.png"
+  adaptive_icon_monochrome: "assets/img/mosquito_alert_logo_monochrome.png"
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
 
