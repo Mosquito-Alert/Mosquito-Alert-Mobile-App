@@ -73,10 +73,9 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/img/mosquito_alert_logo_transparent.png"
-    #adaptive_icon_foreground: "assets/img/mosquito_alert_logo_transparent.png"
-    #adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/img/mosquito_only.png"
-  adaptive_icon_background: "#fbdc1c"
+  adaptive_icon_foreground: "assets/img/mosquito_alert_logo_transparent.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground_inset: 25
   adaptive_icon_monochrome: "assets/img/mosquito_alert_logo_monochrome_2.png"
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
