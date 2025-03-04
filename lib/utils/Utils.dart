@@ -19,7 +19,7 @@ import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,7 +46,6 @@ class Utils {
 
   // Initialized data flags
   static Map<String, dynamic> initializedCheckData = {
-    'user': false, // Whether the user got fetched
     'userScores': false, // Whether the user scores got fetched
     'userCreated': {
       'created': false,
@@ -116,7 +115,7 @@ class Utils {
           session: session!.id,
           responses: []);
 
-      var packageInfo = await PackageInfo.fromPlatform();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
       report!.package_name = packageInfo.packageName;
       report!.package_version = 34;
 
@@ -455,13 +454,6 @@ class Utils {
       UserManager.userScore = await ApiSingleton().getUserScores();
     } else {
       print('Utils (checkForUnfetchedData): UserScores were already fetched');
-    }
-
-    if (!initializedCheckData['user']) {
-      print('Utils (checkForUnfetchedData): Fetching user...');
-      await UserManager.fetchUser();
-    } else {
-      print('Utils (checkForUnfetchedData): User was already fetched');
     }
 
     if (!initializedCheckData['firebase']) {
