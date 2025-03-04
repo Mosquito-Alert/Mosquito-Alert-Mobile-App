@@ -52,6 +52,7 @@ dependencies:
   photo_gallery: ^2.2.1
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
+  flutter_native_splash: ^2.4.4
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,20 @@ flutter_icons:
   image_path_ios: "assets/img/ic_launcher.webp"
   android: true
   ios: true
+
+flutter_native_splash:
+  android: true
+  #ios: true
+  color: "#ffffff"
+  image: assets/img/mosquito_alert_splash.png
+  branding: assets/img/mosquito_only.png
+  branding_mode: bottom
+  branding_bottom_padding: 24
+  android_12:
+    image: assets/img/mosquito_alert_splash.png
+    color: "#ffffff"
+    icon_background_color: "#FFDFA0"
+    branding: assets/img/mosquito_only.png
 
 flutter:
   uses-material-design: true
