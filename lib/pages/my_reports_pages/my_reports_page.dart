@@ -12,16 +12,33 @@ class MyReportsPage extends StatefulWidget {
   _MyReportsPageState createState() => _MyReportsPageState();
 }
 
-class _MyReportsPageState extends State<MyReportsPage> {
+class _MyReportsPageState extends State<MyReportsPage> with TickerProviderStateMixin {
   late List<Report> adultReports;
   late List<Report> biteReports;
   late List<Report> siteReports;
   bool isLoading = true;
 
+  late final TabController _tabController;
+  final List<Color> _indicatorColors = [
+    Color(0xFFE1D32E),     // Color for Mosquito tab
+    Color(0xFFC76758),     // Color for Bites tab
+    Color(0xFF567483),     // Color for Breeding Sites tab
+  ];
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {}); // Update UI when tab changes
+    });
     loadReports();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void loadReports() async {
@@ -41,32 +58,36 @@ class _MyReportsPageState extends State<MyReportsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           bottom: TabBar(
-            tabs: [
+            controller: _tabController,
+            indicatorColor: _indicatorColors[_tabController.index],
+            labelColor: Colors.black,
+            tabs: <Widget>[
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_mosquito.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_mosquito_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_mosquito')),
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_bite.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_bite_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_bite')),
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_breeding_site.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_breeding_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_breeding_site')),
             ],
@@ -77,13 +98,13 @@ class _MyReportsPageState extends State<MyReportsPage> {
           Center(child: CircularProgressIndicator())
           :
           TabBarView(
+            controller: _tabController,
             children: [
               ReportsList(reports: adultReports),
               ReportsList(reports: biteReports),
               ReportsList(reports: siteReports),
             ],
           ),
-      ),
-    );
+      );
   }
 }
