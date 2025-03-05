@@ -90,6 +90,7 @@ android/JRBP_Keystore
 
 # Service account files
 svc-keyfile.json
+GoogleService-Info.plist
 
 # Lockfiles
 Podfile.lock
