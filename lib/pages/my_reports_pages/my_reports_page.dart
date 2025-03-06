@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-
 
 class MyReportsPage extends StatefulWidget {
   const MyReportsPage({Key? key}) : super(key: key);
@@ -23,6 +23,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void initState() {
     super.initState();
     loadReports();
+    _logScreenView();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logScreenView(screenName: '/my_reports');
   }
 
   void loadReports() async {
@@ -33,7 +38,8 @@ class _MyReportsPageState extends State<MyReportsPage> {
         .compareTo(a.creation_time ?? '1970-01-01T00:00:00.000000Z'));
 
     setState(() {
-      adultReports = myReports.where((report) => report.type == 'adult').toList();
+      adultReports =
+          myReports.where((report) => report.type == 'adult').toList();
       biteReports = myReports.where((report) => report.type == 'bite').toList();
       siteReports = myReports.where((report) => report.type == 'site').toList();
       isLoading = false;
@@ -48,47 +54,67 @@ class _MyReportsPageState extends State<MyReportsPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           bottom: TabBar(
-            indicatorColor: Style.colorPrimary,
-            labelColor: Colors.black,
-            tabs: <Widget>[
-              Tab(
-                icon: Image.asset(
-                  'assets/img/ic_mosquito_report_black.webp',
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_mosquito')),
-              Tab(
-                icon: Image.asset(
-                  'assets/img/ic_bite_report_black.webp',
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_bite')),
-              Tab(
-                icon: Image.asset(
-                  'assets/img/ic_breeding_report_black.webp',
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high),
-                text: MyLocalizations.of(context, 'single_breeding_site')),
-            ],
-          ),
+              indicatorColor: Style.colorPrimary,
+              labelColor: Colors.black,
+              tabs: <Widget>[
+                Tab(
+                    icon: Image.asset(
+                        'assets/img/ic_mosquito_report_black.webp',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high),
+                    text: MyLocalizations.of(context, 'single_mosquito')),
+                Tab(
+                    icon: Image.asset('assets/img/ic_bite_report_black.webp',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high),
+                    text: MyLocalizations.of(context, 'single_bite')),
+                Tab(
+                    icon: Image.asset(
+                        'assets/img/ic_breeding_report_black.webp',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high),
+                    text: MyLocalizations.of(context, 'single_breeding_site')),
+              ],
+              onTap: (index) {
+                // Log the tab switch event to Firebase Analytics
+                switch (index) {
+                  case 0:
+                    FirebaseAnalytics.instance.logEvent(
+                      name: 'tab_switched',
+                      parameters: {'tab_name': 'mosquitoes'},
+                    );
+                    break;
+                  case 1:
+                    FirebaseAnalytics.instance.logEvent(
+                      name: 'tab_switched',
+                      parameters: {'tab_name': 'bites'},
+                    );
+                    break;
+                  case 2:
+                    FirebaseAnalytics.instance.logEvent(
+                      name: 'tab_switched',
+                      parameters: {'tab_name': 'breeding_site'},
+                    );
+                    break;
+                }
+              }),
           title: Text(MyLocalizations.of(context, 'your_reports_txt')),
         ),
-        body: isLoading ?
-          Center(child: CircularProgressIndicator())
-          :
-          TabBarView(
-            children: [
-              ReportsList(reports: adultReports),
-              ReportsList(reports: biteReports),
-              ReportsList(reports: siteReports),
-            ],
-          ),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : TabBarView(
+                children: [
+                  ReportsList(reports: adultReports),
+                  ReportsList(reports: biteReports),
+                  ReportsList(reports: siteReports),
+                ],
+              ),
       ),
     );
   }
