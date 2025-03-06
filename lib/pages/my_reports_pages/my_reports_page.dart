@@ -81,11 +81,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
                         filterQuality: FilterQuality.high),
                     text: MyLocalizations.of(context, 'single_breeding_site')),
               ],
-              onTap: (index) {
+              onTap: (index) async {
                 // Log the tab switch event to Firebase Analytics
                 const tabNames = ['mosquitoes', 'bites', 'breeding_site'];
                 if (index >= 0 && index < tabNames.length) {
-                  FirebaseAnalytics.instance.logEvent(
+                  await FirebaseAnalytics.instance.logEvent(
                     name: 'tab_switched',
                     parameters: {'tab_name': tabNames[index]},
                   );
