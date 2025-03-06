@@ -84,7 +84,12 @@ class _MyAppState extends State<MyApp> {
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+      FirebaseAnalyticsObserver(
+        analytics: analytics,
+        routeFilter: (route) {
+          return route is PageRoute && route.settings.name != '/';
+        },
+      );
 
   @override
   void initState() {
