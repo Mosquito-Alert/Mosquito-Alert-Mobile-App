@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
@@ -22,6 +23,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void initState() {
     super.initState();
     loadReports();
+    _logScreenView();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logScreenView(screenName: '/my_reports');
   }
 
   void loadReports() async {
@@ -70,6 +76,29 @@ class _MyReportsPageState extends State<MyReportsPage> {
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_breeding_site')),
             ],
+            onTap: (index) {
+              // Log the tab switch event to Firebase Analytics
+              switch (index) {
+                case 0:
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'tab_switched',
+                    parameters: {'tab_name': 'mosquitoes'},
+                  );
+                  break;
+                case 1:
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'tab_switched',
+                    parameters: {'tab_name': 'bites'},
+                  );
+                  break;
+                case 2:
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'tab_switched',
+                    parameters: {'tab_name': 'breeding_site'},
+                  );
+                  break;
+              }
+            }
           ),
           title: Text(MyLocalizations.of(context, 'your_reports_txt')),
         ),
