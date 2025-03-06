@@ -83,25 +83,12 @@ class _MyReportsPageState extends State<MyReportsPage> {
               ],
               onTap: (index) {
                 // Log the tab switch event to Firebase Analytics
-                switch (index) {
-                  case 0:
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'tab_switched',
-                      parameters: {'tab_name': 'mosquitoes'},
-                    );
-                    break;
-                  case 1:
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'tab_switched',
-                      parameters: {'tab_name': 'bites'},
-                    );
-                    break;
-                  case 2:
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'tab_switched',
-                      parameters: {'tab_name': 'breeding_site'},
-                    );
-                    break;
+                const tabNames = ['mosquitoes', 'bites', 'breeding_site'];
+                if (index >= 0 && index < tabNames.length) {
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'tab_switched',
+                    parameters: {'tab_name': tabNames[index]},
+                  );
                 }
               }),
           title: Text(MyLocalizations.of(context, 'your_reports_txt')),
