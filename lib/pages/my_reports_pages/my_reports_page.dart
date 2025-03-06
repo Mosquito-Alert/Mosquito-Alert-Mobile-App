@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
@@ -12,33 +13,16 @@ class MyReportsPage extends StatefulWidget {
   _MyReportsPageState createState() => _MyReportsPageState();
 }
 
-class _MyReportsPageState extends State<MyReportsPage> with TickerProviderStateMixin {
+class _MyReportsPageState extends State<MyReportsPage> {
   late List<Report> adultReports;
   late List<Report> biteReports;
   late List<Report> siteReports;
   bool isLoading = true;
 
-  late final TabController _tabController;
-  final List<Color> _indicatorColors = [
-    Color(0xFFE1D32E),     // Color for Mosquito tab
-    Color(0xFFC76758),     // Color for Bites tab
-    Color(0xFF567483),     // Color for Breeding Sites tab
-  ];
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
-      setState(() {}); // Update UI when tab changes
-    });
     loadReports();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   void loadReports() async {
@@ -58,12 +42,13 @@ class _MyReportsPageState extends State<MyReportsPage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: _indicatorColors[_tabController.index],
+            indicatorColor: Style.colorPrimary,
             labelColor: Colors.black,
             tabs: <Widget>[
               Tab(
@@ -98,13 +83,13 @@ class _MyReportsPageState extends State<MyReportsPage> with TickerProviderStateM
           Center(child: CircularProgressIndicator())
           :
           TabBarView(
-            controller: _tabController,
             children: [
               ReportsList(reports: adultReports),
               ReportsList(reports: biteReports),
               ReportsList(reports: siteReports),
             ],
           ),
-      );
+      ),
+    );
   }
 }
