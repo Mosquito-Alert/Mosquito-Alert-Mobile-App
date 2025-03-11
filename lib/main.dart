@@ -82,10 +82,9 @@ class _MyAppState extends State<MyApp> {
 
   MyLocalizationsDelegate _newLocaleDelegate = MyLocalizationsDelegate();
 
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(
-        analytics: analytics,
+        analytics: FirebaseAnalytics.instance,
         routeFilter: (route) {
           return route is PageRoute && route.settings.name != '/';
         },
