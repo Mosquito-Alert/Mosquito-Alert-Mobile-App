@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_widget.dart';
@@ -22,6 +24,11 @@ class _MyReportsPageState extends State<MyReportsPage> {
   void initState() {
     super.initState();
     loadReports();
+    _logScreenView();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logScreenView(screenName: '/my_reports');
   }
 
   void loadReports() async {
@@ -47,30 +54,44 @@ class _MyReportsPageState extends State<MyReportsPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           bottom: TabBar(
-            tabs: [
+            indicatorColor: Style.colorPrimary,
+            labelColor: Colors.black,
+            tabs: <Widget>[
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_mosquito.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_mosquito_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_mosquito')),
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_bite.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_bite_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_bite')),
               Tab(
                 icon: Image.asset(
-                  'assets/img/ic_my_reports_breeding_site.webp',
-                  width: 24,
-                  height: 24,
+                  'assets/img/ic_breeding_report_black.webp',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high),
                 text: MyLocalizations.of(context, 'single_breeding_site')),
             ],
-          ),
+            onTap: (index) async {
+              // Log the tab switch event to Firebase Analytics
+              const tabNames = ['mosquitoes', 'bites', 'breeding_site'];
+              if (index >= 0 && index < tabNames.length) {
+                await FirebaseAnalytics.instance.logEvent(
+                  name: 'tab_switched',
+                  parameters: {'tab_name': tabNames[index]},
+                );
+              }
+            }),
           title: Text(MyLocalizations.of(context, 'your_reports_txt')),
         ),
         body: isLoading ?

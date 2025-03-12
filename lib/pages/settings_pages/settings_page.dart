@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:language_picker/language_picker.dart';
 
 import 'package:language_picker/languages.dart';
@@ -12,7 +13,7 @@ import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:workmanager/workmanager.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -58,9 +59,14 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    _logScreenView();
     getPackageInfo();
     initializeBgTracking();
     initializeTagsNum();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logScreenView(screenName: '/settings');
   }
 
   void initializeBgTracking() async {
@@ -68,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void getPackageInfo() async {
-    var _packageInfo = await PackageInfo.fromPlatform();
+    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       packageInfo = _packageInfo;
     });
@@ -168,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       initiallyExpanded: numTagsAdded! > 0,
                       title: Row(
                         children: [
-                            Text(
+                            Style.body(
                               MyLocalizations.of(context, 'auto_tagging_settings_title'),
                             ),
                             Spacer(flex: 1),

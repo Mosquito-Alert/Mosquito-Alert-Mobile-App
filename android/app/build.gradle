@@ -37,7 +37,8 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def googlemapsKey = properties.getProperty('googlemaps.Key', System.getenv('GOOGLE_MAPS_KEY') ?: '')
 
 android {
-    compileSdkVersion 34
+    namespace 'com.example.mosquito_alert_app'
+    compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -48,16 +49,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-        checkReleaseBuilds false
-        abortOnError false
-    }
 
     defaultConfig {
         applicationId "ceab.movelab.tigatrapp"
-        minSdkVersion 23
-        targetSdkVersion 34
+        minSdkVersion 24
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -83,6 +79,12 @@ android {
             minifyEnabled false
             shrinkResources false
         }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'InvalidPackage'
     }
 }
 
