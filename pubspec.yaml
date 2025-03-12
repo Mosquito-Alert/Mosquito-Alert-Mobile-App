@@ -20,7 +20,7 @@ dependencies:
   random_string: ^2.3.1
   geolocator: ^11.1.0
   geocoding: ^3.0.0
-  dio: ^5.3.3
+  dio: ^5.8.0+1
   flutter_image_compress: ^2.3.0
   flutter_markdown: ^0.7.4+3
   firebase_messaging: ^15.2.4
@@ -46,7 +46,7 @@ dependencies:
     git:
         url: https://github.com/fluttercommunity/flutter_workmanager.git
         ref: b783000
-  battery_plus: ^5.0.3
+  battery_plus: ^6.2.1
   badges: ^3.1.2
   cached_network_image: ^3.3.1
   camera_camera: ^3.0.0
