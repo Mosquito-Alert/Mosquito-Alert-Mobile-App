@@ -73,7 +73,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   void initState() {
     super.initState();
     _initializeReport();
-    _logScreenView();
+    _logFirebaseAnalytics();
     _pagesController = PageController();
     index = 0.0;
     _initialformsRepot = [
@@ -90,8 +90,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _formsRepot = _initialformsRepot;
   }
 
-  Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logScreenView(screenName: '/adult_report/new');
+  Future<void> _logFirebaseAnalytics() async {
+    await FirebaseAnalytics.instance.logEvent(name: 'start_report', parameters: {'type': 'adult'});
   }
 
   void setShowCamera(data) {

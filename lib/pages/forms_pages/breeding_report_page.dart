@@ -86,7 +86,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   void initState() {
     super.initState();
     _initializeReport();
-    _logScreenView();
+    _logFirebaseAnalytics();
     _pagesController = PageController();
 
     _formsRepot = [
@@ -114,8 +114,8 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _initialFormsReport = List.from(_formsRepot);
   }
 
-  Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logScreenView(screenName: '/breeding_site_report/new');
+  Future<void> _logFirebaseAnalytics() async {
+    await FirebaseAnalytics.instance.logEvent(name: 'start_report', parameters: {'type': 'breeding_site'});
   }
 
   void skipPage3(skip) {

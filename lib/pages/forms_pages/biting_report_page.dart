@@ -97,7 +97,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   void initState() {
     super.initState();
     _initializeReport();
-    _logScreenView();
+    _logFirebaseAnalytics();
     _pagesController = PageController();
     _formsRepot = [
       BitingForm(
@@ -119,8 +119,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
     ];
   }
 
-  Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logScreenView(screenName: '/bite_report/new');
+  Future<void> _logFirebaseAnalytics() async {
+    await FirebaseAnalytics.instance.logEvent(name: 'start_report', parameters: {'type': 'bite'});
   }
 
   void addOtherReport(String? reportType) {
