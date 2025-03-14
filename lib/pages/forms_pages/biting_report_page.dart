@@ -144,6 +144,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
+    await FirebaseAnalytics.instance.logEvent(name: 'submit_report', parameters: {'type': 'bite'});
     var res = await Utils.createReport();
 
     if (widget.editReport != null) {

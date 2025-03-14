@@ -138,6 +138,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     setState(() {
       percentStream.add(0.8);
     });
+    await FirebaseAnalytics.instance.logEvent(name: 'submit_report', parameters: {'type': 'adult'});
     var res = await Utils.createReport();
 
     if (res!=null && !res) {

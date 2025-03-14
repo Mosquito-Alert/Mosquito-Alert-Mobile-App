@@ -191,6 +191,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
+    await FirebaseAnalytics.instance.logEvent(name: 'submit_report', parameters: {'type': 'breeding_site'});
     var res = await Utils.createReport();
 
     if (widget.editReport != null) {
