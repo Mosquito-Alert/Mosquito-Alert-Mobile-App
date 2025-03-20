@@ -132,21 +132,21 @@ class BackgroundTracking {
     bool isBgTrackingEnabled = await BackgroundTracking.isEnabled();
 
     if (!isBgTrackingEnabled) {
-      return Future.value(true);
+      return;
     }
 
     DateTime now = DateTime.now();
 
     bool canScheduleNow = await BackgroundTracking.canScheduleAt(now);
     if (!canScheduleNow) {
-      return Future.value(false);
+      return;
     }
 
     await BackgroundTracking._appendScheduledDateTimeTaskQueue(now);
 
     int numTaskToSchedule = BackgroundTracking.tasksPerDay - numScheduledTasks;
     if (numTaskToSchedule <= 0) {
-      return Future.value(false);
+      return;
     }
 
     // Today at midnight
@@ -185,7 +185,7 @@ class BackgroundTracking {
     bool isBgTrackingEnabled = await BackgroundTracking.isEnabled();
 
     if (permission != LocationPermission.always || !isBgTrackingEnabled) {
-      return Future.value(true);
+      return;
     }
 
     Position position = await Geolocator.getCurrentPosition(
