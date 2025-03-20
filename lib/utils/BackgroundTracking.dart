@@ -76,36 +76,24 @@ class BackgroundTracking {
   }
 
   static Future<bool> _checkPermissions() async {
-    // Step 1: Check the status of locationWhenInUse permission
-    PermissionStatus whenInUseStatus =
-        await Permission.locationWhenInUse.status;
-
-    // Step 2: If locationWhenInUse is not granted, request it
-    if (!whenInUseStatus.isGranted) {
-      whenInUseStatus = await Permission.locationWhenInUse.request();
-    }
-
-    if (whenInUseStatus.isPermanentlyDenied) {
+    // Step 1: Check the status of locationWhenInUse permission and request if necessary.
+    if (!await Permission.locationWhenInUse.request().isGranted) {
       await openAppSettings(); // Open app settings for the user to manually enable the permission
     }
 
-    // Step 3: If locationWhenInUse is granted, request locationAlways permission
-    if (whenInUseStatus.isGranted) {
-      var alwaysStatus = await Permission.locationAlways.status;
-
-      // Step 4: If locationAlways is not granted, request it
-      if (!alwaysStatus.isGranted) {
-        alwaysStatus = await Permission.locationAlways.request();
-      }
-
-      if (alwaysStatus.isPermanentlyDenied) {
+    if (await Permission.locationWhenInUse.request().isGranted) {
+      // The locationAlways permission can not be requested directly, the user
+      // has to request the locationWhenInUse permission first. Accepting this
+      // permission by clicking on the 'Allow While Using App' gives the user
+      // the possibility to request the locationAlways permission.
+      if (!await Permission.locationAlways.request().isGranted) {
         await openAppSettings();
       }
-    } else {
-      print('Location When In Use permission denied. Tracking not enabled.');
+
+      return Permission.locationAlways.status.isGranted;
     }
 
-    return Permission.locationAlways.status.isGranted;
+    return false;
   }
 
   static List<TimeOfDay> _getRandomTimes(int numSamples,
