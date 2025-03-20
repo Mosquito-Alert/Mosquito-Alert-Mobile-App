@@ -15,8 +15,10 @@ class BackgroundTracking {
   static String _isEnabledPrefsKey = 'trackingEnabled';
   static int tasksPerDay = 5;
 
-  static Future<void> start({bool shouldRun = false}) async {
-    bool hasPermissions = await BackgroundTracking._checkPermissions();
+  static Future<void> start(
+      {bool shouldRun = false, bool requestPermissions = true}) async {
+    bool hasPermissions = await BackgroundTracking._checkPermissions(
+        requestPermissions: requestPermissions);
     if (!hasPermissions) {
       print('Location Always permission denied. Tracking not enabled.');
       await BackgroundTracking.stop();
@@ -75,7 +77,17 @@ class BackgroundTracking {
     return prefs.getBool(BackgroundTracking._isEnabledPrefsKey) ?? false;
   }
 
-  static Future<bool> _checkPermissions() async {
+  static Future<bool> _hasLocationPermissions() async {
+    PermissionStatus permStatus = await Permission.locationAlways.status;
+    return permStatus.isGranted;
+  }
+
+  static Future<bool> _checkPermissions(
+      {bool requestPermissions = true}) async {
+    if (!requestPermissions) {
+      return await BackgroundTracking._hasLocationPermissions();
+    }
+
     // Step 1: Check the status of locationWhenInUse permission and request if necessary.
     if (!await Permission.locationWhenInUse.request().isGranted) {
       await openAppSettings(); // Open app settings for the user to manually enable the permission
@@ -90,7 +102,7 @@ class BackgroundTracking {
         await openAppSettings();
       }
 
-      return Permission.locationAlways.status.isGranted;
+      return await BackgroundTracking._hasLocationPermissions();
     }
 
     return false;

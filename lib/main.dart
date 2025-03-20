@@ -32,7 +32,7 @@ Future<void> main({String env = 'prod'}) async {
 
   bool trackingEnabled = await BackgroundTracking.isEnabled();
   if (trackingEnabled) {
-    await BackgroundTracking.start();
+    await BackgroundTracking.start(requestPermissions: false);
   } else {
     await BackgroundTracking.stop();
   }
