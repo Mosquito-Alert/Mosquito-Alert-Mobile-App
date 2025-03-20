@@ -30,18 +30,12 @@ Future<void> main({String env = 'prod'}) async {
 
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
-  // Start background tracking at midnight to ensure 5 random samples per day
-  var now = DateTime.now().toLocal();
-  var nextMidnight = DateTime(now.year, now.month, now.day + 1);
-  var timeUntilMidnight = nextMidnight.difference(now);
-
-  await Workmanager().registerPeriodicTask(
-    'scheduleDailyTasks',
-    'scheduleDailyTasks',
-    tag: 'scheduleDailyTasks',
-    frequency: Duration(days: 1),
-    initialDelay: timeUntilMidnight,
-  );
+  bool trackingEnabled = await BackgroundTracking.isEnabled();
+  if (trackingEnabled) {
+    await BackgroundTracking.start();
+  } else {
+    await BackgroundTracking.stop();
+  }
 
   runApp(MyApp());
 }
@@ -60,7 +54,10 @@ void callbackDispatcher() {
         await BackgroundTracking.trackingTask();
         break;
       case 'scheduleDailyTasks':
-        await BackgroundTracking.scheduleMultipleTrackingTask(5);
+        int numTaskAlreadyScheduled =
+            inputData?['numTaskAlreadyScheduled'] ?? 0;
+        await BackgroundTracking.scheduleDailyTrackingTask(
+            numScheduledTasks: numTaskAlreadyScheduled);
         break;
     }
     return Future.value(true);

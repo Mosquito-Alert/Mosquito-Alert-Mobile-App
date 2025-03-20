@@ -493,12 +493,10 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> sendFixes(lat, lon, time, power) async {
+  Future<dynamic> sendFixes(String trackingUuid, lat, lon, time, power) async {
     try {
-      var userIdFix = await UserManager.getTrackingId();
-
       var body = {
-        'user_coverage_uuid': userIdFix,
+        'user_coverage_uuid': trackingUuid,
         'fix_time': time,
         'masked_lat':
             (lat / Utils.maskCoordsValue).floor() * Utils.maskCoordsValue,

@@ -1,42 +1,191 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:uuid/uuid.dart';
 import 'package:workmanager/workmanager.dart';
 
 class BackgroundTracking {
-  static List<TimeOfDay> getRandomTimes(int numSamples) {
+  static String _scheduledTasksPrefsKey = 'scheduledTrackingEpochs';
+  static String _isEnabledPrefsKey = 'trackingEnabled';
+  static int tasksPerDay = 5;
+
+  static Future<void> start({bool shouldRun = false}) async {
+    bool hasPermissions = await BackgroundTracking._checkPermissions();
+    if (!hasPermissions) {
+      print('Location Always permission denied. Tracking not enabled.');
+      await BackgroundTracking.stop();
+      return;
+    }
+
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool(BackgroundTracking._isEnabledPrefsKey, true);
+
+    int alreadyRunTasks = 0;
+    if (shouldRun) {
+      await BackgroundTracking.trackingTask();
+      alreadyRunTasks++;
+    }
+
+    // Schedule tasks now.
+    await Workmanager().registerOneOffTask(
+        'TodayScheduleDailyTasks', 'scheduleDailyTasks',
+        tag: 'scheduleDailyTasks',
+        inputData: <String, dynamic>{
+          'numTaskAlreadyScheduled': alreadyRunTasks
+        });
+
+    // Start background tracking at next midnight
+    DateTime now = DateTime.now();
+    DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    Duration timeUntilMidnight = nextMidnight.difference(now);
+
+    // Register the periodic task, being schedule every night
+    await Workmanager().registerPeriodicTask(
+      'scheduleDailyTasks',
+      'scheduleDailyTasks',
+      tag: 'scheduleDailyTasks',
+      frequency: Duration(days: 1),
+      initialDelay: timeUntilMidnight + Duration(seconds: 10),
+    );
+  }
+
+  static Future<void> stop() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool(BackgroundTracking._isEnabledPrefsKey, false);
+
+    if (Platform.isAndroid) {
+      await Workmanager()
+          .cancelByTag('trackingTask'); // Method available only for Android
+      await Workmanager().cancelByTag('scheduleDailyTasks');
+    } else if (Platform.isIOS) {
+      await Workmanager().cancelAll();
+    }
+
+    BackgroundTracking._clearSchedulerTaskQueue();
+  }
+
+  static Future<bool> isEnabled() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(BackgroundTracking._isEnabledPrefsKey) ?? false;
+  }
+
+  static Future<bool> _checkPermissions() async {
+    // Step 1: Check the status of locationWhenInUse permission
+    PermissionStatus whenInUseStatus =
+        await Permission.locationWhenInUse.status;
+
+    // Step 2: If locationWhenInUse is not granted, request it
+    if (!whenInUseStatus.isGranted) {
+      whenInUseStatus = await Permission.locationWhenInUse.request();
+    }
+
+    if (whenInUseStatus.isPermanentlyDenied) {
+      await openAppSettings(); // Open app settings for the user to manually enable the permission
+    }
+
+    // Step 3: If locationWhenInUse is granted, request locationAlways permission
+    if (whenInUseStatus.isGranted) {
+      var alwaysStatus = await Permission.locationAlways.status;
+
+      // Step 4: If locationAlways is not granted, request it
+      if (!alwaysStatus.isGranted) {
+        alwaysStatus = await Permission.locationAlways.request();
+      }
+
+      if (alwaysStatus.isPermanentlyDenied) {
+        await openAppSettings();
+      }
+    } else {
+      print('Location When In Use permission denied. Tracking not enabled.');
+    }
+
+    return Permission.locationAlways.status.isGranted;
+  }
+
+  static List<TimeOfDay> _getRandomTimes(int numSamples,
+      {TimeOfDay? minTime, TimeOfDay? maxTime}) {
+    // Default values if minTime or maxTime are not provided
+    minTime ??= TimeOfDay(hour: 0, minute: 0);
+    maxTime ??= TimeOfDay(hour: 23, minute: 59);
+
+    // Convert minTime and maxTime to minutes since midnight
+    int minMinutes = minTime.hour * 60 + minTime.minute;
+    int maxMinutes = maxTime.hour * 60 + maxTime.minute;
+
     var random = Random();
     var randomTimes = <TimeOfDay>[];
-
     for (var i = 0; i < numSamples; i++) {
-      var hour = random.nextInt(24); // Random hour between 00 and 23
-      var minute = random.nextInt(60); // Random minute between 00 and 59
-      var time = TimeOfDay(hour: hour, minute: minute);
-      randomTimes.add(time);
+      int randomMinutes =
+          random.nextInt(maxMinutes - minMinutes + 1) + minMinutes;
+      int randomHour = randomMinutes ~/ 60;
+      int randomMinute = randomMinutes % 60;
+
+      randomTimes.add(TimeOfDay(hour: randomHour, minute: randomMinute));
     }
 
     return randomTimes;
   }
 
-  static Future<void> scheduleMultipleTrackingTask(int numTasks) async {
-    var permission = await Geolocator.checkPermission();
-    var isBgTrackingEnabled = await UserManager.getTracking();
+  static Future<bool> canScheduleAt(DateTime datetime) async {
+    List<String> schedulerTaskQueue =
+        await BackgroundTracking._getSchedulerTaskQueue();
+    String schedulerId = await BackgroundTracking._getSchedulerId(datetime);
+    return !schedulerTaskQueue.contains(schedulerId);
+  }
 
-    if (permission != LocationPermission.always || !isBgTrackingEnabled) {
+  static Future<void> scheduleDailyTrackingTask(
+      {int numScheduledTasks = 0}) async {
+    bool isBgTrackingEnabled = await BackgroundTracking.isEnabled();
+
+    if (!isBgTrackingEnabled) {
       return Future.value(true);
     }
 
-    var randomTimes = getRandomTimes(numTasks);
+    DateTime now = DateTime.now();
 
-    randomTimes.asMap().forEach((index, time) async {
+    bool canScheduleNow = await BackgroundTracking.canScheduleAt(now);
+    if (!canScheduleNow) {
+      return Future.value(false);
+    }
+
+    await BackgroundTracking._appendScheduledDateTimeTaskQueue(now);
+
+    int numTaskToSchedule = BackgroundTracking.tasksPerDay - numScheduledTasks;
+    if (numTaskToSchedule <= 0) {
+      return Future.value(false);
+    }
+
+    // Today at midnight
+    DateTime startOfDay = DateTime(now.year, now.month, now.day);
+    double fractionOfDayElapsed =
+        now.difference(startOfDay).inSeconds / Duration.secondsPerDay;
+    double remainingFractionOfDay = 1 - fractionOfDayElapsed;
+
+    // Only schedule the fraction of tasks for the remaining day length.
+    int numTasks = max(1, (numTaskToSchedule * remainingFractionOfDay).ceil());
+    List<TimeOfDay> randomTimes =
+        _getRandomTimes(numTasks, minTime: TimeOfDay.now());
+    randomTimes.forEach((time) async {
+      DateTime scheduledTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        time.hour,
+        time.minute,
+      );
+
+      print('Scheduled new tracking task to be run at ${scheduledTime}');
+
       await Workmanager().registerOneOffTask(
-        'tracking_task_$index',
+        'tracking_task_${scheduledTime.millisecondsSinceEpoch}',
         'trackingTask',
-        initialDelay: Duration(hours: time.hour, minutes: time.minute),
+        initialDelay: scheduledTime.difference(now),
         tag: 'trackingTask',
         constraints: Constraints(networkType: NetworkType.connected),
       );
@@ -44,17 +193,66 @@ class BackgroundTracking {
   }
 
   static Future<void> trackingTask() async {
-    var permission = await Geolocator.checkPermission();
-    var isBgTrackingEnabled = await UserManager.getTracking();
+    LocationPermission permission = await Geolocator.checkPermission();
+    bool isBgTrackingEnabled = await BackgroundTracking.isEnabled();
 
     if (permission != LocationPermission.always || !isBgTrackingEnabled) {
       return Future.value(true);
     }
 
-    var position = await Geolocator.getCurrentPosition(
+    Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    var battery = Battery();
-    await ApiSingleton().sendFixes(position.latitude, position.longitude,
-        DateTime.now().toUtc().toIso8601String(), await battery.batteryLevel);
+    Battery battery = Battery();
+    String trackingUuid = await BackgroundTracking._getTrackingUUID();
+    await ApiSingleton().sendFixes(
+        trackingUuid,
+        position.latitude,
+        position.longitude,
+        DateTime.now().toUtc().toIso8601String(),
+        await battery.batteryLevel);
+  }
+
+  static Future<String> _getTrackingUUID() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? trackingUuid = await prefs.getString('trackingUUID');
+    if (trackingUuid == null || trackingUuid.isEmpty) {
+      trackingUuid = Uuid().v4();
+      await prefs.setString('trackingUUID', trackingUuid);
+    }
+    return trackingUuid;
+  }
+
+  static Future<List<String>> _getSchedulerTaskQueue() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    return await prefs
+            .getStringList(BackgroundTracking._scheduledTasksPrefsKey) ??
+        [];
+  }
+
+  static Future<void> _clearSchedulerTaskQueue() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.remove(BackgroundTracking._scheduledTasksPrefsKey);
+  }
+
+  static Future<void> _appendScheduledDateTimeTaskQueue(
+      DateTime datetime) async {
+    List<String> taskQueue = await BackgroundTracking._getSchedulerTaskQueue();
+    String currentId = await BackgroundTracking._getSchedulerId(datetime);
+
+    if (!taskQueue.contains(currentId)) {
+      // Prevent duplicates
+      taskQueue.add(currentId);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      prefs.setStringList(
+          BackgroundTracking._scheduledTasksPrefsKey, taskQueue);
+    }
+  }
+
+  static Future<String> _getSchedulerId(DateTime datetime) async {
+    DateTime date = DateTime(datetime.year, datetime.month, datetime.day);
+    return date.millisecondsSinceEpoch.toString();
   }
 }

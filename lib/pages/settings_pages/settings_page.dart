@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:language_picker/language_picker.dart';
@@ -8,13 +6,13 @@ import 'package:language_picker/languages.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/hashtag.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
+import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:workmanager/workmanager.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage();
@@ -72,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void initializeBgTracking() async {
-    isBgTrackingEnabled = await UserManager.getTracking();
+    isBgTrackingEnabled = await BackgroundTracking.isEnabled();
   }
 
   void getPackageInfo() async {
@@ -145,20 +143,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           value: isBgTrackingEnabled,
                           activeColor: Colors.orange,
                           onChanged: (bool value) async {
-                            await UserManager.setTracking(value);
+                            if (value) {
+                              await BackgroundTracking.start(shouldRun: true);
+                            } else {
+                              await BackgroundTracking.stop();
+                            }
                             var trackingStatus =
-                                await UserManager.getTracking();
+                                await BackgroundTracking.isEnabled();
                             setState(() {
                               isBgTrackingEnabled = trackingStatus;
                             });
-                            if (!isBgTrackingEnabled) {
-                              if (Platform.isAndroid) {
-                                await Workmanager().cancelByTag(
-                                    'trackingTask'); // Method available only for Android
-                              } else if (Platform.isIOS) {
-                                await Workmanager().cancelAll();
-                              }
-                            }
                           },
                         ),
                       ),
