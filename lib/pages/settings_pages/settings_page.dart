@@ -23,6 +23,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool isBgTrackingEnabled = false;
+  bool isBgTrackingLoading = false;
   var packageInfo;
   late int? numTagsAdded;
   bool isLoading = true;
@@ -142,9 +143,20 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           value: isBgTrackingEnabled,
                           activeColor: Colors.orange,
+                          secondary: isBgTrackingLoading
+                              ? CircularProgressIndicator()
+                              : null,
                           onChanged: (bool value) async {
                             if (value) {
-                              await BackgroundTracking.start(shouldRun: true);
+                              setState(() {
+                                isBgTrackingLoading = true;
+                              });
+                              await BackgroundTracking.start(shouldRun: true)
+                                  .whenComplete(() {
+                                setState(() {
+                                  isBgTrackingLoading = false;
+                                });
+                              });
                             } else {
                               await BackgroundTracking.stop();
                             }
