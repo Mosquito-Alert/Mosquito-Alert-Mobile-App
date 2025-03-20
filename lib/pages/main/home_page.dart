@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:mosquito_alert_app/api/v34_api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
@@ -38,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     await FirebaseAnalytics.instance.logScreenView(
         screenName: '/home',
         parameters: {'action_text_id': _suggestedActionTextId});
+    setApi();
   }
 
   @override

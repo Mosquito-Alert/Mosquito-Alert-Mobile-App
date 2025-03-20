@@ -170,6 +170,12 @@ class UserManager {
     await prefs.setInt('lastReportCount', lastReportCount);
   }
 
+  static Future<void> setToken(String token) async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
+
   //get
   static Future<String?> getUUID() async {
     var prefs = await SharedPreferences.getInstance();
@@ -275,7 +281,14 @@ class UserManager {
     return prefs.getInt('lastReportCount');
   }
 
+  static Future<String?> getToken() async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   static signOut() async {
+    // TODO: Delete?
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('userName');
     await prefs.remove('firebaseId');
