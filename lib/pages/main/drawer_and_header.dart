@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -17,7 +18,6 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 
 class MainVC extends StatefulWidget {
   const MainVC({key});
@@ -44,6 +44,12 @@ class _MainVCState extends State<MainVC> {
     super.dispose();
   }
 
+  Future<void> _onDrawerChanged(bool isOpened) async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: isOpened ? 'drawer_open' : 'drawer_close',
+    );
+  }
+
   void _startAsyncTasks() async {
     await UserManager.startFirstTime(context);
     setState(() {
@@ -55,8 +61,11 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    List<MyNotification> notifications = await ApiSingleton().getNotifications();
-    var unacknowledgedCount = notifications.where((notification) => notification.acknowledged == false).length;
+    List<MyNotification> notifications =
+        await ApiSingleton().getNotifications();
+    var unacknowledgedCount = notifications
+        .where((notification) => notification.acknowledged == false)
+        .length;
     updateNotificationCount(unacknowledgedCount);
   }
 
@@ -75,7 +84,6 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<bool> initAuthStatus() async {
-
     userUuid = await UserManager.getUUID();
     UserManager.userScore = await ApiSingleton().getUserScores();
     await UserManager.setUserScores(UserManager.userScore);
@@ -87,7 +95,7 @@ class _MainVCState extends State<MainVC> {
   late final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     MyReportsPage(),
-    GalleryPage(goBackToHomepage: _onItemTapped),    
+    GalleryPage(goBackToHomepage: _onItemTapped),
     InfoPage(),
     SettingsPage(),
   ];
@@ -110,37 +118,42 @@ class _MainVCState extends State<MainVC> {
         ),
         actions: <Widget>[
           badges.Badge(
-            position: badges.BadgePosition.topEnd(top: 4, end: 4),
-            showBadge: unreadNotifications > 0,
-            badgeContent: Text('$unreadNotifications', style: TextStyle(color: Colors.white)),
-            child: IconButton(
-              padding: EdgeInsets.only(top: 6),
-              icon: Icon(Icons.notifications, size: 24),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationsPage(onNotificationUpdate: updateNotificationCount)),
-                );
-              },
-            )
-          )
+              position: badges.BadgePosition.topEnd(top: 4, end: 4),
+              showBadge: unreadNotifications > 0,
+              badgeContent: Text('$unreadNotifications',
+                  style: TextStyle(color: Colors.white)),
+              child: IconButton(
+                padding: EdgeInsets.only(top: 6),
+                icon: Icon(Icons.notifications, size: 24),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationsPage(
+                            onNotificationUpdate: updateNotificationCount)),
+                  );
+                },
+              ))
         ],
       ),
       body: Center(
         child: isLoading
-          ? CircularProgressIndicator()
-          : _widgetOptions[_selectedIndex],
+            ? CircularProgressIndicator()
+            : _widgetOptions[_selectedIndex],
       ),
+      onDrawerChanged: (isOpened) async {
+        await _onDrawerChanged(isOpened);
+      },
       drawer: Drawer(
-        backgroundColor: Colors.white,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  DrawerHeader(
-                    child: Row(
+          backgroundColor: Colors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    DrawerHeader(
+                        child: Row(
                       children: <Widget>[
                         // User score
                         InkWell(
@@ -149,7 +162,8 @@ class _MainVCState extends State<MainVC> {
                               context,
                               MaterialPageRoute(
                                   settings: RouteSettings(name: '/user_score'),
-                                  builder: (context) => InfoPageInWebview("${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                                  builder: (context) => InfoPageInWebview(
+                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
                             );
                           },
                           child: Container(
@@ -161,25 +175,23 @@ class _MainVCState extends State<MainVC> {
                               ),
                             ),
                             child: StreamBuilder<int?>(
-                              stream: Utils.userScoresController.stream,
-                              initialData: UserManager.userScore,
-                              builder: (context, snapshot) {
-                                return Center(
-                                  child: AutoSizeText(
+                                stream: Utils.userScoresController.stream,
+                                initialData: UserManager.userScore,
+                                builder: (context, snapshot) {
+                                  return Center(
+                                      child: AutoSizeText(
                                     snapshot.data != null && snapshot.hasData
-                                      ? snapshot.data.toString()
-                                      : '',
+                                        ? snapshot.data.toString()
+                                        : '',
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
                                     style: TextStyle(
-                                      color: Color(0xFF4B3D04),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 24),
-                                  )
-                                );
-                              }
-                            ),
+                                        color: Color(0xFF4B3D04),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 24),
+                                  ));
+                                }),
                           ),
                         ),
 
@@ -199,94 +211,95 @@ class _MainVCState extends State<MainVC> {
                           ],
                         )
                       ],
-                    )
-                  ),
-                  _buildCustomTile(0, Icons.home, 'home_tab', context),
-                  _buildCustomTile(1, Icons.file_copy, 'your_reports_txt', context),
-                  _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
-                  _buildCustomTile(3, Icons.info, 'info_tab', context),
-                  _buildCustomTile(4, Icons.settings, 'settings_title', context),
-                ],
+                    )),
+                    _buildCustomTile(0, Icons.home, 'home_tab', context),
+                    _buildCustomTile(
+                        1, Icons.file_copy, 'your_reports_txt', context),
+                    _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
+                    _buildCustomTile(3, Icons.info, 'info_tab', context),
+                    _buildCustomTile(
+                        4, Icons.settings, 'settings_title', context),
+                  ],
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Text(
-                  packageInfo != null
-                    ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                    : '',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 8.0,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    packageInfo != null
+                        ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                        : '',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 8.0,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        )
-      ),
+            ],
+          )),
     );
   }
 
   Widget _uuidWithClipboard() {
     return FutureBuilder(
-      future: UserManager.getUUID(),
-      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
+        future: UserManager.getUUID(),
+        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
 
-        return Row(
-          children: [
-            Text(
-              'ID: ',
-              style: TextStyle(
-                color: Colors.black.withOpacity(0.7),
-                fontSize: 8,
-              ),
-            ),
-            Container(
-              width: 150,
-              child: Text(
-                snapshot.data ?? '',
-                overflow: TextOverflow.ellipsis,
+          return Row(
+            children: [
+              Text(
+                'ID: ',
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black.withOpacity(0.7),
                   fontSize: 8,
                 ),
               ),
-            ),
-            GestureDetector(
-              child: Icon(
-                Icons.copy_rounded,
-                size: 12,
+              Container(
+                width: 150,
+                child: Text(
+                  snapshot.data ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 8,
+                  ),
+                ),
               ),
-              onTap: () {
-                final data = snapshot.data;
-                if (data != null) {
-                  Clipboard.setData(ClipboardData(text: data));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_success')),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(MyLocalizations.of(context, 'copied_to_clipboard_error')),
-                    ),
-                  );
-                }
-              },
-            )
-          ],
-        );
-      }
-    );
+              GestureDetector(
+                child: Icon(
+                  Icons.copy_rounded,
+                  size: 12,
+                ),
+                onTap: () {
+                  final data = snapshot.data;
+                  if (data != null) {
+                    Clipboard.setData(ClipboardData(text: data));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(
+                            context, 'copied_to_clipboard_success')),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(MyLocalizations.of(
+                            context, 'copied_to_clipboard_error')),
+                      ),
+                    );
+                  }
+                },
+              )
+            ],
+          );
+        });
   }
 
   Widget _buildCustomTile(int index, IconData icon, String title, context) {
@@ -294,14 +307,14 @@ class _MainVCState extends State<MainVC> {
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedIndex == index ? Colors.orange.shade200 : Colors.transparent,
+          color: _selectedIndex == index
+              ? Colors.orange.shade200
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: ListTile(
-          title: Text(
-            MyLocalizations.of(context, title),
-            style: TextStyle(color: Colors.black)
-          ),
+          title: Text(MyLocalizations.of(context, title),
+              style: TextStyle(color: Colors.black)),
           leading: Icon(
             icon,
             color: Colors.black,

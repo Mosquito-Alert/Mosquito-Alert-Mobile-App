@@ -5,7 +5,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:mosquito_alert_app/main.dart' as app;
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 
-
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
@@ -23,12 +22,14 @@ void main() {
       await tester.pumpAndSettle();*/
 
       // Consent form
-      final acceptConditionsCheckbox = find.byKey(ValueKey("acceptConditionsCheckbox"));
+      final acceptConditionsCheckbox =
+          find.byKey(ValueKey("acceptConditionsCheckbox"));
       await tester.tap(acceptConditionsCheckbox);
       final acceptPrivacyPolicy = find.byKey(ValueKey("acceptPrivacyPolicy"));
       await tester.tap(acceptPrivacyPolicy);
       await tester.pumpAndSettle();
-      final continueButton = find.byKey(ValueKey("button")); // TODO: Using Style.button prevents adding a Key to only this element
+      final continueButton = find.byKey(ValueKey(
+          "button")); // TODO: Using Style.button prevents adding a Key to only this element
       await tester.tap(continueButton);
       await tester.pumpAndSettle();
 

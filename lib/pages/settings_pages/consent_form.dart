@@ -139,7 +139,8 @@ class _ConsentFormState extends State<ConsentForm> {
                               key: ValueKey("acceptPrivacyPolicy"),
                               value: acceptPrivacy,
                               onChanged: (newValue) {
-                                buttonStream.add(acceptConditions! && newValue!);
+                                buttonStream
+                                    .add(acceptConditions! && newValue!);
                                 setState(() {
                                   acceptPrivacy = newValue;
                                 });
@@ -195,14 +196,14 @@ class _ConsentFormState extends State<ConsentForm> {
                                 TextSpan(
                                   text: MyLocalizations.of(
                                       context, 'consent_txt_15'),
-                                  style:
-                                      TextStyle(color: Style.colorPrimary),
+                                  style: TextStyle(color: Style.colorPrimary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => InfoPageInWebview(
+                                            builder: (context) =>
+                                                InfoPageInWebview(
                                                   MyLocalizations.of(
                                                       context, 'url_about_us'),
                                                   localHtml: false,
@@ -227,14 +228,14 @@ class _ConsentFormState extends State<ConsentForm> {
                                 TextSpan(
                                   text: MyLocalizations.of(
                                       context, 'consent_txt_13'),
-                                  style:
-                                      TextStyle(color: Style.colorPrimary),
+                                  style: TextStyle(color: Style.colorPrimary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => InfoPageInWebview(
+                                            builder: (context) =>
+                                                InfoPageInWebview(
                                                   MyLocalizations.of(
                                                       context, 'lisence_link'),
                                                   localHtml: true,
@@ -262,12 +263,12 @@ class _ConsentFormState extends State<ConsentForm> {
                     margin: EdgeInsets.all(15),
                     width: double.infinity,
                     child: Style.button(
-                      MyLocalizations.of(context, 'continue_txt'),
-                      snapshot.data as bool
-                      ? () {
-                        Navigator.pop(context);
-                      }
-                      : null),
+                        MyLocalizations.of(context, 'continue_txt'),
+                        snapshot.data as bool
+                            ? () {
+                                Navigator.pop(context);
+                              }
+                            : null),
                   );
                 })
           ],
