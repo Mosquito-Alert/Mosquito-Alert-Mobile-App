@@ -234,7 +234,7 @@ class BackgroundTracking {
 
   static Future<String> _getTrackingUUID() async {
     var prefs = await SharedPreferences.getInstance();
-    String? trackingUuid = await prefs.getString('trackingUUID');
+    String? trackingUuid = prefs.getString('trackingUUID');
     if (trackingUuid == null || trackingUuid.isEmpty) {
       trackingUuid = Uuid().v4();
       await prefs.setString('trackingUUID', trackingUuid);
@@ -245,8 +245,7 @@ class BackgroundTracking {
   static Future<List<String>> _getSchedulerTaskQueue() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
-    return await prefs
-            .getStringList(BackgroundTracking._scheduledTasksPrefsKey) ??
+    return prefs.getStringList(BackgroundTracking._scheduledTasksPrefsKey) ??
         [];
   }
 

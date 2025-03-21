@@ -10,7 +10,7 @@ class AppConfig {
   static Future<void> setEnvironment(String name) async {
     // Get the SharedPreferences instance
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('env', name);
+    await prefs.setString('env', name);
   }
 
   static Future<AppConfig> loadConfig() async {
