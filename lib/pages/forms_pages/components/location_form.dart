@@ -10,11 +10,11 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
-class GPSForm extends StatefulWidget {
+class LocationForm extends StatefulWidget {
   final Function setValid;
   final String? displayQuestion;
 
-  GPSForm(this.setValid, this.displayQuestion);
+  LocationForm(this.setValid, this.displayQuestion);
 
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
@@ -22,7 +22,7 @@ class GPSForm extends StatefulWidget {
 
 enum LocationType { current, selected, missing }
 
-class _BitingLocationFormState extends State<GPSForm> {
+class _BitingLocationFormState extends State<LocationForm> {
   late GoogleMapController controller;
   List<Marker> markers = [];
 
