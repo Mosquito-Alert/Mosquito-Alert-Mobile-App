@@ -13,7 +13,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'adult_report_page.dart';
 import 'components/biting_form.dart';
-import 'components/biting_location_form.dart';
+import 'components/gps_form.dart';
 
 class BitingReportPage extends StatefulWidget {
   final Report? editReport;
@@ -138,7 +138,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         setValid,
         goNextPage,
       ),
-      BitingLocationForm(
+      GPSForm(
         setValid,
         displayQuestions.elementAt(5)['question']['text'],
       ),

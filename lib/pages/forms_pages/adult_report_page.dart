@@ -15,7 +15,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'components/biting_location_form.dart';
+import 'components/gps_form.dart';
 
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
@@ -102,8 +102,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _initialformsRepot = [
       AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached,
           'ensure_single_mosquito_photos', 'one_mosquito_reminder_badge'),
-      BitingLocationForm(
-          setValid, displayQuestions.elementAt(0)['question']['text']),
+      GPSForm(setValid, displayQuestions.elementAt(0)['question']['text']),
       QuestionsBreedingForm(
           displayQuestions.elementAt(0), setValid, false, null, ''),
       CouldSeeForm(
