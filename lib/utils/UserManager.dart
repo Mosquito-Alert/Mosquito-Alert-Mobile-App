@@ -172,8 +172,16 @@ class UserManager {
 
   static Future<void> setToken(String token) async {
     // TODO: Use flutter_secure_storage
+    // TODO: access_token and refresh_token
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
+  }
+
+  static Future<void> setUser(String username, String password) async {
+    // TODO: flutter_secure_store
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
   }
 
   //get
@@ -287,7 +295,19 @@ class UserManager {
     return prefs.getString('token');
   }
 
-  static signOut() async {
+  static Future<String?> getApiUser() async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
+  static Future<String?> getApiPassword() async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('password');
+  }
+
+  static Future<void> signOut() async {
     // TODO: Delete?
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('userName');

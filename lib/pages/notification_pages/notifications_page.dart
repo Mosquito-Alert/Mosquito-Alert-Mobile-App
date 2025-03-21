@@ -6,6 +6,7 @@ import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/api/v34_api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -43,6 +44,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Future<void> _logScreenView() async {
     await FirebaseAnalytics.instance
         .logScreenView(screenName: '/notifications');
+    setApi();
   }
 
   Future<void> _getData() async {
