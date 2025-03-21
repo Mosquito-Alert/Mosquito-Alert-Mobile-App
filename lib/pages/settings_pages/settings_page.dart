@@ -150,6 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             if (value) {
                               setState(() {
                                 isBgTrackingLoading = true;
+                                isBgTrackingEnabled = true;
                               });
                               await BackgroundTracking.start(shouldRun: true)
                                   .whenComplete(() {
@@ -158,9 +159,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                 });
                               });
                             } else {
+                              setState(() {
+                                isBgTrackingEnabled = false;
+                              });
                               await BackgroundTracking.stop();
                             }
-                            var trackingStatus =
+                            bool trackingStatus =
                                 await BackgroundTracking.isEnabled();
                             setState(() {
                               isBgTrackingEnabled = trackingStatus;
