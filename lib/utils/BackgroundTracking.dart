@@ -221,16 +221,12 @@ class BackgroundTracking {
 
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      Battery battery = Battery();
+      int batteryLevel = await Battery().batteryLevel;
       String trackingUuid = await BackgroundTracking._getTrackingUUID();
 
       // Send data to API
-      return await ApiSingleton().sendFixes(
-          trackingUuid,
-          position.latitude,
-          position.longitude,
-          DateTime.now().toUtc(),
-          await battery.batteryLevel);
+      return await ApiSingleton().sendFixes(trackingUuid, position.latitude,
+          position.longitude, DateTime.now().toUtc(), batteryLevel);
     } catch (e) {
       return Future.error(e);
     }
