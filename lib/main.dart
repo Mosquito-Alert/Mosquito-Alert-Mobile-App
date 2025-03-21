@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
@@ -20,7 +21,9 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main({String env = 'prod'}) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ApiSingleton.initialize(env);
+
+  await AppConfig.setEnvironment(env);
+  await ApiSingleton.initialize();
 
   try {
     await Firebase.initializeApp();
@@ -49,6 +52,8 @@ void callbackDispatcher() {
       print('$err');
     }
 
+    await ApiSingleton.initialize();
+
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
     // - Future.value(false): task failed and needs to be retried
@@ -56,11 +61,13 @@ void callbackDispatcher() {
 
     switch (task) {
       case 'trackingTask':
-        return await BackgroundTracking.trackingTask();
+        // NOTE: do not use await, it should return a Future value
+        return BackgroundTracking.trackingTask();
       case 'scheduleDailyTasks':
         int numTaskAlreadyScheduled =
             inputData?['numTaskAlreadyScheduled'] ?? 0;
-        return await BackgroundTracking.scheduleDailyTrackingTask(
+        // NOTE: do not use await, it should return a Future value
+        return BackgroundTracking.scheduleDailyTrackingTask(
             numScheduledTasks: numTaskAlreadyScheduled);
       default:
         // If the task doesn't match, return true as a fallback

@@ -75,8 +75,8 @@ class ApiSingleton {
 
   ApiSingleton._internal();
 
-  static Future<void> initialize(String env) async {
-    final config = await AppConfig.forEnvironment(env: env);
+  static Future<void> initialize() async {
+    final config = await AppConfig.loadConfig();
     baseUrl = config.baseUrl;
     serverUrl = '$baseUrl/api';
   }
@@ -527,6 +527,7 @@ class ApiSingleton {
       print("HTTP Client Exception: $e");
       return false;
     } catch (e) {
+      print("Error : ${e}");
       return false;
     }
   }
