@@ -49,18 +49,23 @@ void callbackDispatcher() {
       print('$err');
     }
 
+    // Support 3 possible outcomes:
+    // - Future.value(true): task is successful
+    // - Future.value(false): task failed and needs to be retried
+    // - Future.error(): task failed.
+
     switch (task) {
       case 'trackingTask':
-        await BackgroundTracking.trackingTask();
-        break;
+        return await BackgroundTracking.trackingTask();
       case 'scheduleDailyTasks':
         int numTaskAlreadyScheduled =
             inputData?['numTaskAlreadyScheduled'] ?? 0;
-        await BackgroundTracking.scheduleDailyTrackingTask(
+        return await BackgroundTracking.scheduleDailyTrackingTask(
             numScheduledTasks: numTaskAlreadyScheduled);
-        break;
+      default:
+        // If the task doesn't match, return true as a fallback
+        return Future.value(true);
     }
-    return Future.value(true);
   });
 }
 
