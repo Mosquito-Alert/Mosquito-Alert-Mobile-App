@@ -83,7 +83,7 @@ class BackgroundTracking {
     return prefs.getBool(BackgroundTracking._isEnabledPrefsKey) ?? false;
   }
 
-  static Future<bool> _hasLocationPermissions() async {
+  static Future<bool> _hasLocationAlwaysPermission() async {
     PermissionStatus permStatus = await Permission.locationAlways.status;
     return permStatus.isGranted;
   }
@@ -91,7 +91,7 @@ class BackgroundTracking {
   static Future<bool> _checkPermissions(
       {bool requestPermissions = true}) async {
     if (!requestPermissions) {
-      return await BackgroundTracking._hasLocationPermissions();
+      return await BackgroundTracking._hasLocationAlwaysPermission();
     }
 
     // Step 1: Check the status of locationWhenInUse permission and request if necessary.
@@ -108,7 +108,7 @@ class BackgroundTracking {
         await openAppSettings();
       }
 
-      return await BackgroundTracking._hasLocationPermissions();
+      return await BackgroundTracking._hasLocationAlwaysPermission();
     }
 
     return false;
