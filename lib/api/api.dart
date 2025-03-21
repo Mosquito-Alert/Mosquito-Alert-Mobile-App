@@ -522,14 +522,12 @@ class ApiSingleton {
       return response.statusCode == 201;
     } on TimeoutException {
       print("Error: Request timed out.");
-      return false;
     } on http.ClientException catch (e) {
       print("HTTP Client Exception: $e");
-      return false;
     } catch (e) {
       print("Error : ${e}");
-      return false;
     }
+    return false;
   }
 
   Future<dynamic> getCampaigns(countryId) async {
