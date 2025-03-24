@@ -62,7 +62,7 @@ void callbackDispatcher() {
     switch (task) {
       case 'trackingTask':
         // NOTE: do not use await, it should return a Future value
-        return BackgroundTracking.trackingTask();
+        return BackgroundTracking.sendLocationUpdate();
       case 'scheduleDailyTasks':
         int numTaskAlreadyScheduled =
             inputData?['numTaskAlreadyScheduled'] ?? 0;

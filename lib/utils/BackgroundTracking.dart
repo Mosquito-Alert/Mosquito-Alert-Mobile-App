@@ -31,7 +31,7 @@ class BackgroundTracking {
     int alreadyRunTasks = 0;
     if (shouldRun) {
       try {
-        await BackgroundTracking.trackingTask();
+        await BackgroundTracking.sendLocationUpdate();
         alreadyRunTasks++;
       } catch (e) {
         print(e);
@@ -207,7 +207,7 @@ class BackgroundTracking {
     }
   }
 
-  static Future<bool> trackingTask() async {
+  static Future<bool> sendLocationUpdate() async {
     try {
       // Check location permission
       if (await Geolocator.checkPermission() != LocationPermission.always) {
