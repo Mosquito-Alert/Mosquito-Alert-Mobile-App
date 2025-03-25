@@ -14,7 +14,7 @@ jobs:
 
     - name: Statically analyze the Dart code for any errors/warnings, ignoring "info" level warnings
       run: |
-        flutter analyze 2>&1 | tee flutter_analyze.log
+        fvm flutter analyze 2>&1 | tee flutter_analyze.log
         if grep -q -E -i 'error|warning' flutter_analyze.log; then
             exit 1
         else
@@ -23,4 +23,4 @@ jobs:
         fi
 
     - name: Test
-      run: flutter test
+      run: fvm flutter test

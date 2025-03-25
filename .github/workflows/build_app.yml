@@ -13,7 +13,7 @@ jobs:
     - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
 
     - name: Get Dependencies
-      run: flutter pub get
+      run: fvm flutter pub get
 
     - name: Decode google-services.json
       run: echo $GOOGLE_SERVICES_JSON | base64 --decode > android/app/google-services.json
@@ -21,7 +21,7 @@ jobs:
         GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON_ANDROID_BASE64 }}
 
     - name: Build Android on debug mode
-      run: flutter build appbundle --debug
+      run: fvm flutter build appbundle --debug
 
   ios:
     runs-on: macos-latest
@@ -36,7 +36,7 @@ jobs:
       run: |
         echo $GOOGLESERVICES_INFO_PLIST_JSON | base64 --decode > ios/Runner/GoogleService-Info.plist
 
-    - run: flutter pub get
+    - run: fvm flutter pub get
 
     - name: Build ios
-      run: flutter build ios --release --no-codesign
+      run: fvm flutter build ios --release --no-codesign
