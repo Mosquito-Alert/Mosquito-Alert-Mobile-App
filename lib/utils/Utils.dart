@@ -783,9 +783,10 @@ class Utils {
                 style: TextStyle(color: Style.textColor, fontSize: 12)),
             InkWell(
               onTap: () async {
-                final url = MyLocalizations.of(context, 'url_politics');
-                if (await canLaunch(url)) {
-                  await launch(url);
+                Uri url =
+                    Uri.parse(MyLocalizations.of(context, 'url_politics'));
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
                 } else {
                   throw 'Could not launch $url';
                 }
@@ -802,9 +803,9 @@ class Utils {
                 style: TextStyle(color: Style.textColor, fontSize: 12)),
             InkWell(
               onTap: () async {
-                final url = MyLocalizations.of(context, 'url_legal');
-                if (await canLaunch(url)) {
-                  await launch(url);
+                Uri url = Uri.parse(MyLocalizations.of(context, 'url_legal'));
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
                 } else {
                   throw 'Could not launch $url';
                 }
@@ -869,7 +870,8 @@ class Utils {
                     children: [
                       SvgPicture.asset(
                         'assets/img/sendmodule/ic_adn.svg',
-                        color: Style.colorPrimary,
+                        colorFilter: ColorFilter.mode(
+                            Style.colorPrimary, BlendMode.srcIn),
                         height: 20,
                       ),
                       SizedBox(
@@ -929,7 +931,8 @@ class Utils {
                     children: [
                       SvgPicture.asset(
                         'assets/img/sendmodule/ic_adn.svg',
-                        color: Colors.blueAccent,
+                        colorFilter: ColorFilter.mode(
+                            Colors.blueAccent, BlendMode.srcIn),
                         height: 20,
                       ),
                       SizedBox(
@@ -958,8 +961,10 @@ class Utils {
   }
 
   static ui.Locale getLanguage() {
-    var stringLanguange = ui.window.locale.languageCode;
-    var stringCountry = ui.window.locale.countryCode;
+    var stringLanguange =
+        WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    var stringCountry =
+        WidgetsBinding.instance.platformDispatcher.locale.countryCode;
 
     language = Locale('en', 'US');
 
@@ -973,7 +978,7 @@ class Utils {
         stringLanguange == 'it' ||
         stringLanguange == 'pt' ||
         stringLanguange == 'ro') {
-      language = ui.window.locale;
+      language = WidgetsBinding.instance.platformDispatcher.locale;
     }
 
     return language;
