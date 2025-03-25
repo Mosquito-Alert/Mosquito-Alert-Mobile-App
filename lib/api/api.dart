@@ -217,7 +217,7 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> createSession(Session session) async {
+  Future<int?> createSession(Session session) async {
     try {
       final response = await http
           .post(Uri.parse('$serverUrl$sessions'),
@@ -244,7 +244,7 @@ class ApiSingleton {
       return body['id'];
     } catch (e) {
       // print(e);
-      return false;
+      return null;
     }
   }
 
