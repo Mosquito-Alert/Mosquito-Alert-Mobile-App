@@ -21,7 +21,7 @@ void main() {
       await tester.tap(allowButton);
       await tester.pumpAndSettle();*/
 
-      // Consent form
+      // New user is created: Show consent form
       final acceptConditionsCheckbox =
           find.byKey(ValueKey("acceptConditionsCheckbox"));
       await tester.tap(acceptConditionsCheckbox);
