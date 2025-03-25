@@ -9,12 +9,13 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class BitingLocationForm extends StatefulWidget {
+class LocationForm extends StatefulWidget {
   final Function setValid;
   final String? displayQuestion;
 
-  BitingLocationForm(this.setValid, this.displayQuestion);
+  LocationForm(this.setValid, this.displayQuestion);
 
   @override
   _BitingLocationFormState createState() => _BitingLocationFormState();
@@ -22,7 +23,7 @@ class BitingLocationForm extends StatefulWidget {
 
 enum LocationType { current, selected, missing }
 
-class _BitingLocationFormState extends State<BitingLocationForm> {
+class _BitingLocationFormState extends State<LocationForm> {
   late GoogleMapController controller;
   List<Marker> markers = [];
 
@@ -36,6 +37,8 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
   @override
   void initState() {
     super.initState();
+
+    checkLocationPermissions(context);
 
     if (Utils.report != null) {
       switch (Utils.report!.location_choice) {
@@ -64,6 +67,18 @@ class _BitingLocationFormState extends State<BitingLocationForm> {
       }
     } else {
       _getCurrentLocation();
+    }
+  }
+
+  static checkLocationPermissions(BuildContext context) async {
+    if (!await Permission.locationWhenInUse.isGranted) {
+      await Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'NSLocationWhenInUseUsageDescription'),
+          () async {
+        if (!await Permission.locationWhenInUse.request().isGranted) {
+          await openAppSettings();
+        }
+      }, context);
     }
   }
 
