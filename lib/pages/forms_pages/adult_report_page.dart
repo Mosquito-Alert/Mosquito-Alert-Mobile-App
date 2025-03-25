@@ -15,7 +15,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'components/biting_location_form.dart';
+import 'components/location_form.dart';
 
 class AdultReportPage extends StatefulWidget {
   final Report? editReport;
@@ -29,8 +29,8 @@ class AdultReportPage extends StatefulWidget {
 
 class _AdultReportPageState extends State<AdultReportPage> {
   PageController? _pagesController;
-  List<Widget>? _formsRepot;
-  List<Widget>? _initialformsRepot;
+  List<Widget>? _formsReport;
+  List<Widget>? _initialformsReport;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   StreamController<bool> validStream = StreamController<bool>.broadcast();
   StreamController<bool> skipParts = StreamController<bool>.broadcast();
@@ -44,7 +44,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       'parameters': {'type': 'adult'}
     },
     {
-      'name': 'report_add_gps',
+      'name': 'report_add_location',
       'parameters': {'type': 'adult'}
     },
     {
@@ -99,11 +99,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
     _logFirebaseAnalytics();
     _pagesController = PageController();
     index = 0.0;
-    _initialformsRepot = [
+    _initialformsReport = [
       AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached,
           'ensure_single_mosquito_photos', 'one_mosquito_reminder_badge'),
-      BitingLocationForm(
-          setValid, displayQuestions.elementAt(0)['question']['text']),
+      LocationForm(setValid, displayQuestions.elementAt(0)['question']['text']),
       QuestionsBreedingForm(
           displayQuestions.elementAt(0), setValid, false, null, ''),
       CouldSeeForm(
@@ -111,7 +110,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
-    _formsRepot = _initialformsRepot;
+    _formsReport = _initialformsReport;
   }
 
   Future<void> _logFirebaseAnalytics() async {
@@ -303,11 +302,11 @@ class _AdultReportPageState extends State<AdultReportPage> {
                   controller: _pagesController,
                   onPageChanged: _onPageChanged,
                   physics: NeverScrollableScrollPhysics(),
-                  children: _formsRepot!,
+                  children: _formsReport!,
                 ),
                 index! < 1.0
                     ? continueButtonPhotos()
-                    : index != _formsRepot!.length.toDouble() - 1
+                    : index != _formsReport!.length.toDouble() - 1
                         ? SafeArea(
                             child: Align(
                             alignment: Alignment.bottomCenter,
@@ -331,7 +330,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
                                 }),
                           ))
                         : SafeArea(
-                            child: _formsRepot!.length == 2
+                            child: _formsReport!.length == 2
                                 ? Container(
                                     width: double.infinity,
                                     height: 54,

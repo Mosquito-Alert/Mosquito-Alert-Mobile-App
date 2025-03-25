@@ -13,7 +13,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'adult_report_page.dart';
 import 'components/biting_form.dart';
-import 'components/biting_location_form.dart';
+import 'components/location_form.dart';
 
 class BitingReportPage extends StatefulWidget {
   final Report? editReport;
@@ -26,7 +26,7 @@ class BitingReportPage extends StatefulWidget {
 
 class _BitingReportPageState extends State<BitingReportPage> {
   PageController? _pagesController;
-  late List<Widget> _formsRepot;
+  late List<Widget> _formsReport;
   String? otherReport;
   bool seeButton = false;
   bool addMosquito = false;
@@ -42,7 +42,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       'parameters': {'type': 'bite'}
     },
     {
-      'name': 'report_add_gps',
+      'name': 'report_add_location',
       'parameters': {'type': 'bite'}
     },
     {
@@ -126,7 +126,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     _initializeReport();
     _logFirebaseAnalytics();
     _pagesController = PageController();
-    _formsRepot = [
+    _formsReport = [
       BitingForm(
         [
           displayQuestions.elementAt(0),
@@ -138,7 +138,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         setValid,
         goNextPage,
       ),
-      BitingLocationForm(
+      LocationForm(
         setValid,
         displayQuestions.elementAt(5)['question']['text'],
       ),
@@ -287,11 +287,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
                   controller: _pagesController,
                   onPageChanged: _onPageChanged,
                   physics: NeverScrollableScrollPhysics(),
-                  children: _formsRepot,
+                  children: _formsReport,
                 ),
                 index == 0.0
                     ? Container()
-                    : index != _formsRepot.length.toDouble() - 1
+                    : index != _formsReport.length.toDouble() - 1
                         ? SafeArea(
                             child: Align(
                                 alignment: Alignment.bottomCenter,
