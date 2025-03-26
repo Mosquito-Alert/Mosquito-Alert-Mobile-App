@@ -32,7 +32,7 @@ class PushNotificationsManager {
   */
   static Future<void> init() async {
     if (!_initialized) {
-      //await _firebaseMessaging.requestPermission();
+      await _firebaseMessaging.requestPermission();
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
         launchMessage(remoteMessage);
