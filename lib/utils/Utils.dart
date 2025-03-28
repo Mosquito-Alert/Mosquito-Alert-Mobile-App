@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert_app/api/api.dart';
@@ -75,23 +74,6 @@ class Utils {
     double? lon,
     String? locationType,
   }) async {
-    if (lat == null && lon == null) {
-      bool locationEnabled = await Geolocator.isLocationServiceEnabled();
-      LocationPermission locPerm = await Geolocator.checkPermission();
-      bool hasLocationPermission = ![
-        LocationPermission.denied,
-        LocationPermission.deniedForever
-      ].contains(locPerm);
-
-      if (locationEnabled && hasLocationPermission) {
-        Position currentPosition = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        lat = currentPosition.latitude;
-        lon = currentPosition.longitude;
-        locationType = 'current';
-      }
-    }
-
     if (session == null) {
       reportsList = [];
 
@@ -110,19 +92,13 @@ class Utils {
 
       int? sessionId = response + 1;
 
-      session = Session(
+      Session session = Session(
           session_ID: sessionId,
           user: userUUID,
           session_start_time: DateTime.now().toUtc().toIso8601String());
 
       print(language);
-      dynamic createSessionRet = await ApiSingleton().createSession(session!);
-      if (createSessionRet is ApiResponse) {
-        print('response is of type ApiResponse, not a number.');
-        return false;
-      }
-      session!.id = createSessionRet;
-      // print("Session: ${jsonEncode(session.toJson())}");
+      session.id = await ApiSingleton().createSession(session);
     }
 
     if (session!.id != null) {
