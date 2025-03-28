@@ -480,27 +480,6 @@ class Utils {
     await PushNotificationsManager.subscribeToLanguage();
   }
 
-  static getLocation(BuildContext context) async {
-    await Geolocator.requestPermission();
-    var currentPermission = await Geolocator.checkPermission();
-    if (currentPermission == LocationPermission.denied ||
-        currentPermission == LocationPermission.deniedForever ||
-        currentPermission == LocationPermission.unableToDetermine) {
-      await showAlertYesNo(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'NSLocationWhenInUseUsageDescription'),
-          () async {
-        await Geolocator.openLocationSettings();
-      }, context);
-    } else {
-      var pos = await Geolocator.getLastKnownPosition();
-      if (pos != null) {
-        location = LatLng(pos.latitude, pos.longitude);
-      } else {
-        print('Unable to get the last known position.');
-      }
-    }
-  }
-
   static final RegExp mailRegExp = RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
