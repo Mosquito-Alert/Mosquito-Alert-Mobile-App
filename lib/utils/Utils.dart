@@ -116,7 +116,12 @@ class Utils {
           session_start_time: DateTime.now().toUtc().toIso8601String());
 
       print(language);
-      session!.id = await ApiSingleton().createSession(session!);
+      dynamic createSessionRet = await ApiSingleton().createSession(session!);
+      if (createSessionRet is ApiResponse) {
+        print('response is of type ApiResponse, not a number.');
+        return false;
+      }
+      session!.id = createSessionRet;
       // print("Session: ${jsonEncode(session.toJson())}");
     }
 
