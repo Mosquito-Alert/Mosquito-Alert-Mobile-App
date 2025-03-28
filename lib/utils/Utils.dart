@@ -92,16 +92,16 @@ class Utils {
 
       int? sessionId = response + 1;
 
-      Session session = Session(
+      session = Session(
           session_ID: sessionId,
           user: userUUID,
           session_start_time: DateTime.now().toUtc().toIso8601String());
 
       print(language);
-      session.id = await ApiSingleton().createSession(session);
+      session!.id = await ApiSingleton().createSession(session!);
     }
 
-    if (session!.id != null) {
+    if (session?.id != null) {
       var lang = await UserManager.getLanguage();
       var userUUID = await UserManager.getUUID();
       report = Report(
