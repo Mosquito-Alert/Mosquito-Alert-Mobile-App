@@ -75,23 +75,6 @@ class Utils {
     double? lon,
     String? locationType,
   }) async {
-    if (lat == null && lon == null) {
-      bool locationEnabled = await Geolocator.isLocationServiceEnabled();
-      LocationPermission locPerm = await Geolocator.checkPermission();
-      bool hasLocationPermission = ![
-        LocationPermission.denied,
-        LocationPermission.deniedForever
-      ].contains(locPerm);
-
-      if (locationEnabled && hasLocationPermission) {
-        Position currentPosition = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        lat = currentPosition.latitude;
-        lon = currentPosition.longitude;
-        locationType = 'current';
-      }
-    }
-
     if (session == null) {
       reportsList = [];
 
@@ -117,7 +100,6 @@ class Utils {
 
       print(language);
       session!.id = await ApiSingleton().createSession(session!);
-      // print("Session: ${jsonEncode(session.toJson())}");
     }
 
     if (session!.id != null) {
@@ -496,6 +478,27 @@ class Utils {
   static Future<void> loadFirebase() async {
     await PushNotificationsManager.init();
     await PushNotificationsManager.subscribeToLanguage();
+  }
+
+  static getLocation(BuildContext context) async {
+    await Geolocator.requestPermission();
+    var currentPermission = await Geolocator.checkPermission();
+    if (currentPermission == LocationPermission.denied ||
+        currentPermission == LocationPermission.deniedForever ||
+        currentPermission == LocationPermission.unableToDetermine) {
+      await showAlertYesNo(MyLocalizations.of(context, 'app_name'),
+          MyLocalizations.of(context, 'NSLocationWhenInUseUsageDescription'),
+          () async {
+        await Geolocator.openLocationSettings();
+      }, context);
+    } else {
+      var pos = await Geolocator.getLastKnownPosition();
+      if (pos != null) {
+        location = LatLng(pos.latitude, pos.longitude);
+      } else {
+        print('Unable to get the last known position.');
+      }
+    }
   }
 
   static final RegExp mailRegExp = RegExp(
