@@ -34,7 +34,6 @@ Future<void> main({String env = 'prod'}) async {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();

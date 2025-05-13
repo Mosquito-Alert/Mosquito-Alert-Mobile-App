@@ -28,7 +28,7 @@ class UserManager {
 
       await prefs.setBool('firstTime', true);
       var uuid = Uuid().v4();
-      await prefs.setString('uuid', uuid);     
+      await prefs.setString('uuid', uuid);
 
       Utils.initializedCheckData['userCreated']['required'] = true;
 
@@ -40,7 +40,7 @@ class UserManager {
         MaterialPageRoute(
           builder: (context) => LocationConsentScreen(),
         ),
-      );      
+      );
     } else {
       var languageCode = await getLanguage();
       var countryCode = await getLanguageCountry();
