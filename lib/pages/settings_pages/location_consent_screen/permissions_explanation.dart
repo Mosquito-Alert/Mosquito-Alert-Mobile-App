@@ -43,11 +43,24 @@ class BackgroundTrackingInfoScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        // Show loading dialog
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => const Center(child: CircularProgressIndicator()),
+                        );
+
+                        // Start background tracking
                         await BackgroundTracking.start(
                           shouldRun: true,
                           requestPermissions: true,
                         );
-                        Navigator.pop(context);
+
+                        if (context.mounted) {
+                          Navigator.pop(context); // Close loading dialog
+                          Navigator.pop(context); // Back to previous screen
+                          Navigator.pop(context); // Back to HomePage
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.primaryColorDark,
