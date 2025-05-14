@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
+import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/permissions_explanation.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -67,15 +67,20 @@ class LocationConsentScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          await BackgroundTracking.start(
-                              shouldRun: true, requestPermissions: true);
-                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const BackgroundTrackingInfoScreen(),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.primaryColorDark,
                           foregroundColor: Colors.white,
                         ),
-                        child: Text(MyLocalizations.of(context, 'ok')),
+                        child:
+                            Text(MyLocalizations.of(context, 'continue_txt')),
                       ),
                     ),
                   ],
