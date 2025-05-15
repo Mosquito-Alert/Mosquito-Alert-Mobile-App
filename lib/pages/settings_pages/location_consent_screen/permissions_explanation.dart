@@ -22,59 +22,62 @@ class BackgroundTrackingInfoScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "(Hardcoded) By turning on the background tracking, we are going to request the permission to always access your location in the background. Your phone settings may be opened to enable it.",
-                style: TextStyle(
-                    fontSize: 16, color: theme.textTheme.bodyMedium?.color),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("(HC) Previous"),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // Show loading dialog
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => const Center(child: CircularProgressIndicator()),
-                        );
-
-                        // Start background tracking
-                        await BackgroundTracking.start(
-                          shouldRun: true,
-                          requestPermissions: true,
-                        );
-
-                        if (context.mounted) {
-                          Navigator.pop(context); // Close loading dialog
-                          Navigator.pop(context); // Back to previous screen
-                          Navigator.pop(context); // Back to HomePage
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primaryColorDark,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text("(HC) Turn on"),
-                    ),
-                  ),
-                ],
-              ),
+              _buildBodyText(context, theme),
+              _buildEnableButton(context, theme),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+Widget _buildBodyText(BuildContext context, ThemeData theme) {
+  return Text(
+    MyLocalizations.of(context, 'tracking_perm_view_text'),
+    style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+  );
+}
+
+Widget _buildEnableButton(BuildContext context, ThemeData theme) {
+  return Row(
+    children: [
+      Expanded(
+        child: ElevatedButton(
+          onPressed: () => _onEnableTracking(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.primaryColorDark,
+            foregroundColor: Colors.white,
+          ),
+          child: Text(MyLocalizations.of(
+            context,
+            'turn_on_location_button',
+          )),
+        ),
+      ),
+    ],
+  );
+}
+
+Future<void> _onEnableTracking(BuildContext context) async {
+  // Show loading dialog
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => const Center(child: CircularProgressIndicator()),
+  );
+
+  // Start background tracking
+  await BackgroundTracking.start(
+    shouldRun: true,
+    requestPermissions: true,
+  );
+
+  if (context.mounted) {
+    Navigator.pop(context); // Close loading dialog
+    Navigator.pop(context); // Back to previous screen
+    Navigator.pop(context); // Back to HomePage
   }
 }
