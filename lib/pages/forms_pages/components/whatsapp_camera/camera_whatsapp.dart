@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera_camera/camera_camera.dart';
-import 'package:flutter/gestures.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/components/whatsapp_camera/view_image.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_gallery/photo_gallery.dart';
-import 'package:file_picker/file_picker.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -47,14 +45,14 @@ class _WhatsAppCameraController extends ChangeNotifier {
     Timer.periodic(const Duration(seconds: 2), (t) async {
       await Permission.camera.isGranted.then((value) {
         if (value) {
-          getPhotosToGallery();
+          //getPhotosToGallery();
           t.cancel();
         }
       });
     });
   }
 
-  Future<void> getPhotosToGallery() async {
+  /*Future<void> getPhotosToGallery() async {
     final permission = await handlerPermissions();
     if (permission) {
       final albums = await PhotoGallery.listAlbums(
@@ -70,7 +68,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
       }
       notifyListeners();
     }
-  }
+  }*/
 
   Future<void> initialize() async {
     _timer();
@@ -185,74 +183,19 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: CameraCamera(
-              enableZoom: false,
-              resolutionPreset: ResolutionPreset.high,
-              cameraSide: CameraSide.front,
-              onFile: (file) {
-                controller.captureImage(file);
-                Navigator.pop(context, controller.selectedImages);
-              },
-            ),
+          CameraCamera(
+            enableZoom: false,
+            resolutionPreset: ResolutionPreset.high,
+            cameraSide: CameraSide.front,
+            onFile: (file) {
+              controller.captureImage(file);
+              Navigator.pop(context, controller.selectedImages);
+            },
           ),
-          Visibility(
-            visible: widget.infoBadgeTextKey != null,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 70),
-                child: Container(
-                    width: 0.5 * MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      heightFactor: 1.5,
-                      child: Text(
-                          MyLocalizations.of(context, widget.infoBadgeTextKey),
-                          style: TextStyle(color: Colors.white)),
-                    )),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  color: Colors.white,
-                  onPressed: (() => Navigator.pop(context)),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 32, right: 64),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.black.withValues(alpha: 0.6),
-                child: IconButton(
-                  color: Colors.white,
-                  onPressed: () async {
-                    await controller.openGallery().then((value) {
-                      if (controller.selectedImages.isNotEmpty) {
-                        Navigator.pop(context, controller.selectedImages);
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.image),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
+          onlyOneMosquitoBadge(context, widget),
+          closeButton(context),
+          galleryButton(context, controller),
+          /*Positioned(
             bottom: 96,
             left: 0.0,
             right: 0.0,
@@ -317,15 +260,16 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                     }),
               ),
             ),
-          ),
-          Center(
+          ),*/
+          /*Center(
             child: SlidingUpPanelWidget(
               controlHeight: 0,
               panelController: painel,
               child: AnimatedBuilder(
                   animation: controller,
                   builder: (context, child) {
-                    return _ImagesPage(
+                    return Container();
+                    /*return _ImagesPage(
                       controller: controller,
                       close: () {
                         painel.hide();
@@ -337,17 +281,17 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                           painel.hide();
                         }
                       },
-                    );
+                    );*/
                   }),
             ),
-          )
+          )*/
         ],
       ),
     );
   }
 }
 
-class _ImagesPage extends StatefulWidget {
+/*class _ImagesPage extends StatefulWidget {
   final _WhatsAppCameraController controller;
 
   ///
@@ -393,7 +337,7 @@ class __ImagesPageState extends State<_ImagesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: Colors.red, // TODO: Check what's the code opening the black popup on iOS (not opening on Android) https://github.com/Mosquito-Alert/Mosquito-Alert-Mobile-App/issues/352
       height: MediaQuery.of(context).size.height - 40,
       child: Column(
         children: [
@@ -538,4 +482,69 @@ class _ImageItem extends StatelessWidget {
       ),
     );
   }
+}
+*/
+
+Widget onlyOneMosquitoBadge(BuildContext context, dynamic widget) {
+  return Visibility(
+    visible: widget.infoBadgeTextKey != null,
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 70),
+        child: Container(
+            width: 0.5 * MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.orange.shade300,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              heightFactor: 1.5,
+              child: Text(MyLocalizations.of(context, widget.infoBadgeTextKey),
+                  style: TextStyle(color: Colors.white)),
+            )),
+      ),
+    ),
+  );
+}
+
+Widget closeButton(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 30),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          color: Colors.white,
+          onPressed: (() => Navigator.pop(context)),
+          icon: const Icon(Icons.close),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget galleryButton(
+    BuildContext context, _WhatsAppCameraController controller) {
+  return Align(
+    alignment: Alignment.bottomRight,
+    child: Padding(
+      padding: const EdgeInsets.only(bottom: 32, right: 64),
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.black.withValues(alpha: 0.6),
+        child: IconButton(
+          color: Colors.white,
+          onPressed: () async {
+            await controller.openGallery().then((value) {
+              if (controller.selectedImages.isNotEmpty) {
+                Navigator.pop(context, controller.selectedImages);
+              }
+            });
+          },
+          icon: const Icon(Icons.image),
+        ),
+      ),
+    ),
+  );
 }
