@@ -131,7 +131,6 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   }
 }
 
-
 Widget onlyOneMosquitoBadge(BuildContext context, dynamic widget) {
   return Visibility(
     visible: widget.infoBadgeTextKey != null,
