@@ -35,7 +35,9 @@ class _WhatsAppCameraController extends ChangeNotifier {
     if (status.isPermanentlyDenied) return;
 
     try {
-      final albums = await PhotoGallery.listAlbums();
+      final albums = await PhotoGallery.listAlbums(
+        mediumType: MediumType.image
+      );
       if (albums.isEmpty) return;
       
       final recentAlbum = albums.first;
