@@ -28,24 +28,24 @@ class _WhatsAppCameraController extends ChangeNotifier {
   var images = <Medium>[];
 
   Future<void> loadRecentGalleryImages() async {
-    if (Platform.isIOS) return; // Functionality of album.listMedia() crashes on iOS
+    if (Platform.isIOS)
+      return; // Functionality of album.listMedia() crashes on iOS
 
     final status = await Permission.photos.request();
     if (status.isDenied) return;
     if (status.isPermanentlyDenied) return;
 
     try {
-      final albums = await PhotoGallery.listAlbums(
-        mediumType: MediumType.image
-      );
+      final albums =
+          await PhotoGallery.listAlbums(mediumType: MediumType.image);
       if (albums.isEmpty) return;
-      
+
       final recentAlbum = albums.first;
       final media = await recentAlbum.listMedia(
         skip: 0,
         take: 10,
       );
-      
+
       images = media.items;
       notifyListeners();
     } catch (e) {
@@ -205,9 +205,9 @@ Widget galleryButton(
   return FutureBuilder<PermissionStatus>(
     future: Permission.photos.status,
     builder: (context, snapshot) {
-      if (!snapshot.hasData || 
+      if (!snapshot.hasData ||
           snapshot.data == null ||
-          snapshot.data!.isDenied || 
+          snapshot.data!.isDenied ||
           snapshot.data!.isPermanentlyDenied) {
         return Container();
       }
@@ -240,8 +240,10 @@ Widget galleryButton(
   );
 }
 
-Widget recentPhotosStrip(BuildContext context, _WhatsAppCameraController controller) {
-  if (Platform.isIOS) return Container(); // Feature of showing recent pictures in whatsapp style is disabled for iOS
+Widget recentPhotosStrip(
+    BuildContext context, _WhatsAppCameraController controller) {
+  if (Platform.isIOS)
+    return Container(); // Feature of showing recent pictures in whatsapp style is disabled for iOS
 
   return Positioned(
     bottom: 120,
@@ -270,7 +272,7 @@ Widget recentPhotosStrip(BuildContext context, _WhatsAppCameraController control
               return FutureBuilder<Widget>(
                 future: _buildImage(context, controller, medium),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done && 
+                  if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     return snapshot.data!;
                   }
@@ -306,15 +308,16 @@ Widget _buildImagePlaceholder() {
   );
 }
 
-Future<Widget> _buildImage(BuildContext context, _WhatsAppCameraController controller, Medium medium) async {
+Future<Widget> _buildImage(BuildContext context,
+    _WhatsAppCameraController controller, Medium medium) async {
   final List<int> thumbnailData = await medium.getThumbnail(
     width: 200,
     height: 200,
     highQuality: true,
   );
-  
+
   final Uint8List thumbnail = Uint8List.fromList(thumbnailData);
-  
+
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 2),
     child: GestureDetector(
