@@ -173,8 +173,6 @@
 		</dict>
 		<key>NSCameraUsageDescription</key>
 		<string>We use your camera to capture and share photos to provide visual evidence in your reports</string>
-		<key>NSContactsUsageDescription</key>
-		<string>We need access to this feature in order to show results suited for you</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>We use your GPS for precise location tagging in your reports</string>
 		<key>NSLocationAlwaysUsageDescription</key>
@@ -202,6 +200,8 @@
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
+		<key>UIStatusBarHidden</key>
+		<false/>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
@@ -217,7 +217,5 @@
 		<false/>
 		<key>io.flutter.embedded_views_preview</key>
 		<true/>
-		<key>UIStatusBarHidden</key>
-		<false/>
 	</dict>
 </plist>
