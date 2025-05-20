@@ -200,33 +200,47 @@ Widget closeButton(BuildContext context) {
 
 Widget galleryButton(
     BuildContext context, _WhatsAppCameraController controller) {
-  return SafeArea(
-    minimum: const EdgeInsets.only(bottom: 0),
-    child: Align(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 32, right: 64),
-        child: CircleAvatar(
-          radius: 20,
-          backgroundColor: Colors.black.withValues(alpha: 0.6),
-          child: IconButton(
-            color: Colors.white,
-            onPressed: () async {
-              await controller.openGallery().then((value) {
-                if (controller.selectedImages.isNotEmpty) {
-                  Navigator.pop(context, controller.selectedImages);
-                }
-              });
-            },
-            icon: const Icon(Icons.image),
+  return FutureBuilder<PermissionStatus>(
+    future: Permission.photos.status,
+    builder: (context, snapshot) {
+      if (!snapshot.hasData || 
+          snapshot.data == null ||
+          snapshot.data!.isDenied || 
+          snapshot.data!.isPermanentlyDenied) {
+        return Container();
+      }
+
+      return SafeArea(
+        minimum: const EdgeInsets.only(bottom: 0),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 32, right: 64),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.black.withValues(alpha: 0.6),
+              child: IconButton(
+                color: Colors.white,
+                onPressed: () async {
+                  await controller.openGallery().then((value) {
+                    if (controller.selectedImages.isNotEmpty) {
+                      Navigator.pop(context, controller.selectedImages);
+                    }
+                  });
+                },
+                icon: const Icon(Icons.image),
+              ),
+            ),
           ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }
 
 Widget recentPhotosStrip(BuildContext context, _WhatsAppCameraController controller) {
+  if (Platform.isIOS) return Container(); // Feature of showing recent pictures in whatsapp style is disabled for iOS
+
   return Positioned(
     bottom: 120,
     left: 0,
@@ -270,8 +284,6 @@ Widget recentPhotosStrip(BuildContext context, _WhatsAppCameraController control
 }
 
 Widget _buildImagePlaceholder() {
-  if (Platform.isIOS) return Container(); // Feature of showing recent pictures in whatsapp style is disabled for iOS
-
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 2),
     child: Container(
