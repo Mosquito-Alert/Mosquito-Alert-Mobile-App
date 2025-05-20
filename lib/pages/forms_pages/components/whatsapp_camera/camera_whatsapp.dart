@@ -28,17 +28,11 @@ class _WhatsAppCameraController extends ChangeNotifier {
   var images = <Medium>[];
 
   Future<void> loadRecentGalleryImages() async {
-    if (Platform.isAndroid) {
-      final status = await Permission.photos.request();
-      if (status.isDenied) return;
-      if (status.isPermanentlyDenied) {
-        openAppSettings();
-        return;
-      }
-    } else if (Platform.isIOS) {
-      final status = await Permission.photos.request();
-      if (status.isDenied) return;
-    }
+    if (Platform.isIOS) return; // Functionality of album.listMedia() crashes on iOS
+
+    final status = await Permission.photos.request();
+    if (status.isDenied) return;
+    if (status.isPermanentlyDenied) return;
 
     try {
       final albums = await PhotoGallery.listAlbums();
@@ -276,6 +270,8 @@ Widget recentPhotosStrip(BuildContext context, _WhatsAppCameraController control
 }
 
 Widget _buildImagePlaceholder() {
+  if (Platform.isIOS) return Container(); // Feature of showing recent pictures in whatsapp style is disabled for iOS
+
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 2),
     child: Container(
