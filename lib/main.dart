@@ -31,6 +31,13 @@ Future<void> main({String env = 'prod'}) async {
 
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
+  bool trackingEnabled = await BackgroundTracking.isEnabled();
+  if (trackingEnabled) {
+    await BackgroundTracking.start(requestPermissions: false);
+  } else {
+    await BackgroundTracking.stop();
+  }
+
   runApp(MyApp());
 }
 
