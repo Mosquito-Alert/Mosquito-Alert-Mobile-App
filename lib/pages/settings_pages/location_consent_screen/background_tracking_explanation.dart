@@ -60,7 +60,8 @@ class LocationConsentScreen extends StatelessWidget {
                           foregroundColor: theme.primaryColorDark,
                           side: BorderSide(color: theme.primaryColorDark),
                         ),
-                        child: Text(MyLocalizations.of(context, "no_show_info")),
+                        child:
+                            Text(MyLocalizations.of(context, "no_show_info")),
                       ),
                     ),
                     const SizedBox(width: 16),

@@ -41,6 +41,39 @@ Future<void> main({String env = 'prod'}) async {
   runApp(MyApp());
 }
 
+@pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      await Firebase.initializeApp();
+    } catch (err) {
+      print('$err');
+    }
+
+    await ApiSingleton.initialize();
+
+    // Support 3 possible outcomes:
+    // - Future.value(true): task is successful
+    // - Future.value(false): task failed and needs to be retried
+    // - Future.error(): task failed.
+
+    switch (task) {
+      case 'trackingTask':
+        // NOTE: do not use await, it should return a Future value
+        return BackgroundTracking.sendLocationUpdate();
+      case 'scheduleDailyTasks':
+        int numTaskAlreadyScheduled =
+            inputData?['numTaskAlreadyScheduled'] ?? 0;
+        // NOTE: do not use await, it should return a Future value
+        return BackgroundTracking.scheduleDailyTrackingTask(
+            numScheduledTasks: numTaskAlreadyScheduled);
+      default:
+        // If the task doesn't match, return true as a fallback
+        return Future.value(true);
+    }
+  });
+}
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
