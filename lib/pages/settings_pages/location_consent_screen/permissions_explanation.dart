@@ -70,14 +70,19 @@ Future<void> _onEnableTracking(BuildContext context) async {
   );
 
   // Start background tracking
-  await BackgroundTracking.start(
-    shouldRun: true,
-    requestPermissions: true,
-  );
+  try {
+    await BackgroundTracking.start(
+      shouldRun: true,
+      requestPermissions: true,
+    );
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
 
   if (context.mounted) {
-    Navigator.pop(context); // Close loading dialog
-    Navigator.pop(context); // Back to previous screen
-    Navigator.pop(context); // Back to HomePage
+    // Return to home view (first in stack)
+    Navigator.popUntil(context, (route) => route.isFirst);
   }
 }
