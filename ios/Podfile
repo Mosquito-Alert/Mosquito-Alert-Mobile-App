@@ -81,7 +81,7 @@ post_install do |installer|
         'PERMISSION_MEDIA_LIBRARY=1',
 
         ## dart: PermissionGroup.sensors
-        'PERMISSION_SENSORS=1',
+        'PERMISSION_SENSORS=0',
 
         ## dart: PermissionGroup.bluetooth
         'PERMISSION_BLUETOOTH=0',
