@@ -27,7 +27,7 @@ dependencies:
   firebase_core: ^3.13.0
   auto_size_text: ^3.0.0
   file_picker: ^10.1.2
-  device_info_plus: ^9.1.2
+  device_info_plus: ^9.1.2  # TODO: Can we upgrade to 11.4.0
   package_info_plus: ^8.3.0
   url_launcher: ^6.3.1
   photo_view: ^0.15.0
@@ -58,6 +58,10 @@ dependencies:
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
   firebase_analytics: ^11.4.4
+  mosquito_alert:
+    git:
+      url: https://github.com/Mosquito-Alert/mosquito-alert-dart-sdk.git
+      ref: 0.1.10
 
 dependency_overrides:
   # Temporal for flutter_launcher_icons

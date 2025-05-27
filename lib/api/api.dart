@@ -3,15 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:path/path.dart' as path;
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
-import 'package:mosquito_alert_app/models/owcampaing.dart';
-import 'package:mosquito_alert_app/models/partner.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
@@ -19,7 +17,7 @@ import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
-import 'package:mosquito_alert_app/app_config.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
@@ -86,19 +84,21 @@ class ApiSingleton {
   }
 
   Future<bool> checkUserExist(String? uuid) async {
-    var url = '$serverUrl$users$uuid/';
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        return true;
-      }
-    } catch (e) {
-      print('Error: $e');
+    User user;
+    try{
+      final response = await MosquitoAlert(
+        basePathOverride: baseUrl,
+        dio: Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            headers: headers,
+          )
+        )
+      ).getUsersApi().retrieveMine();
+      print("success");
+      user = response.data!;
+    }catch (e) {
+      print(e);
     }
 
     return false;
@@ -526,7 +526,7 @@ class ApiSingleton {
   }
 
   Future<dynamic> getCampaigns(countryId) async {
-    try {
+    /*try {
       final response = await http.get(
         Uri.parse('$serverUrl$campaigns?country_id=$countryId'),
         headers: headers,
@@ -549,11 +549,12 @@ class ApiSingleton {
     } catch (e) {
       print(e);
       return false;
-    }
+    }*/
+    return false;
   }
 
   Future<dynamic> getPartners() async {
-    try {
+    /*try {
       final response = await http.get(
         Uri.parse('$serverUrl$partners'),
         headers: headers,
@@ -577,7 +578,8 @@ class ApiSingleton {
     } catch (e) {
       print(e);
       return false;
-    }
+    }*/
+    return false;
   }
 
   /*
