@@ -56,16 +56,6 @@
 			<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>com.example.mosquito_alert_app.ios.deep</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>fb1971217746245293</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>com.googleusercontent.apps.960892168613-7b7r7duu9j9setj1vaa2tocola7l6g44</string>
@@ -78,12 +68,6 @@
 		<false/>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
-			<string>fbapi</string>
-			<string>fb-messenger-share-api</string>
-			<string>fbauth2</string>
-			<string>fbshareextension</string>
-			<string>twitter</string>
-			<string>twitterauth</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
