@@ -67,8 +67,6 @@
 		<key>FirebaseAppDelegateProxyEnabled</key>
 		<false/>
 		<key>LSApplicationQueriesSchemes</key>
-		<array>
-		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>MinimumOSVersion</key>
