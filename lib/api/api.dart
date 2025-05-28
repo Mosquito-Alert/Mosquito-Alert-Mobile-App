@@ -26,8 +26,6 @@ class ApiSingleton {
   static String baseUrl = '';
   static String serverUrl = '';
 
-  static String token = 'D4w29W49rMKC7L6vYQ3ua3rd6fQ12YZ6n70P';
-
   //User
   static const users = '/users/';
   static const userScore = '/stats/user_xp_data/';
@@ -62,8 +60,11 @@ class ApiSingleton {
   //Headers
   var headers = {
     'Content-Type': ' application/json',
-    'Authorization': 'Token ' + token
+    'Authorization': 'Token ', //TODO: Add token
   };
+
+  // New api
+  static late MosquitoAlert api;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -86,15 +87,9 @@ class ApiSingleton {
   Future<bool> checkUserExist(String? uuid) async {
     User user;
     try{
-      final response = await MosquitoAlert(
-        basePathOverride: baseUrl,
-        dio: Dio(
-          BaseOptions(
-            baseUrl: baseUrl,
-            headers: headers,
-          )
-        )
-      ).getUsersApi().retrieveMine();
+      final response = await api.getUsersApi().retrieveMine(
+        headers: headers,
+      );
       print("success");
       user = response.data!;
     }catch (e) {
@@ -104,40 +99,84 @@ class ApiSingleton {
     return false;
   }
 
+  void initializeApiClient() {
+    api = MosquitoAlert(
+      basePathOverride: baseUrl,
+      dio: Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+          headers: headers, // TODO: Set new token from JWT
+        )
+      )
+    );
+  }
+
   //User
   Future<dynamic> createUser(String? uuid) async {
+    initializeApiClient();
     var userExists = await checkUserExist(uuid);
     try {
       if (userExists) {
         print('Skipping user creation. User already exists');
       } else {
-        final response = await http
-            .post(Uri.parse('$serverUrl$users'),
-                headers: headers,
-                body: json.encode({
-                  'user_UUID': uuid,
-                }))
-            .timeout(
-          Duration(seconds: _timeoutTimerInSeconds),
-          onTimeout: () {
-            print('Request timed out');
-            return Future.error('Request timed out');
-          },
-        );
-        ;
+        final authApi = api.getAuthApi();
 
-        if (response.statusCode != 201) {
-          print(
-              // ignore: prefer_single_quotes
-              "Request: ${response.request.toString()} -> Response: ${response.body}");
-          return ApiResponse.fromJson(json.decode(response.body));
+        final apiUser = await UserManager.getApiUser();
+        final apiPassword = await UserManager.getApiPassword();
+        if (apiUser != null && apiPassword != null) {
+          /*
+          If username and password in sharedprefs:
+            Login JWT: /auth/token
+              request:
+                Username: uuid
+                Password: *******   <random string 16 characters>
+                (opt) Device_id: getId()    // ver device_info_plus
+          */
+          loginJwt(authApi, apiUser, apiPassword);
+        } else {
+          /*
+          Else:
+            Register: /auth/guest
+              Request:
+                Password: ******   <generate(): random string 16 characters>
+              Response:
+                Username: <UUID>
+            Login JWT:
+          */
+          final guestPassword = 'test1234';
+          final guestRegistrationRequest =
+              GuestRegistrationRequest((b) => b..password = guestPassword);
+          final registeredGuest = await authApi.signupGuest(
+              guestRegistrationRequest: guestRegistrationRequest);
+          final apiUser = registeredGuest.data!.username;
+          UserManager.setUser(apiUser, guestPassword);
+          loginJwt(authApi, apiUser, guestPassword);
         }
+
       }
       // Utils.userCreated["created"] = true;
       Utils.initializedCheckData['userCreated']['created'] = true;
       return true;
     } catch (c) {
       return null;
+    }
+  }
+
+  static void loginJwt(AuthApi authApi, String user, String password) async {
+    AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
+        AppUserTokenObtainPairRequest((b) => b
+          ..username = user
+          ..password = password);
+
+    try {
+      final obtainToken = await authApi.obtainToken(
+        appUserTokenObtainPairRequest: appUserTokenObtainPairRequest);
+
+      // access = obtainToken.data?.access
+      // refresh = obtainToken.data?.refresh
+      print(obtainToken);
+    } catch (e){
+      print(e);
     }
   }
 
@@ -476,7 +515,7 @@ class ApiSingleton {
       var response = await dio.post('$serverUrl$photos',
           data: data,
           options: Options(
-            headers: {'Authorization': 'Token ' + token},
+            headers: {'Authorization': 'Token ' }, //+ token}, // TODO: Fix token
             contentType: 'multipart/form-data',
           ));
 
