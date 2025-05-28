@@ -242,11 +242,4 @@ static Future<String?> getToken() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('password');
   }
-
-  static Future<void> signOut() async {
-    // TODO: Delete?
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('userName');
-    await prefs.remove('firebaseId');
-  }
 }
