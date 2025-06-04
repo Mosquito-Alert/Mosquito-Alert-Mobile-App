@@ -122,10 +122,13 @@ class UserManager {
   }
 
   static Future<void> setToken(String token) async {
-    // TODO: Use flutter_secure_storage
-    // TODO: access_token and refresh_token
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
+    await prefs.setString('jwt_token', token);
+  }
+
+  static Future<void> setRefreshToken(String token) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_refresh_token', token);
   }
 
   static Future<void> setUser(String username, String password) async {
@@ -225,10 +228,20 @@ class UserManager {
     return prefs.getInt('lastReportCount');
   }
 
-static Future<String?> getToken() async {
-    // TODO: Use flutter_secure_storage
+  static Future<String?> getToken() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
+    return prefs.getString('jwt_token');
+  }
+
+  static Future<String?> getRefreshToken() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_refresh_token');
+  }
+
+  static Future<void> clearTokens() async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+    await prefs.remove('jwt_refresh_token');
   }
 
   static Future<String?> getApiUser() async {

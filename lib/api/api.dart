@@ -8,6 +8,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
@@ -85,84 +86,88 @@ class ApiSingleton {
   }
 
   Future<bool> checkUserExist(String? uuid) async {
-    User user;
-    try{
-      final response = await api.getUsersApi().retrieveMine(
-        headers: headers,
-      );
-      print("success");
-      user = response.data!;
-    }catch (e) {
-      print(e);
+    try {
+      final response = await api.getUsersApi().retrieveMine();
+      if (response.data != null) {
+        print("User exists");
+        return true;
+      }
+    } catch (e) {
+      if (e is DioException && e.response?.statusCode == 401) {
+        print("User does not exist or not authenticated");
+      } else {
+        print("Error checking user: $e");
+      }
     }
-
     return false;
   }
 
-  void initializeApiClient() {
+  static Future<void> initializeApiClient() async {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        validateStatus: (status) {
+          return status != null && status < 500;
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
     api = MosquitoAlert(
       basePathOverride: baseUrl,
-      dio: Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          headers: headers, // TODO: Set new token from JWT
-        )
-      )
+      dio: dio,
     );
   }
 
   //User
   Future<dynamic> createUser(String? uuid) async {
-    initializeApiClient();
-    var userExists = await checkUserExist(uuid);
     try {
-      if (userExists) {
-        print('Skipping user creation. User already exists');
-      } else {
-        final authApi = api.getAuthApi();
+      await initializeApiClient();
+      final authApi = api.getAuthApi();
 
-        final apiUser = await UserManager.getApiUser();
-        final apiPassword = await UserManager.getApiPassword();
-        if (apiUser != null && apiPassword != null) {
-          /*
-          If username and password in sharedprefs:
-            Login JWT: /auth/token
-              request:
-                Username: uuid
-                Password: *******   <random string 16 characters>
-                (opt) Device_id: getId()    // ver device_info_plus
-          */
-          loginJwt(authApi, apiUser, apiPassword);
-        } else {
-          /*
-          Else:
-            Register: /auth/guest
-              Request:
-                Password: ******   <generate(): random string 16 characters>
-              Response:
-                Username: <UUID>
-            Login JWT:
-          */
-          final guestPassword = 'test1234';
-          final guestRegistrationRequest =
-              GuestRegistrationRequest((b) => b..password = guestPassword);
-          final registeredGuest = await authApi.signupGuest(
-              guestRegistrationRequest: guestRegistrationRequest);
-          final apiUser = registeredGuest.data!.username;
-          UserManager.setUser(apiUser, guestPassword);
-          loginJwt(authApi, apiUser, guestPassword);
+      final apiUser = await UserManager.getApiUser();
+      final apiPassword = await UserManager.getApiPassword();
+
+      // Try to authenticate with existing credentials
+      if (apiUser != null && apiPassword != null) {
+        final success = await loginJwt(authApi, apiUser, apiPassword);
+        if (success) {
+          // Check if user exists after successful login
+          if (await checkUserExist(uuid)) {
+            print('User exists and authenticated');
+            Utils.initializedCheckData['userCreated']['created'] = true;
+            return true;
+          }
         }
-
       }
-      // Utils.userCreated["created"] = true;
-      Utils.initializedCheckData['userCreated']['created'] = true;
-      return true;
-    } catch (c) {
+      
+      final guestPassword = 'test1234';
+      final guestRegistrationRequest =
+          GuestRegistrationRequest((b) => b..password = guestPassword);
+      
+      final registeredGuest = await authApi.signupGuest(
+          guestRegistrationRequest: guestRegistrationRequest);
+      
+      if (registeredGuest.data?.username != null) {
+        final newApiUser = registeredGuest.data!.username;
+        await UserManager.setUser(newApiUser, guestPassword);
+        
+        final success = await loginJwt(authApi, newApiUser, guestPassword);
+        if (success) {
+          Utils.initializedCheckData['userCreated']['created'] = true;
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (e) {
+      print('Error creating user: $e');
       return null;
     }
   }
 
-  static void loginJwt(AuthApi authApi, String user, String password) async {
+  static Future<bool> loginJwt(AuthApi authApi, String user, String password) async {
     AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
         AppUserTokenObtainPairRequest((b) => b
           ..username = user
@@ -172,12 +177,20 @@ class ApiSingleton {
       final obtainToken = await authApi.obtainToken(
         appUserTokenObtainPairRequest: appUserTokenObtainPairRequest);
 
-      // access = obtainToken.data?.access
-      // refresh = obtainToken.data?.refresh
-      print(obtainToken);
-    } catch (e){
-      print(e);
+      if (obtainToken.data?.access != null && obtainToken.data?.refresh != null) {
+        api.dio.interceptors.clear();
+        api.dio.interceptors.add(JwtAuthInterceptor(
+          apiClient: api,
+          accessToken: obtainToken.data!.access,
+          refreshToken: obtainToken.data!.refresh,
+        ));
+
+        return true;
+      }
+    } catch (e) {
+      print("Login failed: $e");
     }
+    return false;
   }
 
   Future<dynamic> getUserScores() async {
