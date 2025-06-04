@@ -1,6 +1,6 @@
 name: mosquito_alert_app
 description: A new Flutter project.
-version: 4.1.0+2883
+version: 4.1.0+2884
 publish_to: none
 
 
@@ -15,7 +15,7 @@ dependencies:
   path_provider: ^2.0.15
   path: ^1.8.1
   uuid: ^4.1.0
-  shared_preferences: ^2.2.3
+  shared_preferences: ^2.5.3
   http: ^1.2.2
   random_string: ^2.3.1
   geolocator: ^11.1.0
@@ -57,7 +57,7 @@ dependencies:
   photo_gallery: ^2.2.1
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
-  firebase_analytics: ^11.4.4
+  firebase_analytics: ^11.4.6
 
 dependency_overrides:
   # Temporal for flutter_launcher_icons
