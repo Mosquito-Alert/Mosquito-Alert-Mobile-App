@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -141,25 +142,42 @@ class ApiSingleton {
           }
         }
       }
-      
-      final guestPassword = 'test1234';
+
+      // Generate a random string of 16 characters
+      final random = Random.secure();
+      const chars =
+          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
+      final guestPassword =
+          List.generate(16, (index) => chars[random.nextInt(chars.length)])
+              .join();
+
+      // TODO: device_id removed from auth/signup/guest in the api?
+      /*final deviceInfoPlugin = DeviceInfoPlugin();
+      final deviceInfo = await deviceInfoPlugin.deviceInfo;
+      String? device_id;
+      if (deviceInfo is AndroidDeviceInfo) {
+        device_id = deviceInfo.id;
+      } else if (deviceInfo is IosDeviceInfo) {
+        device_id = deviceInfo.identifierForVendor;
+      }
+      print('Device ID: $device_id');*/
       final guestRegistrationRequest =
           GuestRegistrationRequest((b) => b..password = guestPassword);
-      
+
       final registeredGuest = await authApi.signupGuest(
           guestRegistrationRequest: guestRegistrationRequest);
-      
+
       if (registeredGuest.data?.username != null) {
         final newApiUser = registeredGuest.data!.username;
         await UserManager.setUser(newApiUser, guestPassword);
-        
+
         final success = await loginJwt(authApi, newApiUser, guestPassword);
         if (success) {
           Utils.initializedCheckData['userCreated']['created'] = true;
           return true;
         }
       }
-      
+
       return false;
     } catch (e) {
       print('Error creating user: $e');
@@ -167,7 +185,8 @@ class ApiSingleton {
     }
   }
 
-  static Future<bool> loginJwt(AuthApi authApi, String user, String password) async {
+  static Future<bool> loginJwt(
+      AuthApi authApi, String user, String password) async {
     AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
         AppUserTokenObtainPairRequest((b) => b
           ..username = user
@@ -175,9 +194,10 @@ class ApiSingleton {
 
     try {
       final obtainToken = await authApi.obtainToken(
-        appUserTokenObtainPairRequest: appUserTokenObtainPairRequest);
+          appUserTokenObtainPairRequest: appUserTokenObtainPairRequest);
 
-      if (obtainToken.data?.access != null && obtainToken.data?.refresh != null) {
+      if (obtainToken.data?.access != null &&
+          obtainToken.data?.refresh != null) {
         api.dio.interceptors.clear();
         api.dio.interceptors.add(JwtAuthInterceptor(
           apiClient: api,
@@ -528,7 +548,7 @@ class ApiSingleton {
       var response = await dio.post('$serverUrl$photos',
           data: data,
           options: Options(
-            headers: {'Authorization': 'Token ' }, //+ token}, // TODO: Fix token
+            headers: {'Authorization': 'Token '},
             contentType: 'multipart/form-data',
           ));
 
