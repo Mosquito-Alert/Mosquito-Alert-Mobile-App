@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
@@ -151,16 +152,6 @@ class ApiSingleton {
           List.generate(16, (index) => chars[random.nextInt(chars.length)])
               .join();
 
-      // TODO: device_id removed from auth/signup/guest in the api?
-      /*final deviceInfoPlugin = DeviceInfoPlugin();
-      final deviceInfo = await deviceInfoPlugin.deviceInfo;
-      String? device_id;
-      if (deviceInfo is AndroidDeviceInfo) {
-        device_id = deviceInfo.id;
-      } else if (deviceInfo is IosDeviceInfo) {
-        device_id = deviceInfo.identifierForVendor;
-      }
-      print('Device ID: $device_id');*/
       final guestRegistrationRequest =
           GuestRegistrationRequest((b) => b..password = guestPassword);
 
@@ -187,10 +178,20 @@ class ApiSingleton {
 
   static Future<bool> loginJwt(
       AuthApi authApi, String user, String password) async {
+      final deviceInfoPlugin = DeviceInfoPlugin();
+      final deviceInfo = await deviceInfoPlugin.deviceInfo;
+      String? deviceId;
+      if (deviceInfo is AndroidDeviceInfo) {
+        deviceId = deviceInfo.id;
+      } else if (deviceInfo is IosDeviceInfo) {
+        deviceId = deviceInfo.identifierForVendor;
+      }
     AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
         AppUserTokenObtainPairRequest((b) => b
           ..username = user
-          ..password = password);
+          ..password = password
+          ..deviceId = deviceId        
+        );
 
     try {
       final obtainToken = await authApi.obtainToken(
@@ -548,7 +549,7 @@ class ApiSingleton {
       var response = await dio.post('$serverUrl$photos',
           data: data,
           options: Options(
-            headers: {'Authorization': 'Token '},
+            headers: {'Authorization': 'Token '}, //+ token}, // TODO: Fix token
             contentType: 'multipart/form-data',
           ));
 
