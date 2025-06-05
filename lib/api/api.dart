@@ -62,6 +62,7 @@ class ApiSingleton {
 
   // New api
   static late MosquitoAlert api;
+  static late AuthApi authApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -114,20 +115,20 @@ class ApiSingleton {
       basePathOverride: baseUrl,
       dio: dio,
     );
+
+    authApi = api.getAuthApi();
   }
 
   //User
   Future<dynamic> createUser(String? uuid) async {
     try {
       await initializeApiClient();
-      final authApi = api.getAuthApi();
-
       final apiUser = await UserManager.getApiUser();
       final apiPassword = await UserManager.getApiPassword();
 
       // Try to authenticate with existing credentials
       if (apiUser != null && apiPassword != null) {
-        final success = await loginJwt(authApi, apiUser, apiPassword);
+        final success = await loginJwt(apiUser, apiPassword);
         if (success) {
           // Check if user exists after successful login
           if (await checkUserExist(uuid)) {
@@ -156,7 +157,7 @@ class ApiSingleton {
         final newApiUser = registeredGuest.data!.username;
         await UserManager.setUser(newApiUser, guestPassword);
 
-        final success = await loginJwt(authApi, newApiUser, guestPassword);
+        final success = await loginJwt(newApiUser, guestPassword);
         if (success) {
           Utils.initializedCheckData['userCreated']['created'] = true;
           return true;
@@ -170,22 +171,20 @@ class ApiSingleton {
     }
   }
 
-  static Future<bool> loginJwt(
-      AuthApi authApi, String user, String password) async {
-      final deviceInfoPlugin = DeviceInfoPlugin();
-      final deviceInfo = await deviceInfoPlugin.deviceInfo;
-      String? deviceId;
-      if (deviceInfo is AndroidDeviceInfo) {
-        deviceId = deviceInfo.id;
-      } else if (deviceInfo is IosDeviceInfo) {
-        deviceId = deviceInfo.identifierForVendor;
-      }
+  static Future<bool> loginJwt(String user, String password) async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    final deviceInfo = await deviceInfoPlugin.deviceInfo;
+    String? deviceId;
+    if (deviceInfo is AndroidDeviceInfo) {
+      deviceId = deviceInfo.id;
+    } else if (deviceInfo is IosDeviceInfo) {
+      deviceId = deviceInfo.identifierForVendor;
+    }
     AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
         AppUserTokenObtainPairRequest((b) => b
           ..username = user
           ..password = password
-          ..deviceId = deviceId        
-        );
+          ..deviceId = deviceId);
 
     try {
       final obtainToken = await authApi.obtainToken(
