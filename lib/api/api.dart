@@ -54,12 +54,6 @@ class ApiSingleton {
   //Partners
   static const partners = '/organizationpins';
 
-  //Headers
-  var headers = {
-    'Content-Type': ' application/json',
-    'Authorization': 'Token ', //TODO: Add token
-  };
-
   // New api
   static late MosquitoAlert api;
   static late AuthApi authApi;
@@ -76,27 +70,11 @@ class ApiSingleton {
     final config = await AppConfig.loadConfig();
     baseUrl = config.baseUrl;
     serverUrl = '$baseUrl/api';
+    await initializeApiClient();
   }
 
   static ApiSingleton getInstance() {
     return ApiSingleton();
-  }
-
-  Future<bool> checkUserExist(String? uuid) async {
-    try {
-      final response = await api.getUsersApi().retrieveMine();
-      if (response.data != null) {
-        print("User exists");
-        return true;
-      }
-    } catch (e) {
-      if (e is DioException && e.response?.statusCode == 401) {
-        print("User does not exist or not authenticated");
-      } else {
-        print("Error checking user: $e");
-      }
-    }
-    return false;
   }
 
   static Future<void> initializeApiClient() async {
@@ -117,29 +95,30 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+
+    // Try to restore session if we have stored credentials
+    final apiUser = await UserManager.getApiUser();
+    final apiPassword = await UserManager.getApiPassword();
+    if (apiUser != null && apiPassword != null) {
+      await loginJwt(apiUser, apiPassword);
+    }
   }
 
-  //User
   Future<dynamic> createUser(String? uuid) async {
     try {
-      await initializeApiClient();
+      // Try to authenticate with existing credentials first
       final apiUser = await UserManager.getApiUser();
       final apiPassword = await UserManager.getApiPassword();
 
-      // Try to authenticate with existing credentials
       if (apiUser != null && apiPassword != null) {
         final success = await loginJwt(apiUser, apiPassword);
         if (success) {
-          // Check if user exists after successful login
-          if (await checkUserExist(uuid)) {
-            print('User exists and authenticated');
-            Utils.initializedCheckData['userCreated']['created'] = true;
-            return true;
-          }
+          return true;
         }
       }
 
-      // Generate a random string of 16 characters
+      // No stored credentials or login failed - register as new guest
+      // Generate a random string of 16 characters for password
       final random = Random.secure();
       const chars =
           'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
@@ -159,7 +138,6 @@ class ApiSingleton {
 
         final success = await loginJwt(newApiUser, guestPassword);
         if (success) {
-          Utils.initializedCheckData['userCreated']['created'] = true;
           return true;
         }
       }
@@ -192,12 +170,17 @@ class ApiSingleton {
 
       if (obtainToken.data?.access != null &&
           obtainToken.data?.refresh != null) {
+        // Clear any existing interceptors and add the JWT auth interceptor
         api.dio.interceptors.clear();
         api.dio.interceptors.add(JwtAuthInterceptor(
           apiClient: api,
           accessToken: obtainToken.data!.access,
           refreshToken: obtainToken.data!.refresh,
         ));
+
+        // Store tokens for future use
+        await UserManager.setToken(obtainToken.data!.access);
+        await UserManager.setRefreshToken(obtainToken.data!.refresh);
 
         return true;
       }
@@ -283,20 +266,13 @@ class ApiSingleton {
           contentType: MediaType('image', 'jpeg'));
 
       var data = FormData.fromMap({'photo': img, 'report': versionUUID});
-
-      var dio = Dio();
-      var response = await dio.post('$serverUrl$photos',
-          data: data,
-          options: Options(
-            headers: {'Authorization': 'Token '}, //+ token}, // TODO: Fix token
-            contentType: 'multipart/form-data',
-          ));
-
-      return response.statusCode == 200;
     } catch (c) {
       print(c);
       return false;
     }
+
+    // TODO
+    return false;
   }
 
   Future<bool> sendFixes(String trackingUuid, double lat, double lon,
