@@ -124,13 +124,11 @@ class UserManager {
   }
 
   static Future<void> setToken(String token) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('jwt_token', token);
+    await _secureStorage.write(key: 'jwt_token', value: token);
   }
 
   static Future<void> setRefreshToken(String token) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('jwt_refresh_token', token);
+    await _secureStorage.write(key: 'jwt_refresh_token', value: token);
   }
 
   static Future<void> setUser(String username, String password) async {
@@ -141,7 +139,7 @@ class UserManager {
   //get
   static Future<String?> getUUID() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.get('uuid') as FutureOr<String?>;
+    return prefs.getString('uuid');
   }
 
   static Future<String?> getFirebaseId() async {
@@ -229,19 +227,16 @@ class UserManager {
   }
 
   static Future<String?> getToken() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('jwt_token');
+    return await _secureStorage.read(key: 'jwt_token');
   }
 
   static Future<String?> getRefreshToken() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('jwt_refresh_token');
+    return await _secureStorage.read(key: 'jwt_refresh_token');
   }
 
   static Future<void> clearTokens() async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.remove('jwt_token');
-    await prefs.remove('jwt_refresh_token');
+    await _secureStorage.delete(key: 'jwt_token');
+    await _secureStorage.delete(key: 'jwt_refresh_token');
   }
 
   static Future<String?> getApiUser() async {
