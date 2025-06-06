@@ -58,6 +58,10 @@ dependencies:
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
   firebase_analytics: ^11.4.6
+  mosquito_alert:
+    git:
+      url: https://github.com/Mosquito-Alert/mosquito-alert-dart-sdk.git
+      ref: 0.1.10
 
 dependency_overrides:
   # Temporal for flutter_launcher_icons
