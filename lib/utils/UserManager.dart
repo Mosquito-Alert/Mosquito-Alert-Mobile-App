@@ -52,8 +52,8 @@ class UserManager {
     }
 
     application.onLocaleChanged(Utils.language);
-    userScore = await ApiSingleton().getUserScores();
-    await setUserScores(userScore);
+    userScore = await ApiSingleton().getUserScore();
+    await setUserScore(userScore);
 
     String? userUuid = await UserManager.getUUID();
     if (userUuid != null) {
@@ -68,9 +68,9 @@ class UserManager {
     await prefs.setString('firebaseId', id);
   }
 
-  static Future<void> setUserScores(scores) async {
+  static Future<void> setUserScore(score) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('userScores', scores);
+    await prefs.setInt('userScore', score);
   }
 
   static Future<void> setSowInfoAdult(show) async {
@@ -149,9 +149,9 @@ class UserManager {
     return prefs.getString('firebaseId');
   }
 
-  static Future<int?> getUserScores() async {
+  static Future<int?> getUserScore() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userScores');
+    return prefs.getInt('userScore');
   }
 
   static Future<bool?> getShowInfoAdult() async {
