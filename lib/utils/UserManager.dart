@@ -121,6 +121,23 @@ class UserManager {
     await prefs.setInt('lastReportCount', lastReportCount);
   }
 
+  static Future<void> setToken(String token) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_token', token);
+  }
+
+  static Future<void> setRefreshToken(String token) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_refresh_token', token);
+  }
+
+  static Future<void> setUser(String username, String password) async {
+    // TODO: flutter_secure_store
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
+  }
+
   //get
   static Future<String?> getUUID() async {
     var prefs = await SharedPreferences.getInstance();
@@ -209,5 +226,33 @@ class UserManager {
   static Future<int?> getLastReportCount() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getInt('lastReportCount');
+  }
+
+  static Future<String?> getToken() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_token');
+  }
+
+  static Future<String?> getRefreshToken() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_refresh_token');
+  }
+
+  static Future<void> clearTokens() async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+    await prefs.remove('jwt_refresh_token');
+  }
+
+  static Future<String?> getApiUser() async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
+  static Future<String?> getApiPassword() async {
+    // TODO: Use flutter_secure_storage
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('password');
   }
 }
