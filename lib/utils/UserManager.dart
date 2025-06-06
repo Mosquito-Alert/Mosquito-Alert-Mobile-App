@@ -234,11 +234,6 @@ class UserManager {
     return await _secureStorage.read(key: 'jwt_refresh_token');
   }
 
-  static Future<void> clearTokens() async {
-    await _secureStorage.delete(key: 'jwt_token');
-    await _secureStorage.delete(key: 'jwt_refresh_token');
-  }
-
   static Future<String?> getApiUser() async {
     return await _secureStorage.read(key: 'username');
   }
