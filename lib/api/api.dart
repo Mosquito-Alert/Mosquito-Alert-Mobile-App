@@ -23,38 +23,6 @@ class ApiSingleton {
   static String baseUrl = '';
   static String serverUrl = '';
 
-  //User
-  static const users = '/users/';
-  static const userScore = '/stats/user_xp_data/';
-
-  //Reports
-  static const reports = '/reports/';
-
-  //Session
-  static const sessions = '/sessions/';
-  static const sessionUpdate = '/session_update/';
-
-  //Images
-  static const photos = '/photos/';
-
-  //Notifications
-  static const notifications = '/user_notifications/';
-  static const mark_notification_as_read = '/mark_notif_as_ack/';
-  static const subscribe_to_topic = '/subscribe_to_topic/';
-  static const unsub_from_topic = '/unsub_from_topic/';
-  static const get_my_topics = '/topics_subscribed/';
-  static const firebaseToken = '/token/';
-
-  //Fixes
-  static const fixes = '/fixes/';
-
-  //Owcampaigns
-  static const campaigns = '/owcampaigns/';
-
-  //Partners
-  static const partners = '/organizationpins';
-
-  // New api
   static late MosquitoAlert api;
   static late AuthApi authApi;
 
@@ -266,6 +234,7 @@ class ApiSingleton {
           contentType: MediaType('image', 'jpeg'));
 
       var data = FormData.fromMap({'photo': img, 'report': versionUUID});
+      print(data);
     } catch (c) {
       print(c);
       return false;
