@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/background_tracking_explanation.dart';
@@ -12,6 +13,7 @@ import 'package:uuid/uuid.dart';
 import 'Application.dart';
 
 class UserManager {
+  static final _secureStorage = FlutterSecureStorage();
   static var profileUUIDs;
   static int? userScore;
 
@@ -132,10 +134,8 @@ class UserManager {
   }
 
   static Future<void> setUser(String username, String password) async {
-    // TODO: flutter_secure_store
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', username);
-    await prefs.setString('password', password);
+    await _secureStorage.write(key: 'username', value: username);
+    await _secureStorage.write(key: 'password', value: password);
   }
 
   //get
@@ -245,14 +245,10 @@ class UserManager {
   }
 
   static Future<String?> getApiUser() async {
-    // TODO: Use flutter_secure_storage
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('username');
+    return await _secureStorage.read(key: 'username');
   }
 
   static Future<String?> getApiPassword() async {
-    // TODO: Use flutter_secure_storage
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('password');
+    return await _secureStorage.read(key: 'password');
   }
 }
