@@ -3,9 +3,11 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/auth/jwt_auth.dart';
@@ -25,6 +27,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late BitesApi bitesApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -63,6 +66,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    bitesApi = api.getBitesApi();
 
     // Try to restore session if we have stored credentials
     final apiUser = await UserManager.getApiUser();
@@ -160,7 +164,7 @@ class ApiSingleton {
 
   Future<dynamic> getUserScores() async {
     // TODO
-    return false;
+    return 0;
   }
 
   //Sessions
@@ -181,8 +185,52 @@ class ApiSingleton {
 
   //Reports
   Future<dynamic> createReport(Report report) async {
-    // TODO
+    // TODO: Delete?
     return null;
+  }
+
+  Future<void> createBiteReport() async {
+    try {
+      // Get current location for the bite report
+      final position = Position(
+          longitude: 0,
+          latitude: 0,
+          timestamp: DateTime(2025),
+          accuracy: 0.0,
+          altitude: 0.0,
+          altitudeAccuracy: 0.0,
+          heading: 0.0,
+          headingAccuracy: 0.0,
+          speed: 0.0,
+          speedAccuracy: 0.0);
+
+      final LocationRequest locationRequest = LocationRequest(
+        (b) => b
+          ..source_ = LocationRequestSource_Enum.auto
+          ..point = LocationPoint((b) => b
+            ..latitude = 0.0
+            ..longitude = 0.0
+          ).toBuilder()
+      );
+
+      final BiteRequest biteRequest = BiteRequest((b) => b
+        ..createdAt = DateTime.now()
+        ..sentAt = DateTime.now()
+        ..location = locationRequest.toBuilder()
+        ..note = "Example mosquito bite report"
+        ..tags = BuiltList<String>(['sample', 'test']).toBuilder()
+        ..eventEnvironment = BiteRequestEventEnvironmentEnum.outdoors
+        ..eventMoment = BiteRequestEventMomentEnum.now
+        ..counts = BiteCountsRequest((b) => b
+              ..head = 1
+              ..chest = 0
+            ).toBuilder());
+
+      final response = await bitesApi.create(biteRequest: biteRequest);
+      print('Bite report created successfully: ${response.data}');
+    } catch (e) {
+      print('Error creating bite report: $e');
+    }
   }
 
   Future saveImages(Report report) async {
