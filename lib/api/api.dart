@@ -208,14 +208,14 @@ class ApiSingleton {
         (b) => b
           ..source_ = LocationRequestSource_Enum.auto
           ..point = LocationPoint((b) => b
-            ..latitude = 0.0
-            ..longitude = 0.0
+            ..latitude = position.latitude
+            ..longitude = position.longitude
           ).toBuilder()
       );
 
       final BiteRequest biteRequest = BiteRequest((b) => b
-        ..createdAt = DateTime.now()
-        ..sentAt = DateTime.now()
+        ..createdAt = DateTime.now().toUtc()
+        ..sentAt = DateTime.now().toUtc()
         ..location = locationRequest.toBuilder()
         ..note = "Example mosquito bite report"
         ..tags = BuiltList<String>(['sample', 'test']).toBuilder()
