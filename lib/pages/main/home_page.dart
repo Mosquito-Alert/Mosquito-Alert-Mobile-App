@@ -5,7 +5,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/map/public_map.dart';
@@ -158,10 +157,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _createBiteReport() async {
     ApiSingleton().createBiteReport();
-    await Navigator.push(
+    /*await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => BitingReportPage()),
-    );
+    );*/
   }
 
   Future<void> _createAdultReport() async {

@@ -191,7 +191,6 @@ class ApiSingleton {
 
   Future<void> createBiteReport() async {
     try {
-      // Get current location for the bite report
       final position = Position(
           longitude: 0,
           latitude: 0,
@@ -257,6 +256,27 @@ class ApiSingleton {
   Future<List<Report>> getReportsList() async {
     // TODO
     return [];
+  }
+
+  Future<bool> deleteBiteReport(String uuid) async {
+    try {
+      // TODO
+      print('Deleting bite report with UUID: $uuid');
+      return true;
+    } catch (e) {
+      print('Error deleting bite report: $e');
+      return false;
+    }
+  }
+
+  Future<List<Bite>> getMyBiteReports() async {
+    try {
+      final response = await bitesApi.listMine();
+      return response.data?.results?.toList() ?? [];
+    } catch (e) {
+      print('Error fetching bite reports: $e');
+      return [];
+    }
   }
 
   //Images
