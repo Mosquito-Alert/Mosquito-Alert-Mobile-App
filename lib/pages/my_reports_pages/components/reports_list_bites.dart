@@ -139,6 +139,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   void _reportBottomSheet(Bite report, BuildContext context) async {
+    // TODO: After adult and sites are created, move to some Utils file
     await FirebaseAnalytics.instance.logSelectContent(
         contentType: 'bite_report', itemId: report.uuid);
 
@@ -232,19 +233,18 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                       ),
                     ],
                   ),
-                  // Details section
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(),
                   ),
-                  if (report.counts != null) ...[
-                    Style.titleMedium(
-                      MyLocalizations.of(context, 'bite_locations'),
-                      fontSize: 14,
-                    ),
-                    SizedBox(height: 10),
-                    Style.body(_getBiteLocations(report.counts)),
-                  ],
+                  ...[
+                  Style.titleMedium(
+                    MyLocalizations.of(context, 'bite_locations'),
+                    fontSize: 14,
+                  ),
+                  SizedBox(height: 10),
+                  Style.body(_getBiteLocations(report.counts)),
+                ],
                   if (report.eventEnvironment != null) ...[
                     SizedBox(height: 20),
                     Style.titleMedium(
@@ -283,6 +283,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   Future<void> _deleteReport(Bite report) async {
+    // TODO: After adult and sites are created, move to some Utils file
     await FirebaseAnalytics.instance.logEvent(
       name: 'delete_report',
       parameters: {'report_uuid': report.uuid},
