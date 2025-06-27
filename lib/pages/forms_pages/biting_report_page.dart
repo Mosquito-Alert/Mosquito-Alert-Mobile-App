@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
@@ -183,15 +184,16 @@ class _BitingReportPageState extends State<BitingReportPage> {
       _showAlertKo();
     } else {
       if (Utils.savedAdultReport != null) {
-        List<Campaign> campaingsList =
-            await ApiSingleton().getCampaigns(Utils.savedAdultReport!.country);
+        CampaignsApi campaignsApi = ApiSingleton.api.getCampaignsApi();
+        Response<PaginatedCampaignList> result = await campaignsApi.list();
+        final campaignsList = (result.data?.results as List<dynamic>? ?? []).cast<Campaign>();
         var now = DateTime.now().toUtc();
-        if (campaingsList.any((element) =>
-            DateTime.parse(element.startDate!).isBefore(now) &&
-            DateTime.parse(element.endDate!).isAfter(now))) {
-          var activeCampaign = campaingsList.firstWhere((element) =>
-              DateTime.parse(element.startDate!).isBefore(now) &&
-              DateTime.parse(element.endDate!).isAfter(now));
+        final activeCampaigns = campaignsList.where((element) =>
+          element.startDate.isBefore(now) &&
+          element.endDate.isAfter(now)
+        ).toList();
+        if (activeCampaigns.isNotEmpty) {
+          var activeCampaign = activeCampaigns.first;
           await Utils.showAlertCampaign(
             context,
             activeCampaign,
@@ -199,9 +201,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CampaignTutorialPage(
-                          fromReport: true,
-                        )),
+                  builder: (context) => CampaignTutorialPage(
+                    fromReport: true,
+                  ),
+                ),
               );
               Utils.resetReport();
             },
@@ -212,7 +215,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
       } else {
         _showAlertOk();
       }
-
       setState(() {
         percentStream.add(1.0);
       });
