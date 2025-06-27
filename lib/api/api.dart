@@ -158,11 +158,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<dynamic> getUserScores() async {
-    // TODO
-    return 0; // Temporarily return 0 to avoid exception, until method is implemented
-  }
-
   //Sessions
   Future<dynamic> getLastSession(String? userUUID) async {
     // TODO

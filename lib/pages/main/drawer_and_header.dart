@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
@@ -32,6 +32,7 @@ class _MainVCState extends State<MainVC> {
   var packageInfo;
   String? userUuid;
   bool isLoading = true;
+  int userScore = 0;
 
   @override
   void initState() {
@@ -58,6 +59,26 @@ class _MainVCState extends State<MainVC> {
     await _getNotificationCount();
     await getPackageInfo();
     await initAuthStatus();
+    await _getUserScore();
+  }
+
+  Future<void> _getUserScore() async {
+    var newScore = 0;
+    try {
+      final userApi = ApiSingleton.api.getUsersApi();
+      final response = await userApi.retrieveMine();
+      
+      if (response.data?.score.value != null) {
+        newScore = response.data!.score.value;
+      }
+    } catch (e) {
+      print('Error getting user score: $e');
+    }
+    newScore = 0;
+
+    setState(() async {
+      userScore = newScore;
+    });
   }
 
   Future<void> _getNotificationCount() async {
@@ -85,8 +106,6 @@ class _MainVCState extends State<MainVC> {
 
   Future<bool> initAuthStatus() async {
     userUuid = await UserManager.getUUID();
-    UserManager.userScore = await ApiSingleton().getUserScores();
-    await UserManager.setUserScores(UserManager.userScore);
     await Utils.loadFirebase();
     return true;
   }
@@ -174,8 +193,8 @@ class _MainVCState extends State<MainVC> {
                               ),
                             ),
                             child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
+                                stream: Utils.userScoresController.stream, // TODO: Check this
+                                initialData: userScore,
                                 builder: (context, snapshot) {
                                   return Center(
                                       child: AutoSizeText(
