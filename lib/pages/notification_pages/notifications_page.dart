@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
@@ -46,10 +47,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _getData() async {
-    PaginatedNotificationList? response =
-        await ApiSingleton().getNotifications();
+    NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
+    Response<PaginatedNotificationList?> response = await notificationsApi.listMine();
     setState(() {
-      notifications = response;
+      notifications = response.data;
       _checkOpenNotification();
     });
     loadingStream.add(false);
