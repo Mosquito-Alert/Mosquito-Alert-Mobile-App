@@ -160,7 +160,7 @@ class ApiSingleton {
 
   Future<dynamic> getUserScores() async {
     // TODO
-    return false;
+    return 0; // Temporarily return 0 to avoid exception, until method is implemented
   }
 
   //Sessions
@@ -251,11 +251,6 @@ class ApiSingleton {
   }
 
   Future<dynamic> getCampaigns(countryId) async {
-    // TODO
-    return false;
-  }
-
-  Future<dynamic> getPartners() async {
     // TODO
     return false;
   }
