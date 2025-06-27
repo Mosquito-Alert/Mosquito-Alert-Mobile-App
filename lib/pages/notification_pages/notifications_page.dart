@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert/src/model/notification.dart' as ext;
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
@@ -27,7 +27,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  List<MyNotification> notifications = [];
+  PaginatedNotificationList? notifications;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
 
   @override
@@ -46,8 +46,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _getData() async {
-    List<MyNotification> response = await ApiSingleton().getNotifications();
-
+    PaginatedNotificationList? response =
+        await ApiSingleton().getNotifications();
     setState(() {
       notifications = response;
       _checkOpenNotification();
@@ -59,7 +59,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     try {
       if (widget.notificationId != null && widget.notificationId!.isNotEmpty) {
         var notifId = widget.notificationId;
-        for (var notif in notifications) {
+        for (var notif in notifications?.results?.toList() ?? []) {
           if (notifId == '${notif.id}') {
             _infoBottomSheet(context, notif);
             return;
@@ -73,6 +73,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final notificationsList = notifications?.results?.toList() ?? [];
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -83,7 +84,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   MyLocalizations.of(context, 'notifications_title'),
                   fontSize: 16),
             ),
-            body: notifications.isEmpty
+            body: notificationsList.isEmpty
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -95,31 +96,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 : Container(
                     margin: EdgeInsets.all(12),
                     child: ListView.builder(
-                        itemCount: notifications.length,
+                        itemCount: notificationsList.length,
                         itemBuilder: (ctx, index) {
+                          final notification = notificationsList[index];
                           return Opacity(
-                            opacity:
-                                !notifications[index].acknowledged! ? 1 : 0.5,
+                            opacity: 1,
                             child: Card(
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
+                              color: notification.isRead ? Colors.grey[200] : Colors.white,
                               child: ListTile(
-                                tileColor: Colors.white,
+                                tileColor: notification.isRead ? Colors.grey[200] : Colors.white,
                                 contentPadding: EdgeInsets.all(12),
                                 onTap: () {
-                                  !notifications[index].acknowledged!
-                                      ? _updateNotification(
-                                          notifications[index].id)
-                                      : null;
-                                  _infoBottomSheet(
-                                      context, notifications[index]);
+                                  if (!notification.isRead) {
+                                    _updateNotification(notification.id);
+                                  }
+                                  _infoBottomSheet(context, notification);
                                 },
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Style.titleMedium(
-                                        notifications[index].expert_comment,
+                                        notification.message.title,
                                         fontSize: 16),
                                     SizedBox(
                                       height: 4,
@@ -152,13 +152,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _infoBottomSheet(
-      BuildContext context, MyNotification notification) async {
+      BuildContext context, ext.Notification notification) async {
     await FirebaseAnalytics.instance.logSelectContent(
         contentType: 'notification', itemId: '${notification.id}');
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
-          log(notification.expert_html!);
           return SafeArea(
             bottom: false,
             child: Container(
@@ -181,17 +180,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       SizedBox(
                         height: 15,
                       ),
-                      Style.titleMedium(notification.expert_comment),
+                      Style.titleMedium(notification.message.title),
                       Style.bodySmall(
-                          DateFormat('dd-MM-yyyy HH:mm').format(
-                              DateTime.parse(notification.date_comment!)
-                                  .toLocal()),
+                          DateFormat('dd-MM-yyyy HH:mm')
+                              .format(notification.createdAt.toLocal()),
                           color: Colors.grey),
                       SizedBox(
                         height: 10,
                       ),
                       html.Html(
-                        data: notification.expert_html!
+                        data: notification.message.body
                             .replaceAll('<p><a', '<a')
                             .replaceAll('</a></p>', '</a>'),
                         style: {
@@ -210,23 +208,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
         });
   }
 
-  Future<void> _updateNotification(id) async {
+  Future<void> _updateNotification(int id) async {
     var userId = await UserManager.getUUID();
     var res = await ApiSingleton().markNotificationAsRead(userId, id);
 
     if (res) {
-      var index = notifications.indexWhere((element) => element.id == id);
-      setState(() {
-        notifications[index].acknowledged = true;
-      });
+      // BuiltValue objects are immutable, so you may need to refetch or rebuild the list
+      setState(() {});
       _updateUnreadNotificationCount();
     }
   }
 
   void _updateUnreadNotificationCount() {
-    var unacknowledgedCount = notifications
-        .where((notification) => notification.acknowledged == false)
-        .length;
+    final notifList = notifications?.results?.toList() ?? [];
+    var unacknowledgedCount =
+        notifList.where((notification) => !notification.isRead).length;
     if (widget.onNotificationUpdate != null) {
       widget.onNotificationUpdate!(unacknowledgedCount);
     }

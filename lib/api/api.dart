@@ -10,7 +10,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
@@ -25,6 +24,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late NotificationsApi notificationsApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -63,6 +63,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    notificationsApi = api.getNotificationsApi();
 
     // Try to restore session if we have stored credentials
     final apiUser = await UserManager.getApiUser();
@@ -160,7 +161,7 @@ class ApiSingleton {
 
   Future<dynamic> getUserScores() async {
     // TODO
-    return false;
+    return 0; // Temporarily return 0 to avoid exception, until method is implemented
   }
 
   //Sessions
@@ -263,9 +264,9 @@ class ApiSingleton {
   /*
   * Notifications Module
   * */
-  Future<List<MyNotification>> getNotifications() async {
-    // TODO
-    return [];
+  Future<PaginatedNotificationList?> getNotifications() async {
+    final response = await notificationsApi.listMine();
+    return response.data;
   }
 
   Future<dynamic> updateNotification(id, acknowledge) async {

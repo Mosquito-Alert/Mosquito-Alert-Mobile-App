@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
@@ -61,12 +60,15 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    List<MyNotification> notifications =
-        await ApiSingleton().getNotifications();
-    var unacknowledgedCount = notifications
-        .where((notification) => notification.acknowledged == false)
-        .length;
-    updateNotificationCount(unacknowledgedCount);
+    final notifications = await ApiSingleton().getNotifications();
+    final results = notifications?.results;
+    if (results != null) {
+      var unacknowledgedCount =
+          results.where((notification) => notification.isRead == false).length;
+      updateNotificationCount(unacknowledgedCount);
+    } else {
+      updateNotificationCount(0);
+    }
   }
 
   void updateNotificationCount(int newCount) {
