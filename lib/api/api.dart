@@ -264,11 +264,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<dynamic> getPartners() async {
-    // TODO
-    return false;
-  }
-
   /*
   * Notifications Module
   * */
