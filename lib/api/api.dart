@@ -244,12 +244,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<bool> sendFixes(String trackingUuid, double lat, double lon,
-      DateTime time, int power) async {
-    // TODO
-    return false;
-  }
-
   Future<dynamic> getCampaigns(countryId) async {
     // TODO
     return false;
