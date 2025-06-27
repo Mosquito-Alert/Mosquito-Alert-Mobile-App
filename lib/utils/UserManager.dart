@@ -15,7 +15,6 @@ import 'Application.dart';
 class UserManager {
   static final _secureStorage = FlutterSecureStorage();
   static var profileUUIDs;
-  static int? userScore;
 
   static Future<bool> startFirstTime(context) async {
     var prefs = await SharedPreferences.getInstance();
@@ -54,8 +53,6 @@ class UserManager {
     }
 
     application.onLocaleChanged(Utils.language);
-    userScore = await ApiSingleton().getUserScore();
-    await setUserScore(userScore);
 
     String? userUuid = await UserManager.getUUID();
     if (userUuid != null) {
@@ -145,11 +142,6 @@ class UserManager {
   static Future<String?> getFirebaseId() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('firebaseId');
-  }
-
-  static Future<int?> getUserScore() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userScore');
   }
 
   static Future<bool?> getShowInfoAdult() async {

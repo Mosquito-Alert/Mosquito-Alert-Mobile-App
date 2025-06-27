@@ -45,7 +45,6 @@ class Utils {
 
   // Initialized data flags
   static Map<String, dynamic> initializedCheckData = {
-    'userScore': false, // Whether the user score got fetched
     'userCreated': {
       'created': false,
       'required': true,
@@ -446,13 +445,6 @@ class Utils {
     } else {
       print(
           'Utils (checkForUnfetchedData): Either the user was created or it was not required (${jsonEncode(userCreated)})');
-    }
-
-    if (!initializedCheckData['userScore']) { // TODO: Can we remove this and just check if we have the userScore, or request it every time user opens the app
-      print('Utils (checkForUnfetchedData): Fetching user score...');
-      UserManager.userScore = await ApiSingleton().getUserScore();
-    } else {
-      print('Utils (checkForUnfetchedData): UserScores were already fetched');
     }
 
     if (!initializedCheckData['firebase']) {

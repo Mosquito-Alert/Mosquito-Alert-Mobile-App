@@ -32,6 +32,7 @@ class _MainVCState extends State<MainVC> {
   var packageInfo;
   String? userUuid;
   bool isLoading = true;
+  int userScore = 0;
 
   @override
   void initState() {
@@ -58,6 +59,9 @@ class _MainVCState extends State<MainVC> {
     await _getNotificationCount();
     await getPackageInfo();
     await initAuthStatus();
+    setState(() async {
+      userScore = await ApiSingleton().getUserScore();
+    });
   }
 
   Future<void> _getNotificationCount() async {
@@ -85,8 +89,6 @@ class _MainVCState extends State<MainVC> {
 
   Future<bool> initAuthStatus() async {
     userUuid = await UserManager.getUUID();
-    UserManager.userScore = await ApiSingleton().getUserScore();
-    await UserManager.setUserScore(UserManager.userScore);
     await Utils.loadFirebase();
     return true;
   }
@@ -175,7 +177,7 @@ class _MainVCState extends State<MainVC> {
                             ),
                             child: StreamBuilder<int?>(
                                 stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
+                                initialData: userScore,
                                 builder: (context, snapshot) {
                                   return Center(
                                       child: AutoSizeText(
