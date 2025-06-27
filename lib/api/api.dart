@@ -261,14 +261,6 @@ class ApiSingleton {
     return false;
   }
 
-  /*
-  * Notifications Module
-  * */
-  Future<PaginatedNotificationList?> getNotifications() async {
-    final response = await notificationsApi.listMine();
-    return response.data;
-  }
-
   Future<dynamic> updateNotification(id, acknowledge) async {
     // TODO
     return false;

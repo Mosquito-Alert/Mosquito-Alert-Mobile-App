@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
@@ -60,7 +62,10 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    final notifications = await ApiSingleton().getNotifications();
+    NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
+    Response<PaginatedNotificationList?> response = await notificationsApi.listMine();
+    PaginatedNotificationList? notifications = response.data;
+
     final results = notifications?.results;
     if (results != null) {
       var unacknowledgedCount =
