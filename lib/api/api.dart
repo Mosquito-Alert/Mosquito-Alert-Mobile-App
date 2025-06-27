@@ -25,6 +25,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late PartnersApi partnersApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -63,6 +64,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    partnersApi = api.getPartnersApi();
 
     // Try to restore session if we have stored credentials
     final apiUser = await UserManager.getApiUser();
@@ -160,7 +162,7 @@ class ApiSingleton {
 
   Future<dynamic> getUserScores() async {
     // TODO
-    return false;
+    return 0; // Temporarily return 0 to avoid exception, until method is implemented
   }
 
   //Sessions
@@ -255,9 +257,9 @@ class ApiSingleton {
     return false;
   }
 
-  Future<dynamic> getPartners() async {
-    // TODO
-    return false;
+  Future<PaginatedPartnerList?> getPartners() async {
+    final response = await partnersApi.list();
+    return response.data;
   }
 
   /*
