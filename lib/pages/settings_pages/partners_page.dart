@@ -50,7 +50,6 @@ class _PartnersPageState extends State<PartnersPage> {
       PartnersApi partnersApi = ApiSingleton.api.getPartnersApi();
       Response<PaginatedPartnerList> response = await partnersApi.list();
       PaginatedPartnerList? partners = response.data;
-      print(partners);
 
       if (partners == null || partners.results == null) return;
 
