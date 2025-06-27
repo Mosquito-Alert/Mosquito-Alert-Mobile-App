@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,9 +46,10 @@ class _PartnersPageState extends State<PartnersPage> {
   getInitialData() async {
     // Set loading state to true initially
     loadingStream.add(true);
-
     try {
-      PaginatedPartnerList? partners = await ApiSingleton().getPartners();
+      PartnersApi partnersApi = ApiSingleton.api.getPartnersApi();
+      Response<PaginatedPartnerList> response = await partnersApi.list();
+      PaginatedPartnerList? partners = response.data;
       print(partners);
 
       if (partners == null || partners.results == null) return;
