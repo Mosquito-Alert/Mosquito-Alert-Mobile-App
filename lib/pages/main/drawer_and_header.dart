@@ -59,8 +59,25 @@ class _MainVCState extends State<MainVC> {
     await _getNotificationCount();
     await getPackageInfo();
     await initAuthStatus();
+    await _getUserScore();
+  }
+
+  Future<void> _getUserScore() async {
+    var newScore = 0;
+    try {
+      final userApi = ApiSingleton.api.getUsersApi();
+      final response = await userApi.retrieveMine();
+      
+      if (response.data?.score.value != null) {
+        newScore = response.data!.score.value;
+      }
+    } catch (e) {
+      print('Error getting user score: $e');
+    }
+    newScore = 0;
+
     setState(() async {
-      userScore = await ApiSingleton().getUserScore();
+      userScore = newScore;
     });
   }
 
@@ -176,7 +193,7 @@ class _MainVCState extends State<MainVC> {
                               ),
                             ),
                             child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
+                                stream: Utils.userScoresController.stream, // TODO: Check this
                                 initialData: userScore,
                                 builder: (context, snapshot) {
                                   return Center(

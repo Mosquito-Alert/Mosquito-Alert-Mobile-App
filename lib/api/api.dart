@@ -158,20 +158,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<int> getUserScore() async {
-    try {
-      final userApi = api.getUsersApi();
-      final response = await userApi.retrieveMine();
-      
-      if (response.data?.score.value != null) {
-        return response.data!.score.value;
-      }
-    } catch (e) {
-      print('Error getting user score: $e');
-    }
-    return 0;
-  }
-
   //Sessions
   Future<dynamic> getLastSession(String? userUUID) async {
     // TODO
