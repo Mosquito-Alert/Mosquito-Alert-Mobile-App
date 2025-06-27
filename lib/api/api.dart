@@ -10,6 +10,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+<<<<<<< HEAD
+=======
+import 'package:mosquito_alert_app/models/notification.dart';
+>>>>>>> main
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
@@ -24,7 +28,10 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+<<<<<<< HEAD
   static late NotificationsApi notificationsApi;
+=======
+>>>>>>> main
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -63,7 +70,10 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+<<<<<<< HEAD
     notificationsApi = api.getNotificationsApi();
+=======
+>>>>>>> main
 
     // Try to restore session if we have stored credentials
     final apiUser = await UserManager.getApiUser();
