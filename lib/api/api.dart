@@ -256,11 +256,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<dynamic> getPartners() async {
-    // TODO
-    return false;
-  }
-
   Future<dynamic> updateNotification(id, acknowledge) async {
     // TODO
     return false;
