@@ -10,7 +10,7 @@ void main() {
 
   group('end-to-end test', () {
     testWidgets('Sanity test', (tester) async {
-      app.main(env: "dev");
+      app.main(env: "test");
       await tester.pumpAndSettle(Duration(seconds: 3));
 
       // New user is created: Show consent form
@@ -33,8 +33,7 @@ void main() {
       final rejectBtn = find.byKey(Key("reject_background_tracking"));
       await tester.ensureVisible(rejectBtn);
       await tester.tap(rejectBtn);
-      await tester.pumpAndSettle(); // Fails here
-      //await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
 
       // Home page
       final homePageButtons = find.byType(CustomCard);

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,17 +14,21 @@ class AppConfig {
     await prefs.setString('env', name);
   }
 
-  static Future<AppConfig> loadConfig() async {
-    // Get the SharedPreferences instance
+  static Future<String?> getEnvironment() async {
     final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('env');
+  }
 
-    // Get the 'env' value from SharedPreferences
-    String? env = prefs.getString('env');
+  static Future<AppConfig> loadConfig() async {
+    String? env = await getEnvironment();
 
-    // Check if 'env' is null or empty and throw an error
     if (env == null || env.isEmpty) {
       throw Exception(
           'AppConfig env is not defined. Be sure to call AppConfig.setEnvironment');
+    }
+
+    if (env == "test") {
+      env = "dev";
     }
 
     final contents = await rootBundle.loadString(
