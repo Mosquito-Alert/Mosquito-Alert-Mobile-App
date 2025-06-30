@@ -234,8 +234,9 @@ class BackgroundTracking {
           ..latitude = position.latitude
           ..longitude = position.longitude))
         ..power = batteryLevel / 100.0);
-      await ApiSingleton.fixesApi.create(fixRequest: fixRequest);
-      return true;
+      final response =
+          await ApiSingleton.fixesApi.create(fixRequest: fixRequest);
+      return response.statusCode == 201;
     } catch (e) {
       return Future.error(e);
     }
