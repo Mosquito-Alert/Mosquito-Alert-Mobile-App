@@ -7,8 +7,7 @@ class UserScoreProvider extends ChangeNotifier {
 
   Future<void> fetchUserScore() async {
     try {
-      final userApi = ApiSingleton.api.getUsersApi();
-      final response = await userApi.retrieveMine();
+      final response = await ApiSingleton.usersApi.retrieveMine();
       if (response.data?.score.value != null) {
         _score = response.data!.score.value;
         notifyListeners();
