@@ -226,18 +226,15 @@ class BackgroundTracking {
       String trackingUuid = await BackgroundTracking._getTrackingUUID();
 
       // Send data to API
-      FixesApi fixesApi = ApiSingleton.api.getFixesApi();
       FixRequest fixRequest = FixRequest((b) => b
         ..coverageUuid = trackingUuid
         ..createdAt = DateTime.now().toUtc()
         ..sentAt = DateTime.now().toUtc()
         ..point.replace(FixLocationRequest((p) => p
           ..latitude = position.latitude
-          ..longitude = position.longitude
-        ))
-        ..power = batteryLevel / 100.0
-      );
-      await fixesApi.create(fixRequest: fixRequest);
+          ..longitude = position.longitude))
+        ..power = batteryLevel / 100.0);
+      await ApiSingleton.fixesApi.create(fixRequest: fixRequest);
       return true;
     } catch (e) {
       return Future.error(e);

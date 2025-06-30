@@ -25,6 +25,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late FixesApi fixesApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -63,6 +64,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    fixesApi = api.getFixesApi();
 
     // Try to restore session if we have stored credentials
     final apiUser = await UserManager.getApiUser();
