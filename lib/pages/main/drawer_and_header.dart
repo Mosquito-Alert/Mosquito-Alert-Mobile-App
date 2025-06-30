@@ -18,6 +18,9 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_score_provider.dart';
 
 class MainVC extends StatefulWidget {
   const MainVC({key});
@@ -32,7 +35,6 @@ class _MainVCState extends State<MainVC> {
   var packageInfo;
   String? userUuid;
   bool isLoading = true;
-  int userScore = 0;
 
   @override
   void initState() {
@@ -59,26 +61,6 @@ class _MainVCState extends State<MainVC> {
     await _getNotificationCount();
     await getPackageInfo();
     await initAuthStatus();
-    await _getUserScore();
-  }
-
-  Future<void> _getUserScore() async {
-    var newScore = 0;
-    try {
-      final userApi = ApiSingleton.api.getUsersApi();
-      final response = await userApi.retrieveMine();
-      
-      if (response.data?.score.value != null) {
-        newScore = response.data!.score.value;
-      }
-    } catch (e) {
-      print('Error getting user score: $e');
-    }
-    newScore = 0;
-
-    setState(() async {
-      userScore = newScore;
-    });
   }
 
   Future<void> _getNotificationCount() async {
@@ -192,15 +174,11 @@ class _MainVCState extends State<MainVC> {
                                 image: AssetImage('assets/img/points_box.webp'),
                               ),
                             ),
-                            child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream, // TODO: Check this
-                                initialData: userScore,
-                                builder: (context, snapshot) {
-                                  return Center(
-                                      child: AutoSizeText(
-                                    snapshot.data != null && snapshot.hasData
-                                        ? snapshot.data.toString()
-                                        : '',
+                            child: Consumer<UserScoreProvider>(
+                              builder: (context, userScoreProvider, _) {
+                                return Center(
+                                  child: AutoSizeText(
+                                    userScoreProvider.score.toString(),
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
@@ -208,8 +186,10 @@ class _MainVCState extends State<MainVC> {
                                         color: Color(0xFF4B3D04),
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                  ));
-                                }),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
 

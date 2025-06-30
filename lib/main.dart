@@ -13,7 +13,10 @@ import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
+
+import 'providers/user_score_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -38,7 +41,15 @@ Future<void> main({String env = 'prod'}) async {
     await BackgroundTracking.stop();
   }
 
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => UserScoreProvider()..fetchUserScore()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
