@@ -7,9 +7,6 @@ jobs:
   android:
     name: Run integration tests
     runs-on: ubuntu-latest
-    strategy:
-        matrix:
-          api-level: 34
     steps:
     - uses: actions/checkout@v4
 
@@ -38,7 +35,7 @@ jobs:
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: ${{ matrix.api-level }}
+        api-level: 34
         target: google_apis
         arch: x86_64
         profile: Nexus 6
