@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/owcampaing.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -13,14 +13,14 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 class ReportsList extends StatefulWidget {
   ReportsList({Key? key, required this.reports}) : super(key: key);
-  final List<Report> reports;
+  final List<dynamic> reports;
 
   @override
   _MyReportsListState createState() => _MyReportsListState(reports: reports);
 }
 
 class _MyReportsListState extends State<ReportsList> {
-  List<Report> reports;
+  List<dynamic> reports;
   GoogleMapController? miniMapController;
 
   _MyReportsListState({required this.reports});
@@ -142,11 +142,11 @@ class _MyReportsListState extends State<ReportsList> {
     List<Campaign> campaignsList = await ApiSingleton().getCampaigns(country);
     var now = DateTime.now().toUtc();
     if (campaignsList.any((element) =>
-        DateTime.parse(element.startDate!).isBefore(now) &&
-        DateTime.parse(element.endDate!).isAfter(now))) {
+        element.startDate.isBefore(now) &&
+        element.endDate.isAfter(now))) {
       var activeCampaign = campaignsList.firstWhere((element) =>
-          DateTime.parse(element.startDate!).isBefore(now) &&
-          DateTime.parse(element.endDate!).isAfter(now));
+          element.startDate.isBefore(now) &&
+          element.endDate.isAfter(now));
       return activeCampaign;
     }
     return null;
