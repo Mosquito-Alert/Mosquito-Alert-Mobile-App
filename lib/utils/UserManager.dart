@@ -67,11 +67,6 @@ class UserManager {
     await prefs.setString('firebaseId', id);
   }
 
-  static Future<void> setUserScore(score) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('userScore', score);
-  }
-
   static Future<void> setSowInfoAdult(show) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setBool('infoCameraAdult', show);
