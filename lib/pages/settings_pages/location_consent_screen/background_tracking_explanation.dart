@@ -53,6 +53,7 @@ class LocationConsentScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
+                        key: Key("reject_background_tracking"),
                         onPressed: () {
                           Navigator.pop(context);
                         },

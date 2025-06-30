@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mosquito_alert_app/main.dart' as app;
@@ -26,19 +25,20 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final continueButton = find.byKey(ValueKey(
-          "button")); // TODO: Using Style.button prevents adding a Key to only this element
+      final continueButton = find.byKey(ValueKey("style.button"));
       await tester.tap(continueButton);
       await tester.pumpAndSettle();
 
-      // TODO: Mock needed to set the location as always allowed?
+      // Reject background traking
+      final rejectBtn = find.byKey(Key("reject_background_tracking"));
+      await tester.ensureVisible(rejectBtn);
+      await tester.tap(rejectBtn);
+      await tester.pumpAndSettle(); // Fails here
+      //await tester.pumpAndSettle(const Duration(seconds: 5));
+
       // Home page
       final homePageButtons = find.byType(CustomCard);
       expect(homePageButtons, findsNWidgets(4));
-      await tester.tap(homePageButtons.at(0));
-      await tester.pumpAndSettle();
-
-      expect(true, true);
     });
   });
 }
