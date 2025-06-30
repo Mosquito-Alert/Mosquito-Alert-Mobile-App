@@ -9,7 +9,9 @@ void main() {
   binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   group('end-to-end test', () {
-    testWidgets('Sanity test', (tester) async {
+    testWidgets(
+        'Test background tracking can be easily disabled on first use, to satisfy Google/Apple requirements',
+        (tester) async {
       app.main(env: "test");
       await tester.pumpAndSettle(Duration(seconds: 3));
 
@@ -30,7 +32,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Reject background traking
-      final rejectBtn = find.byKey(Key("reject_background_tracking"));
+      final rejectBtn = find.byKey(Key("rejectBackgroundTrackingBtn"));
+      expect(rejectBtn, findsOne);
       await tester.ensureVisible(rejectBtn);
       await tester.tap(rejectBtn);
       await tester.pumpAndSettle();
