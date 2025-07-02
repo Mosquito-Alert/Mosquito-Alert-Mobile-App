@@ -14,13 +14,12 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
+import 'package:mosquito_alert_app/providers/user_score_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/user_score_provider.dart';
 
 class MainVC extends StatefulWidget {
   const MainVC({key});
@@ -174,11 +173,11 @@ class _MainVCState extends State<MainVC> {
                                 image: AssetImage('assets/img/points_box.webp'),
                               ),
                             ),
-                            child: Consumer<UserScoreProvider>(
-                              builder: (context, userScoreProvider, _) {
+                            child: Consumer<UserProvider>(
+                              builder: (context, userProvider, _) {
                                 return Center(
                                   child: AutoSizeText(
-                                    userScoreProvider.score.toString(),
+                                    userProvider.userScore.toString(),
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
