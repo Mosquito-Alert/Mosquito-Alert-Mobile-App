@@ -11,12 +11,14 @@ class UserProvider extends ChangeNotifier {
   Future<void> fetchUser() async {
     try {
       final response = await ApiSingleton.usersApi.retrieveMine();
-      if (response.data != null) {
+      if (response.statusCode == 200 && response.data != null) {
         _user = response.data;
-        notifyListeners();
       }
     } catch (e) {
       print('Error getting user: $e');
+      _user = null;
+    } finally {
+      notifyListeners();
     }
   }
 }
