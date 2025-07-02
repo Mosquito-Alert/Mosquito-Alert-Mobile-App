@@ -14,7 +14,7 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
-import 'package:mosquito_alert_app/providers/user_score_provider.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
