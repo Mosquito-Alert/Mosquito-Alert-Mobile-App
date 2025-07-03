@@ -10,7 +10,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
@@ -25,6 +24,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late NotificationsApi notificationsApi;
   static late FixesApi fixesApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
@@ -64,6 +64,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    notificationsApi = api.getNotificationsApi();
     fixesApi = api.getFixesApi();
 
     // Try to restore session if we have stored credentials
@@ -247,25 +248,6 @@ class ApiSingleton {
   }
 
   Future<dynamic> getCampaigns(countryId) async {
-    // TODO
-    return false;
-  }
-
-  /*
-  * Notifications Module
-  * */
-  Future<List<MyNotification>> getNotifications() async {
-    // TODO
-    return [];
-  }
-
-  Future<dynamic> updateNotification(id, acknowledge) async {
-    // TODO
-    return false;
-  }
-
-  Future<dynamic> markNotificationAsRead(
-      String? userIdentifier, int? notificationId) async {
     // TODO
     return false;
   }
