@@ -96,6 +96,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 : Container(
                     margin: EdgeInsets.all(12),
                     child: ListView.builder(
+                        // TODO: Replace with PagedListView
                         itemCount: notificationsList.length,
                         itemBuilder: (ctx, index) {
                           final notification = notificationsList[index];
