@@ -48,7 +48,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Future<void> _getData() async {
     NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
-    Response<PaginatedNotificationList?> response = await notificationsApi.listMine();
+    Response<PaginatedNotificationList?> response =
+        await notificationsApi.listMine();
     setState(() {
       notifications = response.data;
       _checkOpenNotification();
@@ -106,9 +107,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
-                              color: notification.isRead ? Colors.grey[200] : Colors.white,
+                              color: notification.isRead
+                                  ? Colors.grey[200]
+                                  : Colors.white,
                               child: ListTile(
-                                tileColor: notification.isRead ? Colors.grey[200] : Colors.white,
+                                tileColor: notification.isRead
+                                    ? Colors.grey[200]
+                                    : Colors.white,
                                 contentPadding: EdgeInsets.all(12),
                                 onTap: () {
                                   if (!notification.isRead) {

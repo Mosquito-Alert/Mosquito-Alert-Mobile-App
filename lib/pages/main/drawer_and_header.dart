@@ -63,7 +63,8 @@ class _MainVCState extends State<MainVC> {
 
   Future<void> _getNotificationCount() async {
     NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
-    Response<PaginatedNotificationList?> response = await notificationsApi.listMine();
+    Response<PaginatedNotificationList?> response =
+        await notificationsApi.listMine();
     PaginatedNotificationList? notifications = response.data;
 
     final results = notifications?.results;
