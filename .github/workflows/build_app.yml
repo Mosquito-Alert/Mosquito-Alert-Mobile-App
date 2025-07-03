@@ -1,6 +1,7 @@
 name: Build app
 on:
   merge_group:
+  pull_request:
   push:
     branches: ["main"]
 
