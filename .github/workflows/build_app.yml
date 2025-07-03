@@ -54,7 +54,7 @@ jobs:
     - name: Validate pubspec.lock is up to date
       run: |
         if ! git diff --quiet pubspec.lock; then
-          echo "::error ::pubspec.lock is out of date. Run 'flutter pub get' and commit the updated file."
+          echo "::error ::pubspec.lock is out of date. Run 'fvm flutter pub get' and commit the updated file."
           exit 1
         fi
 
