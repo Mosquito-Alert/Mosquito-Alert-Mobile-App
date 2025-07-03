@@ -252,17 +252,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<dynamic> updateNotification(id, acknowledge) async {
-    // TODO
-    return false;
-  }
-
-  Future<dynamic> markNotificationAsRead(
-      String? userIdentifier, int? notificationId) async {
-    // TODO
-    return false;
-  }
-
   Future<bool> subscribeToTopic(
       String userIdentifier, String? topicIdentifier) async {
     // TODO

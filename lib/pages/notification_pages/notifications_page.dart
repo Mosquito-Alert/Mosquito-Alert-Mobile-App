@@ -13,8 +13,6 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-import '../../utils/UserManager.dart';
-
 class NotificationsPage extends StatefulWidget {
   final String? notificationId;
   final Function(int)? onNotificationUpdate;
@@ -215,10 +213,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _updateNotification(int id) async {
-    var userId = await UserManager.getUUID();
-    var res = await ApiSingleton().markNotificationAsRead(userId, id);
+    NotificationRequest notificationRequest =
+        NotificationRequest((b) => b..isRead = true);
+    final res = await ApiSingleton.notificationsApi
+        .update(id: id, notificationRequest: notificationRequest);
 
-    if (res) {
+    if (res.statusCode == 200) {
       // BuiltValue objects are immutable, so you may need to refetch or rebuild the list
       setState(() {});
       _updateUnreadNotificationCount();
