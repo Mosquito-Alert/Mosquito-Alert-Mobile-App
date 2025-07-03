@@ -62,7 +62,7 @@ dependencies:
     git:
       url: https://github.com/Mosquito-Alert/mosquito-alert-dart-sdk.git
       ref: 0.1.21
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.2.4
 
 dependency_overrides:
   # Temporal for flutter_launcher_icons
