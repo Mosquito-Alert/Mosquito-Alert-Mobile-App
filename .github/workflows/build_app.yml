@@ -20,6 +20,13 @@ jobs:
 
     - name: Get Dependencies
       run: flutter pub get
+    
+    - name: Validate pubspec.lock is up to date
+      run: |
+        if ! git diff --quiet pubspec.lock; then
+          echo "::error ::pubspec.lock is out of date. Run 'fvm flutter pub get' and commit the updated file."
+          exit 1
+        fi
 
     - name: Decode google-services.json
       run: echo $GOOGLE_SERVICES_JSON | base64 --decode > android/app/google-services.json
