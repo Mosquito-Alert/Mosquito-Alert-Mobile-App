@@ -241,7 +241,8 @@ class _MainVCState extends State<MainVC> {
 
   Widget _uuidWithClipboard() {
     return FutureBuilder(
-        future: UserManager.getUUID(),
+        // TODO: Update and use provider with UUID, not apiuser
+        future: UserManager.getApiUser(),
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
