@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
@@ -243,7 +243,8 @@ class _MainVCState extends State<MainVC> {
 
   Widget _uuidWithClipboard() {
     return FutureBuilder(
-        future: UserManager.getUUID(),
+        // TODO: Update and use provider with UUID, not apiuser
+        future: UserManager.getApiUser(),
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();

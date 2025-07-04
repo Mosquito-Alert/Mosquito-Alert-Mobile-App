@@ -20,7 +20,6 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:random_string/random_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
@@ -435,19 +434,13 @@ class Utils {
   }
 
   static Future<void> checkForUnfetchedData() async {
-    SharedPreferences prefs;
-    // if (userCreated["required"] && !userCreated["created"]) {
     final Map<String, bool> userCreated = initializedCheckData['userCreated'];
     if (userCreated['required']! && !userCreated['created']!) {
-      print('Utils (checkForUnfetchedData): Creating user...');
-      prefs = await SharedPreferences.getInstance();
-      final uuid = prefs.getString('uuid');
-      await ApiSingleton().createUser(uuid);
+      await ApiSingleton().createUser();
     } else {
       print(
           'Utils (checkForUnfetchedData): Either the user was created or it was not required (${jsonEncode(userCreated)})');
     }
-
     if (!initializedCheckData['userScores']) {
       print('Utils (checkForUnfetchedData): Fetching user scores...');
       UserManager.userScore = await ApiSingleton().getUserScores();

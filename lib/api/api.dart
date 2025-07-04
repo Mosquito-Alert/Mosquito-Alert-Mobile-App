@@ -74,7 +74,7 @@ class ApiSingleton {
     }
   }
 
-  Future<dynamic> createUser(String? uuid) async {
+  Future<dynamic> createUser() async {
     try {
       // Try to authenticate with existing credentials first
       final apiUser = await UserManager.getApiUser();

@@ -8,7 +8,6 @@ import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/background_tracking_explanation.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import 'Application.dart';
 
@@ -29,12 +28,9 @@ class UserManager {
       );
 
       await prefs.setBool('firstTime', true);
-      var uuid = Uuid().v4();
-      await prefs.setString('uuid', uuid);
 
-      Utils.initializedCheckData['userCreated']['required'] = true;
+      await ApiSingleton().createUser();
 
-      await ApiSingleton().createUser(uuid);
       await setLanguage(Utils.language.languageCode);
       await setLanguageCountry(Utils.language.countryCode);
 
