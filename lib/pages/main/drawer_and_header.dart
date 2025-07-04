@@ -85,8 +85,8 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<bool> initAuthStatus() async {
-    final env = await AppConfig.getEnvironment();
-    if (env == "test") {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
       // Requesting permissions on automated tests creates many problems
       // and mocking permission acceptance is difficult on Android and iOS
       return false;

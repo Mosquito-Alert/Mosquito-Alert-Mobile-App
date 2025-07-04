@@ -32,8 +32,8 @@ class PushNotificationsManager {
   * Push Notification Manager Init
   */
   static Future<void> init() async {
-    final env = await AppConfig.getEnvironment();
-    if (!_initialized && env != "test") {
+    final appConfig = await AppConfig.loadConfig();
+    if (!_initialized && appConfig.useAuth) {
       await _firebaseMessaging.requestPermission();
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
