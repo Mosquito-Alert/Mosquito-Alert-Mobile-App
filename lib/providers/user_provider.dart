@@ -7,6 +7,7 @@ class UserProvider extends ChangeNotifier {
   User? get user => _user;
 
   int get userScore => _user?.score.value ?? 0;
+  String get userUuid => _user?.uuid ?? '';
 
   Future<void> fetchUser() async {
     try {
