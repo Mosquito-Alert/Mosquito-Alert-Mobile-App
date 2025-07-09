@@ -93,8 +93,7 @@ class _MainVCState extends State<MainVC> {
       // and mocking permission acceptance is difficult on Android and iOS
       return false;
     }
-    userUuid = await UserManager.getUUID();
-    await Utils.loadFirebase();
+    await Utils.loadFirebase(context);
     return true;
   }
 

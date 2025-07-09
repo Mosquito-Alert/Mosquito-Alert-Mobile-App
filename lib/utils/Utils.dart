@@ -15,10 +15,12 @@ import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
 import 'package:mosquito_alert_app/models/session.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -69,11 +71,13 @@ class Utils {
     double? lat,
     double? lon,
     String? locationType,
+    required BuildContext context,
   }) async {
     if (session == null) {
       reportsList = [];
 
-      var userUUID = await UserManager.getUUID();
+      final userUUID =
+          Provider.of<UserProvider>(context, listen: false).userUuid;
 
       dynamic response = await ApiSingleton().getLastSession(userUUID);
       if (response is bool && !response) {
@@ -99,7 +103,8 @@ class Utils {
 
     if (session?.id != null) {
       var lang = await UserManager.getLanguage();
-      var userUUID = await UserManager.getUUID();
+      final userUUID =
+          Provider.of<UserProvider>(context, listen: false).userUuid;
       report = Report(
           type: type,
           report_id: randomAlphaNumeric(4).toString(),
@@ -171,7 +176,7 @@ class Utils {
     }
   }
 
-  static void addOtherReport(String type) {
+  static void addOtherReport(String type, BuildContext context) {
     report!.version_time = DateTime.now().toUtc().toIso8601String();
     report!.creation_time = DateTime.now().toUtc().toIso8601String();
 
@@ -181,12 +186,14 @@ class Utils {
       createNewReport(type,
           lat: reportsList!.last!.selected_location_lat,
           lon: reportsList!.last!.selected_location_lon,
-          locationType: 'selected');
+          locationType: 'selected',
+          context: context);
     } else {
       createNewReport(type,
           lat: reportsList!.last!.current_location_lat,
           lon: reportsList!.last!.current_location_lon,
-          locationType: 'current');
+          locationType: 'current',
+          context: context);
     }
   }
 
@@ -430,7 +437,7 @@ class Utils {
     }
   }
 
-  static Future<void> checkForUnfetchedData() async {
+  static Future<void> checkForUnfetchedData(BuildContext context) async {
     final Map<String, bool> userCreated = initializedCheckData['userCreated'];
     if (userCreated['required']! && !userCreated['created']!) {
       await ApiSingleton().createUser();
@@ -441,7 +448,7 @@ class Utils {
 
     if (!initializedCheckData['firebase']) {
       print('Utils (checkForUnfetchedData): Loading Firebase...');
-      await loadFirebase();
+      await loadFirebase(context);
     } else {
       print('Utils (checkForUnfetchedData): Firebase was already initialized.');
     }
@@ -458,9 +465,9 @@ class Utils {
     return res;
   }
 
-  static Future<void> loadFirebase() async {
-    await PushNotificationsManager.init();
-    await PushNotificationsManager.subscribeToLanguage();
+  static Future<void> loadFirebase(BuildContext context) async {
+    await PushNotificationsManager.init(context);
+    await PushNotificationsManager.subscribeToLanguage(context);
   }
 
   static final RegExp mailRegExp = RegExp(
