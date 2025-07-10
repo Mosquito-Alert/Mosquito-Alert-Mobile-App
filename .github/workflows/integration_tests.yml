@@ -1,6 +1,7 @@
 name: Integration testing
 
 on:
+  push:
   pull_request:
   merge_group:
   push:
@@ -8,8 +9,11 @@ on:
 
 jobs:
   android_integration_tests:
-    name: Run integration tests
+    name: Run integration tests (attempt ${{ matrix.attempt }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        attempt: [1, 2, 3, 4, 5]
     steps:
     - uses: actions/checkout@v4
 
@@ -47,4 +51,7 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: Nexus 6
-        script: "flutter test integration_test --verbose"
+        script: |
+          adb wait-for-device
+          adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+          flutter test integration_test --timeout=15m
