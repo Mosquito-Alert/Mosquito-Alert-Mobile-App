@@ -12,7 +12,6 @@ import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
@@ -247,23 +246,6 @@ class ApiSingleton {
       String? userIdentifier, int? notificationId) async {
     // TODO
     return false;
-  }
-
-  Future<bool> subscribeToTopic(
-      String userIdentifier, String? topicIdentifier) async {
-    // TODO
-    return false;
-  }
-
-  Future<bool> unsubscribeFromTopic(
-      String userIdentifier, String topicIdentifier) async {
-    // TODO
-    return false;
-  }
-
-  Future<List<Topic>?> getTopicsSubscribed(String userIdentifier) async {
-    // TODO
-    return [];
   }
 
   Future<bool> setFirebaseToken(String? userIdentifier, String fcmToken) async {

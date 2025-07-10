@@ -424,7 +424,6 @@ class Utils {
 
   static Future<void> loadFirebase() async {
     await PushNotificationsManager.init();
-    await PushNotificationsManager.subscribeToLanguage();
   }
 
   static final RegExp mailRegExp = RegExp(
