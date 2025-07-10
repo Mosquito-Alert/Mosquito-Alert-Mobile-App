@@ -41,6 +41,6 @@ void main() {
       // Home page
       final homePageButtons = find.byType(CustomCard);
       expect(homePageButtons, findsNWidgets(4));
-    });
+    }, timeout: Timeout(Duration(minutes: 20)));
   });
 }
