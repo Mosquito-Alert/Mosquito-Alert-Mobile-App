@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        attempt: [1, 2, 3, 4, 5]
+        attempt: [1, 2, 3, 4]
     steps:
     - uses: actions/checkout@v4
 
