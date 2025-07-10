@@ -9,7 +9,6 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/models/session.dart';
 import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
@@ -63,21 +62,6 @@ class ApiSingleton {
     authApi = api.getAuthApi();
     usersApi = api.getUsersApi();
     fixesApi = api.getFixesApi();
-  }
-
-  Future<dynamic> getLastSession(String? userUUID) async {
-    // TODO
-    return false;
-  }
-
-  Future<int?> createSession(Session session) async {
-    // TODO
-    return null;
-  }
-
-  Future<dynamic> closeSession(Session session) async {
-    // TODO
-    return false;
   }
 
   //Reports
