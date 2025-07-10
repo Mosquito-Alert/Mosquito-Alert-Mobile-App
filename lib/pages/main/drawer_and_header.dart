@@ -248,7 +248,7 @@ class _MainVCState extends State<MainVC> {
   Widget _uuidWithClipboard() {
     return Consumer<UserProvider>(
       builder: (context, userProvider, _) {
-        final uuid = userProvider.userUuid;
+        String uuid = userProvider.user?.uuid ?? '';
         if (uuid.isEmpty) {
           // Don't show anything if UUID is not available
           return SizedBox.shrink();

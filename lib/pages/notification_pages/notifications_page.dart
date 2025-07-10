@@ -211,7 +211,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _updateNotification(id) async {
-    final userUuid = Provider.of<UserProvider>(context, listen: false).userUuid;
+    final userUuid =
+        Provider.of<UserProvider>(context, listen: false).user?.uuid;
     var res = await ApiSingleton().markNotificationAsRead(userUuid, id);
 
     if (res) {

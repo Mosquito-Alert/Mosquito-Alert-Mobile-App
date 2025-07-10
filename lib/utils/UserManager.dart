@@ -51,8 +51,9 @@ class UserManager {
 
     application.onLocaleChanged(Utils.language);
 
-    final userUuid = Provider.of<UserProvider>(context, listen: false).userUuid;
-    if (userUuid.isNotEmpty) {
+    final userUuid =
+        Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    if (userUuid != null && userUuid.isNotEmpty) {
       await FirebaseAnalytics.instance.setUserId(id: userUuid);
     }
     return true;

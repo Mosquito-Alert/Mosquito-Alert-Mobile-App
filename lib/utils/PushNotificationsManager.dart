@@ -122,7 +122,7 @@ class PushNotificationsManager {
 
   static Future<void> registerFCMToken(
       String fcmToken, BuildContext context) async {
-    final userId = Provider.of<UserProvider>(context, listen: false).userUuid;
+    final userId = Provider.of<UserProvider>(context, listen: false).user?.uuid;
     ApiSingleton().setFirebaseToken(userId, fcmToken);
     await subscribeToGlobal(context);
   }
@@ -156,39 +156,53 @@ class PushNotificationsManager {
 
   static Future<void> subscribeToTopic(
       String? topic, BuildContext context) async {
-    if (_initialized) {
-      final userId = Provider.of<UserProvider>(context, listen: false).userUuid;
-      if (userId.isNotEmpty && !_checkIfSubscribed(topic)) {
-        var result = await ApiSingleton().subscribeToTopic(userId, topic);
-        if (result) {
-          await _firebaseMessaging.subscribeToTopic(topic!);
-        } else if (topic == 'global') {
-          await _firebaseMessaging.subscribeToTopic('global');
-        }
-      }
+    if (!_initialized) {
+      return;
+    }
+
+    final userId = Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    if (userId == null || userId.isEmpty) {
+      return;
+    }
+    if (_checkIfSubscribed(topic)) {
+      return;
+    }
+
+    var result = await ApiSingleton().subscribeToTopic(userId, topic);
+    if (result) {
+      await _firebaseMessaging.subscribeToTopic(topic!);
+    } else if (topic == 'global') {
+      await _firebaseMessaging.subscribeToTopic('global');
     }
   }
 
   static Future<void> unsubscribeToTopic(
       String topic, BuildContext context) async {
-    final userId = Provider.of<UserProvider>(context, listen: false).userUuid;
-    if (userId.isNotEmpty && _checkIfSubscribed(topic)) {
-      var result = await ApiSingleton().unsubscribeFromTopic(userId, topic);
-      if (result) {
-        await _firebaseMessaging.unsubscribeFromTopic(topic);
-      }
+    final userId = Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    if (userId == null || userId.isEmpty) {
+      return;
+    }
+    if (!_checkIfSubscribed(topic)) {
+      return;
+    }
+
+    var result = await ApiSingleton().unsubscribeFromTopic(userId, topic);
+    if (result) {
+      await _firebaseMessaging.unsubscribeFromTopic(topic);
     }
   }
 
   static Future<List<Topic>?> getTopicsSubscribed(BuildContext context) async {
-    final userId = Provider.of<UserProvider>(context, listen: false).userUuid;
-    if (userId.isNotEmpty) {
-      var result = await ApiSingleton().getTopicsSubscribed(userId);
-      if (result != null) {
-        currentTopics = result;
-      }
+    final userId = Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    if (userId == null || userId.isEmpty) {
+      return null;
     }
-    return null;
+
+    var result = await ApiSingleton().getTopicsSubscribed(userId);
+    if (result != null) {
+      currentTopics = result;
+    }
+    return result;
   }
 
   static bool _checkIfSubscribed(String? topicCode) {

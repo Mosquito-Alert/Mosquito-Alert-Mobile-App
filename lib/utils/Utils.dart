@@ -77,7 +77,7 @@ class Utils {
       reportsList = [];
 
       final userUUID =
-          Provider.of<UserProvider>(context, listen: false).userUuid;
+          Provider.of<UserProvider>(context, listen: false).user?.uuid;
 
       dynamic response = await ApiSingleton().getLastSession(userUUID);
       if (response is bool && !response) {
@@ -104,7 +104,7 @@ class Utils {
     if (session?.id != null) {
       var lang = await UserManager.getLanguage();
       final userUUID =
-          Provider.of<UserProvider>(context, listen: false).userUuid;
+          Provider.of<UserProvider>(context, listen: false).user?.uuid;
       report = Report(
           type: type,
           report_id: randomAlphaNumeric(4).toString(),
