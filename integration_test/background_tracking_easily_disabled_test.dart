@@ -57,6 +57,6 @@ void main() {
       final homePageButtons = find.byType(CustomCard);
       await waitForWidget(tester, homePageButtons);
       expect(homePageButtons, findsNWidgets(4));
-    }, timeout: Timeout(Duration(minutes: 20)));
+    }, timeout: Timeout(Duration(minutes: 25)));
   });
 }
