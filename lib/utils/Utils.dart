@@ -439,8 +439,8 @@ class Utils {
 
   static Future<void> checkForUnfetchedData(BuildContext context) async {
     final Map<String, bool> userCreated = initializedCheckData['userCreated'];
-    if (userCreated['required']! && !userCreated['created']!) {
-      await ApiSingleton().createUser();
+    if (!userCreated['created']!) {
+      await Provider.of<UserProvider>(context, listen: false).createUser();
     } else {
       print(
           'Utils (checkForUnfetchedData): Either the user was created or it was not required (${jsonEncode(userCreated)})');

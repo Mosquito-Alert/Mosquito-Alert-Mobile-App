@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/background_tracking_explanation.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
@@ -30,7 +29,7 @@ class UserManager {
 
       await prefs.setBool('firstTime', true);
 
-      await ApiSingleton().createUser();
+      await Provider.of<UserProvider>(context, listen: false).createUser();
 
       await setLanguage(Utils.language.languageCode);
       await setLanguageCountry(Utils.language.countryCode);
