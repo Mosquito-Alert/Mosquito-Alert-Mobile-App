@@ -11,6 +11,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/models/response.dart';
@@ -395,6 +396,11 @@ class Utils {
   }
 
   static void syncReports() async {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      return;
+    }
+
     List? savedReports = await UserManager.getReportList();
     List? savedImages = await UserManager.getImageList();
 
@@ -432,6 +438,11 @@ class Utils {
   }
 
   static Future<void> checkForUnfetchedData() async {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      return;
+    }
+
     SharedPreferences prefs;
     // if (userCreated["required"] && !userCreated["created"]) {
     final Map<String, bool> userCreated = initializedCheckData['userCreated'];
