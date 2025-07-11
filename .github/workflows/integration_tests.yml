@@ -39,6 +39,13 @@ jobs:
       run: |
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
+        adb wait-for-device
+        adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+
+    - name: Install emulator dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libx11-dev libvulkan-dev libgl1-mesa-dev
 
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
@@ -47,7 +54,4 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: Nexus 6
-        script: |
-          adb wait-for-device
-          adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-          flutter test integration_test --timeout=25m
+        script: flutter test integration_test --timeout=25m
