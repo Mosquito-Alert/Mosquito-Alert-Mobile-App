@@ -4,15 +4,12 @@ on:
   pull_request:
   merge_group:
   push:
-    # branches: ["main"]
+    branches: ["main"]
 
 jobs:
   android_integration_tests:
     name: Run integration tests (attempt ${{ matrix.attempt }})
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        attempt: [1, 2, 3, 4, 5]
     steps:
     - uses: actions/checkout@v4
 
