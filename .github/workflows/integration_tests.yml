@@ -39,13 +39,16 @@ jobs:
       run: |
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
-        adb wait-for-device
-        adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
     - name: Install emulator dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y libx11-dev libvulkan-dev libgl1-mesa-dev
+
+    - name: Wait for adb device
+      run: |
+        adb wait-for-device
+        adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
 
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
