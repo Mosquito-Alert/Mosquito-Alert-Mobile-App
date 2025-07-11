@@ -43,7 +43,6 @@ class Utils {
   static Map<String, dynamic> initializedCheckData = {
     'userCreated': {
       'created': false,
-      'required': true,
     },
     'firebase': false, // Whether firebase got initialized
   };
