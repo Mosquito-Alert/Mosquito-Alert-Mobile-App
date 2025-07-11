@@ -44,10 +44,8 @@ jobs:
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
 
-    - name: Install emulator dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libx11-dev libvulkan-dev libgl1-mesa-dev
+    - name: Build debug APK (avoids test loader timeouts)
+      run: flutter build appbundle --debug
 
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
