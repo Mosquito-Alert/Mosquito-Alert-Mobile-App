@@ -44,7 +44,10 @@ jobs:
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
 
-    - name: Build debug APK (avoids test loader timeouts)
+    - name: Set Gradle JVM options
+      run: echo "org.gradle.jvmargs=-Xmx4096m" >> android/gradle.properties
+
+    - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
 
     - name: Run integration tests
