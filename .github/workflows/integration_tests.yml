@@ -8,7 +8,7 @@ on:
 
 jobs:
   android_integration_tests:
-    name: Run integration tests (attempt ${{ matrix.attempt }})
+    name: Run integration tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
