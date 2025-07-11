@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/topic.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -25,7 +24,6 @@ class PushNotificationsManager {
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
   static bool _initialized = false;
-  static List<Topic> currentTopics = <Topic>[];
 
   /*
   * Push Notification Manager Init
