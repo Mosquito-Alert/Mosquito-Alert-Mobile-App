@@ -54,16 +54,17 @@ class UserProvider extends ChangeNotifier {
       final registeredGuest = await ApiSingleton.authApi
           .signupGuest(guestRegistrationRequest: guestRegistrationRequest);
 
-      if (registeredGuest.data?.username != null) {
-        final newApiUser = registeredGuest.data!.username;
-        await UserManager.setUser(newApiUser, guestPassword);
-        final success = await loginJwt(newApiUser, guestPassword);
-        if (success) {
-          await fetchUser();
-          return true;
-        }
+      final username = registeredGuest.data?.username;
+      if (username == null) {
+        return false;
       }
-      return false;
+
+      await UserManager.setUser(username, guestPassword);
+
+      if (!await loginJwt(username, guestPassword)) return false;
+
+      await fetchUser();
+      return true;
     } catch (e) {
       print('Error creating user: $e');
       return null;
