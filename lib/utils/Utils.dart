@@ -14,12 +14,13 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,7 +44,6 @@ class Utils {
   static Map<String, dynamic> initializedCheckData = {
     'userCreated': {
       'created': false,
-      'required': true,
     },
     'firebase': false, // Whether firebase got initialized
   };
@@ -63,9 +63,11 @@ class Utils {
     double? lat,
     double? lon,
     String? locationType,
+    required BuildContext context,
   }) async {
     var lang = await UserManager.getLanguage();
-    var userUUID = await UserManager.getUUID();
+    final userUUID =
+        Provider.of<UserProvider>(context, listen: false).user?.uuid;
     report = Report(
         type: type,
         report_id: randomAlphaNumeric(4).toString(),
@@ -132,7 +134,7 @@ class Utils {
     }
   }
 
-  static void addOtherReport(String type) {
+  static void addOtherReport(String type, BuildContext context) {
     report!.version_time = DateTime.now().toUtc().toIso8601String();
     report!.creation_time = DateTime.now().toUtc().toIso8601String();
 
@@ -142,12 +144,14 @@ class Utils {
       createNewReport(type,
           lat: reportsList!.last!.selected_location_lat,
           lon: reportsList!.last!.selected_location_lon,
-          locationType: 'selected');
+          locationType: 'selected',
+          context: context);
     } else {
       createNewReport(type,
           lat: reportsList!.last!.current_location_lat,
           lon: reportsList!.last!.current_location_lon,
-          locationType: 'current');
+          locationType: 'current',
+          context: context);
     }
   }
 
@@ -395,20 +399,16 @@ class Utils {
     }
   }
 
-  static Future<void> checkForUnfetchedData() async {
+  static Future<void> checkForUnfetchedData(BuildContext context) async {
     final appConfig = await AppConfig.loadConfig();
     if (!appConfig.useAuth) {
       return;
     }
 
-    SharedPreferences prefs;
     // if (userCreated["required"] && !userCreated["created"]) {
     final Map<String, bool> userCreated = initializedCheckData['userCreated'];
-    if (userCreated['required']! && !userCreated['created']!) {
-      print('Utils (checkForUnfetchedData): Creating user...');
-      prefs = await SharedPreferences.getInstance();
-      final uuid = prefs.getString('uuid');
-      await ApiSingleton().createUser(uuid);
+    if (!userCreated['created']!) {
+      await Provider.of<UserProvider>(context, listen: false).createUser();
     } else {
       print(
           'Utils (checkForUnfetchedData): Either the user was created or it was not required (${jsonEncode(userCreated)})');
@@ -416,7 +416,7 @@ class Utils {
 
     if (!initializedCheckData['firebase']) {
       print('Utils (checkForUnfetchedData): Loading Firebase...');
-      await loadFirebase();
+      await loadFirebase(context);
     } else {
       print('Utils (checkForUnfetchedData): Firebase was already initialized.');
     }
@@ -433,9 +433,9 @@ class Utils {
     return res;
   }
 
-  static Future<void> loadFirebase() async {
-    await PushNotificationsManager.init();
-    await PushNotificationsManager.subscribeToLanguage();
+  static Future<void> loadFirebase(BuildContext context) async {
+    await PushNotificationsManager.init(context);
+    await PushNotificationsManager.subscribeToLanguage(context);
   }
 
   static final RegExp mailRegExp = RegExp(
