@@ -6,14 +6,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 
 import '../api/api.dart';
 import '../main.dart';
 import '../pages/notification_pages/notifications_page.dart';
-import 'UserManager.dart';
 
 class PushNotificationsManager {
   PushNotificationsManager._();
@@ -28,7 +29,7 @@ class PushNotificationsManager {
   /*
   * Push Notification Manager Init
   */
-  static Future<void> init() async {
+  static Future<void> init(BuildContext context) async {
     final appConfig = await AppConfig.loadConfig();
     if (!_initialized && appConfig.useAuth) {
       await _firebaseMessaging.requestPermission();
@@ -51,7 +52,7 @@ class PushNotificationsManager {
           .timeout(Duration(seconds: 10), onTimeout: () => null);
 
       if (token != null) {
-        await registerFCMToken(token);
+        await registerFCMToken(token, context);
         Utils.initializedCheckData['firebase'] = true;
         _initialized = true;
       }
@@ -114,8 +115,9 @@ class PushNotificationsManager {
     });
   }
 
-  static Future<void> registerFCMToken(String fcmToken) async {
-    var userId = await UserManager.getUUID();
+  static Future<void> registerFCMToken(
+      String fcmToken, BuildContext context) async {
+    final userId = Provider.of<UserProvider>(context, listen: false).user?.uuid;
     ApiSingleton().setFirebaseToken(userId, fcmToken);
   }
 }
