@@ -40,6 +40,7 @@ jobs:
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
 
+      # The timeout for a single step in Github Actions is 12 minutes
     - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
 
