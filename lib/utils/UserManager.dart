@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/background_tracking_explanation.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import 'Application.dart';
 
 class UserManager {
   static final _secureStorage = FlutterSecureStorage();
   static var profileUUIDs;
-  static int? userScore;
 
   static Future<bool> startFirstTime(context) async {
     var prefs = await SharedPreferences.getInstance();
@@ -29,12 +28,9 @@ class UserManager {
       );
 
       await prefs.setBool('firstTime', true);
-      var uuid = Uuid().v4();
-      await prefs.setString('uuid', uuid);
 
-      Utils.initializedCheckData['userCreated']['required'] = true;
+      await Provider.of<UserProvider>(context, listen: false).createUser();
 
-      await ApiSingleton().createUser(uuid);
       await setLanguage(Utils.language.languageCode);
       await setLanguageCountry(Utils.language.countryCode);
 
@@ -54,11 +50,10 @@ class UserManager {
     }
 
     application.onLocaleChanged(Utils.language);
-    userScore = await ApiSingleton().getUserScores();
-    await setUserScores(userScore);
 
-    String? userUuid = await UserManager.getUUID();
-    if (userUuid != null) {
+    final userUuid =
+        Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    if (userUuid != null && userUuid.isNotEmpty) {
       await FirebaseAnalytics.instance.setUserId(id: userUuid);
     }
     return true;
@@ -68,11 +63,6 @@ class UserManager {
   static Future<void> setFrirebaseId(id) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString('firebaseId', id);
-  }
-
-  static Future<void> setUserScores(scores) async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('userScores', scores);
   }
 
   static Future<void> setSowInfoAdult(show) async {
@@ -137,19 +127,9 @@ class UserManager {
   }
 
   //get
-  static Future<String?> getUUID() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('uuid');
-  }
-
   static Future<String?> getFirebaseId() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('firebaseId');
-  }
-
-  static Future<int?> getUserScores() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userScores');
   }
 
   static Future<bool?> getShowInfoAdult() async {

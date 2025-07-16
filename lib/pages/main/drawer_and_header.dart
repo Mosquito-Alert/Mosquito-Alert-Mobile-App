@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
@@ -15,10 +16,12 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 
 class MainVC extends StatefulWidget {
   const MainVC({key});
@@ -92,10 +95,13 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<bool> initAuthStatus() async {
-    userUuid = await UserManager.getUUID();
-    UserManager.userScore = await ApiSingleton().getUserScores();
-    await UserManager.setUserScores(UserManager.userScore);
-    await Utils.loadFirebase();
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      // Requesting permissions on automated tests creates many problems
+      // and mocking permission acceptance is difficult on Android and iOS
+      return false;
+    }
+    await Utils.loadFirebase(context);
     return true;
   }
 
@@ -181,15 +187,11 @@ class _MainVCState extends State<MainVC> {
                                 image: AssetImage('assets/img/points_box.webp'),
                               ),
                             ),
-                            child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
-                                builder: (context, snapshot) {
-                                  return Center(
-                                      child: AutoSizeText(
-                                    snapshot.data != null && snapshot.hasData
-                                        ? snapshot.data.toString()
-                                        : '',
+                            child: Consumer<UserProvider>(
+                              builder: (context, userProvider, _) {
+                                return Center(
+                                  child: AutoSizeText(
+                                    userProvider.userScore.toString(),
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
@@ -197,8 +199,10 @@ class _MainVCState extends State<MainVC> {
                                         color: Color(0xFF4B3D04),
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                  ));
-                                }),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
 
@@ -250,63 +254,52 @@ class _MainVCState extends State<MainVC> {
   }
 
   Widget _uuidWithClipboard() {
-    return FutureBuilder(
-        future: UserManager.getUUID(),
-        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          return Row(
-            children: [
-              Text(
-                'ID: ',
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, _) {
+        String uuid = userProvider.user?.uuid ?? '';
+        if (uuid.isEmpty) {
+          // Don't show anything if UUID is not available
+          return SizedBox.shrink();
+        }
+        return Row(
+          children: [
+            Text(
+              'ID: ',
+              style: TextStyle(
+                color: Colors.black.withValues(alpha: 0.7),
+                fontSize: 8,
+              ),
+            ),
+            Container(
+              width: 150,
+              child: Text(
+                uuid,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Colors.grey,
                   fontSize: 8,
                 ),
               ),
-              Container(
-                width: 150,
-                child: Text(
-                  snapshot.data ?? '',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 8,
-                  ),
-                ),
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.copy_rounded,
+                size: 12,
               ),
-              GestureDetector(
-                child: Icon(
-                  Icons.copy_rounded,
-                  size: 12,
-                ),
-                onTap: () {
-                  final data = snapshot.data;
-                  if (data != null) {
-                    Clipboard.setData(ClipboardData(text: data));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(MyLocalizations.of(
-                            context, 'copied_to_clipboard_success')),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(MyLocalizations.of(
-                            context, 'copied_to_clipboard_error')),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
-          );
-        });
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: uuid));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(MyLocalizations.of(
+                        context, 'copied_to_clipboard_success')),
+                  ),
+                );
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildCustomTile(int index, IconData icon, String title, context) {
