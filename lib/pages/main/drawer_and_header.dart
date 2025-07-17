@@ -66,18 +66,9 @@ class _MainVCState extends State<MainVC> {
 
   Future<void> _getNotificationCount() async {
     NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
-    Response<PaginatedNotificationList?> response =
-        await notificationsApi.listMine();
-    PaginatedNotificationList? notifications = response.data;
-
-    final results = notifications?.results;
-    if (results != null) {
-      var unacknowledgedCount =
-          results.where((notification) => notification.isRead == false).length;
-      updateNotificationCount(unacknowledgedCount);
-    } else {
-      updateNotificationCount(0);
-    }
+    final Response<PaginatedNotificationList> response =
+        await notificationsApi.listMine(isRead: true, pageSize: 1);
+    updateNotificationCount(response.data?.count ?? 0);
   }
 
   void updateNotificationCount(int newCount) {
