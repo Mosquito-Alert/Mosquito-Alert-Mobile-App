@@ -214,10 +214,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _updateNotification(int id) async {
-    NotificationRequest notificationRequest =
-        NotificationRequest((b) => b..isRead = true);
-    final res = await ApiSingleton.notificationsApi
-        .update(id: id, notificationRequest: notificationRequest);
+    PatchedNotificationRequest patchedNotificationRequest =
+        PatchedNotificationRequest((b) => b..isRead = true);
+    final res = await ApiSingleton.notificationsApi.partialUpdate(
+        id: id, patchedNotificationRequest: patchedNotificationRequest);
 
     if (res.statusCode == 200) {
       // BuiltValue objects are immutable, so you may need to refetch or rebuild the list
