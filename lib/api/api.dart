@@ -7,7 +7,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
@@ -19,6 +18,7 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
+  static late NotificationsApi notificationsApi;
   static late UsersApi usersApi;
   static late FixesApi fixesApi;
 
@@ -59,6 +59,7 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
+    notificationsApi = api.getNotificationsApi();
     usersApi = api.getUsersApi();
     fixesApi = api.getFixesApi();
   }
@@ -129,25 +130,6 @@ class ApiSingleton {
   }
 
   Future<dynamic> getCampaigns(countryId) async {
-    // TODO
-    return false;
-  }
-
-  /*
-  * Notifications Module
-  * */
-  Future<List<MyNotification>> getNotifications() async {
-    // TODO
-    return [];
-  }
-
-  Future<dynamic> updateNotification(id, acknowledge) async {
-    // TODO
-    return false;
-  }
-
-  Future<dynamic> markNotificationAsRead(
-      String? userIdentifier, int? notificationId) async {
     // TODO
     return false;
   }
