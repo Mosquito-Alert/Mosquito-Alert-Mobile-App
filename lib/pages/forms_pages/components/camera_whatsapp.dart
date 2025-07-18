@@ -147,31 +147,53 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     }
   }
 
+  Widget _buildCameraPermissionDeniedScreen() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 40,
+            left: 16,
+            child: IconButton(
+              icon: Icon(Icons.close, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Camera permission is required',
+                  // MyLocalizations.of(context, 'camera_permission_required'),
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (await openAppSettings()) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(
+                    'Open Settings',
+                    // MyLocalizations.of(context, 'open_settings'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_isCameraPermissionGranted) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Camera permission is required',
-                style: TextStyle(color: Colors.white),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (await openAppSettings()) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Open Settings'),
-              ),
-            ],
-          ),
-        ),
-      );
+      return _buildCameraPermissionDeniedScreen();
     }
 
     return Scaffold(
