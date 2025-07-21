@@ -165,8 +165,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Camera permission is required',
-                  // MyLocalizations.of(context, 'camera_permission_required'),
+                  MyLocalizations.of(context, 'camera_permission_required'),
                   style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -177,10 +176,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                       Navigator.pop(context);
                     }
                   },
-                  child: Text(
-                    'Open Settings',
-                    // MyLocalizations.of(context, 'open_settings'),
-                  ),
+                  child: Text(MyLocalizations.of(context, 'open_settings')),
                 ),
               ],
             ),
