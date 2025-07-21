@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 import requests
 
-from typing import Union, Callable, Optional, Dict
+from typing import Union, Callable, Dict
 
 # Only language over that percentage of translation will be downloaded.
 MIN_PROGRESS_PERCENTAGE = 80
