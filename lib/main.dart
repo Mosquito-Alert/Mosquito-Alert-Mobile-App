@@ -13,7 +13,10 @@ import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
+
+import 'providers/user_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -29,16 +32,26 @@ Future<void> main({String env = 'prod'}) async {
     print('$err');
   }
 
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  final appConfig = await AppConfig.loadConfig();
+  if (appConfig.useAuth) {
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
-  bool trackingEnabled = await BackgroundTracking.isEnabled();
-  if (trackingEnabled) {
-    await BackgroundTracking.start(requestPermissions: false);
-  } else {
-    await BackgroundTracking.stop();
+    bool trackingEnabled = await BackgroundTracking.isEnabled();
+    if (trackingEnabled) {
+      await BackgroundTracking.start(requestPermissions: false);
+    } else {
+      await BackgroundTracking.stop();
+    }
   }
 
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()..fetchUser()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
@@ -106,7 +119,7 @@ class _MyAppState extends State<MyApp> {
         switch (result) {
           case ConnectivityResult.mobile:
           case ConnectivityResult.wifi:
-            Utils.checkForUnfetchedData();
+            Utils.checkForUnfetchedData(context);
             Utils.syncReports();
             break;
           case ConnectivityResult.none:
