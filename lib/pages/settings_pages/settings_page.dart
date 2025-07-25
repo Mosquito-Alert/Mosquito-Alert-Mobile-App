@@ -263,7 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 isSearchable: true,
                 title: Text(MyLocalizations.of(context, 'select_language_txt')),
                 onValuePicked: (Language language) async {
-                  _selectLanguage(language);
+                  await _selectLanguage(language);
                 },
                 itemBuilder: (Language language) {
                   return Row(
