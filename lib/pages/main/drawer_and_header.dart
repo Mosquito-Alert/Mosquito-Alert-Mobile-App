@@ -65,12 +65,21 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
-    NotificationsApi notificationsApi = apiClient.getNotificationsApi();
-    final Response<PaginatedNotificationList> response =
-        await notificationsApi.listMine(isRead: true, pageSize: 1);
-    updateNotificationCount(response.data?.count ?? 0);
+    try {
+      MosquitoAlert apiClient =
+          Provider.of<MosquitoAlert>(context, listen: false);
+      NotificationsApi notificationsApi = apiClient.getNotificationsApi();
+
+      final Response<PaginatedNotificationList> response =
+          await notificationsApi.listMine(isRead: true, pageSize: 1);
+
+      updateNotificationCount(response.data?.count ?? 0);
+    } catch (e, stackTrace) {
+      print('Failed to fetch notification count: $e');
+      debugPrintStack(stackTrace: stackTrace);
+
+      updateNotificationCount(0);
+    }
   }
 
   void updateNotificationCount(int newCount) {
