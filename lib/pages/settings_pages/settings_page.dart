@@ -2,8 +2,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/language_picker.dart';
 import 'package:language_picker/languages.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/hashtag.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -11,6 +14,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage();
@@ -255,16 +259,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     hintText: MyLocalizations.of(context, 'search_txt')),
                 isSearchable: true,
                 title: Text(MyLocalizations.of(context, 'select_language_txt')),
-                onValuePicked: (Language language) => setState(() {
-                      var languageCodes = language.isoCode.split('_');
-
-                      Utils.language =
-                          Locale(languageCodes[0], languageCodes[1]);
-                      UserManager.setLanguage(languageCodes[0]);
-                      UserManager.setLanguageCountry(languageCodes[1]);
-                      application.onLocaleChanged(
-                          Locale(languageCodes[0], languageCodes[1]));
-                    }),
+                onValuePicked: (Language language) async {
+                  _selectLanguage(language);
+                },
                 itemBuilder: (Language language) {
                   return Row(
                     children: <Widget>[
@@ -273,4 +270,40 @@ class _SettingsPageState extends State<SettingsPage> {
                   );
                 })),
       );
+
+  Future<void> _selectLanguage(Language language) async {
+    var languageCodes = language.isoCode.split('_');
+
+    Utils.language = Locale(languageCodes[0], languageCodes[1]);
+    UserManager.setLanguage(languageCodes[0]);
+    UserManager.setLanguageCountry(languageCodes[1]);
+    application.onLocaleChanged(Locale(languageCodes[0], languageCodes[1]));
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userUuid = userProvider.user?.uuid;
+
+    if (userUuid == null) return;
+
+    try {
+      final localeEnum = PatchedUserRequestLocaleEnum.values.firstWhere(
+          (e) => e.toString().split('.').last == languageCodes[0],
+          orElse: () => PatchedUserRequestLocaleEnum.en);
+
+      final patchedUserRequest =
+          PatchedUserRequest((b) => b..locale = localeEnum);
+
+      final response = await ApiSingleton.usersApi.partialUpdate(
+        uuid: userUuid,
+        patchedUserRequest: patchedUserRequest,
+      );
+
+      if (response.statusCode == 200) {
+        print("Debug: usersApi.partialUpdate success");
+      } else {
+        print("Debug: usersApi.partialUpdate failure");
+      }
+    } catch (e) {
+      print('Error updating language: $e');
+    }
+  }
 }
