@@ -7,7 +7,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
@@ -66,7 +65,9 @@ class _MainVCState extends State<MainVC> {
   }
 
   Future<void> _getNotificationCount() async {
-    NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
+    MosquitoAlert apiClient =
+        Provider.of<MosquitoAlert>(context, listen: false);
+    NotificationsApi notificationsApi = apiClient.getNotificationsApi();
     final Response<PaginatedNotificationList> response =
         await notificationsApi.listMine(isRead: true, pageSize: 1);
     updateNotificationCount(response.data?.count ?? 0);

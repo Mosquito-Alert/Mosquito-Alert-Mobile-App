@@ -7,11 +7,11 @@ import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/model/notification.dart' as ext;
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:provider/provider.dart';
 
 class NotificationsPage extends StatefulWidget {
   final String? notificationId;
@@ -28,10 +28,14 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   PaginatedNotificationList? notifications;
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
+  late NotificationsApi notificationsApi;
 
   @override
   void initState() {
     super.initState();
+    MosquitoAlert apiClient =
+        Provider.of<MosquitoAlert>(context, listen: false);
+    notificationsApi = apiClient.getNotificationsApi();
     _logScreenView();
     loadingStream.add(true);
     _getData().then((_) {
@@ -45,7 +49,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _getData() async {
-    NotificationsApi notificationsApi = ApiSingleton.api.getNotificationsApi();
     Response<PaginatedNotificationList?> response =
         await notificationsApi.listMine();
     setState(() {
@@ -216,7 +219,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Future<void> _updateNotification(int id) async {
     PatchedNotificationRequest patchedNotificationRequest =
         PatchedNotificationRequest((b) => b..isRead = true);
-    final res = await ApiSingleton.notificationsApi.partialUpdate(
+    final res = await notificationsApi.partialUpdate(
         id: id, patchedNotificationRequest: patchedNotificationRequest);
 
     if (res.statusCode == 200) {
