@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   var packageInfo;
   late int? numTagsAdded;
   bool isLoading = true;
-  late final usersApi;
+  late UsersApi usersApi;
 
   final languageCodes = [
     Language('bg_BG', 'Bulgarian', 'Bulgarian'),
@@ -275,12 +275,15 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
   Future<void> _selectLanguage(Language language) async {
-    var languageCodes = language.isoCode.split('_');
+    final isoCodeParts = language.isoCode.split('_');
+    final languageCode = isoCodeParts[0];
+    final countryCode = isoCodeParts.length > 1 ? isoCodeParts[1] : null;
+    final locale = Locale(languageCode, countryCode);
 
-    Utils.language = Locale(languageCodes[0], languageCodes[1]);
-    UserManager.setLanguage(languageCodes[0]);
-    UserManager.setLanguageCountry(languageCodes[1]);
-    application.onLocaleChanged(Locale(languageCodes[0], languageCodes[1]));
+    Utils.language = locale;
+    UserManager.setLanguage(languageCode);
+    UserManager.setLanguageCountry(countryCode);
+    application.onLocaleChanged(locale);
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userUuid = userProvider.user?.uuid;
@@ -289,24 +292,25 @@ class _SettingsPageState extends State<SettingsPage> {
 
     try {
       final localeEnum = PatchedUserRequestLocaleEnum.values.firstWhere(
-          (e) => e.toString().split('.').last == languageCodes[0],
+          (e) => e.name == languageCode,
           orElse: () => PatchedUserRequestLocaleEnum.en);
 
       final patchedUserRequest =
           PatchedUserRequest((b) => b..locale = localeEnum);
 
-      final response = await usersApi.partialUpdate(
+      await usersApi.partialUpdate(
         uuid: userUuid,
         patchedUserRequest: patchedUserRequest,
       );
-
-      if (response.statusCode == 200) {
-        print("Debug: usersApi.partialUpdate success");
-      } else {
-        print("Debug: usersApi.partialUpdate failure");
-      }
     } catch (e) {
-      print('Error updating language: $e');
+      print('Error updating language to server: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not update language on server.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 }
