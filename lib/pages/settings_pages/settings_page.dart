@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:language_picker/language_picker.dart';
 import 'package:language_picker/languages.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/hashtag.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/components/settings_menu_widget.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
@@ -29,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   var packageInfo;
   late int? numTagsAdded;
   bool isLoading = true;
+  late final usersApi;
 
   final languageCodes = [
     Language('bg_BG', 'Bulgarian', 'Bulgarian'),
@@ -62,6 +62,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    MosquitoAlert apiClient =
+        Provider.of<MosquitoAlert>(context, listen: false);
+    usersApi = apiClient.getUsersApi();
     _logScreenView();
     getPackageInfo();
     initializeBgTracking();
@@ -292,7 +295,7 @@ class _SettingsPageState extends State<SettingsPage> {
       final patchedUserRequest =
           PatchedUserRequest((b) => b..locale = localeEnum);
 
-      final response = await ApiSingleton.usersApi.partialUpdate(
+      final response = await usersApi.partialUpdate(
         uuid: userUuid,
         patchedUserRequest: patchedUserRequest,
       );
