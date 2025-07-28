@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:camera_camera/camera_camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
@@ -196,7 +195,8 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          CameraCamera(
+          // TODO: Replace camera
+          /*CameraCamera(
             enableZoom: false,
             resolutionPreset: ResolutionPreset.high,
             cameraSide: CameraSide.front,
@@ -204,7 +204,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
               controller.captureImage(file);
               Navigator.pop(context, controller.selectedImages);
             },
-          ),
+          ),*/
           onlyOneMosquitoBadge(context, widget),
           closeButton(context),
           galleryButton(context, controller),
