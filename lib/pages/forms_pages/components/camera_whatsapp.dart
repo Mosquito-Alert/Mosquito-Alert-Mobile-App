@@ -28,9 +28,6 @@ class _WhatsAppCameraController extends ChangeNotifier {
   var images = <Medium>[];
 
   Future<void> loadRecentGalleryImages() async {
-    if (Platform.isIOS)
-      return; // Functionality of album.listMedia() crashes on iOS
-
     final status = await Permission.photos.request();
     if (status.isDenied) return;
     if (status.isPermanentlyDenied) return;
@@ -371,8 +368,6 @@ class _WhatsappCameraState extends State<WhatsappCamera>
 
   Widget recentPhotosStrip(
       BuildContext context, _WhatsAppCameraController controller) {
-    if (Platform.isIOS) return Container();
-
     return FutureBuilder<PermissionStatus>(
       future: Permission.photos.status,
       builder: (context, snapshot) {
@@ -381,7 +376,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         }
 
         return Positioned(
-          bottom: 120,
+          bottom: 120 + MediaQuery.of(context).padding.bottom,
           left: 0,
           right: 0,
           child: Container(
