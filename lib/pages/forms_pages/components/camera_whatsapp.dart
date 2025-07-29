@@ -112,7 +112,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   bool _isCameraPermissionGranted = false;
   List<CameraDescription> _cameras = [];
   CameraController? _cameraController;
-  late Future<void> _initializeControllerFuture;
+  Future<void>? _initializeControllerFuture;
 
   @override
   void dispose() {
@@ -156,7 +156,12 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         enableAudio: false,
       );
 
-      _initializeControllerFuture = _cameraController!.initialize();
+      _initializeControllerFuture = _cameraController!
+          .initialize()
+          .timeout(const Duration(seconds: 3), onTimeout: () {
+        print("Error: _initializeCamera timed out before it could initialize.");
+        Navigator.pop(context);
+      });
       setState(() {});
     } catch (e) {
       print('Camera error: $e');
@@ -218,11 +223,17 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       return _buildCameraPermissionDeniedScreen();
     }
 
+    if (_initializeControllerFuture == null) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // TODO: Late initialization quick screen
           FutureBuilder<void>(
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
