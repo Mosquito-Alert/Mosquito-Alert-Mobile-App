@@ -245,18 +245,21 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   Widget cameraAndGalleryButtons(
       BuildContext context, _WhatsAppCameraController controller) {
     return Positioned(
-      bottom: 32 + MediaQuery.of(context).padding.bottom,
-      left: 0,
-      right: 0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(width: 60),
-          captureImageButton(),
-          galleryButton(context, controller),
-        ],
-      ),
-    );
+        bottom: 32 + MediaQuery.of(context).padding.bottom,
+        left: 0,
+        right: 0,
+        child: Row(
+          children: [
+            Expanded(child: SizedBox()), // empty on the left
+            captureImageButton(),
+            Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: galleryButton(context, controller),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget captureImageButton() {
@@ -344,13 +347,13 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         });
       },
       child: Container(
-        width: 64,
-        height: 64,
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
         ),
-        child: Icon(Icons.photo_library, color: Colors.black, size: 28),
+        child: Icon(Icons.photo_library, color: Colors.black, size: 24),
       ),
     );
   }
