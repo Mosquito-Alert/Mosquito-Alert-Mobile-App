@@ -222,6 +222,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
+          // TODO: Late initialization quick screen
           FutureBuilder<void>(
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
@@ -232,33 +233,43 @@ class _WhatsappCameraState extends State<WhatsappCamera>
               }
             },
           ),
-          captureImageButton(),
           onlyOneMosquitoBadge(context, widget),
           closeButton(context),
-          galleryButton(context, controller),
           recentPhotosStrip(context, controller),
+          cameraAndGalleryButtons(context, controller),
+        ],
+      ),
+    );
+  }
+
+  Widget cameraAndGalleryButtons(
+      BuildContext context, _WhatsAppCameraController controller) {
+    return Positioned(
+      bottom: 32 + MediaQuery.of(context).padding.bottom,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(width: 60),
+          captureImageButton(),
+          galleryButton(context, controller),
         ],
       ),
     );
   }
 
   Widget captureImageButton() {
-    return Positioned(
-      bottom: 32,
-      left: 0,
-      right: 0,
-      child: Center(
-        child: GestureDetector(
-          onTap: _captureImage,
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: Icon(Icons.camera, color: Colors.black),
-          ),
+    return GestureDetector(
+      onTap: _captureImage,
+      child: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
         ),
+        child: Icon(Icons.camera_alt, color: Colors.black, size: 28),
       ),
     );
   }
@@ -318,36 +329,28 @@ class _WhatsappCameraState extends State<WhatsappCamera>
 
   Widget galleryButton(
       BuildContext context, _WhatsAppCameraController controller) {
-    return SafeArea(
-      minimum: const EdgeInsets.only(bottom: 0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 32, right: 64),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.black.withValues(alpha: 0.6),
-            child: IconButton(
-              color: Colors.white,
-              onPressed: () async {
-                // Request permission when gallery button is tapped
-                final status = await Permission.photos.request();
-                if (status.isPermanentlyDenied) {
-                  // Open app settings if permanently denied
-                  await openAppSettings();
-                  return;
-                }
+    return GestureDetector(
+      onTap: () async {
+        final status = await Permission.photos.request();
+        if (status.isPermanentlyDenied) {
+          await openAppSettings();
+          return;
+        }
 
-                await controller.openGallery().then((value) {
-                  if (controller.selectedImages.isNotEmpty) {
-                    Navigator.pop(context, controller.selectedImages);
-                  }
-                });
-              },
-              icon: const Icon(Icons.image),
-            ),
-          ),
+        await controller.openGallery().then((_) {
+          if (controller.selectedImages.isNotEmpty) {
+            Navigator.pop(context, controller.selectedImages);
+          }
+        });
+      },
+      child: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
         ),
+        child: Icon(Icons.photo_library, color: Colors.black, size: 28),
       ),
     );
   }
