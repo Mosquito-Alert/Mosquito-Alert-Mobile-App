@@ -49,7 +49,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Future<void> _getData() async {
     try {
-      Response<sdk.PaginatedNotificationList?> response =
+      final Response<sdk.PaginatedNotificationList?> response =
+          //await notificationsApi.listMine(pageSize: 1);
           await notificationsApi.listMine();
       setState(() {
         notifications.addAll(response.data?.results ?? []);
@@ -224,10 +225,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final res = await notificationsApi.partialUpdate(
         id: id, patchedNotificationRequest: patchedNotificationRequest);
 
-    if (res.statusCode == 200) {
-      // BuiltValue objects are immutable, so you may need to refetch or rebuild the list
-      setState(() {});
-      _updateUnreadNotificationCount();
+    if (res.statusCode == 200 && res.data != null) {
+      final updatedNotification = res.data!;
+
+      setState(() {
+        final index =
+            notifications.indexWhere((notification) => notification.id == id);
+        if (index != -1) {
+          notifications[index] = updatedNotification;
+        }
+      });
     }
   }
 
