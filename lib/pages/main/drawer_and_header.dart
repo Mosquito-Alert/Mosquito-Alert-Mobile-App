@@ -71,7 +71,7 @@ class _MainVCState extends State<MainVC> {
       NotificationsApi notificationsApi = apiClient.getNotificationsApi();
 
       final Response<PaginatedNotificationList> response =
-          await notificationsApi.listMine(isRead: true, pageSize: 1);
+          await notificationsApi.listMine(isRead: false, pageSize: 1);
 
       updateNotificationCount(response.data?.count ?? 0);
     } catch (e, stackTrace) {
