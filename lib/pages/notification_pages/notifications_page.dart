@@ -5,8 +5,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:intl/intl.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert/src/model/notification.dart' as ext;
+import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
@@ -26,15 +25,15 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  PaginatedNotificationList? notifications;
+  List<sdk.Notification> notifications = [];
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
-  late NotificationsApi notificationsApi;
+  late sdk.NotificationsApi notificationsApi;
 
   @override
   void initState() {
     super.initState();
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    sdk.MosquitoAlert apiClient =
+        Provider.of<sdk.MosquitoAlert>(context, listen: false);
     notificationsApi = apiClient.getNotificationsApi();
     _logScreenView();
     loadingStream.add(true);
@@ -49,10 +48,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _getData() async {
-    Response<PaginatedNotificationList?> response =
+    Response<sdk.PaginatedNotificationList?> response =
         await notificationsApi.listMine();
     setState(() {
-      notifications = response.data;
+      notifications.addAll(response.data?.results ?? []);
       _checkOpenNotification();
     });
     loadingStream.add(false);
@@ -62,7 +61,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     try {
       if (widget.notificationId != null && widget.notificationId!.isNotEmpty) {
         var notifId = widget.notificationId;
-        for (var notif in notifications?.results?.toList() ?? []) {
+        for (var notif in notifications) {
           if (notifId == '${notif.id}') {
             _infoBottomSheet(context, notif);
             return;
@@ -76,7 +75,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final notificationsList = notifications?.results?.toList() ?? [];
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -87,7 +85,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   MyLocalizations.of(context, 'notifications_title'),
                   fontSize: 16),
             ),
-            body: notificationsList.isEmpty
+            body: notifications.isEmpty
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -100,9 +98,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     margin: EdgeInsets.all(12),
                     child: ListView.builder(
                         // TODO: Replace with PagedListView
-                        itemCount: notificationsList.length,
+                        itemCount: notifications.length,
                         itemBuilder: (ctx, index) {
-                          final notification = notificationsList[index];
+                          final notification = notifications[index];
                           return Opacity(
                             opacity: 1,
                             child: Card(
@@ -160,7 +158,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _infoBottomSheet(
-      BuildContext context, ext.Notification notification) async {
+      BuildContext context, sdk.Notification notification) async {
     await FirebaseAnalytics.instance.logSelectContent(
         contentType: 'notification', itemId: '${notification.id}');
     CustomShowModalBottomSheet.customShowModalBottomSheet(
@@ -217,8 +215,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _updateNotification(int id) async {
-    PatchedNotificationRequest patchedNotificationRequest =
-        PatchedNotificationRequest((b) => b..isRead = true);
+    sdk.PatchedNotificationRequest patchedNotificationRequest =
+        sdk.PatchedNotificationRequest((b) => b..isRead = true);
     final res = await notificationsApi.partialUpdate(
         id: id, patchedNotificationRequest: patchedNotificationRequest);
 
@@ -230,7 +228,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _updateUnreadNotificationCount() {
-    final notifList = notifications?.results?.toList() ?? [];
+    final notifList = notifications;
     var unacknowledgedCount =
         notifList.where((notification) => !notification.isRead).length;
     if (widget.onNotificationUpdate != null) {
