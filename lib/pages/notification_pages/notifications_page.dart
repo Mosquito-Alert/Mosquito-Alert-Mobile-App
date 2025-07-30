@@ -48,13 +48,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _getData() async {
-    Response<sdk.PaginatedNotificationList?> response =
-        await notificationsApi.listMine();
-    setState(() {
-      notifications.addAll(response.data?.results ?? []);
-      _checkOpenNotification();
-    });
-    loadingStream.add(false);
+    try {
+      Response<sdk.PaginatedNotificationList?> response =
+          await notificationsApi.listMine();
+      setState(() {
+        notifications.addAll(response.data?.results ?? []);
+        _checkOpenNotification();
+      });
+      loadingStream.add(false);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _checkOpenNotification() {
