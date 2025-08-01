@@ -1,6 +1,6 @@
 name: mosquito_alert_app
 description: A new Flutter project.
-version: 4.1.0+2891
+version: 4.1.0+2892
 publish_to: none
 
 
@@ -22,7 +22,7 @@ dependencies:
   geocoding: ^4.0.0
   dio: ^5.8.0+1
   flutter_image_compress: ^2.3.0
-  flutter_markdown: ^0.7.4+3
+  markdown: ^7.3.0
   firebase_messaging: ^15.2.4
   firebase_core: ^3.13.0
   auto_size_text: ^3.0.0
@@ -52,7 +52,7 @@ dependencies:
   battery_plus: ^6.2.1
   badges: ^3.1.2
   cached_network_image: ^3.3.1
-  camera_camera: ^3.0.0
+  camera: ^0.11.2
   flutter_sliding_up_panel: ^2.1.1
   photo_gallery: ^2.2.1
   textfield_tags: ^3.0.1
