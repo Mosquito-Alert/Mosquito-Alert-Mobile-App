@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_gallery/photo_gallery.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -25,28 +23,20 @@ class _WhatsAppCameraController extends ChangeNotifier {
   ///
   final bool multiple;
   final selectedImages = <File>[];
-  var images = <Medium>[];
 
   Future<void> loadRecentGalleryImages() async {
     final status = await Permission.photos.request();
     if (status.isDenied) return;
     if (status.isPermanentlyDenied) return;
 
+    // Note: image_picker doesn't provide recent gallery thumbnails
+    // This method now just ensures permissions are granted
+    // The actual gallery access is handled by openGallery() method
     try {
-      final albums =
-          await PhotoGallery.listAlbums(mediumType: MediumType.image);
-      if (albums.isEmpty) return;
-
-      final recentAlbum = albums.first;
-      final media = await recentAlbum.listMedia(
-        skip: 0,
-        take: 10,
-      );
-
-      images = media.items;
+      // Just notify listeners that permission check is complete
       notifyListeners();
     } catch (e) {
-      print('Error loading gallery images: $e');
+      print('Error checking gallery permissions: $e');
     }
   }
 
@@ -384,69 +374,21 @@ class _WhatsappCameraState extends State<WhatsappCamera>
             child: AnimatedBuilder(
               animation: controller,
               builder: (context, _) {
-                if (controller.images.isEmpty) {
-                  return Container();
-                }
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.images.length,
-                  itemBuilder: (context, index) {
-                    final medium = controller.images[index];
-                    return FutureBuilder<Widget>(
-                      future: _buildImage(context, controller, medium),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData) {
-                          return snapshot.data!;
-                        }
-                        return Container();
-                      },
-                    );
-                  },
+                // Simplified gallery access - no recent images display
+                // Users will access gallery through the gallery button
+                return Container(
+                  child: Center(
+                    child: Text(
+                      'Gallery images will appear here after selection',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ),
                 );
               },
             ),
           ),
         );
       },
-    );
-  }
-
-  Future<Widget> _buildImage(BuildContext context,
-      _WhatsAppCameraController controller, Medium medium) async {
-    final List<int> thumbnailData = await medium.getThumbnail(
-      width: 200,
-      height: 200,
-      highQuality: true,
-    );
-
-    final Uint8List thumbnail = Uint8List.fromList(thumbnailData);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: GestureDetector(
-        onTap: () async {
-          final file = await medium.getFile();
-          controller.captureImage(file);
-          Navigator.pop(context, controller.selectedImages);
-        },
-        child: Container(
-          width: 70,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white38, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.memory(
-              thumbnail,
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
