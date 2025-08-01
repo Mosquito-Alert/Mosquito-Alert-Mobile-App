@@ -87,48 +87,75 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  @override // TODO 1: Try with complete example from package (Using their build method)
+  // TODO 1: Try with complete example from package (Using their build method)
   // TODO 2: Try with their Using setState
-  Widget build(BuildContext context) => PagingListener(
-        controller: _pagingController,
-        builder: (context, state, fetchNextPage) =>
-            PagedListView<int, sdk.Notification>(
-          state: state,
-          fetchNextPage: fetchNextPage,
-          builderDelegate: PagedChildBuilderDelegate(
-            itemBuilder: (context, notification, index) {
-              return Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                color: notification.isRead ? Colors.grey[200] : Colors.white,
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(12),
-                  onTap: () {
-                    if (!notification.isRead) {
-                      _updateNotification(notification.id);
-                    }
-                    _infoBottomSheet(context, notification);
-                  },
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Style.titleMedium(notification.message.title,
-                          fontSize: 16),
-                      SizedBox(height: 4),
-                      Style.bodySmall(
-                        MyLocalizations.of(context, 'see_more_txt'),
-                        color: Colors.grey,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Style.title(
+          MyLocalizations.of(context, 'notifications_title'),
+          fontSize: 16,
+        ),
+      ),
+      body: Container(
+        margin: EdgeInsets.all(12),
+        child: PagingListener<int, sdk.Notification>(
+          controller: _pagingController,
+          builder: (context, state, fetchNextPage) {
+            return PagedListView<int, sdk.Notification>(
+              state: state,
+              fetchNextPage: fetchNextPage,
+              padding: const EdgeInsets.only(top: 4, bottom: 12),
+              builderDelegate: PagedChildBuilderDelegate<sdk.Notification>(
+                itemBuilder: (context, notification, index) {
+                  return Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color:
+                        notification.isRead ? Colors.grey[200] : Colors.white,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(12),
+                      onTap: () {
+                        if (!notification.isRead) {
+                          _updateNotification(notification.id);
+                        }
+                        _infoBottomSheet(context, notification);
+                      },
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Style.titleMedium(notification.message.title,
+                              fontSize: 16),
+                          SizedBox(height: 4),
+                          Style.bodySmall(
+                            MyLocalizations.of(context, 'see_more_txt'),
+                            color: Colors.grey,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  );
+                },
+                noItemsFoundIndicatorBuilder: (context) => Center(
+                  child: Style.body(
+                    MyLocalizations.of(context, 'no_notifications_yet_txt'),
                   ),
                 ),
-              );
-            },
-          ),
+                firstPageProgressIndicatorBuilder: (context) =>
+                    Center(child: CircularProgressIndicator()),
+                newPageProgressIndicatorBuilder: (context) =>
+                    Center(child: CircularProgressIndicator()),
+              ),
+            );
+          },
         ),
-      );
+      ),
+    );
 
 /*  @override
   Widget build(BuildContext context) {
@@ -224,8 +251,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
               return Container();
             }),*/
       ],
-    );
-  }*/
+    );*/
+  }
 
   void _infoBottomSheet(
       BuildContext context, sdk.Notification notification) async {
