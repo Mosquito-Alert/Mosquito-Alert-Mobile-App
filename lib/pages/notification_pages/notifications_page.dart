@@ -24,7 +24,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  static const _pageSize = 3;
+  static const _pageSize = 20;
   late final _pagingController = PagingController<int, sdk.Notification>(
       getNextPageKey: (state) =>
           state.lastPageIsEmpty ? null : state.nextIntPageKey,
