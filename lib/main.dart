@@ -5,15 +5,20 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
+import 'package:mosquito_alert_app/providers/auth_provider.dart';
+import 'package:mosquito_alert_app/services/api_service.dart';
 import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
+
+import 'providers/user_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -21,7 +26,6 @@ Future<void> main({String env = 'prod'}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AppConfig.setEnvironment(env);
-  await ApiSingleton.initialize();
 
   try {
     await Firebase.initializeApp();
@@ -29,16 +33,46 @@ Future<void> main({String env = 'prod'}) async {
     print('$err');
   }
 
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  final authProvider = AuthProvider();
+  await authProvider.init();
 
-  bool trackingEnabled = await BackgroundTracking.isEnabled();
-  if (trackingEnabled) {
-    await BackgroundTracking.start(requestPermissions: false);
-  } else {
-    await BackgroundTracking.stop();
+  final ApiService apiService =
+      await ApiService.init(authProvider: authProvider);
+  final MosquitoAlert apiClient = apiService.client;
+
+  authProvider.setApiClient(apiClient);
+  final userProvider = UserProvider(apiClient: apiClient);
+  BackgroundTracking.configure(apiClient: apiClient);
+
+  final appConfig = await AppConfig.loadConfig();
+  if (appConfig.useAuth) {
+    String? username = authProvider.username;
+    String? password = authProvider.password;
+    if (username != null && password != null) {
+      await authProvider.login(username: username, password: password);
+      await userProvider.fetchUser();
+    }
+
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+
+    bool trackingEnabled = await BackgroundTracking.isEnabled();
+    if (trackingEnabled) {
+      await BackgroundTracking.start(requestPermissions: false);
+    } else {
+      await BackgroundTracking.stop();
+    }
   }
 
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<MosquitoAlert>.value(value: apiClient),
+        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+        ChangeNotifierProvider<UserProvider>.value(value: userProvider),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point') // Mandatory if the App is using Flutter 3.1+
@@ -50,8 +84,25 @@ void callbackDispatcher() {
       print('$err');
     }
 
-    await ApiSingleton.initialize();
+    final authProvider = AuthProvider();
+    await authProvider.init();
 
+    final ApiService apiService =
+        await ApiService.init(authProvider: authProvider);
+    final MosquitoAlert apiClient = apiService.client;
+
+    authProvider.setApiClient(apiClient);
+
+    final userProvider = UserProvider(apiClient: apiClient);
+    String? username = authProvider.username;
+    String? password = authProvider.password;
+    if (username == null && password == null) {
+      return false; // No user credentials available, cannot proceed
+    }
+    await authProvider.login(username: username!, password: password!);
+    await userProvider.fetchUser();
+
+    BackgroundTracking.configure(apiClient: apiClient);
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
     // - Future.value(false): task failed and needs to be retried
@@ -106,7 +157,7 @@ class _MyAppState extends State<MyApp> {
         switch (result) {
           case ConnectivityResult.mobile:
           case ConnectivityResult.wifi:
-            Utils.checkForUnfetchedData();
+            Utils.checkForUnfetchedData(context);
             Utils.syncReports();
             break;
           case ConnectivityResult.none:
