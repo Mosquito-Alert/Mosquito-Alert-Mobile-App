@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +24,27 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  List<sdk.Notification> notifications = [];
+  static const _pageSize = 20;
+  late final _pagingController = PagingController<int, sdk.Notification>(
+      getNextPageKey: (state) =>
+          state.lastPageIsEmpty ? null : state.nextIntPageKey,
+      fetchPage: (pageKey) async {
+        final response = await notificationsApi.listMine(
+          page: pageKey,
+          pageSize: _pageSize,
+        );
+
+        Iterable<sdk.Notification> notificationsIt =
+            response.data?.results ?? [];
+        List<sdk.Notification> notifications = notificationsIt.toList();
+
+        if (pageKey == 1) {
+          _checkOpenNotification();
+        }
+
+        return notifications;
+      });
+
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   late sdk.NotificationsApi notificationsApi;
 
@@ -37,9 +56,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notificationsApi = apiClient.getNotificationsApi();
     _logScreenView();
     loadingStream.add(true);
-    _getData().then((_) {
-      _updateUnreadNotificationCount();
-    });
+
+    //_pagingController.refresh();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   Future<void> _logScreenView() async {
@@ -47,26 +71,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
         .logScreenView(screenName: '/notifications');
   }
 
-  Future<void> _getData() async {
-    try {
-      final Response<sdk.PaginatedNotificationList?> response =
-          //await notificationsApi.listMine(pageSize: 1);
-          await notificationsApi.listMine();
-      setState(() {
-        notifications.addAll(response.data?.results ?? []);
-        _checkOpenNotification();
-      });
-      loadingStream.add(false);
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void _checkOpenNotification() {
     try {
       if (widget.notificationId != null && widget.notificationId!.isNotEmpty) {
         var notifId = widget.notificationId;
-        for (var notif in notifications) {
+        for (var notif in _pagingController.items ?? []) {
           if (notifId == '${notif.id}') {
             _infoBottomSheet(context, notif);
             return;
@@ -78,7 +87,50 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  @override
+  @override // TODO 1: Try with complete example from package (Using their build method)
+  // TODO 2: Try with their Using setState
+  Widget build(BuildContext context) => PagingListener(
+        controller: _pagingController,
+        builder: (context, state, fetchNextPage) =>
+            PagedListView<int, sdk.Notification>(
+          state: state,
+          fetchNextPage: fetchNextPage,
+          builderDelegate: PagedChildBuilderDelegate(
+            itemBuilder: (context, notification, index) {
+              return Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                color: notification.isRead ? Colors.grey[200] : Colors.white,
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(12),
+                  onTap: () {
+                    if (!notification.isRead) {
+                      _updateNotification(notification.id);
+                    }
+                    _infoBottomSheet(context, notification);
+                  },
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Style.titleMedium(notification.message.title,
+                          fontSize: 16),
+                      SizedBox(height: 4),
+                      Style.bodySmall(
+                        MyLocalizations.of(context, 'see_more_txt'),
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+/*  @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -90,62 +142,75 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   MyLocalizations.of(context, 'notifications_title'),
                   fontSize: 16),
             ),
-            body: notifications.isEmpty
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                        Center(
-                          child: Style.body(MyLocalizations.of(
-                              context, 'no_notifications_yet_txt')),
-                        ),
-                      ])
-                : Container(
-                    margin: EdgeInsets.all(12),
-                    child: ListView.builder(
-                        // TODO: Replace with PagedListView
-                        itemCount: notifications.length,
-                        itemBuilder: (ctx, index) {
-                          final notification = notifications[index];
-                          return Opacity(
-                            opacity: 1,
-                            child: Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              color: notification.isRead
-                                  ? Colors.grey[200]
-                                  : Colors.white,
-                              child: ListTile(
-                                tileColor: notification.isRead
-                                    ? Colors.grey[200]
-                                    : Colors.white,
-                                contentPadding: EdgeInsets.all(12),
-                                onTap: () {
-                                  if (!notification.isRead) {
-                                    _updateNotification(notification.id);
-                                  }
-                                  _infoBottomSheet(context, notification);
-                                },
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Style.titleMedium(
-                                        notification.message.title,
-                                        fontSize: 16),
-                                    SizedBox(
-                                      height: 4,
+            body: (_pagingController.items == null)
+                ? Center(child: CircularProgressIndicator())
+                : _pagingController.items!.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Center(
+                              child: Style.body(MyLocalizations.of(
+                                  context, 'no_notifications_yet_txt')),
+                            ),
+                          ])
+                    : Container(
+                        margin: EdgeInsets.all(12),
+                        child: PagingListener/*<int, sdk.Notification>*/(
+                          controller: _pagingController,
+                          builder: (context, state, fetchNextPage) =>
+                              PagedListView<int, sdk.Notification>(
+                            state: state,
+                            fetchNextPage: fetchNextPage,
+                            padding: const EdgeInsets.all(12),
+                            builderDelegate:
+                                PagedChildBuilderDelegate/*<sdk.Notification>*/(
+                              itemBuilder: (context, notification, index) {
+                                return Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  color: notification.isRead
+                                      ? Colors.grey[200]
+                                      : Colors.white,
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.all(12),
+                                    onTap: () {
+                                      if (!notification.isRead) {
+                                        _updateNotification(notification.id);
+                                      }
+                                      _infoBottomSheet(context, notification);
+                                    },
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Style.titleMedium(
+                                            notification.message.title,
+                                            fontSize: 16),
+                                        SizedBox(height: 4),
+                                        Style.bodySmall(
+                                          MyLocalizations.of(
+                                              context, 'see_more_txt'),
+                                          color: Colors.grey,
+                                        ),
+                                      ],
                                     ),
-                                    Style.bodySmall(
-                                        MyLocalizations.of(
-                                            context, 'see_more_txt'),
-                                        color: Colors.grey),
-                                  ],
+                                  ),
+                                );
+                              },
+                              noItemsFoundIndicatorBuilder: (context) => Center(
+                                child: Style.body(
+                                  MyLocalizations.of(
+                                      context, 'no_notifications_yet_txt'),
                                 ),
                               ),
                             ),
-                          );
-                        }))),
-        StreamBuilder<bool>(
+                          ),
+                        ),
+                      )),
+        // TODO: Remove?
+        /*StreamBuilder<bool>(
             stream: loadingStream.stream,
             initialData: true,
             builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
@@ -157,10 +222,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 );
               }
               return Container();
-            }),
+            }),*/
       ],
     );
-  }
+  }*/
 
   void _infoBottomSheet(
       BuildContext context, sdk.Notification notification) async {
@@ -227,23 +292,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     if (res.statusCode == 200 && res.data != null) {
       final updatedNotification = res.data!;
+      final itemList = _pagingController.items;
 
-      setState(() {
-        final index =
-            notifications.indexWhere((notification) => notification.id == id);
+      if (itemList != null) {
+        final index = itemList.indexWhere((n) => n.id == id);
         if (index != -1) {
-          notifications[index] = updatedNotification;
+          itemList[index] = updatedNotification;
+          _pagingController
+              .notifyListeners(); // TODO: Warning The member 'notifyListeners' can only be used within instance members of subclasses of 'package:flutter/src/foundation/change_notifier.dart'
         }
-      });
+      }
     }
   }
 
   void _updateUnreadNotificationCount() {
-    final notifList = notifications;
-    var unacknowledgedCount =
-        notifList.where((notification) => !notification.isRead).length;
-    if (widget.onNotificationUpdate != null) {
-      widget.onNotificationUpdate!(unacknowledgedCount);
-    }
+    final itemList = _pagingController.items;
+    if (itemList == null) return;
+
+    final unacknowledgedCount =
+        itemList.where((notification) => !notification.isRead).length;
+
+    widget.onNotificationUpdate?.call(unacknowledgedCount);
   }
 }
