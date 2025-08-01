@@ -24,7 +24,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  static const _pageSize = 20;
+  static const _pageSize = 3;
   late final _pagingController = PagingController<int, sdk.Notification>(
       getNextPageKey: (state) =>
           state.lastPageIsEmpty ? null : state.nextIntPageKey,
@@ -56,8 +56,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notificationsApi = apiClient.getNotificationsApi();
     _logScreenView();
     loadingStream.add(true);
-
-    //_pagingController.refresh();
   }
 
   @override
@@ -87,8 +85,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  // TODO 1: Try with complete example from package (Using their build method)
-  // TODO 2: Try with their Using setState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,102 +152,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ),
       ),
     );
-
-/*  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              centerTitle: true,
-              title: Style.title(
-                  MyLocalizations.of(context, 'notifications_title'),
-                  fontSize: 16),
-            ),
-            body: (_pagingController.items == null)
-                ? Center(child: CircularProgressIndicator())
-                : _pagingController.items!.isEmpty
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                            Center(
-                              child: Style.body(MyLocalizations.of(
-                                  context, 'no_notifications_yet_txt')),
-                            ),
-                          ])
-                    : Container(
-                        margin: EdgeInsets.all(12),
-                        child: PagingListener/*<int, sdk.Notification>*/(
-                          controller: _pagingController,
-                          builder: (context, state, fetchNextPage) =>
-                              PagedListView<int, sdk.Notification>(
-                            state: state,
-                            fetchNextPage: fetchNextPage,
-                            padding: const EdgeInsets.all(12),
-                            builderDelegate:
-                                PagedChildBuilderDelegate/*<sdk.Notification>*/(
-                              itemBuilder: (context, notification, index) {
-                                return Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  color: notification.isRead
-                                      ? Colors.grey[200]
-                                      : Colors.white,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.all(12),
-                                    onTap: () {
-                                      if (!notification.isRead) {
-                                        _updateNotification(notification.id);
-                                      }
-                                      _infoBottomSheet(context, notification);
-                                    },
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Style.titleMedium(
-                                            notification.message.title,
-                                            fontSize: 16),
-                                        SizedBox(height: 4),
-                                        Style.bodySmall(
-                                          MyLocalizations.of(
-                                              context, 'see_more_txt'),
-                                          color: Colors.grey,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              noItemsFoundIndicatorBuilder: (context) => Center(
-                                child: Style.body(
-                                  MyLocalizations.of(
-                                      context, 'no_notifications_yet_txt'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
-        // TODO: Remove?
-        /*StreamBuilder<bool>(
-            stream: loadingStream.stream,
-            initialData: true,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-              if (snapLoading.data == true) {
-                return Container(
-                  child: Center(
-                    child: Utils.loading(true),
-                  ),
-                );
-              }
-              return Container();
-            }),*/
-      ],
-    );*/
   }
 
   void _infoBottomSheet(
@@ -324,9 +224,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
       if (itemList != null) {
         final index = itemList.indexWhere((n) => n.id == id);
         if (index != -1) {
-          itemList[index] = updatedNotification;
-          _pagingController
-              .notifyListeners(); // TODO: Warning The member 'notifyListeners' can only be used within instance members of subclasses of 'package:flutter/src/foundation/change_notifier.dart'
+          setState(() {
+            itemList[index] = updatedNotification;
+          });
+          _updateUnreadNotificationCount();
         }
       }
     }
