@@ -13,11 +13,8 @@ import 'package:provider/provider.dart';
 
 class NotificationsPage extends StatefulWidget {
   final String? notificationId;
-  final Function(int)? onNotificationUpdate;
 
-  const NotificationsPage(
-      {Key? key, this.notificationId, this.onNotificationUpdate})
-      : super(key: key);
+  const NotificationsPage({Key? key, this.notificationId}) : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
@@ -227,19 +224,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
           setState(() {
             itemList[index] = updatedNotification;
           });
-          _updateUnreadNotificationCount();
         }
       }
     }
-  }
-
-  void _updateUnreadNotificationCount() {
-    final itemList = _pagingController.items;
-    if (itemList == null) return;
-
-    final unacknowledgedCount =
-        itemList.where((notification) => !notification.isRead).length;
-
-    widget.onNotificationUpdate?.call(unacknowledgedCount);
   }
 }
