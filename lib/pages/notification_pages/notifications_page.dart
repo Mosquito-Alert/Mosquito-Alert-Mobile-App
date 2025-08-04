@@ -24,26 +24,27 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  bool _isLastPage = false;
   static const _pageSize = 20;
-  late final _pagingController = PagingController<int, sdk.Notification>(
-      getNextPageKey: (state) =>
-          state.lastPageIsEmpty ? null : state.nextIntPageKey,
-      fetchPage: (pageKey) async {
-        final response = await notificationsApi.listMine(
-          page: pageKey,
-          pageSize: _pageSize,
-        );
+  late final _pagingController =
+      PagingController<int, sdk.Notification>(getNextPageKey: (state) {
+    return _isLastPage ? null : state.nextIntPageKey;
+  }, fetchPage: (pageKey) async {
+    final response = await notificationsApi.listMine(
+      page: pageKey,
+      pageSize: _pageSize,
+    );
+    _isLastPage = response.data?.next == null;
 
-        Iterable<sdk.Notification> notificationsIt =
-            response.data?.results ?? [];
-        List<sdk.Notification> notifications = notificationsIt.toList();
+    Iterable<sdk.Notification> notificationsIt = response.data?.results ?? [];
+    List<sdk.Notification> notifications = notificationsIt.toList();
 
-        if (pageKey == 1) {
-          _checkOpenNotification();
-        }
+    if (pageKey == 1) {
+      _checkOpenNotification();
+    }
 
-        return notifications;
-      });
+    return notifications;
+  });
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   late sdk.NotificationsApi notificationsApi;
@@ -227,19 +228,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
           setState(() {
             itemList[index] = updatedNotification;
           });
-          _updateUnreadNotificationCount();
         }
       }
     }
-  }
-
-  void _updateUnreadNotificationCount() {
-    final itemList = _pagingController.items;
-    if (itemList == null) return;
-
-    final unacknowledgedCount =
-        itemList.where((notification) => !notification.isRead).length;
-
-    widget.onNotificationUpdate?.call(unacknowledgedCount);
   }
 }
