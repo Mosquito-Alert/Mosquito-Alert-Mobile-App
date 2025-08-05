@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
+import 'package:html/parser.dart' show parse;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
@@ -12,7 +14,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
 class NotificationsPage extends StatefulWidget {
-  final String? notificationId;
+  final int? notificationId;
 
   const NotificationsPage({Key? key, this.notificationId}) : super(key: key);
 
@@ -30,17 +32,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final response = await notificationsApi.listMine(
       page: pageKey,
       pageSize: _pageSize,
+      orderBy: BuiltList<String>(["-created_at"]),
     );
-    _isLastPage = response.data?.next == null;
+    final data = response.data;
+    if (data == null) return [];
+    _isLastPage = data.next == null;
 
-    Iterable<sdk.Notification> notificationsIt = response.data?.results ?? [];
-    List<sdk.Notification> notifications = notificationsIt.toList();
-
-    if (pageKey == 1) {
-      _checkOpenNotification();
-    }
-
-    return notifications;
+    return data.results?.toList() ?? [];
   });
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
@@ -54,6 +52,27 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notificationsApi = apiClient.getNotificationsApi();
     _logScreenView();
     loadingStream.add(true);
+
+    if (widget.notificationId != null) {
+      // Delay until the first frame is rendered
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final notification =
+            await fetchNotificationById(widget.notificationId!);
+        if (notification != null && mounted) {
+          _showNotificationBottomSheet(context, notification);
+        }
+      });
+    }
+  }
+
+  Future<sdk.Notification?> fetchNotificationById(int id) async {
+    try {
+      final response = await notificationsApi.retrieve(id: id);
+      return response.data;
+    } catch (e) {
+      // Handle error if needed
+      return null;
+    }
   }
 
   @override
@@ -67,20 +86,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
         .logScreenView(screenName: '/notifications');
   }
 
-  void _checkOpenNotification() {
-    try {
-      if (widget.notificationId != null && widget.notificationId!.isNotEmpty) {
-        var notifId = widget.notificationId;
-        for (var notif in _pagingController.items ?? []) {
-          if (notifId == '${notif.id}') {
-            _infoBottomSheet(context, notif);
-            return;
-          }
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
+  String _parseHtmlString(String htmlString) {
+    final document = parse(htmlString);
+    final String parsedString = document.body?.text ?? '';
+    return parsedString.trim();
   }
 
   @override
@@ -115,23 +124,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: ListTile(
                       contentPadding: EdgeInsets.all(12),
                       onTap: () {
-                        if (!notification.isRead) {
-                          _updateNotification(notification.id);
-                        }
-                        _infoBottomSheet(context, notification);
+                        _showNotificationBottomSheet(context, notification);
                       },
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Style.titleMedium(notification.message.title,
-                              fontSize: 16),
-                          SizedBox(height: 4),
-                          Style.bodySmall(
-                            MyLocalizations.of(context, 'see_more_txt'),
-                            color: Colors.grey,
-                          ),
-                        ],
+                      title: Text(
+                        notification.message.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: notification.isRead
+                              ? Colors.black54
+                              : Colors.black,
+                        ),
                       ),
+                      subtitle: Text(
+                          _parseHtmlString(notification.message.body),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
                     ),
                   );
                 },
@@ -152,10 +159,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
-  void _infoBottomSheet(
+  void _showNotificationBottomSheet(
       BuildContext context, sdk.Notification notification) async {
     await FirebaseAnalytics.instance.logSelectContent(
         contentType: 'notification', itemId: '${notification.id}');
+
+    if (!notification.isRead) {
+      await markNotificationAsRead(notification);
+    }
+
     CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -209,24 +221,24 @@ class _NotificationsPageState extends State<NotificationsPage> {
         });
   }
 
-  Future<void> _updateNotification(int id) async {
+  Future<void> markNotificationAsRead(sdk.Notification notification) async {
+    if (notification.isRead) return;
+
     sdk.PatchedNotificationRequest patchedNotificationRequest =
         sdk.PatchedNotificationRequest((b) => b..isRead = true);
-    final res = await notificationsApi.partialUpdate(
-        id: id, patchedNotificationRequest: patchedNotificationRequest);
+    final response = await notificationsApi.partialUpdate(
+        id: notification.id,
+        patchedNotificationRequest: patchedNotificationRequest);
 
-    if (res.statusCode == 200 && res.data != null) {
-      final updatedNotification = res.data!;
-      final itemList = _pagingController.items;
-
-      if (itemList != null) {
-        final index = itemList.indexWhere((n) => n.id == id);
-        if (index != -1) {
-          setState(() {
-            itemList[index] = updatedNotification;
-          });
-        }
-      }
+    final sdk.Notification? newNotification = response.data;
+    if (newNotification == null || response.statusCode != 200) {
+      print('Failed to update notification: No data returned');
+      return;
     }
+
+    // Update the notification in the paging controller
+    // See: https://github.com/EdsonBueno/infinite_scroll_pagination/issues/389
+    _pagingController.mapItems((sdk.Notification item) =>
+        item.id == newNotification.id ? newNotification : item);
   }
 }
