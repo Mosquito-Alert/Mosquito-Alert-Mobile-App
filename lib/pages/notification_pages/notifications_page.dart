@@ -13,11 +13,8 @@ import 'package:provider/provider.dart';
 
 class NotificationsPage extends StatefulWidget {
   final String? notificationId;
-  final Function(int)? onNotificationUpdate;
 
-  const NotificationsPage(
-      {Key? key, this.notificationId, this.onNotificationUpdate})
-      : super(key: key);
+  const NotificationsPage({Key? key, this.notificationId}) : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
