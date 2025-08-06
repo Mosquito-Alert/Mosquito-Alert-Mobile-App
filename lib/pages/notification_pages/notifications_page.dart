@@ -31,10 +31,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
       page: pageKey,
       pageSize: _pageSize,
     );
-    _isLastPage = response.data?.next == null;
-
-    Iterable<sdk.Notification> notificationsIt = response.data?.results ?? [];
-    List<sdk.Notification> notifications = notificationsIt.toList();
+    final data = response.data;
+    if (data == null) return [];
+    
+    List<sdk.Notification> notifications = data.results?.toList() ?? [];
+    _isLastPage = data.next == null;
 
     if (pageKey == 1) {
       _checkOpenNotification();
