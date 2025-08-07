@@ -60,34 +60,91 @@ class PushNotificationsManager {
   }
 
   static void launchMessage(RemoteMessage message) {
-    String? title = message.notification?.title;
-    String? msg = message.notification?.body;
-    int? notifId = int.tryParse(message.data['id'].toString());
-    // Don't proceed if notifId is null
-    if (notifId == null) {
-      print('Notification ID is null, aborting navigation.');
+    RemoteNotification? notification = message.notification;
+    if (notification == null) {
+      print('Notification is null, aborting launch.');
+      return;
+    }
+    String? title = notification.title;
+    String? msg = notification.body;
+    if (title == null || msg == null) {
+      print('Title or message is null, aborting launch.');
       return;
     }
 
-    if (title!.isNotEmpty || msg!.isNotEmpty) {
-      showOverlayNotification((context) {
-        return MessageNotification(
-          title: title,
-          message: msg,
-          onTap: () {
-            OverlaySupportEntry.of(context)!.dismiss();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NotificationsPage(
-                        notificationId: notifId,
-                      ),
-                  fullscreenDialog: true),
-            );
-          },
-        );
-      }, duration: Duration(milliseconds: 4000));
+    int? notifId = int.tryParse(message.data['id'].toString());
+
+    showOverlayNotification((context) {
+      return MessageNotification(
+        title: title,
+        message: msg,
+        onTap: () {
+          OverlaySupportEntry.of(context)!.dismiss();
+          if (notifId == null) {
+            print('Notification ID is null, not navigating.');
+            return;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NotificationsPage(
+                      notificationId: notifId,
+                    ),
+                fullscreenDialog: true),
+          );
+        },
+      );
+    }, duration: Duration(milliseconds: 4000));
+  }
+
+  void _handleBackgroundMessage(RemoteMessage message) {
+    if (message.data['id'] != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NotificationsPage(
+                    notificationId: int.tryParse(message.data['id'].toString()),
+                  ),
+              fullscreenDialog: true));
     }
+  }
+
+  void _handleForegroundMessage(RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    if (notification == null) {
+      print('Notification is null, aborting launch.');
+      return;
+    }
+    String? title = notification.title;
+    String? msg = notification.body;
+    if (title == null && msg == null) {
+      print('Title and message are null, aborting launch.');
+      return;
+    }
+
+    int? notifId = int.tryParse(message.data['id'].toString());
+
+    showOverlayNotification((context) {
+      return MessageNotification(
+        title: title,
+        message: msg,
+        onTap: () {
+          OverlaySupportEntry.of(context)!.dismiss();
+          if (notifId == null) {
+            print('Notification ID is null, not navigating.');
+            return;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NotificationsPage(
+                      notificationId: notifId,
+                    ),
+                fullscreenDialog: true),
+          );
+        },
+      );
+    }, duration: Duration(milliseconds: 4000));
   }
 
   static void openMessageScreen(Map<String, dynamic> message) {
