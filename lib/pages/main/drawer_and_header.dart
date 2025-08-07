@@ -32,7 +32,8 @@ class MainVC extends StatefulWidget {
   State<MainVC> createState() => _MainVCState();
 }
 
-class _MainVCState extends State<MainVC> with RouteAware {
+class _MainVCState extends State<MainVC>
+    with RouteAware, WidgetsBindingObserver {
   int _selectedIndex = 0;
   int unreadNotifications = 0;
   var packageInfo;
@@ -42,12 +43,14 @@ class _MainVCState extends State<MainVC> with RouteAware {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _startAsyncTasks();
   }
 
   @override
   void dispose() {
     ObserverUtils.routeObserver.unsubscribe(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -61,6 +64,14 @@ class _MainVCState extends State<MainVC> with RouteAware {
   void didPopNext() {
     // Called when returning from another page
     _fetchNotificationCount();
+  }
+
+  // Called when app lifecycle state changes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _fetchNotificationCount();
+    }
   }
 
   Future<void> _onDrawerChanged(bool isOpened) async {
