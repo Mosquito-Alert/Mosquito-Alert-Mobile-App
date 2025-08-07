@@ -16,7 +16,6 @@ import 'components/biting_form.dart';
 import 'components/location_form.dart';
 
 class BitingReportPage extends StatefulWidget {
-  BitingReportPage();
   @override
   _BitingReportPageState createState() => _BitingReportPageState();
 }

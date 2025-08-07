@@ -14,8 +14,6 @@ import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class BreedingReportPage extends StatefulWidget {
-  BreedingReportPage();
-
   @override
   _BreedingReportPageState createState() => _BreedingReportPageState();
 }

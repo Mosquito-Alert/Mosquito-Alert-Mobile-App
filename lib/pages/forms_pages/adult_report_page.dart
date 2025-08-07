@@ -18,8 +18,6 @@ import 'package:mosquito_alert_app/utils/style.dart';
 import 'components/location_form.dart';
 
 class AdultReportPage extends StatefulWidget {
-  AdultReportPage();
-
   @override
   _AdultReportPageState createState() => _AdultReportPageState();
 }
