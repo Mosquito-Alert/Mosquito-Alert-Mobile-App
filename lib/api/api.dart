@@ -1,22 +1,15 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:built_collection/built_collection.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/models/session.dart';
-import 'package:mosquito_alert_app/models/topic.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -27,7 +20,8 @@ class ApiSingleton {
 
   static late MosquitoAlert api;
   static late AuthApi authApi;
-  static late BitesApi bitesApi;
+  static late UsersApi usersApi;
+  static late FixesApi fixesApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -66,121 +60,8 @@ class ApiSingleton {
     );
 
     authApi = api.getAuthApi();
-    bitesApi = api.getBitesApi();
-
-    // Try to restore session if we have stored credentials
-    final apiUser = await UserManager.getApiUser();
-    final apiPassword = await UserManager.getApiPassword();
-    if (apiUser != null && apiPassword != null) {
-      await loginJwt(apiUser, apiPassword);
-    }
-  }
-
-  Future<dynamic> createUser(String? uuid) async {
-    try {
-      // Try to authenticate with existing credentials first
-      final apiUser = await UserManager.getApiUser();
-      final apiPassword = await UserManager.getApiPassword();
-
-      if (apiUser != null && apiPassword != null) {
-        final success = await loginJwt(apiUser, apiPassword);
-        if (success) {
-          return true;
-        }
-      }
-
-      // No stored credentials or login failed - register as new guest
-      // Generate a random string of 16 characters for password
-      final random = Random.secure();
-      const chars =
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
-      final guestPassword =
-          List.generate(16, (index) => chars[random.nextInt(chars.length)])
-              .join();
-
-      final guestRegistrationRequest =
-          GuestRegistrationRequest((b) => b..password = guestPassword);
-
-      final registeredGuest = await authApi.signupGuest(
-          guestRegistrationRequest: guestRegistrationRequest);
-
-      if (registeredGuest.data?.username != null) {
-        final newApiUser = registeredGuest.data!.username;
-        await UserManager.setUser(newApiUser, guestPassword);
-
-        final success = await loginJwt(newApiUser, guestPassword);
-        if (success) {
-          return true;
-        }
-      }
-
-      return false;
-    } catch (e) {
-      print('Error creating user: $e');
-      return null;
-    }
-  }
-
-  static Future<bool> loginJwt(String user, String password) async {
-    final deviceInfoPlugin = DeviceInfoPlugin();
-    final deviceInfo = await deviceInfoPlugin.deviceInfo;
-    String? deviceId;
-    if (deviceInfo is AndroidDeviceInfo) {
-      deviceId = deviceInfo.id;
-    } else if (deviceInfo is IosDeviceInfo) {
-      deviceId = deviceInfo.identifierForVendor;
-    }
-    AppUserTokenObtainPairRequest appUserTokenObtainPairRequest =
-        AppUserTokenObtainPairRequest((b) => b
-          ..username = user
-          ..password = password
-          ..deviceId = deviceId);
-
-    try {
-      final obtainToken = await authApi.obtainToken(
-          appUserTokenObtainPairRequest: appUserTokenObtainPairRequest);
-
-      if (obtainToken.data?.access != null &&
-          obtainToken.data?.refresh != null) {
-        // Clear any existing interceptors and add the JWT auth interceptor
-        api.dio.interceptors.clear();
-        api.dio.interceptors.add(JwtAuthInterceptor(
-          apiClient: api,
-          accessToken: obtainToken.data!.access,
-          refreshToken: obtainToken.data!.refresh,
-        ));
-
-        // Store tokens for future use
-        await UserManager.setToken(obtainToken.data!.access);
-        await UserManager.setRefreshToken(obtainToken.data!.refresh);
-
-        return true;
-      }
-    } catch (e) {
-      print("Login failed: $e");
-    }
-    return false;
-  }
-
-  Future<dynamic> getUserScores() async {
-    // TODO
-    return 0; // Temporarily return 0 to avoid exception, until method is implemented
-  }
-
-  //Sessions
-  Future<dynamic> getLastSession(String? userUUID) async {
-    // TODO
-    return false;
-  }
-
-  Future<int?> createSession(Session session) async {
-    // TODO
-    return null;
-  }
-
-  Future<dynamic> closeSession(Session session) async {
-    // TODO
-    return false;
+    usersApi = api.getUsersApi();
+    fixesApi = api.getFixesApi();
   }
 
   //Reports
@@ -203,14 +84,11 @@ class ApiSingleton {
           speed: 0.0,
           speedAccuracy: 0.0);
 
-      final LocationRequest locationRequest = LocationRequest(
-        (b) => b
-          ..source_ = LocationRequestSource_Enum.auto
-          ..point = LocationPoint((b) => b
-            ..latitude = position.latitude
-            ..longitude = position.longitude
-          ).toBuilder()
-      );
+      final LocationRequest locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.auto
+        ..point = LocationPoint((b) => b
+          ..latitude = position.latitude
+          ..longitude = position.longitude).toBuilder());
 
       final BiteRequest biteRequest = BiteRequest((b) => b
         ..createdAt = DateTime.now().toUtc()
@@ -221,9 +99,8 @@ class ApiSingleton {
         ..eventEnvironment = BiteRequestEventEnvironmentEnum.outdoors
         ..eventMoment = BiteRequestEventMomentEnum.now
         ..counts = BiteCountsRequest((b) => b
-              ..head = 1
-              ..chest = 0
-            ).toBuilder());
+          ..head = 1
+          ..chest = 0).toBuilder());
 
       final response = await bitesApi.create(biteRequest: biteRequest);
       print('Bite report created successfully: ${response.data}');
@@ -312,12 +189,6 @@ class ApiSingleton {
     return false;
   }
 
-  Future<bool> sendFixes(String trackingUuid, double lat, double lon,
-      DateTime time, int power) async {
-    // TODO
-    return false;
-  }
-
   Future<dynamic> getCampaigns(countryId) async {
     // TODO
     return false;
@@ -340,23 +211,6 @@ class ApiSingleton {
       String? userIdentifier, int? notificationId) async {
     // TODO
     return false;
-  }
-
-  Future<bool> subscribeToTopic(
-      String userIdentifier, String? topicIdentifier) async {
-    // TODO
-    return false;
-  }
-
-  Future<bool> unsubscribeFromTopic(
-      String userIdentifier, String topicIdentifier) async {
-    // TODO
-    return false;
-  }
-
-  Future<List<Topic>?> getTopicsSubscribed(String userIdentifier) async {
-    // TODO
-    return [];
   }
 
   Future<bool> setFirebaseToken(String? userIdentifier, String fcmToken) async {

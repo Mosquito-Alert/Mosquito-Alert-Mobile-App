@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,16 +12,16 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/models/response.dart';
-import 'package:mosquito_alert_app/models/session.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,22 +35,14 @@ class Utils {
   //Manage Data
   static LatLng? location;
   static LatLng defaultLocation = LatLng(0, 0);
-  static StreamController<int?> userScoresController =
-      StreamController<int?>.broadcast();
 
   //REPORTS
   static Report? report;
-  static Session? session;
   static List<Report?>? reportsList;
   static Report? savedAdultReport;
 
   // Initialized data flags
   static Map<String, dynamic> initializedCheckData = {
-    'userScores': false, // Whether the user scores got fetched
-    'userCreated': {
-      'created': false,
-      'required': true,
-    },
     'firebase': false, // Whether firebase got initialized
   };
 
@@ -63,98 +56,62 @@ class Utils {
     imagePath!.removeWhere((element) => element['image'] == image);
   }
 
-  static void closeSession() {
-    session!.session_end_time = DateTime.now().toUtc().toIso8601String();
-    ApiSingleton().closeSession(session!);
-  }
-
   static Future<bool> createNewReport(
     String type, {
     double? lat,
     double? lon,
     String? locationType,
+    required BuildContext context,
   }) async {
-    if (session == null) {
-      reportsList = [];
+    var lang = await UserManager.getLanguage();
+    final userUUID =
+        Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    report = Report(
+        type: type,
+        report_id: randomAlphaNumeric(4).toString(),
+        version_number: 0,
+        version_UUID: Uuid().v4(),
+        user: userUUID,
+        responses: []);
 
-      var userUUID = await UserManager.getUUID();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    report!.package_name = packageInfo.packageName;
+    report!.package_version = 34;
 
-      dynamic response = await ApiSingleton().getLastSession(userUUID);
-      if (response is bool && !response) {
-        print('Unable to get last session.');
-        return false;
-      }
-
-      if (response is ApiResponse) {
-        print('response is of type ApiResponse, not a number.');
-        return false;
-      }
-
-      int? sessionId = response + 1;
-
-      session = Session(
-          session_ID: sessionId,
-          user: userUUID,
-          session_start_time: DateTime.now().toUtc().toIso8601String());
-
-      print(language);
-      session!.id = await ApiSingleton().createSession(session!);
+    if (Platform.isAndroid) {
+      var buildData = await DeviceInfoPlugin().androidInfo;
+      report!.device_manufacturer = buildData.manufacturer;
+      report!.device_model = buildData.model;
+      report!.os = 'Android';
+      report!.os_language = language.languageCode;
+      report!.os_version = buildData.version.sdkInt.toString();
+      report!.app_language = lang ?? language.languageCode;
+    } else if (Platform.isIOS) {
+      var buildData = await DeviceInfoPlugin().iosInfo;
+      report!.device_manufacturer = 'Apple';
+      report!.device_model = buildData.model;
+      report!.os = buildData.systemName;
+      report!.os_language = language.languageCode;
+      report!.os_version = buildData.systemVersion;
+      report!.app_language = lang ?? language.languageCode;
     }
 
-    if (session?.id != null) {
-      var lang = await UserManager.getLanguage();
-      var userUUID = await UserManager.getUUID();
-      report = Report(
-          type: type,
-          report_id: randomAlphaNumeric(4).toString(),
-          version_number: 0,
-          version_UUID: Uuid().v4(),
-          user: userUUID,
-          session: session!.id,
-          responses: []);
-
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      report!.package_name = packageInfo.packageName;
-      report!.package_version = 34;
-
-      if (Platform.isAndroid) {
-        var buildData = await DeviceInfoPlugin().androidInfo;
-        report!.device_manufacturer = buildData.manufacturer;
-        report!.device_model = buildData.model;
-        report!.os = 'Android';
-        report!.os_language = language.languageCode;
-        report!.os_version = buildData.version.sdkInt.toString();
-        report!.app_language = lang ?? language.languageCode;
-      } else if (Platform.isIOS) {
-        var buildData = await DeviceInfoPlugin().iosInfo;
-        report!.device_manufacturer = 'Apple';
-        report!.device_model = buildData.model;
-        report!.os = buildData.systemName;
-        report!.os_language = language.languageCode;
-        report!.os_version = buildData.systemVersion;
-        report!.app_language = lang ?? language.languageCode;
+    if (lat != null && lon != null) {
+      if (locationType == 'selected') {
+        report!.location_choice = 'selected';
+        report!.selected_location_lat = lat;
+        report!.selected_location_lon = lon;
+      } else {
+        report!.location_choice = 'current';
+        report!.current_location_lat = lat;
+        report!.current_location_lon = lon;
       }
-
-      if (lat != null && lon != null) {
-        if (locationType == 'selected') {
-          report!.location_choice = 'selected';
-          report!.selected_location_lat = lat;
-          report!.selected_location_lon = lon;
-        } else {
-          report!.location_choice = 'current';
-          report!.current_location_lat = lat;
-          report!.current_location_lon = lon;
-        }
-      }
-      return true;
     }
-
-    return false;
+    return true;
   }
 
   static void resetReport() {
     report = null;
-    session = null;
     reportsList = null;
   }
 
@@ -175,7 +132,7 @@ class Utils {
     }
   }
 
-  static void addOtherReport(String type) {
+  static void addOtherReport(String type, BuildContext context) {
     report!.version_time = DateTime.now().toUtc().toIso8601String();
     report!.creation_time = DateTime.now().toUtc().toIso8601String();
 
@@ -185,12 +142,14 @@ class Utils {
       createNewReport(type,
           lat: reportsList!.last!.selected_location_lat,
           lon: reportsList!.last!.selected_location_lon,
-          locationType: 'selected');
+          locationType: 'selected',
+          context: context);
     } else {
       createNewReport(type,
           lat: reportsList!.last!.current_location_lat,
           lon: reportsList!.last!.current_location_lon,
-          locationType: 'current');
+          locationType: 'current',
+          context: context);
     }
   }
 
@@ -369,7 +328,6 @@ class Utils {
         }
       }
 
-      closeSession();
       return isCreated;
     }
   }
@@ -398,6 +356,11 @@ class Utils {
   }
 
   static void syncReports() async {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      return;
+    }
+
     List? savedReports = await UserManager.getReportList();
     List? savedImages = await UserManager.getImageList();
 
@@ -434,30 +397,15 @@ class Utils {
     }
   }
 
-  static Future<void> checkForUnfetchedData() async {
-    SharedPreferences prefs;
-    // if (userCreated["required"] && !userCreated["created"]) {
-    final Map<String, bool> userCreated = initializedCheckData['userCreated'];
-    if (userCreated['required']! && !userCreated['created']!) {
-      print('Utils (checkForUnfetchedData): Creating user...');
-      prefs = await SharedPreferences.getInstance();
-      final uuid = prefs.getString('uuid');
-      await ApiSingleton().createUser(uuid);
-    } else {
-      print(
-          'Utils (checkForUnfetchedData): Either the user was created or it was not required (${jsonEncode(userCreated)})');
-    }
-
-    if (!initializedCheckData['userScores']) {
-      print('Utils (checkForUnfetchedData): Fetching user scores...');
-      UserManager.userScore = await ApiSingleton().getUserScores();
-    } else {
-      print('Utils (checkForUnfetchedData): UserScores were already fetched');
+  static Future<void> checkForUnfetchedData(BuildContext context) async {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      return;
     }
 
     if (!initializedCheckData['firebase']) {
       print('Utils (checkForUnfetchedData): Loading Firebase...');
-      await loadFirebase();
+      await loadFirebase(context);
     } else {
       print('Utils (checkForUnfetchedData): Firebase was already initialized.');
     }
@@ -474,9 +422,8 @@ class Utils {
     return res;
   }
 
-  static Future<void> loadFirebase() async {
-    await PushNotificationsManager.init();
-    await PushNotificationsManager.subscribeToLanguage();
+  static Future<void> loadFirebase(BuildContext context) async {
+    await PushNotificationsManager.init(context);
   }
 
   static final RegExp mailRegExp = RegExp(
@@ -1025,5 +972,13 @@ class Utils {
       await UserManager.setLastReviewRequest(now);
       await UserManager.setLastReportCount(numReports);
     }
+  }
+
+  static String getRandomPassword(int length) {
+    const chars =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
+    final rand = Random.secure();
+    return List.generate(length, (index) => chars[rand.nextInt(chars.length)])
+        .join();
   }
 }

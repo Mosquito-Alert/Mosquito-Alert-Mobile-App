@@ -156,15 +156,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _createBiteReport() async {
-    //ApiSingleton().createBiteReport(); // TODO: For debugging
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BitingReportPage()),
-    );
+    var createReport =
+        await Utils.createNewReport('bite', context: context); // TODO: Comment?
+    loadingStream.add(false);
+    if (createReport) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BitingReportPage()),
+      );
+    } else {
+      print('Bite report was not created');
+      loadingStream.add(false);
+    }
   }
 
   Future<void> _createAdultReport() async {
-    var createReport = await Utils.createNewReport('adult');
+    var createReport = await Utils.createNewReport('adult', context: context);
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(
@@ -178,7 +185,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _createSiteReport() async {
-    var createReport = await Utils.createNewReport('site');
+    var createReport = await Utils.createNewReport('site', context: context);
     loadingStream.add(false);
     if (createReport) {
       await Navigator.push(

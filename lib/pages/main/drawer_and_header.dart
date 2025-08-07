@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/api/api.dart';
+import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
@@ -14,10 +16,14 @@ import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.d
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
+import 'package:mosquito_alert_app/providers/auth_provider.dart';
+import 'package:mosquito_alert_app/providers/user_provider.dart';
+import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 
 class MainVC extends StatefulWidget {
   const MainVC({key});
@@ -52,12 +58,15 @@ class _MainVCState extends State<MainVC> {
 
   void _startAsyncTasks() async {
     await UserManager.startFirstTime(context);
+    bool initSuccess = await initAuth();
+    if (initSuccess) {
+      await initBackgroundTracking();
+    }
     setState(() {
-      isLoading = false;
+      isLoading = !initSuccess;
     });
     await _getNotificationCount();
     await getPackageInfo();
-    await initAuthStatus();
   }
 
   Future<void> _getNotificationCount() async {
@@ -83,12 +92,79 @@ class _MainVCState extends State<MainVC> {
     return true;
   }
 
-  Future<bool> initAuthStatus() async {
-    userUuid = await UserManager.getUUID();
-    UserManager.userScore = await ApiSingleton().getUserScores();
-    await UserManager.setUserScores(UserManager.userScore);
-    await Utils.loadFirebase();
+  Future<bool> initAuth() async {
+    final appConfig = await AppConfig.loadConfig();
+    if (!appConfig.useAuth) {
+      // Requesting permissions on automated tests creates many problems
+      // and mocking permission acceptance is difficult on Android and iOS
+      return true;
+    }
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    String? username = authProvider.username;
+    String? password = authProvider.password;
+    if (username == null && password == null) {
+      // Create a guest user
+      password = Utils.getRandomPassword(10);
+      try {
+        final GuestRegistration guestRegistration =
+            await authProvider.createGuestUser(password: password);
+        username = guestRegistration.username;
+      } catch (e) {
+        print('Error creating guest user: $e');
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to create user: $e'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return false;
+      }
+    }
+
+    // Check if the user is authenticated but the user data is not yet loaded
+    if (userProvider.user == null) {
+      try {
+        // Try fetching user if already authenticated
+        await userProvider.fetchUser();
+      } catch (_) {
+        // If fetching fails, try logging in and then fetch
+        try {
+          await authProvider.login(username: username!, password: password!);
+          await userProvider.fetchUser();
+        } catch (e) {
+          print('Error logging in: $e');
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Login failed: $e'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+          return false;
+        }
+      }
+    }
+    await Utils.loadFirebase(context);
     return true;
+  }
+
+  Future<void> initBackgroundTracking() async {
+    BackgroundTracking.configure(
+      apiClient: Provider.of<MosquitoAlert>(context, listen: false),
+    );
+    bool trackingEnabled = await BackgroundTracking.isEnabled();
+    if (trackingEnabled) {
+      await BackgroundTracking.start(requestPermissions: false);
+    } else {
+      await BackgroundTracking.stop();
+    }
   }
 
   late final List<Widget> _widgetOptions = <Widget>[
@@ -173,15 +249,11 @@ class _MainVCState extends State<MainVC> {
                                 image: AssetImage('assets/img/points_box.webp'),
                               ),
                             ),
-                            child: StreamBuilder<int?>(
-                                stream: Utils.userScoresController.stream,
-                                initialData: UserManager.userScore,
-                                builder: (context, snapshot) {
-                                  return Center(
-                                      child: AutoSizeText(
-                                    snapshot.data != null && snapshot.hasData
-                                        ? snapshot.data.toString()
-                                        : '',
+                            child: Consumer<UserProvider>(
+                              builder: (context, userProvider, _) {
+                                return Center(
+                                  child: AutoSizeText(
+                                    userProvider.userScore.toString(),
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
@@ -189,8 +261,10 @@ class _MainVCState extends State<MainVC> {
                                         color: Color(0xFF4B3D04),
                                         fontWeight: FontWeight.w500,
                                         fontSize: 24),
-                                  ));
-                                }),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
 
@@ -242,63 +316,52 @@ class _MainVCState extends State<MainVC> {
   }
 
   Widget _uuidWithClipboard() {
-    return FutureBuilder(
-        future: UserManager.getUUID(),
-        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          return Row(
-            children: [
-              Text(
-                'ID: ',
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, _) {
+        String uuid = userProvider.user?.uuid ?? '';
+        if (uuid.isEmpty) {
+          // Don't show anything if UUID is not available
+          return SizedBox.shrink();
+        }
+        return Row(
+          children: [
+            Text(
+              'ID: ',
+              style: TextStyle(
+                color: Colors.black.withValues(alpha: 0.7),
+                fontSize: 8,
+              ),
+            ),
+            Container(
+              width: 150,
+              child: Text(
+                uuid,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Colors.grey,
                   fontSize: 8,
                 ),
               ),
-              Container(
-                width: 150,
-                child: Text(
-                  snapshot.data ?? '',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 8,
-                  ),
-                ),
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.copy_rounded,
+                size: 12,
               ),
-              GestureDetector(
-                child: Icon(
-                  Icons.copy_rounded,
-                  size: 12,
-                ),
-                onTap: () {
-                  final data = snapshot.data;
-                  if (data != null) {
-                    Clipboard.setData(ClipboardData(text: data));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(MyLocalizations.of(
-                            context, 'copied_to_clipboard_success')),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(MyLocalizations.of(
-                            context, 'copied_to_clipboard_error')),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
-          );
-        });
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: uuid));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(MyLocalizations.of(
+                        context, 'copied_to_clipboard_success')),
+                  ),
+                );
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildCustomTile(int index, IconData icon, String title, context) {

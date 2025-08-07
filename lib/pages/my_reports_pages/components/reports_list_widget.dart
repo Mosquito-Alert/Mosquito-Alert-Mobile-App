@@ -142,11 +142,9 @@ class _MyReportsListState extends State<ReportsList> {
     List<Campaign> campaignsList = await ApiSingleton().getCampaigns(country);
     var now = DateTime.now().toUtc();
     if (campaignsList.any((element) =>
-        element.startDate.isBefore(now) &&
-        element.endDate.isAfter(now))) {
+        element.startDate.isBefore(now) && element.endDate.isAfter(now))) {
       var activeCampaign = campaignsList.firstWhere((element) =>
-          element.startDate.isBefore(now) &&
-          element.endDate.isAfter(now));
+          element.startDate.isBefore(now) && element.endDate.isAfter(now));
       return activeCampaign;
     }
     return null;

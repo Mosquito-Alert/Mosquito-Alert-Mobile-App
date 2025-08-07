@@ -53,7 +53,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     totalBites += (counts.rightArm ?? 0);
     totalBites += (counts.leftLeg ?? 0);
     totalBites += (counts.rightLeg ?? 0);
-    
+
     if (totalBites == 0) {
       return MyLocalizations.of(context, 'no_bites');
     } else if (totalBites == 1) {
@@ -65,14 +65,26 @@ class _ReportsListBitesState extends State<ReportsListBites> {
 
   String _getBiteLocations(BiteCounts counts) {
     List<String> locations = [];
-    if ((counts.head ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_head'));
-    if ((counts.chest ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_chest'));
-    if ((counts.leftArm ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_leftarm'));
-    if ((counts.rightArm ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_rightarm'));
-    if ((counts.leftLeg ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_leftleg'));
-    if ((counts.rightLeg ?? 0) > 0) locations.add(MyLocalizations.of(context, 'bite_report_bodypart_rightleg'));
-    
-    return locations.isEmpty ? MyLocalizations.of(context, 'unknown') : locations.join(', ');
+    if ((counts.head ?? 0) > 0)
+      locations.add(MyLocalizations.of(context, 'bite_report_bodypart_head'));
+    if ((counts.chest ?? 0) > 0)
+      locations.add(MyLocalizations.of(context, 'bite_report_bodypart_chest'));
+    if ((counts.leftArm ?? 0) > 0)
+      locations
+          .add(MyLocalizations.of(context, 'bite_report_bodypart_leftarm'));
+    if ((counts.rightArm ?? 0) > 0)
+      locations
+          .add(MyLocalizations.of(context, 'bite_report_bodypart_rightarm'));
+    if ((counts.leftLeg ?? 0) > 0)
+      locations
+          .add(MyLocalizations.of(context, 'bite_report_bodypart_leftleg'));
+    if ((counts.rightLeg ?? 0) > 0)
+      locations
+          .add(MyLocalizations.of(context, 'bite_report_bodypart_rightleg'));
+
+    return locations.isEmpty
+        ? MyLocalizations.of(context, 'unknown')
+        : locations.join(', ');
   }
 
   @override
@@ -106,19 +118,21 @@ class _ReportsListBitesState extends State<ReportsListBites> {
               text: TextSpan(
                 children: [
                   ...[
-                  const WidgetSpan(
-                    child: Icon(Icons.place_outlined, size: 16, color: Colors.grey),
-                  ),
-                  TextSpan(
-                    text: ' ${_getBiteLocations(report.counts)}\n',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey,
+                    const WidgetSpan(
+                      child: Icon(Icons.place_outlined,
+                          size: 16, color: Colors.grey),
                     ),
-                  ),
-                ],
+                    TextSpan(
+                      text: ' ${_getBiteLocations(report.counts)}\n',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                   const WidgetSpan(
-                    child: Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                    child: Icon(Icons.calendar_today,
+                        size: 16, color: Colors.grey),
                   ),
                   TextSpan(
                     text: ' ${_formatCreationTime(report)}',
@@ -140,8 +154,8 @@ class _ReportsListBitesState extends State<ReportsListBites> {
 
   void _reportBottomSheet(Bite report, BuildContext context) async {
     // TODO: After adult and sites are created, move to some Utils file
-    await FirebaseAnalytics.instance.logSelectContent(
-        contentType: 'bite_report', itemId: report.uuid);
+    await FirebaseAnalytics.instance
+        .logSelectContent(contentType: 'bite_report', itemId: report.uuid);
 
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
       context: context,
@@ -182,7 +196,8 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                         onSelected: (value) {
                           if (value == 1) {
                             Utils.showAlertYesNo(
-                              MyLocalizations.of(context, 'delete_report_title'),
+                              MyLocalizations.of(
+                                  context, 'delete_report_title'),
                               MyLocalizations.of(context, 'delete_report_txt'),
                               () async {
                                 await _deleteReport(report);
@@ -216,11 +231,13 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Style.titleMedium(
-                              MyLocalizations.of(context, 'exact_time_register_txt'),
+                              MyLocalizations.of(
+                                  context, 'exact_time_register_txt'),
                               fontSize: 14,
                             ),
                             Style.body(
-                              DateFormat('EEEE, dd MMMM yyyy', Utils.language.languageCode)
+                              DateFormat('EEEE, dd MMMM yyyy',
+                                      Utils.language.languageCode)
                                   .format(report.createdAt.toLocal()),
                               fontSize: 12,
                             ),
@@ -238,13 +255,13 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                     child: Divider(),
                   ),
                   ...[
-                  Style.titleMedium(
-                    MyLocalizations.of(context, 'bite_locations'),
-                    fontSize: 14,
-                  ),
-                  SizedBox(height: 10),
-                  Style.body(_getBiteLocations(report.counts)),
-                ],
+                    Style.titleMedium(
+                      MyLocalizations.of(context, 'bite_locations'),
+                      fontSize: 14,
+                    ),
+                    SizedBox(height: 10),
+                    Style.body(_getBiteLocations(report.counts)),
+                  ],
                   if (report.eventEnvironment != null) ...[
                     SizedBox(height: 20),
                     Style.titleMedium(
@@ -289,7 +306,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       parameters: {'report_uuid': report.uuid},
     );
     Navigator.pop(context);
-    
+
     try {
       final success = await ApiSingleton().deleteBiteReport(report.uuid);
       if (success) {
@@ -312,4 +329,3 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     }
   }
 }
-    

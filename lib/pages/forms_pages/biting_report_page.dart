@@ -186,12 +186,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
       if (Utils.savedAdultReport != null) {
         CampaignsApi campaignsApi = ApiSingleton.api.getCampaignsApi();
         Response<PaginatedCampaignList> result = await campaignsApi.list();
-        final campaignsList = (result.data?.results as List<dynamic>? ?? []).cast<Campaign>();
+        final campaignsList =
+            (result.data?.results as List<dynamic>? ?? []).cast<Campaign>();
         var now = DateTime.now().toUtc();
-        final activeCampaigns = campaignsList.where((element) =>
-          element.startDate.isBefore(now) &&
-          element.endDate.isAfter(now)
-        ).toList();
+        final activeCampaigns = campaignsList
+            .where((element) =>
+                element.startDate.isBefore(now) && element.endDate.isAfter(now))
+            .toList();
         if (activeCampaigns.isNotEmpty) {
           var activeCampaign = activeCampaigns.first;
           await Utils.showAlertCampaign(
@@ -317,7 +318,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
                                                 if (currentPage == 2 &&
                                                     addMosquito) {
-                                                  Utils.addOtherReport('adult');
+                                                  Utils.addOtherReport(
+                                                      'adult', context);
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
