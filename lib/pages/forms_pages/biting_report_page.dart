@@ -170,7 +170,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
     //var res = await Utils.createReport(); // TODO: Replace with issue #397
 
-    /*if (/*!res! || */Utils.savedAdultReport == null) {
+    /*if (/*!res! || */Utils.savedAdultReport == null) { // TODO: Uncomment after testing
       _showAlertKo();
       setState(() {
         percentStream.add(1.0);
@@ -179,7 +179,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }*/
 
     try {
-      Response<PaginatedCampaignList> response =
+      Response<PaginatedCampaignList>
+          response = // TODO: Think if I should put this inside findActiveCampaign()
           await campaignsApi.list(countryId: Utils.savedAdultReport!.country);
       PaginatedCampaignList? campaigns =
           response.data; // TODO: Handle pagination
