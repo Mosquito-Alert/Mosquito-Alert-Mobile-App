@@ -1,15 +1,17 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:dio/src/response.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/api/api.dart';
-import 'package:mosquito_alert_app/models/owcampaing.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:provider/provider.dart';
 
 import 'adult_report_page.dart';
 import 'components/biting_form.dart';
@@ -30,6 +32,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   StreamController<bool> validStream = StreamController<bool>.broadcast();
   StreamController<double> percentStream = StreamController<double>.broadcast();
   double index = 0;
+  late CampaignsApi campaignsApi;
 
   // Define the events to log
   final List<Map<String, dynamic>> _pageEvents = [
@@ -112,6 +115,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
   @override
   void initState() {
     super.initState();
+    MosquitoAlert apiClient =
+        Provider.of<MosquitoAlert>(context, listen: false);
+    campaignsApi = apiClient.getCampaignsApi();
     _logFirebaseAnalytics();
     _pagesController = PageController();
     _formsReport = [
@@ -162,38 +168,45 @@ class _BitingReportPageState extends State<BitingReportPage> {
     loadingStream.add(true);
     await FirebaseAnalytics.instance
         .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
-    var res = await Utils.createReport();
+    //var res = await Utils.createReport(); // TODO: Replace with issue #397
 
-    if (!res! || Utils.savedAdultReport == null) {
+    /*if (/*!res! || */Utils.savedAdultReport == null) {
       _showAlertKo();
       setState(() {
         percentStream.add(1.0);
       });
       return;
+    }*/
+
+    try {
+      Response<PaginatedCampaignList> response =
+          await campaignsApi.list(countryId: Utils.savedAdultReport!.country);
+      PaginatedCampaignList? campaigns =
+          response.data; // TODO: Handle pagination
+
+      final activeCampaign = findActiveCampaign(campaigns!.results);
+      if (activeCampaign == null) {
+        _showAlertKo();
+        return;
+      }
+
+      await Utils.showAlertCampaign(
+        context,
+        activeCampaign,
+        (ctx) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CampaignTutorialPage(fromReport: true),
+            ),
+          );
+          Utils.resetReport();
+        },
+      );
+    } catch (e, stackTrace) {
+      print('Failed to fetch campaigns: $e');
+      debugPrintStack(stackTrace: stackTrace);
     }
-
-    List<Campaign> campaigns =
-        await ApiSingleton().getCampaigns(Utils.savedAdultReport!.country);
-
-    final activeCampaign = findActiveCampaign(campaigns);
-    if (activeCampaign == null) {
-      _showAlertKo();
-      return;
-    }
-
-    await Utils.showAlertCampaign(
-      context,
-      activeCampaign,
-      (ctx) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CampaignTutorialPage(fromReport: true),
-          ),
-        );
-        Utils.resetReport();
-      },
-    );
 
     _showAlertOk();
     setState(() {
@@ -201,13 +214,12 @@ class _BitingReportPageState extends State<BitingReportPage> {
     });
   }
 
-  Campaign? findActiveCampaign(List<Campaign> campaigns) {
+  Campaign? findActiveCampaign(BuiltList<Campaign>? campaigns) {
+    if (campaigns == null || campaigns.isEmpty) return null;
+
     final now = DateTime.now().toUtc();
     final filtered = campaigns.where((element) {
-      final start = DateTime.tryParse(element.startDate ?? '');
-      final end = DateTime.tryParse(element.endDate ?? '');
-      if (start == null || end == null) return false;
-      return start.isBefore(now) && end.isAfter(now);
+      return element.startDate.isBefore(now) && element.endDate.isAfter(now);
     }).toList();
 
     if (filtered.isEmpty) return null;
