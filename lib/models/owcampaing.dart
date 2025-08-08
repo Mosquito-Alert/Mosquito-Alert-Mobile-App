@@ -1,3 +1,4 @@
+// TODO: Remove with issue #403
 class Campaign {
   int? id;
   String? postingAddress;
