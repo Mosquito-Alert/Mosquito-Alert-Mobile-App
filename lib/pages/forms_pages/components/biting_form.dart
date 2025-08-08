@@ -126,8 +126,8 @@ class _BitingFormState extends State<BitingForm> {
                         questions = Utils.report!.responses;
                       });
                       addToList(question[0]['question']['text'], '',
-                          question_id: 1,
-                          answer_id: 11,
+                          question_id: BiteQuestion.how_many.id,
+                          //answer_id: 11, // TODO: It's an empty string, deprecate?
                           answer_value: _textController.text);
 
                       var isValid = canContinue();
@@ -161,8 +161,8 @@ class _BitingFormState extends State<BitingForm> {
                           .where((q) => q['question']['id'] == 1)
                           .toList();
                       addToList(question[0]['question']['text'], '',
-                          question_id: 1,
-                          answer_id: 11,
+                          question_id: BiteQuestion.how_many.id,
+                          //answer_id: 11, // TODO: Empty value, deprecate?
                           answer_value: _textController.text);
                       var isValid = canContinue();
                       setState(() {
@@ -324,7 +324,8 @@ class _BitingFormState extends State<BitingForm> {
                                       addToList(
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][3]['text'],
-                                          question_id: 2,
+                                          question_id:
+                                              BiteQuestion.bitten_body_part.id,
                                           answer_id: BodyPart.body.id);
                                     }
                                   : null,
@@ -341,7 +342,8 @@ class _BitingFormState extends State<BitingForm> {
                                       addToList(
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][1]['text'],
-                                          question_id: 2,
+                                          question_id:
+                                              BiteQuestion.bitten_body_part.id,
                                           answer_id: BodyPart.left_arm.id);
                                     }
                                   : null,
@@ -363,7 +365,8 @@ class _BitingFormState extends State<BitingForm> {
                                       addToList(
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][5]['text'],
-                                          question_id: 2,
+                                          question_id:
+                                              BiteQuestion.bitten_body_part.id,
                                           answer_id: BodyPart.right_leg.id);
                                     }
                                   : null,
@@ -380,7 +383,8 @@ class _BitingFormState extends State<BitingForm> {
                                       addToList(
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][4]['text'],
-                                          question_id: 2,
+                                          question_id:
+                                              BiteQuestion.bitten_body_part.id,
                                           answer_id: BodyPart.left_leg.id);
                                     }
                                   : null,
@@ -567,7 +571,7 @@ class _BitingFormState extends State<BitingForm> {
   bool _validateAddBite() {
     var totalParts = 0;
     questions!.forEach((q) {
-      if (q!.question_id == BiteQuestion.vehicle_or_building.id) {
+      if (q!.question_id == BiteQuestion.bitten_body_part.id) {
         totalParts = totalParts + int.parse(q.answer_value!);
       }
     });
@@ -608,7 +612,7 @@ class _BitingFormState extends State<BitingForm> {
   void removeBite() {
     var bodyParts = Utils.report!.responses!
         .where((element) =>
-            element!.question_id == BiteQuestion.vehicle_or_building.id)
+            element!.question_id == BiteQuestion.bitten_body_part.id)
         .toList();
     if (bodyParts.isNotEmpty) {
       if (int.parse(bodyParts.last!.answer_value!) > 1) {
