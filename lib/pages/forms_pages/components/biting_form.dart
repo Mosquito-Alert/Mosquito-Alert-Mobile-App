@@ -24,7 +24,8 @@ enum BiteQuestion {
   bitten_body_part(2),
   what_time(3),
   vehicle_or_building(4),
-  when(5);
+  when(5),
+  what_does_it_look_like(7);
 
   final int id;
   const BiteQuestion(this.id);
@@ -32,7 +33,8 @@ enum BiteQuestion {
 
 enum Answer {
   just_now(51),
-  last_24h(52);
+  last_24h(52),
+  inside_vehicle(131);
 
   final int id;
   const Answer(this.id);
