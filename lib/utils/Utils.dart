@@ -15,6 +15,7 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/biting_form.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
@@ -187,7 +188,7 @@ class Utils {
 
     // add total bites
 
-    if (question_id == 1) {
+    if (question_id == BiteQuestion.how_many.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.question_id == question_id);
       if (currentIndex == -1) {
@@ -204,7 +205,7 @@ class Utils {
     }
 
     //increase answer_value question 2
-    if (question_id == 2) {
+    if (question_id == BiteQuestion.bitten_body_part.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.answer_id == answer_id);
       if (currentIndex == -1) {
@@ -223,7 +224,8 @@ class Utils {
     }
 
     //add other questions without answer_value
-    if (question_id != 2 && question_id != 1) {
+    if (question_id != BiteQuestion.bitten_body_part.id &&
+        question_id != BiteQuestion.how_many.id) {
       if (_questions!.any((q) => q!.answer_id == answer_id)) {
         // delete question from list
         _questions.removeWhere((q) => q!.answer_id == answer_id);
@@ -246,8 +248,9 @@ class Utils {
       }
     }
 
-    if (answer_id == 131) {
-      _questions!.removeWhere((q) => q!.question_id == 3);
+    if (answer_id == Answer.inside_vehicle.id) {
+      _questions!
+          .removeWhere((q) => q!.question_id == BiteQuestion.what_time.id);
     }
     report!.responses = _questions;
   }
@@ -255,7 +258,8 @@ class Utils {
   static void resetBitingQuestion() {
     var _questions = report!.responses!;
 
-    _questions.removeWhere((q) => q!.question_id == 2);
+    _questions
+        .removeWhere((q) => q!.question_id == BiteQuestion.bitten_body_part.id);
 
     report!.responses = _questions;
   }
@@ -275,7 +279,7 @@ class Utils {
       var newQuestion = Question(
         question: 'question_7',
         answer: answer,
-        question_id: 7,
+        question_id: BiteQuestion.what_does_it_look_like.id,
         answer_id: answerId,
       );
       _questions.add(newQuestion);
