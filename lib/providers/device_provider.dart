@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:app_set_id/app_set_id.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/locale.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -38,11 +38,11 @@ class DeviceProvider with ChangeNotifier {
   static Future<DeviceProvider> create(
       {required MosquitoAlert apiClient}) async {
     final devicesApi = apiClient.getDevicesApi();
-    final _mobileDeviceIdentifierPlugin = MobileDeviceIdentifier();
-    String? deviceId;
+    final _appSetIdPlugin = AppSetId();
 
+    String? deviceId;
     try {
-      deviceId = await _mobileDeviceIdentifierPlugin.getDeviceId();
+      deviceId = await _appSetIdPlugin.getIdentifier();
     } on PlatformException catch (e) {
       debugPrint('Failed to get device ID: ${e.message}');
     }
