@@ -223,10 +223,22 @@ class _MainVCState extends State<MainVC>
           badges.Badge(
               position: badges.BadgePosition.topEnd(top: 0, end: 3),
               showBadge: unreadNotifications > 0,
-              badgeContent: Text('$unreadNotifications',
-                  style: TextStyle(color: Colors.white)),
+              badgeContent: Text(
+                  unreadNotifications > 9 ? '+9' : '$unreadNotifications',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: unreadNotifications > 9 ? 10 : 13)),
+              badgeStyle: badges.BadgeStyle(
+                padding: unreadNotifications > 9
+                    ? EdgeInsets.all(5)
+                    : EdgeInsets.all(6),
+                shape: badges.BadgeShape.circle,
+                badgeColor: Colors.red,
+                borderSide:
+                    BorderSide(color: Colors.white, width: 2), // white border
+              ),
               child: IconButton(
-                  icon: Icon(Icons.notifications),
+                  icon: Icon(Icons.notifications_none),
                   onPressed: () {
                     Navigator.push(
                       context,
