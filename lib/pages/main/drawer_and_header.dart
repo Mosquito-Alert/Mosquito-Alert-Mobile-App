@@ -221,21 +221,19 @@ class _MainVCState extends State<MainVC>
         ),
         actions: <Widget>[
           badges.Badge(
-              position: badges.BadgePosition.topEnd(top: 4, end: 4),
+              position: badges.BadgePosition.topEnd(top: 0, end: 3),
               showBadge: unreadNotifications > 0,
               badgeContent: Text('$unreadNotifications',
                   style: TextStyle(color: Colors.white)),
               child: IconButton(
-                padding: EdgeInsets.only(top: 6),
-                icon: Icon(Icons.notifications, size: 24),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationsPage()),
-                  );
-                },
-              ))
+                  icon: Icon(Icons.notifications),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationsPage()),
+                    );
+                  }))
         ],
       ),
       body: Center(
