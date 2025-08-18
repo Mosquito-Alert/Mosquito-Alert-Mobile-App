@@ -188,7 +188,7 @@ class Utils {
 
     // add total bites
 
-    if (question_id == BiteQuestion.how_many.id) {
+    if (question_id == BiteQuestion.howMany.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.question_id == question_id);
       if (currentIndex == -1) {
@@ -205,7 +205,7 @@ class Utils {
     }
 
     //increase answer_value question 2
-    if (question_id == BiteQuestion.bitten_body_part.id) {
+    if (question_id == BiteQuestion.bittenBodyPart.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.answer_id == answer_id);
       if (currentIndex == -1) {
@@ -224,8 +224,8 @@ class Utils {
     }
 
     //add other questions without answer_value
-    if (question_id != BiteQuestion.bitten_body_part.id &&
-        question_id != BiteQuestion.how_many.id) {
+    if (question_id != BiteQuestion.bittenBodyPart.id &&
+        question_id != BiteQuestion.howMany.id) {
       if (_questions!.any((q) => q!.answer_id == answer_id)) {
         // delete question from list
         _questions.removeWhere((q) => q!.answer_id == answer_id);
@@ -250,7 +250,7 @@ class Utils {
 
     if (answer_id == Answer.inside_vehicle.id) {
       _questions!
-          .removeWhere((q) => q!.question_id == BiteQuestion.what_time.id);
+          .removeWhere((q) => q!.question_id == BiteQuestion.whatTime.id);
     }
     report!.responses = _questions;
   }
@@ -259,7 +259,7 @@ class Utils {
     var _questions = report!.responses!;
 
     _questions
-        .removeWhere((q) => q!.question_id == BiteQuestion.bitten_body_part.id);
+        .removeWhere((q) => q!.question_id == BiteQuestion.bittenBodyPart.id);
 
     report!.responses = _questions;
   }
@@ -279,7 +279,7 @@ class Utils {
       var newQuestion = Question(
         question: 'question_7',
         answer: answer,
-        question_id: BiteQuestion.what_does_it_look_like.id,
+        question_id: BiteQuestion.whatDoesItLookLike.id,
         answer_id: answerId,
       );
       _questions.add(newQuestion);

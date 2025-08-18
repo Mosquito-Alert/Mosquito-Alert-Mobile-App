@@ -9,23 +9,23 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 enum BodyPart {
   head(21),
-  left_arm(22),
-  right_arm(23),
+  leftArm(22),
+  rightArm(23),
   body(24),
-  left_leg(25),
-  right_leg(26);
+  leftLeg(25),
+  rightLeg(26);
 
   final int id;
   const BodyPart(this.id);
 }
 
 enum BiteQuestion {
-  how_many(1),
-  bitten_body_part(2),
-  what_time(3),
-  vehicle_or_building(4),
-  when(5),
-  what_does_it_look_like(7);
+  howMany(1),
+  bittenBodyPart(2),
+  whatTime(3),
+  vehicleOrBuilding(4),
+  when_now_or_last_24h(5),
+  whatDoesItLookLike(7);
 
   final int id;
   const BiteQuestion(this.id);
@@ -67,11 +67,11 @@ class _BitingFormState extends State<BitingForm> {
 
     if (Utils.report != null) {
       for (var q in Utils.report!.responses!) {
-        if (q!.question_id == BiteQuestion.how_many.id) {
+        if (q!.question_id == BiteQuestion.howMany.id) {
           bites = int.parse(q.answer_value!);
         }
-        if (q.question_id! <= BiteQuestion.vehicle_or_building.id ||
-            q.question_id == BiteQuestion.when.id) {
+        if (q.question_id! <= BiteQuestion.vehicleOrBuilding.id ||
+            q.question_id == BiteQuestion.when_now_or_last_24h.id) {
           questions!.add(q);
         }
         if (q.answer_id == Answer.last_24h.id) {
@@ -85,10 +85,10 @@ class _BitingFormState extends State<BitingForm> {
     });
     _textController.text = bites.toString();
     displayQuestions = widget.displayQuestions
-        .where((q) => q['question']['id'] > BiteQuestion.bitten_body_part.id)
+        .where((q) => q['question']['id'] > BiteQuestion.bittenBodyPart.id)
         .toList();
     bodyQuestion = widget.displayQuestions
-        .where((q) => q['question']['id'] == BiteQuestion.bitten_body_part.id)
+        .where((q) => q['question']['id'] == BiteQuestion.bittenBodyPart.id)
         .toList()[0];
   }
 
@@ -128,7 +128,7 @@ class _BitingFormState extends State<BitingForm> {
                         questions = Utils.report!.responses;
                       });
                       addToList(question[0]['question']['text'], '',
-                          question_id: BiteQuestion.how_many.id,
+                          question_id: BiteQuestion.howMany.id,
                           //answer_id: 11, // TODO: It's an empty string, deprecate?
                           answer_value: _textController.text);
 
@@ -163,7 +163,7 @@ class _BitingFormState extends State<BitingForm> {
                           .where((q) => q['question']['id'] == 1)
                           .toList();
                       addToList(question[0]['question']['text'], '',
-                          question_id: BiteQuestion.how_many.id,
+                          question_id: BiteQuestion.howMany.id,
                           //answer_id: 11, // TODO: Empty value, deprecate?
                           answer_value: _textController.text);
                       var isValid = canContinue();
@@ -186,28 +186,28 @@ class _BitingFormState extends State<BitingForm> {
                         ),
                         Image.asset(
                           questions!.any((question) =>
-                                  question!.answer_id == BodyPart.left_leg.id)
+                                  question!.answer_id == BodyPart.leftLeg.id)
                               ? 'assets/img/ic_left_leg_on.webp'
                               : 'assets/img/ic_left_leg_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
                           questions!.any((question) =>
-                                  question!.answer_id == BodyPart.right_leg.id)
+                                  question!.answer_id == BodyPart.rightLeg.id)
                               ? 'assets/img/ic_right_leg_on.webp'
                               : 'assets/img/ic_right_leg_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
                           questions!.any((question) =>
-                                  question!.answer_id == BodyPart.left_arm.id)
+                                  question!.answer_id == BodyPart.leftArm.id)
                               ? 'assets/img/ic_left_hand_on.webp'
                               : 'assets/img/ic_left_hand_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
                           questions!.any((question) =>
-                                  question!.answer_id == BodyPart.right_arm.id)
+                                  question!.answer_id == BodyPart.rightArm.id)
                               ? 'assets/img/ic_right_hand_on.webp'
                               : 'assets/img/ic_right_hand_off.webp',
                           width: mediaQuery.width,
@@ -238,16 +238,16 @@ class _BitingFormState extends State<BitingForm> {
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.21,
                           child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.right_arm.id)
-                              ? Style.body(getIndexBody(BodyPart.right_arm.id))
+                                  question!.answer_id == BodyPart.rightArm.id)
+                              ? Style.body(getIndexBody(BodyPart.rightArm.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.70,
                           child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.left_arm.id)
-                              ? Style.body(getIndexBody(BodyPart.left_arm.id))
+                                  question!.answer_id == BodyPart.leftArm.id)
+                              ? Style.body(getIndexBody(BodyPart.leftArm.id))
                               : Container(),
                         ),
                         Positioned(
@@ -262,16 +262,16 @@ class _BitingFormState extends State<BitingForm> {
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.28,
                           child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.right_leg.id)
-                              ? Style.body(getIndexBody(BodyPart.right_leg.id))
+                                  question!.answer_id == BodyPart.rightLeg.id)
+                              ? Style.body(getIndexBody(BodyPart.rightLeg.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.63,
                           child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.left_leg.id)
-                              ? Style.body(getIndexBody(BodyPart.left_leg.id))
+                                  question!.answer_id == BodyPart.leftLeg.id)
+                              ? Style.body(getIndexBody(BodyPart.leftLeg.id))
                               : Container(),
                         ),
                       ],
@@ -285,7 +285,7 @@ class _BitingFormState extends State<BitingForm> {
                                   addToList(bodyQuestion['question']['text'],
                                       bodyQuestion['answers'][0]['text'],
                                       question_id:
-                                          BiteQuestion.bitten_body_part.id,
+                                          BiteQuestion.bittenBodyPart.id,
                                       answer_id: BodyPart.head.id);
                                 }
                               : null,
@@ -309,8 +309,8 @@ class _BitingFormState extends State<BitingForm> {
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][2]['text'],
                                           question_id:
-                                              BiteQuestion.bitten_body_part.id,
-                                          answer_id: BodyPart.right_arm.id);
+                                              BiteQuestion.bittenBodyPart.id,
+                                          answer_id: BodyPart.rightArm.id);
                                     }
                                   : null,
                               child: Container(
@@ -327,7 +327,7 @@ class _BitingFormState extends State<BitingForm> {
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][3]['text'],
                                           question_id:
-                                              BiteQuestion.bitten_body_part.id,
+                                              BiteQuestion.bittenBodyPart.id,
                                           answer_id: BodyPart.body.id);
                                     }
                                   : null,
@@ -345,8 +345,8 @@ class _BitingFormState extends State<BitingForm> {
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][1]['text'],
                                           question_id:
-                                              BiteQuestion.bitten_body_part.id,
-                                          answer_id: BodyPart.left_arm.id);
+                                              BiteQuestion.bittenBodyPart.id,
+                                          answer_id: BodyPart.leftArm.id);
                                     }
                                   : null,
                               child: Container(
@@ -368,8 +368,8 @@ class _BitingFormState extends State<BitingForm> {
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][5]['text'],
                                           question_id:
-                                              BiteQuestion.bitten_body_part.id,
-                                          answer_id: BodyPart.right_leg.id);
+                                              BiteQuestion.bittenBodyPart.id,
+                                          answer_id: BodyPart.rightLeg.id);
                                     }
                                   : null,
                               child: Container(
@@ -386,8 +386,8 @@ class _BitingFormState extends State<BitingForm> {
                                           bodyQuestion['question']['text'],
                                           bodyQuestion['answers'][4]['text'],
                                           question_id:
-                                              BiteQuestion.bitten_body_part.id,
-                                          answer_id: BodyPart.left_leg.id);
+                                              BiteQuestion.bittenBodyPart.id,
+                                          answer_id: BodyPart.leftLeg.id);
                                     }
                                   : null,
                               child: Container(
@@ -549,9 +549,9 @@ class _BitingFormState extends State<BitingForm> {
 
   addToList(String? question, String? answer,
       {question_id, answer_id, answer_value}) {
-    if ((question_id != BiteQuestion.how_many.id &&
+    if ((question_id != BiteQuestion.howMany.id &&
             int.parse(_textController.text) > 0) ||
-        question_id == BiteQuestion.how_many.id) {
+        question_id == BiteQuestion.howMany.id) {
       Utils.addBiteResponse(
         question,
         answer,
@@ -573,7 +573,7 @@ class _BitingFormState extends State<BitingForm> {
   bool _validateAddBite() {
     var totalParts = 0;
     questions!.forEach((q) {
-      if (q!.question_id == BiteQuestion.bitten_body_part.id) {
+      if (q!.question_id == BiteQuestion.bittenBodyPart.id) {
         totalParts = totalParts + int.parse(q.answer_value!);
       }
     });
@@ -588,9 +588,9 @@ class _BitingFormState extends State<BitingForm> {
       var totalQ5 = 0;
 
       questions!.forEach((q) {
-        if (q!.question_id == BiteQuestion.vehicle_or_building.id) totalQ3++;
-        if (q.question_id == BiteQuestion.when.id) totalQ4++;
-        if (q.question_id == BiteQuestion.what_time.id) totalQ5++;
+        if (q!.question_id == BiteQuestion.vehicleOrBuilding.id) totalQ3++;
+        if (q.question_id == BiteQuestion.when_now_or_last_24h.id) totalQ4++;
+        if (q.question_id == BiteQuestion.whatTime.id) totalQ5++;
       });
 
       if (questions!.any((q) => q!.answer_id == Answer.last_24h.id)) {
@@ -613,8 +613,8 @@ class _BitingFormState extends State<BitingForm> {
 
   void removeBite() {
     var bodyParts = Utils.report!.responses!
-        .where((element) =>
-            element!.question_id == BiteQuestion.bitten_body_part.id)
+        .where(
+            (element) => element!.question_id == BiteQuestion.bittenBodyPart.id)
         .toList();
     if (bodyParts.isNotEmpty) {
       if (int.parse(bodyParts.last!.answer_value!) > 1) {
