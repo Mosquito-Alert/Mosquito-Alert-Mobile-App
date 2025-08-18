@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:dio/src/response.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -179,13 +178,11 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }*/
 
     try {
-      Response<PaginatedCampaignList>
-          response = // TODO: Think if I should put this inside findActiveCampaign()
-          await campaignsApi.list(countryId: Utils.savedAdultReport!.country);
-      PaginatedCampaignList? campaigns =
+      Response<PaginatedCampaignList> response = await campaignsApi.list(
+          countryId: Utils.savedAdultReport!.country, isActive: true);
+      PaginatedCampaignList? activeCampaign =
           response.data; // TODO: Handle pagination
 
-      final activeCampaign = findActiveCampaign(campaigns!.results);
       if (activeCampaign == null) {
         _showAlertKo();
         return;
@@ -213,18 +210,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     setState(() {
       percentStream.add(1.0);
     });
-  }
-
-  Campaign? findActiveCampaign(BuiltList<Campaign>? campaigns) {
-    if (campaigns == null || campaigns.isEmpty) return null;
-
-    final now = DateTime.now().toUtc();
-    final filtered = campaigns.where((element) {
-      return element.startDate.isBefore(now) && element.endDate.isAfter(now);
-    }).toList();
-
-    if (filtered.isEmpty) return null;
-    return filtered.first;
   }
 
   void goNextPage() {
