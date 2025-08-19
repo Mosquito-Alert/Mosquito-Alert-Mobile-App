@@ -170,11 +170,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
     }
 
     if (Utils.savedAdultReport == null) {
-      _showAlertOk();
-      setState(() {
-        percentStream.add(1.0);
-      });
-      return;
+      return showSuccess();
     }
 
     List<Campaign> campaigns =
@@ -182,11 +178,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
     final activeCampaign = findActiveCampaign(campaigns);
     if (activeCampaign == null) {
-      _showAlertOk();
-      setState(() {
-        percentStream.add(1.0);
-      });
-      return;
+      return showSuccess();
     }
 
     await Utils.showAlertCampaign(
@@ -203,6 +195,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
       },
     );
 
+    showSuccess();
+  }
+
+  void showSuccess() {
     _showAlertOk();
     setState(() {
       percentStream.add(1.0);
