@@ -161,11 +161,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   void _createReport() async {
-    /*
-    TODO: The logic here is (almost) the same as _saveData()
-    in biting_report_page.dart
-    Consider refactor to move them together into a new file
-    */
     setState(() {
       percentStream.add(0.8);
     });
@@ -185,11 +180,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
 
     PaginatedCampaignList? activeCampaign = null;
     try {
-      // TODO: Needs testing
       Response<PaginatedCampaignList> response = await campaignsApi.list(
         countryId: Utils.savedAdultReport!.country,
         isActive: true,
-        orderBy: BuiltList<String>(["-start_date"]),
+        orderBy: BuiltList<String>.of(["-start_date"]),
         pageSize: 1,
       );
       activeCampaign = response.data;
@@ -197,6 +191,8 @@ class _AdultReportPageState extends State<AdultReportPage> {
       print('Failed to fetch campaigns: $e');
       debugPrintStack(stackTrace: stackTrace);
     }
+
+    showSuccess();
 
     if (activeCampaign != null) {
       await Utils.showAlertCampaign(
@@ -211,8 +207,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
         },
       );
     }
-
-    return showSuccess();
   }
 
   void showSuccess() {
