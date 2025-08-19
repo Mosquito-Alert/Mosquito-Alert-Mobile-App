@@ -169,13 +169,17 @@ class _BitingReportPageState extends State<BitingReportPage> {
         .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
     //var res = await Utils.createReport(); // TODO: Replace with issue #397
 
-    /*if (/*!res! || */Utils.savedAdultReport == null) { // TODO: Uncomment after testing
+    /*if (!res!) { // TODO: Uncomment after testing
       _showAlertKo();
       setState(() {
         percentStream.add(1.0);
       });
       return;
     }*/
+
+    if (Utils.savedAdultReport == null) {
+      return showSuccess();
+    }
 
     try {
       Response<PaginatedCampaignList> response = await campaignsApi.list(
@@ -184,8 +188,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
           response.data; // TODO: Handle pagination
 
       if (activeCampaign == null) {
-        _showAlertKo();
-        return;
+        return showSuccess();
       }
 
       await Utils.showAlertCampaign(
@@ -198,7 +201,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
               builder: (context) => CampaignTutorialPage(fromReport: true),
             ),
           );
-          Utils.resetReport();
         },
       );
     } catch (e, stackTrace) {
@@ -206,7 +208,12 @@ class _BitingReportPageState extends State<BitingReportPage> {
       debugPrintStack(stackTrace: stackTrace);
     }
 
+    showSuccess();
+  }
+
+  void showSuccess() {
     _showAlertOk();
+    Utils.resetReport();
     setState(() {
       percentStream.add(1.0);
     });

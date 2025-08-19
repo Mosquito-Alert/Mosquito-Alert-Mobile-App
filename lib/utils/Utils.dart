@@ -15,8 +15,8 @@ import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/question.dart';
 import 'package:mosquito_alert_app/models/report.dart';
+import 'package:mosquito_alert_app/pages/forms_pages/components/biting_form.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
-import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -40,11 +40,6 @@ class Utils {
   static Report? report;
   static List<Report?>? reportsList;
   static Report? savedAdultReport;
-
-  // Initialized data flags
-  static Map<String, dynamic> initializedCheckData = {
-    'firebase': false, // Whether firebase got initialized
-  };
 
   static void saveImgPath(File img) {
     imagePath ??= [];
@@ -187,7 +182,7 @@ class Utils {
 
     // add total bites
 
-    if (question_id == 1) {
+    if (question_id == BiteQuestion.howMany.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.question_id == question_id);
       if (currentIndex == -1) {
@@ -204,7 +199,7 @@ class Utils {
     }
 
     //increase answer_value question 2
-    if (question_id == 2) {
+    if (question_id == BiteQuestion.bittenBodyPart.id) {
       var currentIndex = _questions!
           .indexWhere((question) => question!.answer_id == answer_id);
       if (currentIndex == -1) {
@@ -223,7 +218,8 @@ class Utils {
     }
 
     //add other questions without answer_value
-    if (question_id != 2 && question_id != 1) {
+    if (question_id != BiteQuestion.bittenBodyPart.id &&
+        question_id != BiteQuestion.howMany.id) {
       if (_questions!.any((q) => q!.answer_id == answer_id)) {
         // delete question from list
         _questions.removeWhere((q) => q!.answer_id == answer_id);
@@ -246,8 +242,9 @@ class Utils {
       }
     }
 
-    if (answer_id == 131) {
-      _questions!.removeWhere((q) => q!.question_id == 3);
+    if (answer_id == Answer.inside_vehicle.id) {
+      _questions!
+          .removeWhere((q) => q!.question_id == BiteQuestion.whatTime.id);
     }
     report!.responses = _questions;
   }
@@ -255,7 +252,8 @@ class Utils {
   static void resetBitingQuestion() {
     var _questions = report!.responses!;
 
-    _questions.removeWhere((q) => q!.question_id == 2);
+    _questions
+        .removeWhere((q) => q!.question_id == BiteQuestion.bittenBodyPart.id);
 
     report!.responses = _questions;
   }
@@ -275,7 +273,7 @@ class Utils {
       var newQuestion = Question(
         question: 'question_7',
         answer: answer,
-        question_id: 7,
+        question_id: BiteQuestion.whatDoesItLookLike.id,
         answer_id: answerId,
       );
       _questions.add(newQuestion);
@@ -397,20 +395,6 @@ class Utils {
     }
   }
 
-  static Future<void> checkForUnfetchedData(BuildContext context) async {
-    final appConfig = await AppConfig.loadConfig();
-    if (!appConfig.useAuth) {
-      return;
-    }
-
-    if (!initializedCheckData['firebase']) {
-      print('Utils (checkForUnfetchedData): Loading Firebase...');
-      await loadFirebase(context);
-    } else {
-      print('Utils (checkForUnfetchedData): Firebase was already initialized.');
-    }
-  }
-
   static Future<bool> deleteReport(r) async {
     Report deleteReport = r;
     deleteReport.version_time = DateTime.now().toUtc().toIso8601String();
@@ -420,10 +404,6 @@ class Utils {
     var res =
         await ApiSingleton().createReport(deleteReport) != null ? true : false;
     return res;
-  }
-
-  static Future<void> loadFirebase(BuildContext context) async {
-    await PushNotificationsManager.init(context);
   }
 
   static final RegExp mailRegExp = RegExp(
