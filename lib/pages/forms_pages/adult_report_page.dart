@@ -201,7 +201,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
     if (activeCampaign != null) {
       await Utils.showAlertCampaign(
         context,
-        activeCampaign,
         (ctx) {
           Navigator.pushReplacement(
             context,

@@ -197,7 +197,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     if (activeCampaign != null) {
       await Utils.showAlertCampaign(
         context,
-        activeCampaign,
         (ctx) {
           Navigator.pushReplacement(
             context,
