@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:dio/src/response.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -167,25 +168,29 @@ class _BitingReportPageState extends State<BitingReportPage> {
     loadingStream.add(true);
     await FirebaseAnalytics.instance
         .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
-    //var res = await Utils.createReport(); // TODO: Replace with issue #397
+    var res = await Utils.createReport(); // TODO: Replace with issue #397
 
-    /*if (!res!) { // TODO: Uncomment after testing
+    if (!res!) {
       _showAlertKo();
       setState(() {
         percentStream.add(1.0);
       });
       return;
-    }*/
+    }
 
     if (Utils.savedAdultReport == null) {
       return showSuccess();
     }
 
     try {
+      // TODO: Needs testing
       Response<PaginatedCampaignList> response = await campaignsApi.list(
-          countryId: Utils.savedAdultReport!.country, isActive: true);
-      PaginatedCampaignList? activeCampaign =
-          response.data; // TODO: Handle pagination
+        countryId: Utils.savedAdultReport!.country,
+        isActive: true,
+        orderBy: BuiltList<String>(["-start_date"]),
+        pageSize: 1,
+      );
+      PaginatedCampaignList? activeCampaign = response.data;
 
       if (activeCampaign == null) {
         return showSuccess();

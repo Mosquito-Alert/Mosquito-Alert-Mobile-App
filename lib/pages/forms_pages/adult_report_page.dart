@@ -155,6 +155,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   void _createReport() async {
+    // TODO: Same as bite
     loadingStream.add(true);
     setState(() {
       percentStream.add(0.8);
