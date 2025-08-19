@@ -164,8 +164,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
         .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
     var res = await Utils.createReport();
 
-    if (!res! || Utils.savedAdultReport == null) {
+    if (!res!) {
       _showAlertKo();
+      return;
+    }
+
+    if (Utils.savedAdultReport == null) {
+      _showAlertOk();
       setState(() {
         percentStream.add(1.0);
       });
@@ -177,7 +182,10 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
     final activeCampaign = findActiveCampaign(campaigns);
     if (activeCampaign == null) {
-      _showAlertKo();
+      _showAlertOk();
+      setState(() {
+        percentStream.add(1.0);
+      });
       return;
     }
 
