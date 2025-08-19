@@ -191,7 +191,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
             builder: (context) => CampaignTutorialPage(fromReport: true),
           ),
         );
-        Utils.resetReport();
       },
     );
 
@@ -200,6 +199,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   void showSuccess() {
     _showAlertOk();
+    Utils.resetReport();
     setState(() {
       percentStream.add(1.0);
     });
