@@ -172,9 +172,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
     if (!res!) {
       _showAlertKo();
-      setState(() {
-        percentStream.add(1.0);
-      });
       return;
     }
 
@@ -182,6 +179,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       return showSuccess();
     }
 
+    PaginatedCampaignList? activeCampaign = null;
     try {
       // TODO: Needs testing
       Response<PaginatedCampaignList> response = await campaignsApi.list(
@@ -190,12 +188,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
         orderBy: BuiltList<String>(["-start_date"]),
         pageSize: 1,
       );
-      PaginatedCampaignList? activeCampaign = response.data;
+      activeCampaign = response.data;
+    } catch (e, stackTrace) {
+      print('Failed to fetch campaigns: $e');
+      debugPrintStack(stackTrace: stackTrace);
+    }
 
-      if (activeCampaign == null) {
-        return showSuccess();
-      }
-
+    if (activeCampaign != null) {
       await Utils.showAlertCampaign(
         context,
         activeCampaign,
@@ -208,12 +207,9 @@ class _BitingReportPageState extends State<BitingReportPage> {
           );
         },
       );
-    } catch (e, stackTrace) {
-      print('Failed to fetch campaigns: $e');
-      debugPrintStack(stackTrace: stackTrace);
     }
 
-    showSuccess();
+    return showSuccess();
   }
 
   void showSuccess() {
