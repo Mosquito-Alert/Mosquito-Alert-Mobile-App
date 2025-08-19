@@ -6,9 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/notification.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
@@ -17,11 +15,6 @@ import 'package:path_provider/path_provider.dart';
 class ApiSingleton {
   static String baseUrl = '';
   static String serverUrl = '';
-
-  static late MosquitoAlert api;
-  static late AuthApi authApi;
-  static late UsersApi usersApi;
-  static late FixesApi fixesApi;
 
   static final ApiSingleton _singleton = ApiSingleton._internal();
 
@@ -35,33 +28,10 @@ class ApiSingleton {
     final config = await AppConfig.loadConfig();
     baseUrl = config.baseUrl;
     serverUrl = '$baseUrl/api';
-    await initializeApiClient();
   }
 
   static ApiSingleton getInstance() {
     return ApiSingleton();
-  }
-
-  static Future<void> initializeApiClient() async {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: baseUrl,
-        validateStatus: (status) {
-          return status != null && status < 500;
-        },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
-    api = MosquitoAlert(
-      basePathOverride: baseUrl,
-      dio: dio,
-    );
-
-    authApi = api.getAuthApi();
-    usersApi = api.getUsersApi();
-    fixesApi = api.getFixesApi();
   }
 
   //Reports
@@ -190,30 +160,6 @@ class ApiSingleton {
   }
 
   Future<dynamic> getCampaigns(countryId) async {
-    // TODO
-    return false;
-  }
-
-  /*
-  * Notifications Module
-  * */
-  Future<List<MyNotification>> getNotifications() async {
-    // TODO
-    return [];
-  }
-
-  Future<dynamic> updateNotification(id, acknowledge) async {
-    // TODO
-    return false;
-  }
-
-  Future<dynamic> markNotificationAsRead(
-      String? userIdentifier, int? notificationId) async {
-    // TODO
-    return false;
-  }
-
-  Future<bool> setFirebaseToken(String? userIdentifier, String fcmToken) async {
     // TODO
     return false;
   }
