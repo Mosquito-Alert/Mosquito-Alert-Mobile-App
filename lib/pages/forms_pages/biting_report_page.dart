@@ -177,24 +177,21 @@ class _BitingReportPageState extends State<BitingReportPage> {
         await ApiSingleton().getCampaigns(Utils.savedAdultReport!.country);
 
     final activeCampaign = findActiveCampaign(campaigns);
-    if (activeCampaign == null) {
-      return showSuccess();
-    }
-
-    await Utils.showAlertCampaign(
-      context,
-      activeCampaign,
-      (ctx) {
-        Navigator.pushReplacement(
+    if (activeCampaign ) {
+      await Utils.showAlertCampaign(
           context,
-          MaterialPageRoute(
-            builder: (context) => CampaignTutorialPage(fromReport: true),
-          ),
+          activeCampaign,
+          (ctx) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CampaignTutorialPage(fromReport: true),
+              ),
+            );
+          },
         );
-      },
-    );
-
-    showSuccess();
+    }
+    return showSuccess();
   }
 
   void showSuccess() {
