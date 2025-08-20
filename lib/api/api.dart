@@ -158,9 +158,4 @@ class ApiSingleton {
     // TODO
     return false;
   }
-
-  Future<dynamic> getCampaigns(countryId) async {
-    // TODO
-    return false;
-  }
 }
