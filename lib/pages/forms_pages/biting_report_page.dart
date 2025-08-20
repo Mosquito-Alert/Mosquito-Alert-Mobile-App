@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -167,44 +166,53 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
     if (!res!) {
       _showAlertKo();
-    } else {
-      if (Utils.savedAdultReport != null) {
-        CampaignsApi campaignsApi = ApiSingleton.api.getCampaignsApi();
-        Response<PaginatedCampaignList> result = await campaignsApi.list();
-        final campaignsList =
-            (result.data?.results as List<dynamic>? ?? []).cast<Campaign>();
-        var now = DateTime.now().toUtc();
-        final activeCampaigns = campaignsList
-            .where((element) =>
-                element.startDate.isBefore(now) && element.endDate.isAfter(now))
-            .toList();
-        if (activeCampaigns.isNotEmpty) {
-          var activeCampaign = activeCampaigns.first;
-          await Utils.showAlertCampaign(
-            context,
-            activeCampaign,
-            (ctx) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CampaignTutorialPage(
-                    fromReport: true,
-                  ),
-                ),
-              );
-              Utils.resetReport();
-            },
-          );
-        } else {
-          _showAlertOk();
-        }
-      } else {
-        _showAlertOk();
-      }
-      setState(() {
-        percentStream.add(1.0);
-      });
+      return;
     }
+
+    if (Utils.savedAdultReport == null) {
+      return showSuccess();
+    }
+
+    List<Campaign> campaigns =
+        await ApiSingleton().getCampaigns(Utils.savedAdultReport!.country);
+
+    final activeCampaign = findActiveCampaign(campaigns);
+    if (activeCampaign != null) {
+      await Utils.showAlertCampaign(
+        context,
+        activeCampaign,
+        (ctx) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CampaignTutorialPage(fromReport: true),
+            ),
+          );
+        },
+      );
+    }
+    return showSuccess();
+  }
+
+  void showSuccess() {
+    _showAlertOk();
+    Utils.resetReport();
+    setState(() {
+      percentStream.add(1.0);
+    });
+  }
+
+  Campaign? findActiveCampaign(List<Campaign> campaigns) {
+    final now = DateTime.now().toUtc();
+    final filtered = campaigns.where((element) {
+      final start = DateTime.tryParse(element.startDate ?? '');
+      final end = DateTime.tryParse(element.endDate ?? '');
+      if (start == null || end == null) return false;
+      return start.isBefore(now) && end.isAfter(now);
+    }).toList();
+
+    if (filtered.isEmpty) return null;
+    return filtered.first;
   }
 
   void goNextPage() {
