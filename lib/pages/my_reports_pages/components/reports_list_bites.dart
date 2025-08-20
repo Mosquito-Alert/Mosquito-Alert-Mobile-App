@@ -27,9 +27,9 @@ class _ReportsListBitesState extends State<ReportsListBites> {
 
   Future<void> _loadBiteReports() async {
     try {
-      final reports = await ApiSingleton().getMyBiteReports();
+      //final reports = await ApiSingleton().getMyBiteReports();
       setState(() {
-        biteReports = reports;
+        //biteReports = reports;
         isLoading = false;
       });
     } catch (e) {

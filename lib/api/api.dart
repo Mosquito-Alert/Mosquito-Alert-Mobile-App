@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/report.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
@@ -72,8 +74,8 @@ class ApiSingleton {
           ..head = 1
           ..chest = 0).toBuilder());
 
-      final response = await bitesApi.create(biteRequest: biteRequest);
-      print('Bite report created successfully: ${response.data}');
+      //final response = await bitesApi.create(biteRequest: biteRequest);
+      //print('Bite report created successfully: ${response.data}');
     } catch (e) {
       print('Error creating bite report: $e');
     }
@@ -116,15 +118,15 @@ class ApiSingleton {
     }
   }
 
-  Future<List<Bite>> getMyBiteReports() async {
+  /*Future<List<Bite>> getMyBiteReports() async {
     try {
-      final response = await bitesApi.listMine();
-      return response.data?.results?.toList() ?? [];
+      //final response = await bitesApi.listMine();
+      //return response.data?.results?.toList() ?? [];
     } catch (e) {
       print('Error fetching bite reports: $e');
       return [];
     }
-  }
+  }*/
 
   //Images
   Future<bool> saveImage(String imagePath, String? versionUUID) async {
