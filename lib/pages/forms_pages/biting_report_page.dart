@@ -179,7 +179,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
       return showSuccess();
     }
 
-    PaginatedCampaignList? activeCampaign = null;
+    Campaign? activeCampaign = null;
     try {
       Response<PaginatedCampaignList> response = await campaignsApi.list(
         countryId: Utils.savedAdultReport!.country,
@@ -187,7 +187,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
         orderBy: BuiltList<String>.of(["-start_date"]),
         pageSize: 1,
       );
-      activeCampaign = response.data;
+      activeCampaign = response.data!.results!.first;
     } catch (e, stackTrace) {
       print('Failed to fetch campaigns: $e');
       debugPrintStack(stackTrace: stackTrace);

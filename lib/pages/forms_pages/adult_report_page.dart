@@ -178,7 +178,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
       return showSuccess();
     }
 
-    PaginatedCampaignList? activeCampaign = null;
+    Campaign? activeCampaign = null;
     try {
       Response<PaginatedCampaignList> response = await campaignsApi.list(
         countryId: Utils.savedAdultReport!.country,
@@ -186,7 +186,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
         orderBy: BuiltList<String>.of(["-start_date"]),
         pageSize: 1,
       );
-      activeCampaign = response.data;
+      activeCampaign = response.data!.results!.first;
     } catch (e, stackTrace) {
       print('Failed to fetch campaigns: $e');
       debugPrintStack(stackTrace: stackTrace);
