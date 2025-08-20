@@ -118,16 +118,6 @@ class ApiSingleton {
     }
   }
 
-  /*Future<List<Bite>> getMyBiteReports() async {
-    try {
-      //final response = await bitesApi.listMine();
-      //return response.data?.results?.toList() ?? [];
-    } catch (e) {
-      print('Error fetching bite reports: $e');
-      return [];
-    }
-  }*/
-
   //Images
   Future<bool> saveImage(String imagePath, String? versionUUID) async {
     try {

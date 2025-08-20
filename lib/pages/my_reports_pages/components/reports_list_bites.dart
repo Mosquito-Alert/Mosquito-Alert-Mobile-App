@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:provider/provider.dart';
 
 class ReportsListBites extends StatefulWidget {
   const ReportsListBites({super.key});
@@ -18,18 +19,25 @@ class ReportsListBites extends StatefulWidget {
 class _ReportsListBitesState extends State<ReportsListBites> {
   List<Bite> biteReports = [];
   bool isLoading = true;
+  late BitesApi bitesApi;
 
   @override
   void initState() {
     super.initState();
+    super.initState();
+    MosquitoAlert apiClient =
+        Provider.of<MosquitoAlert>(context, listen: false);
+    bitesApi = apiClient.getBitesApi();
     _loadBiteReports();
   }
 
   Future<void> _loadBiteReports() async {
     try {
-      //final reports = await ApiSingleton().getMyBiteReports();
+      // TODO: Handle pagination like in notifications page with infinite scrolling view
+      final response = await bitesApi.listMine();
+      final reports = response.data?.results?.toList() ?? [];
       setState(() {
-        //biteReports = reports;
+        biteReports = reports;
         isLoading = false;
       });
     } catch (e) {
