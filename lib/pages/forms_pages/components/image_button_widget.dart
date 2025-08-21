@@ -16,7 +16,7 @@ class CustomImageButton extends StatelessWidget {
         child: Card(
           color: selected == true ? Style.colorPrimary : Colors.white,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
           elevation: disabled == true ? 0 : 3,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
@@ -30,13 +30,13 @@ class CustomImageButton extends StatelessWidget {
                           img!,
                         ),
                       )
-                    : SizedBox(
+                    : const SizedBox(
                         height: 140,
                       ),
                 Expanded(
                   flex: MediaQuery.of(context).textScaleFactor < 1.23 ? 1 : 2,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
                     child: Style.titleMedium(title,
                         textAlign: TextAlign.center, fontSize: 16),
                   ),

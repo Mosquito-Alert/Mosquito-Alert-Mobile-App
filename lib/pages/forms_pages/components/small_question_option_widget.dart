@@ -20,7 +20,7 @@ class SmallQuestionOption extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: const BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey,
@@ -35,7 +35,7 @@ class SmallQuestionOption extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Style.colorPrimary,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: const BorderRadius.circular(15),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
