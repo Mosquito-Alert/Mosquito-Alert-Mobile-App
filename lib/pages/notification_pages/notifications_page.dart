@@ -56,9 +56,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     sdk.MosquitoAlert apiClient =
         Provider.of<sdk.MosquitoAlert>(context, listen: false);
     notificationsApi = apiClient.getNotificationsApi();
-
     _analyticsService = widget.analyticsService ?? FirebaseAnalyticsService();
-
     _logScreenView();
     loadingStream.add(true);
 
