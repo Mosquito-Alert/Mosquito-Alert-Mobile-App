@@ -24,7 +24,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   @override
   void initState() {
     super.initState();
-    super.initState();
     MosquitoAlert apiClient =
         Provider.of<MosquitoAlert>(context, listen: false);
     bitesApi = apiClient.getBitesApi();

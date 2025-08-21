@@ -74,7 +74,7 @@ class _MyReportsListState extends State<ReportsList> {
     return Scaffold(
         body: reports.isEmpty
             ? Center(
-                child: Text('No reports found.'),
+                child: Text('No reports found.'), // TODO: Translate
               )
             : ListView.builder(
                 itemCount: reports.length,
