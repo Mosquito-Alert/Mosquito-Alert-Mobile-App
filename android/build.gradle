@@ -35,6 +35,13 @@ allprojects {
                     }
                 }
             }
+            
+            // Also configure Kotlin compiler options directly for any Kotlin tasks
+            project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                kotlinOptions {
+                    jvmTarget = "21"
+                }
+            }
         }
     } 
 }
