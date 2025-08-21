@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
 class ApiSingleton {
   static String baseUrl = '';
@@ -40,66 +34,6 @@ class ApiSingleton {
   Future<dynamic> createReport(Report report) async {
     // TODO: Delete?
     return null;
-  }
-
-  Future<void> createBiteReport() async {
-    try {
-      final position = Position(
-          longitude: 0,
-          latitude: 0,
-          timestamp: DateTime(2025),
-          accuracy: 0.0,
-          altitude: 0.0,
-          altitudeAccuracy: 0.0,
-          heading: 0.0,
-          headingAccuracy: 0.0,
-          speed: 0.0,
-          speedAccuracy: 0.0);
-
-      final LocationRequest locationRequest = LocationRequest((b) => b
-        ..source_ = LocationRequestSource_Enum.auto
-        ..point = LocationPoint((b) => b
-          ..latitude = position.latitude
-          ..longitude = position.longitude).toBuilder());
-
-      final BiteRequest biteRequest = BiteRequest((b) => b
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..location = locationRequest.toBuilder()
-        ..note = "Example mosquito bite report"
-        ..tags = BuiltList<String>(['sample', 'test']).toBuilder()
-        ..eventEnvironment = BiteRequestEventEnvironmentEnum.outdoors
-        ..eventMoment = BiteRequestEventMomentEnum.now
-        ..counts = BiteCountsRequest((b) => b
-          ..head = 1
-          ..chest = 0).toBuilder());
-
-      //final response = await bitesApi.create(biteRequest: biteRequest);
-      //print('Bite report created successfully: ${response.data}');
-    } catch (e) {
-      print('Error creating bite report: $e');
-    }
-  }
-
-  Future saveImages(Report report) async {
-    if (Utils.imagePath != null) {
-      Utils.imagePath!.forEach((img) async {
-        if (img['id'] == report.version_UUID) {
-          if (!img['image'].contains('http')) {
-            var isSaved = await saveImage(img['image'], report.version_UUID);
-            if (!isSaved) {
-              final directory = await getApplicationDocumentsDirectory();
-              File newImage = await img['imageFile']
-                  .copy('${directory.path}/${report.version_UUID}.png');
-
-              await Utils.saveLocalImage(newImage.path, report.version_UUID);
-            } else {
-              Utils.deleteImage(img['image']);
-            }
-          }
-        }
-      });
-    }
   }
 
   Future<List<Report>> getReportsList() async {
