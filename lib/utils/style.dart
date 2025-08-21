@@ -109,11 +109,11 @@ class Style {
       style: ElevatedButton.styleFrom(
         elevation: 0,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        padding: EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         backgroundColor: color ?? colorPrimary,
         foregroundColor: textColor ?? Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: const BorderRadius.circular(3),
         ),
       ),
       child: Text(
@@ -175,29 +175,29 @@ class Style {
         fillColor: Colors.white,
         hintText: hint,
         hintMaxLines: 5,
-        hintStyle: TextStyle(fontSize: 17),
-        contentPadding: EdgeInsets.fromLTRB(15.0, 16.0, 10.0, 16.0),
+        hintStyle: const TextStyle(fontSize: 17),
+        contentPadding: const EdgeInsets.fromLTRB(15.0, 16.0, 10.0, 16.0),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
+          borderRadius: const BorderRadius.circular(3.0),
           borderSide:
               BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
         ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
+          borderRadius: const BorderRadius.circular(3.0),
           borderSide:
               BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
+          borderRadius: const BorderRadius.circular(3.0),
           borderSide:
               BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
+          borderRadius: const BorderRadius.circular(3.0),
           borderSide: BorderSide(color: Colors.red, width: 1.0),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
+          borderRadius: const BorderRadius.circular(3.0),
           borderSide: BorderSide(color: Colors.red, width: 1.0),
         ),
         alignLabelWithHint: true);
