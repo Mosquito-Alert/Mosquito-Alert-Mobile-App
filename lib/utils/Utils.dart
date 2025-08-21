@@ -71,6 +71,8 @@ class Utils {
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     report!.package_name = packageInfo.packageName;
+    // Use build number from pubspec.yaml as package_version to ensure it increments with each release
+    // This replaces the previous hardcoded value (34) with dynamic build number (current: 2898)
     report!.package_version = int.parse(packageInfo.buildNumber);
 
     if (Platform.isAndroid) {
