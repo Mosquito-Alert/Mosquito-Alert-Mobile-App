@@ -14,12 +14,12 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 5.0,
-      borderRadius: const BorderRadius.circular(100),
+      borderRadius: BorderRadius.circular(100),
       child: Container(
         height: 70.0,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(100),
         ),
         child: InkWell(
           onTap: () {

@@ -14,7 +14,7 @@ class QuestionOption extends StatelessWidget {
       child: Card(
         color: selected ? Style.colorPrimary : Colors.white,
         margin: const EdgeInsets.symmetric(vertical: 5),
-        shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 2,
         child: Container(
           padding: const EdgeInsets.all(5),

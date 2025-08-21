@@ -273,7 +273,7 @@ class _BitingLocationFormState extends State<LocationForm> {
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             height: MediaQuery.of(context).size.height * 0.4,
                             child: ClipRRect(
-                                borderRadius: const BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(15),
                                 child: GoogleMap(
                                   onMapCreated: _onMapCreated,
                                   rotateGesturesEnabled: false,

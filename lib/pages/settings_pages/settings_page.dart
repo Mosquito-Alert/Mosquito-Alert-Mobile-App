@@ -131,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Container(
                         padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
                         decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5),
                             color: Colors.white,
                             border: Border.all(
                                 color: Colors.black.withValues(alpha: 0.1))),
@@ -182,7 +182,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(5),
                           color: Colors.white,
                           border: Border.all(
                               color: Colors.black.withValues(alpha: 0.1)),

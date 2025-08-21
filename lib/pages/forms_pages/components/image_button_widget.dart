@@ -16,7 +16,7 @@ class CustomImageButton extends StatelessWidget {
         child: Card(
           color: selected == true ? Style.colorPrimary : Colors.white,
           shape:
-              RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: disabled == true ? 0 : 3,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
