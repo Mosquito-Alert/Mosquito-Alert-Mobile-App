@@ -71,7 +71,7 @@ class Utils {
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     report!.package_name = packageInfo.packageName;
-    report!.package_version = 34;
+    report!.package_version = int.parse(packageInfo.buildNumber);
 
     if (Platform.isAndroid) {
       var buildData = await DeviceInfoPlugin().androidInfo;
