@@ -36,9 +36,7 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 35,
-            ),
+            SizedBox(height: 35),
             Container(
               width: double.infinity,
               child: StreamBuilder(
@@ -56,20 +54,20 @@ class _AddOtherReportPageState extends State<AddOtherReportPage> {
                 },
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Style.title(MyLocalizations.of(context, 'add_comments_question')),
-            SizedBox(
-              height: 12,
+            SizedBox(height: 12),
+            Style.textField(
+              MyLocalizations.of(context, 'comments_txt'),
+              _commentsController,
+              context,
+              keyboardType: TextInputType.multiline,
+              maxLines: 4,
+              expands: false,
+              handleChange: (text) {
+                Utils.report!.note = text;
+              },
             ),
-            Style.textField(MyLocalizations.of(context, 'comments_txt'),
-                _commentsController, context,
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                expands: false, handleChange: (text) {
-              Utils.report!.note = text;
-            }),
             Style.bottomOffset,
           ],
         ),

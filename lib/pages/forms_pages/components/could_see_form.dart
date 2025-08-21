@@ -11,8 +11,12 @@ class CouldSeeForm extends StatefulWidget {
   final Function nextPage;
 
   CouldSeeForm(
-      this.addReport, this.displayQuestion, this.setValid, this.nextPage,
-      {this.addOtherReport});
+    this.addReport,
+    this.displayQuestion,
+    this.setValid,
+    this.nextPage, {
+    this.addOtherReport,
+  });
   @override
   _CouldSeeFormState createState() => _CouldSeeFormState();
 }
@@ -33,14 +37,14 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 35,
+            SizedBox(height: 35),
+            Style.title(
+              MyLocalizations.of(
+                context,
+                widget.displayQuestion['question']['text'],
+              ),
             ),
-            Style.title(MyLocalizations.of(
-                context, widget.displayQuestion['question']['text'])),
-            SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: 30),
             GridView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -55,19 +59,20 @@ class _CouldSeeFormState extends State<CouldSeeForm> {
                 return Container(
                   padding: EdgeInsets.all(5),
                   child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selected = text;
-                        });
-                        id == 82
-                            ? widget.addReport(true)
-                            : widget.addReport(false);
-                        widget.nextPage();
-                      },
-                      child: SmallQuestionOption(
-                        text,
-                        selected: selected == text,
-                      )),
+                    onTap: () {
+                      setState(() {
+                        selected = text;
+                      });
+                      id == 82
+                          ? widget.addReport(true)
+                          : widget.addReport(false);
+                      widget.nextPage();
+                    },
+                    child: SmallQuestionOption(
+                      text,
+                      selected: selected == text,
+                    ),
+                  ),
                 );
               },
             ),

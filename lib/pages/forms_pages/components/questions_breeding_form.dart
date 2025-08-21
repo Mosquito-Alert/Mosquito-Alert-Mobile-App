@@ -13,9 +13,14 @@ class QuestionsBreedingForm extends StatefulWidget {
   final Function? nextPage, skipPage3;
   final String bottomImage;
 
-  QuestionsBreedingForm(this.displayQuestion, this.setValid, this.hasImage,
-      this.nextPage, this.bottomImage,
-      {this.skipPage3});
+  QuestionsBreedingForm(
+    this.displayQuestion,
+    this.setValid,
+    this.hasImage,
+    this.nextPage,
+    this.bottomImage, {
+    this.skipPage3,
+  });
 
   @override
   _QuestionsBreedingFormState createState() => _QuestionsBreedingFormState();
@@ -33,7 +38,8 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
     );
     if (Utils.report != null) {
       var index = Utils.report!.responses!.indexWhere(
-          (q) => q!.question_id == widget.displayQuestion['question']['id']);
+        (q) => q!.question_id == widget.displayQuestion['question']['id'],
+      );
       if (index != -1) {
         question!.answer = Utils.report!.responses![index]!.answer;
         question!.answer_id = Utils.report!.responses![index]!.answer_id;
@@ -63,14 +69,14 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  height: 35,
+                SizedBox(height: 35),
+                Style.title(
+                  MyLocalizations.of(
+                    context,
+                    widget.displayQuestion['question']['text'],
+                  ),
                 ),
-                Style.title(MyLocalizations.of(
-                    context, widget.displayQuestion['question']['text'])),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
                 GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -95,8 +101,8 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                           child: CustomImageButton(
                             selected: question!.answer_id == id ? true : false,
                             title: MyLocalizations.of(context, text),
-                            img: widget.displayQuestion['answers'][index]
-                                ['img'],
+                            img:
+                                widget.displayQuestion['answers'][index]['img'],
                           ),
                         ),
                       );
@@ -104,25 +110,26 @@ class _QuestionsBreedingFormState extends State<QuestionsBreedingForm> {
                     return Container(
                       padding: EdgeInsets.all(5),
                       child: GestureDetector(
-                          onTap: () {
-                            addQuestion(text, id);
-                            widget.setValid(true);
-                            if (question!.question_id == 10) {
-                              if (id == 81) {
-                                Utils.deleteResonse(17);
-                                widget.skipPage3!(true);
-                              } else {
-                                widget.skipPage3!(false);
-                              }
+                        onTap: () {
+                          addQuestion(text, id);
+                          widget.setValid(true);
+                          if (question!.question_id == 10) {
+                            if (id == 81) {
+                              Utils.deleteResonse(17);
+                              widget.skipPage3!(true);
+                            } else {
+                              widget.skipPage3!(false);
                             }
-                            if (widget.nextPage != null) {
-                              widget.nextPage!();
-                            }
-                          },
-                          child: SmallQuestionOption(
-                            text,
-                            selected: question!.answer_id == id,
-                          )),
+                          }
+                          if (widget.nextPage != null) {
+                            widget.nextPage!();
+                          }
+                        },
+                        child: SmallQuestionOption(
+                          text,
+                          selected: question!.answer_id == id,
+                        ),
+                      ),
                     );
                   },
                 ),

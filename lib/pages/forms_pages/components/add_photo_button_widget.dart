@@ -17,8 +17,13 @@ class AddPhotoButton extends StatefulWidget {
   final String? subtitleKey;
   final String? infoBadgeTextKey;
 
-  AddPhotoButton(this.isEditing, this.photoRequired,
-      this._atLeastOnePhotoAttached, this.subtitleKey, this.infoBadgeTextKey);
+  AddPhotoButton(
+    this.isEditing,
+    this.photoRequired,
+    this._atLeastOnePhotoAttached,
+    this.subtitleKey,
+    this.infoBadgeTextKey,
+  );
 
   @override
   _AddPhotoButtonState createState() => _AddPhotoButtonState();
@@ -92,9 +97,9 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
         children: [
           Style.title(MyLocalizations.of(context, 'bs_info_adult_title')),
           Visibility(
-              visible: widget.subtitleKey != null,
-              child:
-                  Style.body(MyLocalizations.of(context, widget.subtitleKey))),
+            visible: widget.subtitleKey != null,
+            child: Style.body(MyLocalizations.of(context, widget.subtitleKey)),
+          ),
           SizedBox(height: 15),
           GridView.builder(
             shrinkWrap: true,
@@ -113,12 +118,10 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 1),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Icon(
-                          Icons.add,
-                          size: 30,
+                          border: Border.all(color: Colors.black, width: 1),
+                          borderRadius: BorderRadius.circular(15),
                         ),
+                        child: Icon(Icons.add, size: 30),
                       ),
                     )
                   : Stack(
@@ -143,10 +146,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             gradient: LinearGradient(
-                              colors: [
-                                Colors.black54,
-                                Colors.transparent,
-                              ],
+                              colors: [Colors.black54, Colors.transparent],
                               begin: Alignment.topLeft,
                               end: Alignment.center,
                             ),
@@ -157,10 +157,7 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
                               onPressed: () {
                                 _deleteImage(images[index], index);
                               },
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                              ),
+                              icon: Icon(Icons.close, color: Colors.white),
                             ),
                           ),
                         ),
@@ -175,8 +172,11 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
 
   void _deleteImage(String? img, int index) {
     if (widget.photoRequired && images.length == 1) {
-      Utils.showAlert(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'photo_required_alert'), context);
+      Utils.showAlert(
+        MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'photo_required_alert'),
+        context,
+      );
     } else {
       Utils.deleteImage(img);
       setState(() {
@@ -189,10 +189,11 @@ class _AddPhotoButtonState extends State<AddPhotoButton> {
     var files = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => WhatsappCamera(
-                multiple: false,
-                infoBadgeTextKey: widget.infoBadgeTextKey,
-              )),
+        builder: (context) => WhatsappCamera(
+          multiple: false,
+          infoBadgeTextKey: widget.infoBadgeTextKey,
+        ),
+      ),
     );
 
     if (files == null) {

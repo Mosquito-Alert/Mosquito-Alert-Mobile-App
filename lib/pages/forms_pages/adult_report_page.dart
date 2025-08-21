@@ -39,24 +39,24 @@ class _AdultReportPageState extends State<AdultReportPage> {
   final List<Map<String, dynamic>> _pageEvents = [
     {
       'name': 'report_add_photo',
-      'parameters': {'type': 'adult'}
+      'parameters': {'type': 'adult'},
     },
     {
       'name': 'report_add_location',
-      'parameters': {'type': 'adult'}
+      'parameters': {'type': 'adult'},
     },
     {
       'name': 'report_add_environment',
-      'parameters': {'type': 'adult'}
+      'parameters': {'type': 'adult'},
     },
     {
       'name': 'report_add_bitten',
-      'parameters': {'type': 'adult'}
+      'parameters': {'type': 'adult'},
     },
     {
       'name': 'report_add_note',
-      'parameters': {'type': 'adult'}
-    }
+      'parameters': {'type': 'adult'},
+    },
   ];
 
   List<Map> displayQuestions = [
@@ -66,14 +66,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
         {'id': 131, 'text': 'question_13_answer_131'},
         {'id': 132, 'text': 'question_13_answer_132'},
         {'id': 133, 'text': 'question_13_answer_133'},
-      ]
+      ],
     },
     {
       'question': {'id': 8, 'text': 'question_8'},
       'answers': [
         {'id': 82, 'text': 'question_8_answer_82'},
         {'id': 81, 'text': 'question_8_answer_81'},
-      ]
+      ],
     },
   ];
 
@@ -86,20 +86,36 @@ class _AdultReportPageState extends State<AdultReportPage> {
   @override
   void initState() {
     super.initState();
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+      context,
+      listen: false,
+    );
     campaignsApi = apiClient.getCampaignsApi();
     _logFirebaseAnalytics();
     _pagesController = PageController();
     index = 0.0;
     _initialformsReport = [
-      AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached,
-          'ensure_single_mosquito_photos', 'one_mosquito_reminder_badge'),
+      AddPhotoButton(
+        true,
+        true,
+        _checkAtLeastOnePhotoAttached,
+        'ensure_single_mosquito_photos',
+        'one_mosquito_reminder_badge',
+      ),
       LocationForm(setValid, displayQuestions.elementAt(0)['question']['text']),
       QuestionsBreedingForm(
-          displayQuestions.elementAt(0), setValid, false, null, ''),
+        displayQuestions.elementAt(0),
+        setValid,
+        false,
+        null,
+        '',
+      ),
       CouldSeeForm(
-          addBitingReport, displayQuestions.elementAt(1), setValid, goNextPage),
+        addBitingReport,
+        displayQuestions.elementAt(1),
+        setValid,
+        goNextPage,
+      ),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
 
@@ -107,8 +123,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
   }
 
   Future<void> _logFirebaseAnalytics() async {
-    await FirebaseAnalytics.instance
-        .logEvent(name: 'start_report', parameters: {'type': 'adult'});
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'start_report',
+      parameters: {'type': 'adult'},
+    );
   }
 
   void _onPageChanged(int index) async {
@@ -152,8 +170,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
         MaterialPageRoute(builder: (context) => BitingReportPage()),
       );
     } else {
-      _pagesController!
-          .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease);
+      _pagesController!.nextPage(
+        duration: Duration(microseconds: 300),
+        curve: Curves.ease,
+      );
       setState(() {
         index = _pagesController!.page! + 1;
       });
@@ -165,8 +185,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
-    await FirebaseAnalytics.instance
-        .logEvent(name: 'submit_report', parameters: {'type': 'adult'});
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'submit_report',
+      parameters: {'type': 'adult'},
+    );
     var res = await Utils.createReport(); // TODO: Replace with issue #400
 
     if (!res!) {
@@ -195,17 +217,14 @@ class _AdultReportPageState extends State<AdultReportPage> {
     showSuccess();
 
     if (activeCampaign != null) {
-      await Utils.showAlertCampaign(
-        context,
-        (ctx) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CampaignTutorialPage(fromReport: true),
-            ),
-          );
-        },
-      );
+      await Utils.showAlertCampaign(context, (ctx) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CampaignTutorialPage(fromReport: true),
+          ),
+        );
+      });
     }
   }
 
@@ -248,24 +267,28 @@ class _AdultReportPageState extends State<AdultReportPage> {
                     _onWillPop();
                   } else {
                     if (currentPage == 2.0 &&
-                        !Utils.report!.responses!
-                            .any((element) => element!.answer_id == 61)) {
+                        !Utils.report!.responses!.any(
+                          (element) => element!.answer_id == 61,
+                        )) {
                       setState(() {
                         index = 0;
                       });
                       _pagesController!
-                          .animateToPage(0,
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.ease)
+                          .animateToPage(
+                            0,
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease,
+                          )
                           .then((value) {
-                        setValid(true);
-                        addOtherReport(null);
-                      });
+                            setValid(true);
+                            addOtherReport(null);
+                          });
                     } else if (currentPage == 4.0) {
                       addBitingReport(false);
                       _pagesController!.previousPage(
-                          duration: Duration(microseconds: 300),
-                          curve: Curves.ease);
+                        duration: Duration(microseconds: 300),
+                        curve: Curves.ease,
+                      );
                       setState(() {
                         index = currentPage! - 1;
                       });
@@ -275,19 +298,21 @@ class _AdultReportPageState extends State<AdultReportPage> {
                       });
                       _pagesController!
                           .previousPage(
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.ease)
+                            duration: Duration(microseconds: 300),
+                            curve: Curves.ease,
+                          )
                           .then((value) {
-                        setValid(true);
-                        addOtherReport(null);
-                      });
+                            setValid(true);
+                            addOtherReport(null);
+                          });
                     }
                   }
                 },
               ),
               title: Style.title(
-                  MyLocalizations.of(context, 'adult_report_title'),
-                  fontSize: 16),
+                MyLocalizations.of(context, 'adult_report_title'),
+                fontSize: 16,
+              ),
             ),
             body: Stack(
               alignment: Alignment.bottomCenter,
@@ -301,58 +326,71 @@ class _AdultReportPageState extends State<AdultReportPage> {
                 index! < 1.0
                     ? continueButtonPhotos()
                     : index != _formsReport!.length.toDouble() - 1
-                        ? SafeArea(
-                            child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: StreamBuilder<bool>(
-                                stream: validStream.stream,
-                                initialData: false,
-                                builder: (BuildContext ctxt,
-                                    AsyncSnapshot<bool> snapshot) {
+                    ? SafeArea(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: StreamBuilder<bool>(
+                            stream: validStream.stream,
+                            initialData: false,
+                            builder:
+                                (
+                                  BuildContext ctxt,
+                                  AsyncSnapshot<bool> snapshot,
+                                ) {
                                   return snapshot.data!
                                       ? continueButton(index)
                                       : Container(
                                           width: double.infinity,
                                           height: 54,
                                           margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
+                                            vertical: 6,
+                                            horizontal: 12,
+                                          ),
                                           child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'),
-                                              null),
+                                            MyLocalizations.of(
+                                              context,
+                                              'continue_txt',
+                                            ),
+                                            null,
+                                          ),
                                         );
-                                }),
-                          ))
-                        : SafeArea(
-                            child: _formsReport!.length == 2
-                                ? Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                      MyLocalizations.of(
-                                          context, 'understand_txt'),
-                                      () {
-                                        Navigator.pop(context);
-                                        Utils.resetReport();
-                                        Utils.imagePath = null;
-                                      },
-                                    ),
-                                  )
-                                : Container(
-                                    width: double.infinity,
-                                    height: 54,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    child: Style.button(
-                                      MyLocalizations.of(context, 'send_data'),
-                                      () {
-                                        _createReport();
-                                      },
-                                    ),
-                                  ),
+                                },
                           ),
+                        ),
+                      )
+                    : SafeArea(
+                        child: _formsReport!.length == 2
+                            ? Container(
+                                width: double.infinity,
+                                height: 54,
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 12,
+                                ),
+                                child: Style.button(
+                                  MyLocalizations.of(context, 'understand_txt'),
+                                  () {
+                                    Navigator.pop(context);
+                                    Utils.resetReport();
+                                    Utils.imagePath = null;
+                                  },
+                                ),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                height: 54,
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 12,
+                                ),
+                                child: Style.button(
+                                  MyLocalizations.of(context, 'send_data'),
+                                  () {
+                                    _createReport();
+                                  },
+                                ),
+                              ),
+                      ),
               ],
             ),
           ),
@@ -363,11 +401,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
               if (snapshot.hasData == false || snapshot.data == false) {
                 return Container();
               }
-              return Utils.loading(
-                snapshot.data,
-              );
+              return Utils.loading(snapshot.data);
             },
-          )
+          ),
         ],
       ),
     );
@@ -385,37 +421,41 @@ class _AdultReportPageState extends State<AdultReportPage> {
     }
 
     return Container(
-        width: double.infinity,
-        height: 54,
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        child: Style.button(MyLocalizations.of(context, 'continue_txt'), () {
-          goNextPage();
-        }));
+      width: double.infinity,
+      height: 54,
+      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      child: Style.button(MyLocalizations.of(context, 'continue_txt'), () {
+        goNextPage();
+      }),
+    );
   }
 
   Widget continueButton(double? index) {
     return Container(
-        width: double.infinity,
-        height: 54,
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        child: Style.button(MyLocalizations.of(context, 'continue_txt'), () {
-          var currentPage = _pagesController!.page;
+      width: double.infinity,
+      height: 54,
+      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      child: Style.button(MyLocalizations.of(context, 'continue_txt'), () {
+        var currentPage = _pagesController!.page;
 
-          if (currentPage == 3.0 && addBiting) {
-            Utils.addOtherReport('bite', context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BitingReportPage()),
-            );
-          } else {
-            setState(() {
-              index = currentPage! + 1;
-            });
+        if (currentPage == 3.0 && addBiting) {
+          Utils.addOtherReport('bite', context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BitingReportPage()),
+          );
+        } else {
+          setState(() {
+            index = currentPage! + 1;
+          });
 
-            _pagesController!.nextPage(
-                duration: Duration(microseconds: 300), curve: Curves.ease);
-          }
-        }));
+          _pagesController!.nextPage(
+            duration: Duration(microseconds: 300),
+            curve: Curves.ease,
+          );
+        }
+      }),
+    );
   }
 
   void _showAlertOk() {
@@ -453,16 +493,20 @@ class _AdultReportPageState extends State<AdultReportPage> {
   void _onWillPop() {
     var responses = Utils.report?.responses ?? [];
     if (responses.isNotEmpty) {
-      Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'close_report_no_save_txt'), () {
-        if (Utils.reportsList != null && Utils.reportsList!.isNotEmpty) {
-          Utils.deleteLastReport();
-        } else {
-          Utils.resetReport();
-          Utils.imagePath = null;
-        }
-        Navigator.pop(context);
-      }, context);
+      Utils.showAlertYesNo(
+        MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'close_report_no_save_txt'),
+        () {
+          if (Utils.reportsList != null && Utils.reportsList!.isNotEmpty) {
+            Utils.deleteLastReport();
+          } else {
+            Utils.resetReport();
+            Utils.imagePath = null;
+          }
+          Navigator.pop(context);
+        },
+        context,
+      );
     } else {
       Navigator.pop(context);
     }

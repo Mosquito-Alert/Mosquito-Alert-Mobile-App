@@ -44,22 +44,36 @@ class _BitingLocationFormState extends State<LocationForm> {
       switch (Utils.report!.location_choice) {
         case 'selected':
           streamType.add(LocationType.selected);
-          markers.add(Marker(
+          markers.add(
+            Marker(
               markerId: MarkerId('mk_${markers.length}'),
-              position: LatLng(Utils.report!.selected_location_lat!,
-                  Utils.report!.selected_location_lon!)));
-          currentLocation = LatLng(Utils.report!.selected_location_lat!,
-              Utils.report!.selected_location_lon!);
+              position: LatLng(
+                Utils.report!.selected_location_lat!,
+                Utils.report!.selected_location_lon!,
+              ),
+            ),
+          );
+          currentLocation = LatLng(
+            Utils.report!.selected_location_lat!,
+            Utils.report!.selected_location_lon!,
+          );
           widget.setValid(true);
           break;
         case 'current':
           streamType.add(LocationType.current);
-          markers.add(Marker(
+          markers.add(
+            Marker(
               markerId: MarkerId('mk_${markers.length}'),
-              position: LatLng(Utils.report!.current_location_lat!,
-                  Utils.report!.current_location_lon!)));
-          currentLocation = LatLng(Utils.report!.current_location_lat!,
-              Utils.report!.current_location_lon!);
+              position: LatLng(
+                Utils.report!.current_location_lat!,
+                Utils.report!.current_location_lon!,
+              ),
+            ),
+          );
+          currentLocation = LatLng(
+            Utils.report!.current_location_lat!,
+            Utils.report!.current_location_lon!,
+          );
           widget.setValid(true);
           break;
         default:
@@ -72,13 +86,16 @@ class _BitingLocationFormState extends State<LocationForm> {
 
   static checkLocationPermissions(BuildContext context) async {
     if (!await Permission.locationWhenInUse.isGranted) {
-      await Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'NSLocationWhenInUseUsageDescription'),
-          () async {
-        if (!await Permission.locationWhenInUse.request().isGranted) {
-          await openAppSettings();
-        }
-      }, context);
+      await Utils.showAlertYesNo(
+        MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'NSLocationWhenInUseUsageDescription'),
+        () async {
+          if (!await Permission.locationWhenInUse.request().isGranted) {
+            await openAppSettings();
+          }
+        },
+        context,
+      );
     }
   }
 
@@ -93,7 +110,9 @@ class _BitingLocationFormState extends State<LocationForm> {
 
   void updateMarker(LatLng markerPosition) {
     var mk = Marker(
-        markerId: MarkerId('mk${markers.length}'), position: markerPosition);
+      markerId: MarkerId('mk${markers.length}'),
+      position: markerPosition,
+    );
     Utils.setSelectedLocation(mk.position.latitude, mk.position.longitude);
     widget.setValid(true);
 
@@ -113,31 +132,42 @@ class _BitingLocationFormState extends State<LocationForm> {
 
         if (geolocationEnabled) {
           var currentPosition = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
+            desiredAccuracy: LocationAccuracy.high,
+          );
           Utils.setCurrentLocation(
-              currentPosition.latitude, currentPosition.longitude);
+            currentPosition.latitude,
+            currentPosition.longitude,
+          );
           await controller.moveCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
-                  target: LatLng(
-                      currentPosition.latitude, currentPosition.longitude),
-                  zoom: 15.0),
+                target: LatLng(
+                  currentPosition.latitude,
+                  currentPosition.longitude,
+                ),
+                zoom: 15.0,
+              ),
             ),
           );
           currentMarkers = [
             Marker(
-                markerId: MarkerId('mk${markers.length}'),
-                position:
-                    LatLng(currentPosition.latitude, currentPosition.longitude))
+              markerId: MarkerId('mk${markers.length}'),
+              position: LatLng(
+                currentPosition.latitude,
+                currentPosition.longitude,
+              ),
+            ),
           ];
           widget.setValid(true);
         } else {
           await Utils.showAlert(
-              MyLocalizations.of(context, 'location_not_active_title'),
-              MyLocalizations.of(context, 'location_not_active_txt'),
-              context, onPressed: () {
-            Navigator.pop(context);
-          });
+            MyLocalizations.of(context, 'location_not_active_title'),
+            MyLocalizations.of(context, 'location_not_active_txt'),
+            context,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
           streamType.add(LocationType.selected);
         }
 
@@ -150,18 +180,27 @@ class _BitingLocationFormState extends State<LocationForm> {
           await controller.moveCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
-                  target: LatLng(Utils.report!.selected_location_lat!,
-                      Utils.report!.selected_location_lon!),
-                  zoom: 15.0),
+                target: LatLng(
+                  Utils.report!.selected_location_lat!,
+                  Utils.report!.selected_location_lon!,
+                ),
+                zoom: 15.0,
+              ),
             ),
           );
-          Utils.setSelectedLocation(Utils.report!.selected_location_lat,
-              Utils.report!.selected_location_lon);
-          currentMarkers.add(Marker(
-            markerId: MarkerId('selected'),
-            position: LatLng(Utils.report!.selected_location_lat!,
-                Utils.report!.selected_location_lon!),
-          ));
+          Utils.setSelectedLocation(
+            Utils.report!.selected_location_lat,
+            Utils.report!.selected_location_lon,
+          );
+          currentMarkers.add(
+            Marker(
+              markerId: MarkerId('selected'),
+              position: LatLng(
+                Utils.report!.selected_location_lat!,
+                Utils.report!.selected_location_lon!,
+              ),
+            ),
+          );
           widget.setValid(true);
         }
         //get markers in responses
@@ -174,13 +213,20 @@ class _BitingLocationFormState extends State<LocationForm> {
                 print(q.answer_value);
 
                 var res = q.answer_value!
-                    .substring(q.answer_value!.indexOf('( ') + 2,
-                        q.answer_value!.indexOf(')'))
+                    .substring(
+                      q.answer_value!.indexOf('( ') + 2,
+                      q.answer_value!.indexOf(')'),
+                    )
                     .split(', ');
-                currentMarkers.add(Marker(
+                currentMarkers.add(
+                  Marker(
                     markerId: MarkerId('mk_$i'),
-                    position:
-                        LatLng(double.parse(res[0]), double.parse(res[1]))));
+                    position: LatLng(
+                      double.parse(res[0]),
+                      double.parse(res[1]),
+                    ),
+                  ),
+                );
               }
             });
           }
@@ -213,11 +259,10 @@ class _BitingLocationFormState extends State<LocationForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  height: 35,
-                ),
+                SizedBox(height: 35),
                 Style.title(
-                    MyLocalizations.of(context, widget.displayQuestion)),
+                  MyLocalizations.of(context, widget.displayQuestion),
+                ),
                 Style.body(MyLocalizations.of(context, 'chose_option_txt')),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
@@ -225,106 +270,120 @@ class _BitingLocationFormState extends State<LocationForm> {
                     stream: streamType.stream,
                     initialData: Utils.report!.location_choice != null
                         ? Utils.report!.location_choice == 'selected'
-                            ? LocationType.selected
-                            : LocationType.current
+                              ? LocationType.selected
+                              : LocationType.current
                         : LocationType.current,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<LocationType> snapshot) {
-                      return Column(
-                        children: <Widget>[
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                    child: GestureDetector(
+                    builder:
+                        (
+                          BuildContext context,
+                          AsyncSnapshot<LocationType> snapshot,
+                        ) {
+                          return Column(
+                            children: <Widget>[
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: GestureDetector(
                                         onTap: () {
-                                          updateType(LocationType.current,
-                                              context: context);
+                                          updateType(
+                                            LocationType.current,
+                                            context: context,
+                                          );
                                         },
                                         child: SmallQuestionOption(
                                           'current_location_txt',
-                                          selected: snapshot.data ==
+                                          selected:
+                                              snapshot.data ==
                                               LocationType.current,
-                                        ))),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    child: GestureDetector(
-                                  onTap: () {
-                                    widget.setValid(false);
-                                    updateType(LocationType.selected);
-                                  },
-                                  child: SmallQuestionOption(
-                                    'select_location_txt',
-                                    selected:
-                                        snapshot.data == LocationType.selected,
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            height: MediaQuery.of(context).size.height * 0.4,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: GoogleMap(
-                                  onMapCreated: _onMapCreated,
-                                  rotateGesturesEnabled: false,
-                                  myLocationButtonEnabled: false,
-                                  zoomControlsEnabled: false,
-                                  minMaxZoomPreference:
-                                      MinMaxZoomPreference(5, 18),
-                                  mapToolbarEnabled: false,
-                                  onTap: (LatLng pos) {
-                                    if (snapshot.data ==
-                                        LocationType.selected) {
-                                      updateMarker(pos);
-                                    }
-                                  },
-                                  initialCameraPosition: CameraPosition(
-                                    target: currentLocation != null
-                                        ? LatLng(currentLocation!.latitude,
-                                            currentLocation!.longitude)
-                                        : Utils.location != null
-                                            ? LatLng(Utils.location!.latitude,
-                                                Utils.location!.longitude)
-                                            : LatLng(
-                                                Utils.defaultLocation.latitude,
-                                                Utils
-                                                    .defaultLocation.longitude),
-                                    zoom: 7.0,
-                                  ),
-                                  markers: markers.isNotEmpty
-                                      ? Set.from(markers.cast<
-                                          Marker>()) // Cast elements to Marker
-                                      : <Marker>{},
-                                  gestureRecognizers: <Factory<
-                                      OneSequenceGestureRecognizer>>{
-                                    Factory<OneSequenceGestureRecognizer>(
-                                      () => EagerGestureRecognizer(),
+                                        ),
+                                      ),
                                     ),
-                                  },
-                                )),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Style.button(
-                            MyLocalizations.of(context, 'reset'),
-                            () {
-                              resetLocations();
-                            },
-                          )
-                        ],
-                      );
-                    },
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          widget.setValid(false);
+                                          updateType(LocationType.selected);
+                                        },
+                                        child: SmallQuestionOption(
+                                          'select_location_txt',
+                                          selected:
+                                              snapshot.data ==
+                                              LocationType.selected,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: GoogleMap(
+                                    onMapCreated: _onMapCreated,
+                                    rotateGesturesEnabled: false,
+                                    myLocationButtonEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    minMaxZoomPreference: MinMaxZoomPreference(
+                                      5,
+                                      18,
+                                    ),
+                                    mapToolbarEnabled: false,
+                                    onTap: (LatLng pos) {
+                                      if (snapshot.data ==
+                                          LocationType.selected) {
+                                        updateMarker(pos);
+                                      }
+                                    },
+                                    initialCameraPosition: CameraPosition(
+                                      target: currentLocation != null
+                                          ? LatLng(
+                                              currentLocation!.latitude,
+                                              currentLocation!.longitude,
+                                            )
+                                          : Utils.location != null
+                                          ? LatLng(
+                                              Utils.location!.latitude,
+                                              Utils.location!.longitude,
+                                            )
+                                          : LatLng(
+                                              Utils.defaultLocation.latitude,
+                                              Utils.defaultLocation.longitude,
+                                            ),
+                                      zoom: 7.0,
+                                    ),
+                                    markers: markers.isNotEmpty
+                                        ? Set.from(
+                                            markers.cast<Marker>(),
+                                          ) // Cast elements to Marker
+                                        : <Marker>{},
+                                    gestureRecognizers:
+                                        <Factory<OneSequenceGestureRecognizer>>{
+                                          Factory<OneSequenceGestureRecognizer>(
+                                            () => EagerGestureRecognizer(),
+                                          ),
+                                        },
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Style.button(
+                                MyLocalizations.of(context, 'reset'),
+                                () {
+                                  resetLocations();
+                                },
+                              ),
+                            ],
+                          );
+                        },
                   ),
                 ),
                 Style.bottomOffset,
@@ -343,8 +402,9 @@ class _BitingLocationFormState extends State<LocationForm> {
     Utils.report!.current_location_lon = null;
 
     if (Utils.report!.type == 'bite') {
-      Utils.report!.responses!
-          .removeWhere((question) => question!.question_id == 5);
+      Utils.report!.responses!.removeWhere(
+        (question) => question!.question_id == 5,
+      );
     }
     print(Utils.report!.responses);
 

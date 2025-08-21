@@ -43,8 +43,11 @@ class Utils {
 
   static void saveImgPath(File img) {
     imagePath ??= [];
-    imagePath!
-        .add({'image': img.path, 'id': report!.version_UUID, 'imageFile': img});
+    imagePath!.add({
+      'image': img.path,
+      'id': report!.version_UUID,
+      'imageFile': img,
+    });
   }
 
   static void deleteImage(String? image) {
@@ -59,15 +62,18 @@ class Utils {
     required BuildContext context,
   }) async {
     var lang = await UserManager.getLanguage();
-    final userUUID =
-        Provider.of<UserProvider>(context, listen: false).user?.uuid;
+    final userUUID = Provider.of<UserProvider>(
+      context,
+      listen: false,
+    ).user?.uuid;
     report = Report(
-        type: type,
-        report_id: randomAlphaNumeric(4).toString(),
-        version_number: 0,
-        version_UUID: Uuid().v4(),
-        user: userUUID,
-        responses: []);
+      type: type,
+      report_id: randomAlphaNumeric(4).toString(),
+      version_number: 0,
+      version_UUID: Uuid().v4(),
+      user: userUUID,
+      responses: [],
+    );
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     report!.package_name = packageInfo.packageName;
@@ -121,7 +127,7 @@ class Utils {
       editReport.photos!.forEach((element) {
         imagePath!.add({
           'image': '${ApiSingleton.baseUrl}/media/${element.photo}',
-          'id': editReport.version_UUID
+          'id': editReport.version_UUID,
         });
       });
     }
@@ -134,17 +140,21 @@ class Utils {
     reportsList!.add(report);
     report = null;
     if (reportsList!.last!.location_choice == 'selected') {
-      createNewReport(type,
-          lat: reportsList!.last!.selected_location_lat,
-          lon: reportsList!.last!.selected_location_lon,
-          locationType: 'selected',
-          context: context);
+      createNewReport(
+        type,
+        lat: reportsList!.last!.selected_location_lat,
+        lon: reportsList!.last!.selected_location_lon,
+        locationType: 'selected',
+        context: context,
+      );
     } else {
-      createNewReport(type,
-          lat: reportsList!.last!.current_location_lat,
-          lon: reportsList!.last!.current_location_lon,
-          locationType: 'current',
-          context: context);
+      createNewReport(
+        type,
+        lat: reportsList!.last!.current_location_lat,
+        lon: reportsList!.last!.current_location_lon,
+        locationType: 'current',
+        context: context,
+      );
     }
   }
 
@@ -172,8 +182,13 @@ class Utils {
     report!.selected_location_lon = lon;
   }
 
-  static void addBiteResponse(String? question, String? answer,
-      {question_id, answer_id, answer_value}) {
+  static void addBiteResponse(
+    String? question,
+    String? answer, {
+    question_id,
+    answer_id,
+    answer_value,
+  }) {
     if (report == null) {
       return;
     }
@@ -183,16 +198,19 @@ class Utils {
     // add total bites
 
     if (question_id == BiteQuestion.howMany.id) {
-      var currentIndex = _questions!
-          .indexWhere((question) => question!.question_id == question_id);
+      var currentIndex = _questions!.indexWhere(
+        (question) => question!.question_id == question_id,
+      );
       if (currentIndex == -1) {
-        _questions.add(Question(
-          question: question.toString(),
-          answer: 'N/A',
-          answer_id: answer_id,
-          question_id: question_id,
-          answer_value: '1',
-        ));
+        _questions.add(
+          Question(
+            question: question.toString(),
+            answer: 'N/A',
+            answer_id: answer_id,
+            question_id: question_id,
+            answer_value: '1',
+          ),
+        );
       } else {
         _questions[currentIndex]!.answer_value = answer_value.toString();
       }
@@ -200,16 +218,19 @@ class Utils {
 
     //increase answer_value question 2
     if (question_id == BiteQuestion.bittenBodyPart.id) {
-      var currentIndex = _questions!
-          .indexWhere((question) => question!.answer_id == answer_id);
+      var currentIndex = _questions!.indexWhere(
+        (question) => question!.answer_id == answer_id,
+      );
       if (currentIndex == -1) {
-        _questions.add(Question(
-          question: question.toString(),
-          answer: answer.toString(),
-          answer_id: answer_id,
-          question_id: question_id,
-          answer_value: '1',
-        ));
+        _questions.add(
+          Question(
+            question: question.toString(),
+            answer: answer.toString(),
+            answer_id: answer_id,
+            question_id: question_id,
+            answer_value: '1',
+          ),
+        );
       } else {
         var value = int.parse(_questions[currentIndex]!.answer_value!);
         value = value + 1;
@@ -225,26 +246,31 @@ class Utils {
         _questions.removeWhere((q) => q!.answer_id == answer_id);
       } else {
         if (_questions.any(
-            (q) => q!.question_id == question_id && q.answer_id != answer_id)) {
+          (q) => q!.question_id == question_id && q.answer_id != answer_id,
+        )) {
           //modify question
-          var index =
-              _questions.indexWhere((q) => q!.question_id == question_id);
+          var index = _questions.indexWhere(
+            (q) => q!.question_id == question_id,
+          );
           _questions[index]!.answer_id = answer_id;
           _questions[index]!.answer = answer;
         } else {
-          _questions.add(Question(
-            question: question.toString(),
-            answer: answer.toString(),
-            answer_id: answer_id,
-            question_id: question_id,
-          ));
+          _questions.add(
+            Question(
+              question: question.toString(),
+              answer: answer.toString(),
+              answer_id: answer_id,
+              question_id: question_id,
+            ),
+          );
         }
       }
     }
 
     if (answer_id == Answer.inside_vehicle.id) {
-      _questions!
-          .removeWhere((q) => q!.question_id == BiteQuestion.whatTime.id);
+      _questions!.removeWhere(
+        (q) => q!.question_id == BiteQuestion.whatTime.id,
+      );
     }
     report!.responses = _questions;
   }
@@ -252,16 +278,18 @@ class Utils {
   static void resetBitingQuestion() {
     var _questions = report!.responses!;
 
-    _questions
-        .removeWhere((q) => q!.question_id == BiteQuestion.bittenBodyPart.id);
+    _questions.removeWhere(
+      (q) => q!.question_id == BiteQuestion.bittenBodyPart.id,
+    );
 
     report!.responses = _questions;
   }
 
   static void addAdultPartsResponse(answer, answerId, i) {
     var _questions = report!.responses!;
-    var index = _questions
-        .indexWhere((q) => q!.answer_id! > i && q.answer_id! < i + 10);
+    var index = _questions.indexWhere(
+      (q) => q!.answer_id! > i && q.answer_id! < i + 10,
+    );
     if (index != -1) {
       if (_questions[index]!.answer_id == answerId) {
         _questions.removeAt(index);
@@ -282,8 +310,9 @@ class Utils {
   }
 
   static void addResponse(Question? question) {
-    var index = report!.responses!
-        .indexWhere((q) => q!.question_id == question!.question_id);
+    var index = report!.responses!.indexWhere(
+      (q) => q!.question_id == question!.question_id,
+    );
     var _responses = report!.responses;
     _responses ??= [];
     if (index != -1) {
@@ -341,14 +370,18 @@ class Utils {
   }
 
   static Future<void> saveLocalImage(
-      String? image, String? version_UUID) async {
+    String? image,
+    String? version_UUID,
+  ) async {
     var savedImages = await UserManager.getImageList();
     if (savedImages == null || savedImages.isEmpty) {
       savedImages = [];
     }
 
-    var imageString =
-        json.encode({'image': image, 'verison_UUID': version_UUID});
+    var imageString = json.encode({
+      'image': image,
+      'verison_UUID': version_UUID,
+    });
     savedImages.add(imageString);
     await UserManager.setImageList(savedImages);
   }
@@ -368,8 +401,9 @@ class Utils {
     if (savedReports != null && savedReports.isNotEmpty) {
       bool isCreated;
       for (var i = 0; i < savedReports.length; i++) {
-        var savedReport =
-            await Report.fromJsonAsync(json.decode(savedReports[i]));
+        var savedReport = await Report.fromJsonAsync(
+          json.decode(savedReports[i]),
+        );
         isCreated = await ApiSingleton().createReport(savedReport) != null
             ? true
             : false;
@@ -384,8 +418,10 @@ class Utils {
       bool isCreated;
       for (var i = 0; i < savedImages.length; i++) {
         Map image = json.decode(savedImages[i]);
-        isCreated = await ApiSingleton()
-            .saveImage(image['image'], image['verison_UUID']);
+        isCreated = await ApiSingleton().saveImage(
+          image['image'],
+          image['verison_UUID'],
+        );
         if (!isCreated) {
           await saveLocalImage(image['image'], image['verison_UUID']);
         } else {
@@ -401,17 +437,24 @@ class Utils {
     deleteReport.version_number = -1;
     deleteReport.version_UUID = Uuid().v4();
 
-    var res =
-        await ApiSingleton().createReport(deleteReport) != null ? true : false;
+    var res = await ApiSingleton().createReport(deleteReport) != null
+        ? true
+        : false;
     return res;
   }
 
   static final RegExp mailRegExp = RegExp(
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+  );
 
   //Alerts
-  static Future showAlert(String? title, String? text, BuildContext? context,
-      {onPressed, barrierDismissible}) {
+  static Future showAlert(
+    String? title,
+    String? text,
+    BuildContext? context, {
+    onPressed,
+    barrierDismissible,
+  }) {
     if (Platform.isAndroid) {
       return showDialog(
         context: context!,
@@ -420,11 +463,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(text!),
-                ],
-              ),
+              child: ListBody(children: <Widget>[Text(text!)]),
             ),
             actions: <Widget>[
               TextButton(
@@ -447,19 +486,11 @@ class Utils {
         context: context!, //
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text(
-              title!,
-              style: TextStyle(letterSpacing: -0.3),
-            ),
+            title: Text(title!, style: TextStyle(letterSpacing: -0.3)),
             content: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  text!,
-                  style: TextStyle(height: 1.2),
-                )
+                SizedBox(height: 4),
+                Text(text!, style: TextStyle(height: 1.2)),
               ],
             ),
             actions: <Widget>[
@@ -482,8 +513,12 @@ class Utils {
   }
 
   static Future showCustomAlert(
-      String? title, Widget body, BuildContext context,
-      {onPressed, barrierDismissible}) {
+    String? title,
+    Widget body,
+    BuildContext context, {
+    onPressed,
+    barrierDismissible,
+  }) {
     if (Platform.isAndroid) {
       return showDialog(
         context: context,
@@ -492,11 +527,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  body,
-                ],
-              ),
+              child: ListBody(children: <Widget>[body]),
             ),
             actions: <Widget>[
               TextButton(
@@ -519,18 +550,8 @@ class Utils {
         context: context, //
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text(
-              title!,
-              style: TextStyle(letterSpacing: -0.3),
-            ),
-            content: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                body,
-              ],
-            ),
+            title: Text(title!, style: TextStyle(letterSpacing: -0.3)),
+            content: Column(children: <Widget>[SizedBox(height: 4), body]),
             actions: <Widget>[
               CupertinoDialogAction(
                 isDefaultAction: true,
@@ -563,11 +584,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(text!),
-                ],
-              ),
+              child: ListBody(children: <Widget>[Text(text!)]),
             ),
             actions: <Widget>[
               TextButton(
@@ -594,14 +611,7 @@ class Utils {
           return CupertinoAlertDialog(
             title: Text(title!),
             content: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  text!,
-                )
-              ],
+              children: <Widget>[SizedBox(height: 4), Text(text!)],
             ),
             actions: <Widget>[
               CupertinoDialogAction(
@@ -625,33 +635,41 @@ class Utils {
     }
   }
 
-  static Future? modalDetailTrackingforPlatform(List<Widget> list,
-      TargetPlatform platform, BuildContext context, Function close,
-      {title, cancelButton}) {
+  static Future? modalDetailTrackingforPlatform(
+    List<Widget> list,
+    TargetPlatform platform,
+    BuildContext context,
+    Function close, {
+    title,
+    cancelButton,
+  }) {
     if (platform == TargetPlatform.iOS) {
       return showCupertinoModalPopup(
-          context: context,
-          builder: (context) {
-            return CupertinoActionSheet(
-                title: title != null ? Text(title) : null,
-                cancelButton: cancelButton ??
-                    CupertinoActionSheetAction(
-                      onPressed: close as void Function(),
-                      child: Text(
-                        MyLocalizations.of(context, 'cancel'),
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                actions: list);
-          });
+        context: context,
+        builder: (context) {
+          return CupertinoActionSheet(
+            title: title != null ? Text(title) : null,
+            cancelButton:
+                cancelButton ??
+                CupertinoActionSheetAction(
+                  onPressed: close as void Function(),
+                  child: Text(
+                    MyLocalizations.of(context, 'cancel'),
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+            actions: list,
+          );
+        },
+      );
     } else if (platform == TargetPlatform.android) {
       showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return BottomSheet(
-              builder: (BuildContext context) {
-                return SafeArea(
-                    child: Container(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+            builder: (BuildContext context) {
+              return SafeArea(
+                child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -659,22 +677,31 @@ class Utils {
                           ? Container(
                               width: double.infinity,
                               padding: EdgeInsets.only(
-                                  top: 20, left: 20, right: 20, bottom: 0),
-                              child: Text(title,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400)),
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 0,
+                              ),
+                              child: Text(
+                                title,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             )
                           : Container(),
                       Wrap(children: list),
                     ],
                   ),
-                ));
-              },
-              onClosing: close as void Function(),
-            );
-          });
+                ),
+              );
+            },
+            onClosing: close as void Function(),
+          );
+        },
+      );
     }
     return null;
   }
@@ -687,12 +714,15 @@ class Utils {
         child: Wrap(
           alignment: WrapAlignment.center,
           children: <Widget>[
-            Text('${MyLocalizations.of(context, 'terms_and_conditions_txt1')} ',
-                style: TextStyle(color: Style.textColor, fontSize: 12)),
+            Text(
+              '${MyLocalizations.of(context, 'terms_and_conditions_txt1')} ',
+              style: TextStyle(color: Style.textColor, fontSize: 12),
+            ),
             InkWell(
               onTap: () async {
-                Uri url =
-                    Uri.parse(MyLocalizations.of(context, 'url_politics'));
+                Uri url = Uri.parse(
+                  MyLocalizations.of(context, 'url_politics'),
+                );
                 if (await canLaunchUrl(url)) {
                   await launchUrl(url);
                 } else {
@@ -700,15 +730,18 @@ class Utils {
                 }
               },
               child: Text(
-                  MyLocalizations.of(context, 'terms_and_conditions_txt2'),
-                  style: TextStyle(
-                      color: Style.textColor,
-                      fontSize: 12,
-                      decoration: TextDecoration.underline)),
+                MyLocalizations.of(context, 'terms_and_conditions_txt2'),
+                style: TextStyle(
+                  color: Style.textColor,
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
             ),
             Text(
-                ' ${MyLocalizations.of(context, 'terms_and_conditions_txt3')} ',
-                style: TextStyle(color: Style.textColor, fontSize: 12)),
+              ' ${MyLocalizations.of(context, 'terms_and_conditions_txt3')} ',
+              style: TextStyle(color: Style.textColor, fontSize: 12),
+            ),
             InkWell(
               onTap: () async {
                 Uri url = Uri.parse(MyLocalizations.of(context, 'url_legal'));
@@ -719,11 +752,13 @@ class Utils {
                 }
               },
               child: Text(
-                  MyLocalizations.of(context, 'terms_and_conditions_txt4'),
-                  style: TextStyle(
-                      color: Style.textColor,
-                      fontSize: 12,
-                      decoration: TextDecoration.underline)),
+                MyLocalizations.of(context, 'terms_and_conditions_txt4'),
+                style: TextStyle(
+                  color: Style.textColor,
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
             ),
             Text('.', style: TextStyle(color: Style.textColor, fontSize: 12)),
           ],
@@ -736,14 +771,16 @@ class Utils {
     return _isLoading == true
         ? IgnorePointer(
             child: Container(
-            color: Colors.transparent,
-            child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    indicatorColor ?? Style.colorPrimary),
+              color: Colors.transparent,
+              child: Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    indicatorColor ?? Style.colorPrimary,
+                  ),
+                ),
               ),
             ),
-          ))
+          )
         : Container();
   }
 
@@ -754,44 +791,46 @@ class Utils {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              MyLocalizations.of(context, 'app_name'),
-            ),
+            title: Text(MyLocalizations.of(context, 'app_name')),
             content: SingleChildScrollView(
-              child: ListBody(children: <Widget>[
-                Style.body(MyLocalizations.of(context, 'save_report_ok_txt')),
-                SizedBox(
-                  height: 12,
-                ),
-                Style.title(
+              child: ListBody(
+                children: <Widget>[
+                  Style.body(MyLocalizations.of(context, 'save_report_ok_txt')),
+                  SizedBox(height: 12),
+                  Style.title(
                     MyLocalizations.of(
-                        context, 'alert_campaign_found_create_body'),
+                      context,
+                      'alert_campaign_found_create_body',
+                    ),
                     textAlign: TextAlign.left,
                     fontSize: 15.0,
-                    height: 1.2)
-              ]),
+                    height: 1.2,
+                  ),
+                ],
+              ),
             ),
             actions: <Widget>[
               TextButton(
-                  //Changed from FlatButton
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/img/sendmodule/ic_adn.svg',
-                        colorFilter: ColorFilter.mode(
-                            Style.colorPrimary, BlendMode.srcIn),
-                        height: 20,
+                //Changed from FlatButton
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/img/sendmodule/ic_adn.svg',
+                      colorFilter: ColorFilter.mode(
+                        Style.colorPrimary,
+                        BlendMode.srcIn,
                       ),
-                      SizedBox(
-                        width: 7,
-                      ),
-                      Text(MyLocalizations.of(context, 'show_info'))
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onPressed(context);
-                  }),
+                      height: 20,
+                    ),
+                    SizedBox(width: 7),
+                    Text(MyLocalizations.of(context, 'show_info')),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  onPressed(context);
+                },
+              ),
               TextButton(
                 //Changed from FlatButton
                 child: Text(MyLocalizations.of(context, 'no_show_info')),
@@ -815,44 +854,46 @@ class Utils {
             ),
             content: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 4,
+                SizedBox(height: 4),
+                Style.body(
+                  MyLocalizations.of(context, 'save_report_ok_txt'),
+                  textAlign: TextAlign.center,
                 ),
-                Style.body(MyLocalizations.of(context, 'save_report_ok_txt'),
-                    textAlign: TextAlign.center),
-                SizedBox(
-                  height: 12,
-                ),
+                SizedBox(height: 12),
                 Style.title(
-                    MyLocalizations.of(
-                        context, 'alert_campaign_found_create_body'),
-                    textAlign: TextAlign.center,
-                    fontSize: 15.0,
-                    height: 1.2)
+                  MyLocalizations.of(
+                    context,
+                    'alert_campaign_found_create_body',
+                  ),
+                  textAlign: TextAlign.center,
+                  fontSize: 15.0,
+                  height: 1.2,
+                ),
               ],
             ),
             actions: <Widget>[
               CupertinoDialogAction(
-                  isDefaultAction: true,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/img/sendmodule/ic_adn.svg',
-                        colorFilter: ColorFilter.mode(
-                            Colors.blueAccent, BlendMode.srcIn),
-                        height: 20,
+                isDefaultAction: true,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/img/sendmodule/ic_adn.svg',
+                      colorFilter: ColorFilter.mode(
+                        Colors.blueAccent,
+                        BlendMode.srcIn,
                       ),
-                      SizedBox(
-                        width: 7,
-                      ),
-                      Text(MyLocalizations.of(context, 'show_info'))
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onPressed(context);
-                  }),
+                      height: 20,
+                    ),
+                    SizedBox(width: 7),
+                    Text(MyLocalizations.of(context, 'show_info')),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  onPressed(context);
+                },
+              ),
               CupertinoDialogAction(
                 isDefaultAction: true,
                 child: Text(MyLocalizations.of(context, 'no_show_info')),
@@ -893,7 +934,9 @@ class Utils {
   }
 
   static String getTranslatedReportType(
-      BuildContext context, String? reportType) {
+    BuildContext context,
+    String? reportType,
+  ) {
     var translationString;
     switch (reportType) {
       case 'adult':
@@ -935,7 +978,8 @@ class Utils {
     final lastReportCount = await UserManager.getLastReportCount() ?? 0;
     final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
 
-    var shouldRequestReview = (numReports == 3 ||
+    var shouldRequestReview =
+        (numReports == 3 ||
         numReports == 4 ||
         numReports >= lastReportCount + 3 ||
         now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000);
@@ -958,7 +1002,9 @@ class Utils {
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
     final rand = Random.secure();
-    return List.generate(length, (index) => chars[rand.nextInt(chars.length)])
-        .join();
+    return List.generate(
+      length,
+      (index) => chars[rand.nextInt(chars.length)],
+    ).join();
   }
 }

@@ -29,28 +29,28 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   final List<Map<String, dynamic>> _pageEvents = [
     {
       'name': 'report_add_site_type',
-      'parameters': {'type': 'breeding_site'}
+      'parameters': {'type': 'breeding_site'},
     },
     {
       'name': 'report_add_photo',
-      'parameters': {'type': 'breeding_site'}
+      'parameters': {'type': 'breeding_site'},
     },
     {
       'name': 'report_add_has_water',
-      'parameters': {'type': 'breeding_site'}
+      'parameters': {'type': 'breeding_site'},
     },
     {
       'name': 'report_add_has_larvae',
-      'parameters': {'type': 'breeding_site'}
+      'parameters': {'type': 'breeding_site'},
     },
     {
       'name': 'report_add_location',
-      'parameters': {'type': 'breeding_site'}
+      'parameters': {'type': 'breeding_site'},
     },
     {
       'name': 'report_add_note',
-      'parameters': {'type': 'breeding_site'}
-    }
+      'parameters': {'type': 'breeding_site'},
+    },
   ];
 
   List<Map> displayQuestions = [
@@ -60,28 +60,28 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         {
           'img': 'assets/img/ic_imbornal.webp',
           'id': 121,
-          'text': 'question_12_answer_121'
+          'text': 'question_12_answer_121',
         },
         {
           'img': 'assets/img/ic_other_site.webp',
           'id': 122,
-          'text': 'question_12_answer_122'
-        }
-      ]
+          'text': 'question_12_answer_122',
+        },
+      ],
     },
     {
       'question': {'id': 10, 'text': 'question_10'},
       'answers': [
         {'id': 101, 'text': 'question_10_answer_101'},
-        {'id': 81, 'text': 'question_10_answer_102'}
-      ]
+        {'id': 81, 'text': 'question_10_answer_102'},
+      ],
     },
     {
       'question': {'id': 17, 'text': 'question_17'},
       'answers': [
         {'id': 101, 'text': 'question_10_answer_101'},
-        {'id': 81, 'text': 'question_10_answer_102'}
-      ]
+        {'id': 81, 'text': 'question_10_answer_102'},
+      ],
     },
     {
       'question': {'id': 16, 'text': 'question_16'},
@@ -104,8 +104,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     _pagesController = PageController();
 
     _formsReport = [
-      QuestionsBreedingForm(displayQuestions.elementAt(0), setValid, true,
-          goNextPage, 'assets/img/bottoms/breeding_1.webp'),
+      QuestionsBreedingForm(
+        displayQuestions.elementAt(0),
+        setValid,
+        true,
+        goNextPage,
+        'assets/img/bottoms/breeding_1.webp',
+      ),
       AddPhotoButton(true, true, _checkAtLeastOnePhotoAttached, null, null),
       QuestionsBreedingForm(
         displayQuestions.elementAt(1),
@@ -115,8 +120,13 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
         'assets/img/bottoms/breeding_2.webp',
         skipPage3: skipPage3,
       ),
-      QuestionsBreedingForm(displayQuestions.elementAt(2), setValid, false,
-          goNextPage, 'assets/img/bottoms/breeding_3.webp'),
+      QuestionsBreedingForm(
+        displayQuestions.elementAt(2),
+        setValid,
+        false,
+        goNextPage,
+        'assets/img/bottoms/breeding_3.webp',
+      ),
       LocationForm(setValid, displayQuestions.elementAt(3)['question']['text']),
       AddOtherReportPage(_createReport, setValid, percentStream),
     ];
@@ -124,8 +134,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   Future<void> _logFirebaseAnalytics() async {
-    await FirebaseAnalytics.instance
-        .logEvent(name: 'start_report', parameters: {'type': 'breeding_site'});
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'start_report',
+      parameters: {'type': 'breeding_site'},
+    );
   }
 
   void _onPageChanged(int index) async {
@@ -178,8 +190,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   }
 
   void goNextPage() {
-    _pagesController!
-        .nextPage(duration: Duration(microseconds: 300), curve: Curves.ease);
+    _pagesController!.nextPage(
+      duration: Duration(microseconds: 300),
+      curve: Curves.ease,
+    );
     setState(() {
       index = _pagesController!.page! + 1;
     });
@@ -211,8 +225,10 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
       percentStream.add(0.8);
     });
     loadingStream.add(true);
-    await FirebaseAnalytics.instance
-        .logEvent(name: 'submit_report', parameters: {'type': 'breeding_site'});
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'submit_report',
+      parameters: {'type': 'breeding_site'},
+    );
     var res = await Utils.createReport();
 
     if (!res!) {
@@ -254,8 +270,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                   } else {
                     _pagesController!
                         .previousPage(
-                            duration: Duration(microseconds: 300),
-                            curve: Curves.ease)
+                          duration: Duration(microseconds: 300),
+                          curve: Curves.ease,
+                        )
                         .then((value) => addOtherReport(null));
                   }
                   setState(() {
@@ -264,8 +281,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 },
               ),
               title: Style.title(
-                  MyLocalizations.of(context, 'breeding_report_title'),
-                  fontSize: 16),
+                MyLocalizations.of(context, 'breeding_report_title'),
+                fontSize: 16,
+              ),
             ),
             body: Stack(
               alignment: Alignment.bottomCenter,
@@ -278,76 +296,98 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                 ),
                 index <= displayContinue
                     ? index == 1 && _atLeastOnePhotoAttached
-                        ? Container(
-                            width: double.infinity,
-                            height: 54,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 12),
-                            child: Style.button(
+                          ? Container(
+                              width: double.infinity,
+                              height: 54,
+                              margin: EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 12,
+                              ),
+                              child: Style.button(
                                 MyLocalizations.of(context, 'continue_txt'),
                                 () {
-                              goNextPage();
-                            }))
-                        : Container()
+                                  goNextPage();
+                                },
+                              ),
+                            )
+                          : Container()
                     : index != _formsReport.length.toDouble() - 1
-                        ? SafeArea(
-                            child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: StreamBuilder<bool>(
-                                stream: validStream.stream,
-                                initialData: false,
-                                builder: (BuildContext ctxt,
-                                    AsyncSnapshot<bool> snapshot) {
+                    ? SafeArea(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: StreamBuilder<bool>(
+                            stream: validStream.stream,
+                            initialData: false,
+                            builder:
+                                (
+                                  BuildContext ctxt,
+                                  AsyncSnapshot<bool> snapshot,
+                                ) {
                                   return snapshot.data!
                                       ? Container(
                                           width: double.infinity,
                                           height: 54,
                                           margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
+                                            vertical: 6,
+                                            horizontal: 12,
+                                          ),
                                           child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'), () {
-                                            var currentPage =
-                                                _pagesController!.page;
+                                            MyLocalizations.of(
+                                              context,
+                                              'continue_txt',
+                                            ),
+                                            () {
+                                              var currentPage =
+                                                  _pagesController!.page;
 
-                                            if (currentPage == 0.0) {
-                                              goNextPage();
-                                            } else if (currentPage == 4.0) {
-                                              if (otherReport == 'adult' ||
-                                                  otherReport == 'bite') {
-                                                navigateOtherReport();
+                                              if (currentPage == 0.0) {
+                                                goNextPage();
+                                              } else if (currentPage == 4.0) {
+                                                if (otherReport == 'adult' ||
+                                                    otherReport == 'bite') {
+                                                  navigateOtherReport();
+                                                }
+                                              } else {
+                                                goNextPage();
                                               }
-                                            } else {
-                                              goNextPage();
-                                            }
-                                          }),
+                                            },
+                                          ),
                                         )
                                       : Container(
                                           width: double.infinity,
                                           height: 54,
                                           margin: EdgeInsets.symmetric(
-                                              vertical: 6, horizontal: 12),
+                                            vertical: 6,
+                                            horizontal: 12,
+                                          ),
                                           child: Style.button(
-                                              MyLocalizations.of(
-                                                  context, 'continue_txt'),
-                                              null),
+                                            MyLocalizations.of(
+                                              context,
+                                              'continue_txt',
+                                            ),
+                                            null,
+                                          ),
                                         );
-                                }),
-                          ))
-                        : SafeArea(
-                            child: Container(
-                              width: double.infinity,
-                              height: 54,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 12),
-                              child: Style.button(
-                                MyLocalizations.of(context, 'send_data'),
-                                () {
-                                  _createReport();
                                 },
-                              ),
-                            ),
                           ),
+                        ),
+                      )
+                    : SafeArea(
+                        child: Container(
+                          width: double.infinity,
+                          height: 54,
+                          margin: EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 12,
+                          ),
+                          child: Style.button(
+                            MyLocalizations.of(context, 'send_data'),
+                            () {
+                              _createReport();
+                            },
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -358,11 +398,9 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
               if (snapshot.hasData == false || snapshot.data == false) {
                 return Container();
               }
-              return Utils.loading(
-                snapshot.data,
-              );
+              return Utils.loading(snapshot.data);
             },
-          )
+          ),
         ],
       ),
     );
@@ -402,16 +440,20 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   void _onWillPop() {
     var responses = Utils.report?.responses ?? [];
     if (responses.isNotEmpty) {
-      Utils.showAlertYesNo(MyLocalizations.of(context, 'app_name'),
-          MyLocalizations.of(context, 'close_report_no_save_txt'), () {
-        if (Utils.reportsList != null && Utils.reportsList!.isNotEmpty) {
-          Utils.deleteLastReport();
-        } else {
-          Utils.resetReport();
-          Utils.imagePath = null;
-        }
-        Navigator.pop(context);
-      }, context);
+      Utils.showAlertYesNo(
+        MyLocalizations.of(context, 'app_name'),
+        MyLocalizations.of(context, 'close_report_no_save_txt'),
+        () {
+          if (Utils.reportsList != null && Utils.reportsList!.isNotEmpty) {
+            Utils.deleteLastReport();
+          } else {
+            Utils.resetReport();
+            Utils.imagePath = null;
+          }
+          Navigator.pop(context);
+        },
+        context,
+      );
     } else {
       Navigator.pop(context);
     }

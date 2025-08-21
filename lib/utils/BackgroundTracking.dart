@@ -21,10 +21,13 @@ class BackgroundTracking {
     _fixesApi = apiClient.getFixesApi();
   }
 
-  static Future<void> start(
-      {bool shouldRun = false, bool requestPermissions = true}) async {
+  static Future<void> start({
+    bool shouldRun = false,
+    bool requestPermissions = true,
+  }) async {
     bool hasPermissions = await BackgroundTracking._checkPermissions(
-        requestPermissions: requestPermissions);
+      requestPermissions: requestPermissions,
+    );
     if (!hasPermissions) {
       print('Location Always permission denied. Tracking not enabled.');
       await BackgroundTracking.stop();
@@ -47,7 +50,8 @@ class BackgroundTracking {
     // Schedule tasks now.
     try {
       await BackgroundTracking.scheduleDailyTrackingTask(
-          numScheduledTasks: alreadyRunTasks);
+        numScheduledTasks: alreadyRunTasks,
+      );
     } catch (e) {
       print(e);
     }
@@ -59,7 +63,8 @@ class BackgroundTracking {
 
     // Register the periodic task, being schedule every night
     print(
-        "Nightly scheduler for background tracking starting at ${nextMidnight} (in ${timeUntilMidnight})");
+      "Nightly scheduler for background tracking starting at ${nextMidnight} (in ${timeUntilMidnight})",
+    );
     await Workmanager().registerPeriodicTask(
       'scheduleDailyTasks',
       'scheduleDailyTasks', // ignored on iOS where you should use [uniqueName]
@@ -74,8 +79,9 @@ class BackgroundTracking {
     prefs.setBool(BackgroundTracking._isEnabledPrefsKey, false);
 
     if (Platform.isAndroid) {
-      await Workmanager()
-          .cancelByTag('trackingTask'); // Method available only for Android
+      await Workmanager().cancelByTag(
+        'trackingTask',
+      ); // Method available only for Android
       await Workmanager().cancelByTag('scheduleDailyTasks');
     } else if (Platform.isIOS) {
       await Workmanager().cancelAll();
@@ -94,8 +100,9 @@ class BackgroundTracking {
     return permStatus.isGranted;
   }
 
-  static Future<bool> _checkPermissions(
-      {bool requestPermissions = true}) async {
+  static Future<bool> _checkPermissions({
+    bool requestPermissions = true,
+  }) async {
     if (!requestPermissions) {
       return await BackgroundTracking._hasLocationAlwaysPermission();
     }
@@ -120,8 +127,11 @@ class BackgroundTracking {
     return false;
   }
 
-  static List<TimeOfDay> _getRandomTimes(int numSamples,
-      {TimeOfDay? minTime, TimeOfDay? maxTime}) {
+  static List<TimeOfDay> _getRandomTimes(
+    int numSamples, {
+    TimeOfDay? minTime,
+    TimeOfDay? maxTime,
+  }) {
     // Default values if minTime or maxTime are not provided
     minTime ??= TimeOfDay(hour: 0, minute: 0);
     maxTime ??= TimeOfDay(hour: 23, minute: 59);
@@ -151,8 +161,9 @@ class BackgroundTracking {
     return !schedulerTaskQueue.contains(schedulerId);
   }
 
-  static Future<bool> scheduleDailyTrackingTask(
-      {int numScheduledTasks = 0}) async {
+  static Future<bool> scheduleDailyTrackingTask({
+    int numScheduledTasks = 0,
+  }) async {
     try {
       // Ensure background tracking is enabled
       if (!await BackgroundTracking.isEnabled()) {
@@ -181,10 +192,14 @@ class BackgroundTracking {
       double remainingFractionOfDay = 1 - fractionOfDayElapsed;
 
       // Only schedule the fraction of tasks for the remaining day length.
-      int numTasks =
-          max(1, (numTaskToSchedule * remainingFractionOfDay).ceil());
-      List<TimeOfDay> randomTimes =
-          _getRandomTimes(numTasks, minTime: TimeOfDay.now());
+      int numTasks = max(
+        1,
+        (numTaskToSchedule * remainingFractionOfDay).ceil(),
+      );
+      List<TimeOfDay> randomTimes = _getRandomTimes(
+        numTasks,
+        minTime: TimeOfDay.now(),
+      );
 
       // Schedule tasks asynchronously
       randomTimes.forEach((time) async {
@@ -226,19 +241,26 @@ class BackgroundTracking {
       }
 
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,
+      );
       int batteryLevel = await Battery().batteryLevel;
       String trackingUuid = await BackgroundTracking._getTrackingUUID();
 
       // Send data to API
-      FixRequest fixRequest = FixRequest((b) => b
-        ..coverageUuid = trackingUuid
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..point.replace(FixLocationRequest((p) => p
-          ..latitude = position.latitude
-          ..longitude = position.longitude))
-        ..power = batteryLevel / 100.0);
+      FixRequest fixRequest = FixRequest(
+        (b) => b
+          ..coverageUuid = trackingUuid
+          ..createdAt = DateTime.now().toUtc()
+          ..sentAt = DateTime.now().toUtc()
+          ..point.replace(
+            FixLocationRequest(
+              (p) => p
+                ..latitude = position.latitude
+                ..longitude = position.longitude,
+            ),
+          )
+          ..power = batteryLevel / 100.0,
+      );
       final response = await _fixesApi.create(fixRequest: fixRequest);
       return response.statusCode == 201;
     } catch (e) {
@@ -269,7 +291,8 @@ class BackgroundTracking {
   }
 
   static Future<void> _appendScheduledDateTimeTaskQueue(
-      DateTime datetime) async {
+    DateTime datetime,
+  ) async {
     List<String> taskQueue = await BackgroundTracking._getSchedulerTaskQueue();
     String currentId = await BackgroundTracking._getSchedulerId(datetime);
 
@@ -280,7 +303,9 @@ class BackgroundTracking {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       prefs.setStringList(
-          BackgroundTracking._scheduledTasksPrefsKey, taskQueue);
+        BackgroundTracking._scheduledTasksPrefsKey,
+        taskQueue,
+      );
     }
   }
 

@@ -47,8 +47,9 @@ class ApiSingleton {
             var isSaved = await saveImage(img['image'], report.version_UUID);
             if (!isSaved) {
               final directory = await getApplicationDocumentsDirectory();
-              File newImage = await img['imageFile']
-                  .copy('${directory.path}/${report.version_UUID}.png');
+              File newImage = await img['imageFile'].copy(
+                '${directory.path}/${report.version_UUID}.png',
+              );
 
               await Utils.saveLocalImage(newImage.path, report.version_UUID);
             } else {
@@ -70,22 +71,25 @@ class ApiSingleton {
     try {
       // Compressing image to jpeg 4k max = 3840x2180
       Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-          imagePath,
-          minWidth: 3840,
-          minHeight: 2180,
-          quality: 98,
-          autoCorrectionAngle: true,
-          format: CompressFormat.jpeg,
-          keepExif: true);
+        imagePath,
+        minWidth: 3840,
+        minHeight: 2180,
+        quality: 98,
+        autoCorrectionAngle: true,
+        format: CompressFormat.jpeg,
+        keepExif: true,
+      );
 
       if (compressedImage == null) {
         print('Failed to compress image');
         return false;
       }
 
-      var img = await MultipartFile.fromBytes(compressedImage,
-          filename: '${path.basenameWithoutExtension(imagePath)}.jpeg',
-          contentType: MediaType('image', 'jpeg'));
+      var img = await MultipartFile.fromBytes(
+        compressedImage,
+        filename: '${path.basenameWithoutExtension(imagePath)}.jpeg',
+        contentType: MediaType('image', 'jpeg'),
+      );
 
       var data = FormData.fromMap({'photo': img, 'report': versionUUID});
       print(data);

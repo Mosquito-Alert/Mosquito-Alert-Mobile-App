@@ -102,76 +102,70 @@ class _BitingFormState extends State<BitingForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                height: 24,
-              ),
+              SizedBox(height: 24),
               Style.titleMedium(
-                  MyLocalizations.of(context, 'bytes_and_place_report_txt'),
-                  fontSize: 16),
-              SizedBox(
-                height: 12,
+                MyLocalizations.of(context, 'bytes_and_place_report_txt'),
+                fontSize: 16,
               ),
+              SizedBox(height: 12),
               Row(
                 children: <Widget>[
-                  Style.button(
-                    '-',
-                    () {
-                      bites = max(bites - 1, 0);
-                      _textController.text = bites.toString();
-                      var question = widget.displayQuestions
-                          .where((q) => q['question']['id'] == 1)
-                          .toList();
+                  Style.button('-', () {
+                    bites = max(bites - 1, 0);
+                    _textController.text = bites.toString();
+                    var question = widget.displayQuestions
+                        .where((q) => q['question']['id'] == 1)
+                        .toList();
 
-                      removeBite();
+                    removeBite();
 
-                      setState(() {
-                        questions = Utils.report!.responses;
-                      });
-                      addToList(question[0]['question']['text'], '',
-                          question_id: BiteQuestion.howMany.id,
-                          //answer_id: 11, // TODO: It's an empty string, deprecate?
-                          answer_value: _textController.text);
+                    setState(() {
+                      questions = Utils.report!.responses;
+                    });
+                    addToList(
+                      question[0]['question']['text'],
+                      '',
+                      question_id: BiteQuestion.howMany.id,
+                      //answer_id: 11, // TODO: It's an empty string, deprecate?
+                      answer_value: _textController.text,
+                    );
 
-                      var isValid = canContinue();
-                      Utils.resetBitingQuestion();
-                      setState(() {
-                        valid = isValid;
-                        questions = Utils.report!.responses;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
+                    var isValid = canContinue();
+                    Utils.resetBitingQuestion();
+                    setState(() {
+                      valid = isValid;
+                      questions = Utils.report!.responses;
+                    });
+                  }),
+                  SizedBox(width: 12),
                   Expanded(
-                      flex: 1,
-                      child: Style.textField(
-                        'a',
-                        _textController,
-                        context,
-                        enabled: false,
-                      )),
-                  SizedBox(
-                    width: 12,
+                    flex: 1,
+                    child: Style.textField(
+                      'a',
+                      _textController,
+                      context,
+                      enabled: false,
+                    ),
                   ),
-                  Style.button(
-                    '+',
-                    () {
-                      bites = min(bites = bites + 1, 20);
-                      _textController.text = bites.toString();
-                      var question = widget.displayQuestions
-                          .where((q) => q['question']['id'] == 1)
-                          .toList();
-                      addToList(question[0]['question']['text'], '',
-                          question_id: BiteQuestion.howMany.id,
-                          //answer_id: 11, // TODO: Empty value, deprecate?
-                          answer_value: _textController.text);
-                      var isValid = canContinue();
-                      setState(() {
-                        valid = isValid;
-                      });
-                    },
-                  ),
+                  SizedBox(width: 12),
+                  Style.button('+', () {
+                    bites = min(bites = bites + 1, 20);
+                    _textController.text = bites.toString();
+                    var question = widget.displayQuestions
+                        .where((q) => q['question']['id'] == 1)
+                        .toList();
+                    addToList(
+                      question[0]['question']['text'],
+                      '',
+                      question_id: BiteQuestion.howMany.id,
+                      //answer_id: 11, // TODO: Empty value, deprecate?
+                      answer_value: _textController.text,
+                    );
+                    var isValid = canContinue();
+                    setState(() {
+                      valid = isValid;
+                    });
+                  }),
                 ],
               ),
               Container(
@@ -185,43 +179,55 @@ class _BitingFormState extends State<BitingForm> {
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.leftLeg.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.leftLeg.id,
+                              )
                               ? 'assets/img/ic_left_leg_on.webp'
                               : 'assets/img/ic_left_leg_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.rightLeg.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.rightLeg.id,
+                              )
                               ? 'assets/img/ic_right_leg_on.webp'
                               : 'assets/img/ic_right_leg_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.leftArm.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.leftArm.id,
+                              )
                               ? 'assets/img/ic_left_hand_on.webp'
                               : 'assets/img/ic_left_hand_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.rightArm.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.rightArm.id,
+                              )
                               ? 'assets/img/ic_right_hand_on.webp'
                               : 'assets/img/ic_right_hand_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.head.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.head.id,
+                              )
                               ? 'assets/img/ic_head_on.webp'
                               : 'assets/img/ic_head_off.webp',
                           width: mediaQuery.width,
                         ),
                         Image.asset(
-                          questions!.any((question) =>
-                                  question!.answer_id == BodyPart.body.id)
+                          questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.body.id,
+                              )
                               ? 'assets/img/ic_chest_on.webp'
                               : 'assets/img/ic_chest_off.webp',
                           width: mediaQuery.width,
@@ -229,48 +235,66 @@ class _BitingFormState extends State<BitingForm> {
                         Positioned(
                           top: mediaQuery.height * 0.05,
                           left: mediaQuery.width * 0.37,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.head.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.head.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.head.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.21,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.rightArm.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.rightArm.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.rightArm.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.18,
                           left: mediaQuery.width * 0.70,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.leftArm.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.leftArm.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.leftArm.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.23,
                           left: mediaQuery.width * 0.56,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.body.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.body.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.body.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.28,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.rightLeg.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.rightLeg.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.rightLeg.id))
                               : Container(),
                         ),
                         Positioned(
                           top: mediaQuery.height * 0.37,
                           left: mediaQuery.width * 0.63,
-                          child: questions!.any((question) =>
-                                  question!.answer_id == BodyPart.leftLeg.id)
+                          child:
+                              questions!.any(
+                                (question) =>
+                                    question!.answer_id == BodyPart.leftLeg.id,
+                              )
                               ? Style.body(getIndexBody(BodyPart.leftLeg.id))
                               : Container(),
                         ),
@@ -282,11 +306,12 @@ class _BitingFormState extends State<BitingForm> {
                         GestureDetector(
                           onTap: _validateAddBite()
                               ? () {
-                                  addToList(bodyQuestion['question']['text'],
-                                      bodyQuestion['answers'][0]['text'],
-                                      question_id:
-                                          BiteQuestion.bittenBodyPart.id,
-                                      answer_id: BodyPart.head.id);
+                                  addToList(
+                                    bodyQuestion['question']['text'],
+                                    bodyQuestion['answers'][0]['text'],
+                                    question_id: BiteQuestion.bittenBodyPart.id,
+                                    answer_id: BodyPart.head.id,
+                                  );
                                 }
                               : null,
                           child: Center(
@@ -306,11 +331,12 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text'],
-                                          bodyQuestion['answers'][2]['text'],
-                                          question_id:
-                                              BiteQuestion.bittenBodyPart.id,
-                                          answer_id: BodyPart.rightArm.id);
+                                        bodyQuestion['question']['text'],
+                                        bodyQuestion['answers'][2]['text'],
+                                        question_id:
+                                            BiteQuestion.bittenBodyPart.id,
+                                        answer_id: BodyPart.rightArm.id,
+                                      );
                                     }
                                   : null,
                               child: Container(
@@ -324,11 +350,12 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text'],
-                                          bodyQuestion['answers'][3]['text'],
-                                          question_id:
-                                              BiteQuestion.bittenBodyPart.id,
-                                          answer_id: BodyPart.body.id);
+                                        bodyQuestion['question']['text'],
+                                        bodyQuestion['answers'][3]['text'],
+                                        question_id:
+                                            BiteQuestion.bittenBodyPart.id,
+                                        answer_id: BodyPart.body.id,
+                                      );
                                     }
                                   : null,
                               child: Container(
@@ -342,11 +369,12 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text'],
-                                          bodyQuestion['answers'][1]['text'],
-                                          question_id:
-                                              BiteQuestion.bittenBodyPart.id,
-                                          answer_id: BodyPart.leftArm.id);
+                                        bodyQuestion['question']['text'],
+                                        bodyQuestion['answers'][1]['text'],
+                                        question_id:
+                                            BiteQuestion.bittenBodyPart.id,
+                                        answer_id: BodyPart.leftArm.id,
+                                      );
                                     }
                                   : null,
                               child: Container(
@@ -365,11 +393,12 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text'],
-                                          bodyQuestion['answers'][5]['text'],
-                                          question_id:
-                                              BiteQuestion.bittenBodyPart.id,
-                                          answer_id: BodyPart.rightLeg.id);
+                                        bodyQuestion['question']['text'],
+                                        bodyQuestion['answers'][5]['text'],
+                                        question_id:
+                                            BiteQuestion.bittenBodyPart.id,
+                                        answer_id: BodyPart.rightLeg.id,
+                                      );
                                     }
                                   : null,
                               child: Container(
@@ -383,11 +412,12 @@ class _BitingFormState extends State<BitingForm> {
                               onTap: _validateAddBite()
                                   ? () {
                                       addToList(
-                                          bodyQuestion['question']['text'],
-                                          bodyQuestion['answers'][4]['text'],
-                                          question_id:
-                                              BiteQuestion.bittenBodyPart.id,
-                                          answer_id: BodyPart.leftLeg.id);
+                                        bodyQuestion['question']['text'],
+                                        bodyQuestion['answers'][4]['text'],
+                                        question_id:
+                                            BiteQuestion.bittenBodyPart.id,
+                                        answer_id: BodyPart.leftLeg.id,
+                                      );
                                     }
                                   : null,
                               child: Container(
@@ -411,9 +441,7 @@ class _BitingFormState extends State<BitingForm> {
                   fontSize: 12,
                 ),
               ),
-              SizedBox(
-                height: 12,
-              ),
+              SizedBox(height: 12),
               Center(
                 child: Style.button(MyLocalizations.of(context, 'reset'), () {
                   Utils.resetBitingQuestion();
@@ -426,9 +454,7 @@ class _BitingFormState extends State<BitingForm> {
                   });
                 }),
               ),
-              SizedBox(
-                height: 24,
-              ),
+              SizedBox(height: 24),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -439,82 +465,83 @@ class _BitingFormState extends State<BitingForm> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       Style.titleMedium(
-                          MyLocalizations.of(
-                              context, displayQuestions[i]['question']['text']),
-                          fontSize: 16),
-                      SizedBox(
-                        height: 10,
+                        MyLocalizations.of(
+                          context,
+                          displayQuestions[i]['question']['text'],
+                        ),
+                        fontSize: 16,
                       ),
+                      SizedBox(height: 10),
                       Container(
                         child: GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: displayQuestions[i]['answers'].length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 5 / 2,
-                            ),
-                            itemBuilder: (context, index) {
-                              String? answerTxt =
-                                  displayQuestions[i]['answers'][index]['text'];
-                              String? questionTxt =
-                                  displayQuestions[i]['question']['text'];
-                              int? questionId =
-                                  displayQuestions[i]['question']['id'];
-                              int? answerId =
-                                  displayQuestions[i]['answers'][index]['id'];
-                              return Container(
-                                padding: EdgeInsets.all(5),
-                                child: InkWell(
-                                  onTap: () {
-                                    if (answerId == Answer.last_24h.id) {
-                                      setState(() {
-                                        showDaytime = true;
-                                      });
-                                    } else if (answerId == Answer.just_now.id) {
-                                      setState(() {
-                                        showDaytime = false;
-                                      });
-                                    }
-                                    addToList(questionTxt, answerTxt,
-                                        question_id: questionId,
-                                        answer_id: answerId);
-                                  },
-                                  child: SmallQuestionOption(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: displayQuestions[i]['answers'].length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 5 / 2,
+                              ),
+                          itemBuilder: (context, index) {
+                            String? answerTxt =
+                                displayQuestions[i]['answers'][index]['text'];
+                            String? questionTxt =
+                                displayQuestions[i]['question']['text'];
+                            int? questionId =
+                                displayQuestions[i]['question']['id'];
+                            int? answerId =
+                                displayQuestions[i]['answers'][index]['id'];
+                            return Container(
+                              padding: EdgeInsets.all(5),
+                              child: InkWell(
+                                onTap: () {
+                                  if (answerId == Answer.last_24h.id) {
+                                    setState(() {
+                                      showDaytime = true;
+                                    });
+                                  } else if (answerId == Answer.just_now.id) {
+                                    setState(() {
+                                      showDaytime = false;
+                                    });
+                                  }
+                                  addToList(
+                                    questionTxt,
                                     answerTxt,
-                                    selected: questions!
-                                        .any((q) => q!.answer_id == answerId),
+                                    question_id: questionId,
+                                    answer_id: answerId,
+                                  );
+                                },
+                                child: SmallQuestionOption(
+                                  answerTxt,
+                                  selected: questions!.any(
+                                    (q) => q!.answer_id == answerId,
                                   ),
                                 ),
-                              );
-                            }),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   );
                 },
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 height: 54,
                 child: Style.button(
-                    MyLocalizations.of(context, 'continue_txt'),
-                    valid
-                        ? () {
-                            widget.nextPage();
-                          }
-                        : null),
+                  MyLocalizations.of(context, 'continue_txt'),
+                  valid
+                      ? () {
+                          widget.nextPage();
+                        }
+                      : null,
+                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
             ],
           ),
         ),
@@ -523,8 +550,9 @@ class _BitingFormState extends State<BitingForm> {
   }
 
   String? getIndexBody(int answer_id) {
-    var index = Utils.report!.responses!
-        .indexWhere((question) => question!.answer_id == answer_id);
+    var index = Utils.report!.responses!.indexWhere(
+      (question) => question!.answer_id == answer_id,
+    );
 
     if (index != -1) {
       return Utils.report!.responses![index]!.answer_value;
@@ -547,8 +575,13 @@ class _BitingFormState extends State<BitingForm> {
     return null;
   }
 
-  addToList(String? question, String? answer,
-      {question_id, answer_id, answer_value}) {
+  addToList(
+    String? question,
+    String? answer, {
+    question_id,
+    answer_id,
+    answer_value,
+  }) {
     if ((question_id != BiteQuestion.howMany.id &&
             int.parse(_textController.text) > 0) ||
         question_id == BiteQuestion.howMany.id) {
@@ -614,7 +647,8 @@ class _BitingFormState extends State<BitingForm> {
   void removeBite() {
     var bodyParts = Utils.report!.responses!
         .where(
-            (element) => element!.question_id == BiteQuestion.bittenBodyPart.id)
+          (element) => element!.question_id == BiteQuestion.bittenBodyPart.id,
+        )
         .toList();
     if (bodyParts.isNotEmpty) {
       if (int.parse(bodyParts.last!.answer_value!) > 1) {
@@ -627,7 +661,7 @@ class _BitingFormState extends State<BitingForm> {
 
     Utils.report!.responses = <dynamic>{
       ...?Utils.report!.responses,
-      ...bodyParts
+      ...bodyParts,
     }.cast<Question?>().toList();
   }
 }

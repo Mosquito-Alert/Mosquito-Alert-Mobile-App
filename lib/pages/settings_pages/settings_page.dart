@@ -46,9 +46,15 @@ class _SettingsPageState extends State<SettingsPage> {
     Language('hu_HU', 'Hungarian', 'Hungarian'),
     Language('it_IT', 'Italian', 'Italian'),
     Language(
-        'lb_LU', 'Luxembourgish (Luxembourg)', 'Luxembourgish (Luxembourg)'),
-    Language('mk_MK', 'Macedonian (Former Yugoslav Republic of Macedonia)',
-        'Macedonian (Former Yugoslav Republic of Macedonia)'),
+      'lb_LU',
+      'Luxembourgish (Luxembourg)',
+      'Luxembourgish (Luxembourg)',
+    ),
+    Language(
+      'mk_MK',
+      'Macedonian (Former Yugoslav Republic of Macedonia)',
+      'Macedonian (Former Yugoslav Republic of Macedonia)',
+    ),
     Language('nl_NL', 'Dutch', 'Dutch'),
     Language('pt_PT', 'Protuguese', 'Protuguese'),
     Language('ro_RO', 'Romanian', 'Romanian'),
@@ -62,8 +68,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+      context,
+      listen: false,
+    );
     usersApi = apiClient.getUsersApi();
     _logScreenView();
     getPackageInfo();
@@ -117,162 +125,182 @@ class _SettingsPageState extends State<SettingsPage> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SettingsMenuWidget(
-                          MyLocalizations.of(context, 'select_language_txt'),
-                          () {
+                    SizedBox(height: 10),
+                    SettingsMenuWidget(
+                      MyLocalizations.of(context, 'select_language_txt'),
+                      () {
                         _openLanguagePickerDialog();
-                      }),
-                      SizedBox(
-                        height: 10,
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.1),
+                        ),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(bottom: 12.0, top: 12.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                            border: Border.all(
-                                color: Colors.black.withValues(alpha: 0.1))),
-                        child: SwitchListTile(
-                          title: Style.body(MyLocalizations.of(
-                              context, 'background_tracking_title')),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              MyLocalizations.of(
-                                  context, 'background_tracking_subtitle'),
-                              style: TextStyle(fontSize: 11),
-                            ),
+                      child: SwitchListTile(
+                        title: Style.body(
+                          MyLocalizations.of(
+                            context,
+                            'background_tracking_title',
                           ),
-                          value: isBgTrackingEnabled,
-                          activeColor: Colors.orange,
-                          secondary: isBgTrackingLoading
-                              ? CircularProgressIndicator()
-                              : null,
-                          onChanged: (bool value) async {
-                            if (value) {
-                              setState(() {
-                                isBgTrackingLoading = true;
-                                isBgTrackingEnabled = true;
-                              });
-                              await BackgroundTracking.start(shouldRun: true)
-                                  .whenComplete(() {
-                                setState(() {
-                                  isBgTrackingLoading = false;
-                                });
-                              });
-                            } else {
-                              setState(() {
-                                isBgTrackingEnabled = false;
-                              });
-                              await BackgroundTracking.stop();
-                            }
-                            bool trackingStatus =
-                                await BackgroundTracking.isEnabled();
+                        ),
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            MyLocalizations.of(
+                              context,
+                              'background_tracking_subtitle',
+                            ),
+                            style: TextStyle(fontSize: 11),
+                          ),
+                        ),
+                        value: isBgTrackingEnabled,
+                        activeColor: Colors.orange,
+                        secondary: isBgTrackingLoading
+                            ? CircularProgressIndicator()
+                            : null,
+                        onChanged: (bool value) async {
+                          if (value) {
                             setState(() {
-                              isBgTrackingEnabled = trackingStatus;
+                              isBgTrackingLoading = true;
+                              isBgTrackingEnabled = true;
                             });
-                          },
+                            await BackgroundTracking.start(
+                              shouldRun: true,
+                            ).whenComplete(() {
+                              setState(() {
+                                isBgTrackingLoading = false;
+                              });
+                            });
+                          } else {
+                            setState(() {
+                              isBgTrackingEnabled = false;
+                            });
+                            await BackgroundTracking.stop();
+                          }
+                          bool trackingStatus =
+                              await BackgroundTracking.isEnabled();
+                          setState(() {
+                            isBgTrackingEnabled = trackingStatus;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.1),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          border: Border.all(
-                              color: Colors.black.withValues(alpha: 0.1)),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ExpansionTile(
-                                initiallyExpanded: numTagsAdded! > 0,
-                                title: Row(
-                                  children: [
-                                    Style.body(
-                                      MyLocalizations.of(context,
-                                          'auto_tagging_settings_title'),
-                                    ),
-                                    Spacer(flex: 1),
-                                    if (numTagsAdded! > 0)
-                                      Container(
-                                        margin: EdgeInsets.only(left: 8.0),
-                                        padding: EdgeInsets.all(4.0),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.grey,
-                                        ),
-                                        child: Text(
-                                          '$numTagsAdded',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ExpansionTile(
+                              initiallyExpanded: numTagsAdded! > 0,
+                              title: Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0),
-                                    child: Text(
-                                      MyLocalizations.of(
-                                          context, 'enable_auto_hashtag_text'),
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey[600]),
+                                  Style.body(
+                                    MyLocalizations.of(
+                                      context,
+                                      'auto_tagging_settings_title',
                                     ),
                                   ),
-                                  StringMultilineTags(
-                                      updateTagsNum: updateTagsNum),
+                                  Spacer(flex: 1),
+                                  if (numTagsAdded! > 0)
+                                    Container(
+                                      margin: EdgeInsets.only(left: 8.0),
+                                      padding: EdgeInsets.all(4.0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey,
+                                      ),
+                                      child: Text(
+                                        '$numTagsAdded',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0,
+                                  ),
+                                  child: Text(
+                                    MyLocalizations.of(
+                                      context,
+                                      'enable_auto_hashtag_text',
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                                StringMultilineTags(
+                                  updateTagsNum: updateTagsNum,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
   }
 
   void _openLanguagePickerDialog() => showDialog(
-        context: context,
-        builder: (context) => Theme(
-            data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
-            child: LanguagePickerDialog(
-                languages: languageCodes
-                    .map((language) => Language(
-                        language.isoCode,
-                        MyLocalizations.of(context, language.isoCode),
-                        language.nativeName))
-                    .toList()
-                  ..sort((a, b) => a.name.compareTo(b.name)),
-                titlePadding: EdgeInsets.all(8.0),
-                searchCursorColor: Style.colorPrimary,
-                searchInputDecoration: InputDecoration(
-                    hintText: MyLocalizations.of(context, 'search_txt')),
-                isSearchable: true,
-                title: Text(MyLocalizations.of(context, 'select_language_txt')),
-                onValuePicked: (Language language) async {
-                  await _selectLanguage(language);
-                },
-                itemBuilder: (Language language) {
-                  return Row(
-                    children: <Widget>[
-                      Text(MyLocalizations.of(context, language.isoCode)),
-                    ],
-                  );
-                })),
-      );
+    context: context,
+    builder: (context) => Theme(
+      data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
+      child: LanguagePickerDialog(
+        languages:
+            languageCodes
+                .map(
+                  (language) => Language(
+                    language.isoCode,
+                    MyLocalizations.of(context, language.isoCode),
+                    language.nativeName,
+                  ),
+                )
+                .toList()
+              ..sort((a, b) => a.name.compareTo(b.name)),
+        titlePadding: EdgeInsets.all(8.0),
+        searchCursorColor: Style.colorPrimary,
+        searchInputDecoration: InputDecoration(
+          hintText: MyLocalizations.of(context, 'search_txt'),
+        ),
+        isSearchable: true,
+        title: Text(MyLocalizations.of(context, 'select_language_txt')),
+        onValuePicked: (Language language) async {
+          await _selectLanguage(language);
+        },
+        itemBuilder: (Language language) {
+          return Row(
+            children: <Widget>[
+              Text(MyLocalizations.of(context, language.isoCode)),
+            ],
+          );
+        },
+      ),
+    ),
+  );
 
   Future<void> _selectLanguage(Language language) async {
     final isoCodeParts = language.isoCode.split('_');
@@ -292,11 +320,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
     try {
       final localeEnum = PatchedUserRequestLocaleEnum.values.firstWhere(
-          (e) => e.name == languageCode,
-          orElse: () => PatchedUserRequestLocaleEnum.en);
+        (e) => e.name == languageCode,
+        orElse: () => PatchedUserRequestLocaleEnum.en,
+      );
 
-      final patchedUserRequest =
-          PatchedUserRequest((b) => b..locale = localeEnum);
+      final patchedUserRequest = PatchedUserRequest(
+        (b) => b..locale = localeEnum,
+      );
 
       await usersApi.partialUpdate(
         uuid: userUuid,

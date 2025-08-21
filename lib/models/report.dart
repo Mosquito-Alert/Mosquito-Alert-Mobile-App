@@ -34,34 +34,35 @@ class Report {
   String? nuts3;
   String? nuts2;
 
-  Report(
-      {this.version_UUID,
-      this.version_number,
-      this.user,
-      this.report_id,
-      this.phone_upload_time,
-      this.creation_time,
-      this.version_time,
-      this.type,
-      this.location_choice,
-      this.current_location_lon,
-      this.current_location_lat,
-      this.selected_location_lon,
-      this.selected_location_lat,
-      this.note,
-      this.package_name,
-      this.package_version,
-      this.responses,
-      this.device_manufacturer,
-      this.device_model,
-      this.os,
-      this.os_language,
-      this.os_version,
-      this.app_language,
-      this.displayCity,
-      this.nuts3,
-      this.nuts2,
-      this.country});
+  Report({
+    this.version_UUID,
+    this.version_number,
+    this.user,
+    this.report_id,
+    this.phone_upload_time,
+    this.creation_time,
+    this.version_time,
+    this.type,
+    this.location_choice,
+    this.current_location_lon,
+    this.current_location_lat,
+    this.selected_location_lon,
+    this.selected_location_lat,
+    this.note,
+    this.package_name,
+    this.package_version,
+    this.responses,
+    this.device_manufacturer,
+    this.device_model,
+    this.os,
+    this.os_language,
+    this.os_version,
+    this.app_language,
+    this.displayCity,
+    this.nuts3,
+    this.nuts2,
+    this.country,
+  });
 
   Report._internal(Map<dynamic, dynamic> json) {
     log(json.toString());
@@ -181,11 +182,7 @@ class Photo {
   String? photo;
   String? uuid;
 
-  Photo({
-    this.id,
-    this.photo,
-    this.uuid,
-  });
+  Photo({this.id, this.photo, this.uuid});
 
   Photo.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];

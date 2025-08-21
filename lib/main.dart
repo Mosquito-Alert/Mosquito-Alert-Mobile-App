@@ -38,8 +38,9 @@ Future<void> main({String env = 'prod'}) async {
   final authProvider = AuthProvider();
   await authProvider.init();
 
-  final ApiService apiService =
-      await ApiService.init(authProvider: authProvider);
+  final ApiService apiService = await ApiService.init(
+    authProvider: authProvider,
+  );
   final MosquitoAlert apiClient = apiService.client;
 
   authProvider.setApiClient(apiClient);
@@ -76,8 +77,9 @@ void callbackDispatcher() {
     final authProvider = AuthProvider();
     await authProvider.init();
 
-    final ApiService apiService =
-        await ApiService.init(authProvider: authProvider);
+    final ApiService apiService = await ApiService.init(
+      authProvider: authProvider,
+    );
     final MosquitoAlert apiClient = apiService.client;
 
     authProvider.setApiClient(apiClient);
@@ -88,7 +90,8 @@ void callbackDispatcher() {
     String? password = authProvider.password;
     if (username == null && password == null) {
       return Future.value(
-          false); // No user credentials available, cannot proceed
+        false,
+      ); // No user credentials available, cannot proceed
     }
     try {
       await authProvider.login(username: username!, password: password!);
@@ -121,7 +124,8 @@ void callbackDispatcher() {
             inputData?['numTaskAlreadyScheduled'] ?? 0;
         // NOTE: do not use await, it should return a Future value
         return BackgroundTracking.scheduleDailyTrackingTask(
-            numScheduledTasks: numTaskAlreadyScheduled);
+          numScheduledTasks: numTaskAlreadyScheduled,
+        );
       default:
         // If the task doesn't match, return true as a fallback
         return Future.value(true);
@@ -153,9 +157,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     //backgroud sync reports
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
+    subscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) {
       print('Connectivity status changed to $results');
       for (var result in results) {
         switch (result) {
@@ -188,25 +192,26 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport(
-        child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: Colors.white,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        navigatorKey: navigatorKey,
+        navigatorObservers: <NavigatorObserver>[
+          observer,
+          ObserverUtils.routeObserver,
+        ],
+        home: MainVC(),
+        localizationsDelegates: [
+          _newLocaleDelegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: application.supportedLocales(),
       ),
-      navigatorKey: navigatorKey,
-      navigatorObservers: <NavigatorObserver>[
-        observer,
-        ObserverUtils.routeObserver
-      ],
-      home: MainVC(),
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: application.supportedLocales(),
-    ));
+    );
   }
 }

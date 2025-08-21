@@ -25,16 +25,20 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance
-        .logScreenView(screenName: '/mosquito_guide');
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: '/mosquito_guide',
+    );
   }
 
   List<Slide> initSlides() {
-    slides.add(Slide(
+    slides.add(
+      Slide(
         title: '',
         description: MyLocalizations.of(context, 'gallery_info_01'),
         pathImage: 'assets/img/gallery/guia_1.webp',
-        backgroundImage: 'assets/img/gallery/guia_1.webp'));
+        backgroundImage: 'assets/img/gallery/guia_1.webp',
+      ),
+    );
     slides.add(
       Slide(
         title: '',
@@ -100,50 +104,47 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Widget renderNextBtn() {
-    return Icon(
-      Icons.navigate_next,
-      color: Style.colorPrimary,
-      size: 35.0,
-    );
+    return Icon(Icons.navigate_next, color: Style.colorPrimary, size: 35.0);
   }
 
   Widget renderDoneBtn() {
-    return Icon(
-      Icons.done,
-      color: Style.colorPrimary,
-    );
+    return Icon(Icons.done, color: Style.colorPrimary);
   }
 
   List<Widget> renderListCustomTabs() {
     var tabs = <Widget>[];
     for (var i = 0; i < slides.length; i++) {
       var currentSlide = slides[i];
-      tabs.add(Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Container(
-          margin: EdgeInsets.only(bottom: 60.0),
-          child: ListView(
-            children: <Widget>[
-              GestureDetector(
+      tabs.add(
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 60.0),
+            child: ListView(
+              children: <Widget>[
+                GestureDetector(
                   child: Image.asset(
-                currentSlide.pathImage!,
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.55,
-                fit: BoxFit.contain,
-              )),
-              Container(
+                    currentSlide.pathImage!,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Container(
                   margin: EdgeInsets.all(20.0),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 0.0),
                     child: html.Html(
                       data: markdownToHtml(currentSlide.description!),
                     ),
-                  )),
-            ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ));
+      );
     }
     return tabs;
   }
@@ -158,9 +159,11 @@ class _GalleryPageState extends State<GalleryPage> {
         renderDoneBtn: renderDoneBtn(),
         onDonePress: onDonePress,
         doneButtonStyle: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-                Style.colorPrimary.withValues(alpha: 0.2)),
-            overlayColor: WidgetStateProperty.all(Style.colorPrimary)),
+          backgroundColor: WidgetStateProperty.all(
+            Style.colorPrimary.withValues(alpha: 0.2),
+          ),
+          overlayColor: WidgetStateProperty.all(Style.colorPrimary),
+        ),
         colorDot: Style.colorPrimary.withValues(alpha: 0.4),
         sizeDot: 6.0,
         colorActiveDot: Style.colorPrimary,
@@ -168,8 +171,9 @@ class _GalleryPageState extends State<GalleryPage> {
         backgroundColorAllSlides: Colors.white,
         hideStatusBar: false,
         prevButtonStyle: ButtonStyle(
-            foregroundColor: WidgetStateProperty.all(Style.colorPrimary),
-            overlayColor: WidgetStateProperty.all(Style.colorPrimary)),
+          foregroundColor: WidgetStateProperty.all(Style.colorPrimary),
+          overlayColor: WidgetStateProperty.all(Style.colorPrimary),
+        ),
       ),
     );
   }

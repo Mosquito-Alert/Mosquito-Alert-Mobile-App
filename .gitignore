@@ -94,3 +94,8 @@ svc-keyfile.json
 # Lockfiles
 Podfile.lock
 yarn.lock
+
+# Downloaded SDKs and tools
+dart-sdk/
+dart-sdk.zip
+flutter.tar.xz

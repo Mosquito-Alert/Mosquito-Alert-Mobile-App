@@ -13,28 +13,28 @@ class ApiService {
       baseUrl: baseUrl,
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(
-          milliseconds:
-              10000), // A lower receiveTimeout causes a timeout on the notifications endpoint
+        milliseconds: 10000,
+      ), // A lower receiveTimeout causes a timeout on the notifications endpoint
     );
     final Dio _dio = Dio(options);
 
-    _dio.interceptors.add(JwtAuthInterceptor(
+    _dio.interceptors.add(
+      JwtAuthInterceptor(
         options: options,
         getAccessToken: () async => authProvider.accessToken ?? '',
         getRefreshToken: () async => authProvider.refreshToken ?? '',
         onTokenUpdateCallback: (newAccessToken) {
           authProvider.setAccessToken(accessToken: newAccessToken);
-        }));
+        },
+      ),
+    );
 
     _client = MosquitoAlert(dio: _dio);
   }
 
   static Future<ApiService> init({required AuthProvider authProvider}) async {
     final config = await AppConfig.loadConfig();
-    return ApiService._(
-      authProvider: authProvider,
-      baseUrl: config.baseUrl,
-    );
+    return ApiService._(authProvider: authProvider, baseUrl: config.baseUrl);
   }
 
   MosquitoAlert get client => _client;

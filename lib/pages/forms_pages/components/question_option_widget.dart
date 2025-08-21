@@ -23,11 +23,7 @@ class QuestionOption extends StatelessWidget {
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(left: 10),
-                child: Image.asset(
-                  img,
-                  height: 40,
-                  width: 40,
-                ),
+                child: Image.asset(img, height: 40, width: 40),
               ),
               Center(
                 child: Style.body(
