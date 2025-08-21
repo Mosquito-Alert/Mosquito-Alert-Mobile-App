@@ -13,14 +13,7 @@ jobs:
     - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
 
     - name: Statically analyze the Dart code for any errors/warnings/info, treating all as errors
-      run: |
-        flutter analyze 2>&1 | tee flutter_analyze.log
-        if grep -q -E -i 'error|warning|info •' flutter_analyze.log; then
-            exit 1
-        else
-          echo "No errors, warnings, or info messages found."
-          exit 0
-        fi
+      run: flutter analyze
 
     - name: Test
       run: flutter test
