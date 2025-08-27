@@ -149,8 +149,12 @@
 		<string>We use your image gallery to save photos taken with the app to your device's gallery</string>
 		<key>NSUserNotificationsUsageDescription</key>
 		<string>We use notifications to keep you updated on the status of your reports</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>We use your device identifier to track you across sessions and save your contributions accordingly</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSAppleMusicUsageDescription</key>
+		<string>This app does not access your music library. This permission is required by a third-party library, but we do not use it for any purpose.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>fetch</string>
