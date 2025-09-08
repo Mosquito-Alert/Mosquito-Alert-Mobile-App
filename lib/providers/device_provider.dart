@@ -55,9 +55,19 @@ class DeviceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Public method to get device information
-  Future<DeviceInfoData> getDeviceInfo() async {
-    return await _getDeviceInfo();
+  Future<String?> getiOSVersion() async {
+    if (!Platform.isIOS) {
+      return null;
+    }
+
+    try {
+      final deviceInfoPlugin = DeviceInfoPlugin();
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      return iosInfo.systemVersion;
+    } catch (e) {
+      debugPrint('Error getting iOS version: $e');
+      return null;
+    }
   }
 
   Future<void> updateFcmToken(String fcmToken) async {

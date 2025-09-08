@@ -37,14 +37,12 @@ class _WhatsAppCameraController extends ChangeNotifier {
     }
 
     final status = await Permission.photos.request();
-    if (status.isDenied || status.isPermanentlyDenied) {
-      return;
-    }
+    if (status.isDenied) return;
+    if (status.isPermanentlyDenied) return;
 
     try {
       final albums =
           await PhotoGallery.listAlbums(mediumType: MediumType.image);
-
       if (albums.isEmpty) return;
 
       final recentAlbum = albums.first;
@@ -71,14 +69,17 @@ class _WhatsAppCameraController extends ChangeNotifier {
       try {
         final deviceProvider =
             Provider.of<DeviceProvider>(context, listen: false);
-        final deviceInfo = await deviceProvider.getDeviceInfo();
-        final systemVersion = deviceInfo.osVersion;
+        final systemVersion = await deviceProvider.getiOSVersion();
+
+        if (systemVersion == null) {
+          return false; // Unable to get iOS version, disable for safety
+        }
 
         final versionParts = systemVersion.split('.').map(int.parse).toList();
         final majorVersion = versionParts.isNotEmpty ? versionParts[0] : 0;
 
         if (majorVersion >= 17) {
-          // Disable feature for iOS where there's a known bug/crash
+          // Disable feature for iOS 17+ where there's a known bug/crash
           return false;
         }
 
@@ -165,7 +166,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      Navigator.pop(context);
+      _loadRecentPhotosIfPermissionGranted();
     }
   }
 
@@ -175,6 +176,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     controller = _WhatsAppCameraController(multiple: widget.multiple);
     _initializeCamera();
     _requestCameraPermission();
+    _loadRecentPhotosIfPermissionGranted();
     panel.addListener(() {
       if (panel.status.name == 'hidden') {
         controller.selectedImages.clear();
@@ -215,6 +217,19 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     });
     if (status.isGranted) {
       controller.loadRecentGalleryImages(context);
+    }
+  }
+
+  Future<void> _loadRecentPhotosIfPermissionGranted() async {
+    final photosStatus = await Permission.photos.status;
+    if (photosStatus.isGranted) {
+      controller.loadRecentGalleryImages(context);
+    } else {
+      // Request photos permission if not granted
+      final requestedStatus = await Permission.photos.request();
+      if (requestedStatus.isGranted) {
+        controller.loadRecentGalleryImages(context);
+      }
     }
   }
 
@@ -416,6 +431,13 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data != PermissionStatus.granted) {
           return Container();
+        }
+
+        // Trigger loading if permission is granted but no images loaded yet
+        if (controller.images.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.loadRecentGalleryImages(context);
+          });
         }
 
         return Positioned(
