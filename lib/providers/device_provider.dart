@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:app_set_id/app_set_id.dart';
-import 'package:dio/dio.dart';
-import 'package:intl/locale.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/locale.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -53,6 +53,11 @@ class DeviceProvider with ChangeNotifier {
   void setDevice(Device? newDevice) {
     device = newDevice;
     notifyListeners();
+  }
+
+  /// Public method to get device information
+  Future<DeviceInfoData> getDeviceInfo() async {
+    return await _getDeviceInfo();
   }
 
   Future<void> updateFcmToken(String fcmToken) async {

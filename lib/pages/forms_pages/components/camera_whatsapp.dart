@@ -3,12 +3,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_gallery/photo_gallery.dart';
+import 'package:provider/provider.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -27,14 +29,22 @@ class _WhatsAppCameraController extends ChangeNotifier {
   final selectedImages = <File>[];
   var images = <Medium>[];
 
-  Future<void> loadRecentGalleryImages() async {
+  Future<void> loadRecentGalleryImages(BuildContext context) async {
+    if (!(await isRecentPhotosFeatureEnabled(context))) {
+      images.clear();
+      notifyListeners();
+      return;
+    }
+
     final status = await Permission.photos.request();
-    if (status.isDenied) return;
-    if (status.isPermanentlyDenied) return;
+    if (status.isDenied || status.isPermanentlyDenied) {
+      return;
+    }
 
     try {
       final albums =
           await PhotoGallery.listAlbums(mediumType: MediumType.image);
+
       if (albums.isEmpty) return;
 
       final recentAlbum = albums.first;
@@ -47,18 +57,51 @@ class _WhatsAppCameraController extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error loading gallery images: $e');
+      images.clear();
+      notifyListeners();
     }
   }
 
-  Future<void> openGallery() async {
-    final res = await FilePicker.platform.pickFiles(
-      allowMultiple: multiple,
-      type: FileType.image,
-    );
-    if (res != null) {
-      for (var element in res.files) {
-        if (element.path != null) selectedImages.add(File(element.path!));
+  Future<bool> isRecentPhotosFeatureEnabled(BuildContext context) async {
+    if (Platform.isAndroid) {
+      return true;
+    }
+
+    if (Platform.isIOS) {
+      try {
+        final deviceProvider =
+            Provider.of<DeviceProvider>(context, listen: false);
+        final deviceInfo = await deviceProvider.getDeviceInfo();
+        final systemVersion = deviceInfo.osVersion;
+
+        final versionParts = systemVersion.split('.').map(int.parse).toList();
+        final majorVersion = versionParts.isNotEmpty ? versionParts[0] : 0;
+
+        if (majorVersion >= 17) {
+          // Disable feature for iOS where there's a known bug/crash
+          return false;
+        }
+
+        return true;
+      } catch (e) {
+        return false; // Disable if version unknown
       }
+    }
+
+    return false; // Disable for other OS
+  }
+
+  Future<void> openGallery() async {
+    final picker = ImagePicker();
+    List<XFile> pickedImages = [];
+    if (multiple) {
+      pickedImages = await picker.pickMultiImage();
+    } else {
+      final singleImage = await picker.pickImage(source: ImageSource.gallery);
+      if (singleImage != null) pickedImages.add(singleImage);
+    }
+    for (var xfile in pickedImages) {
+      selectedImages.add(File(xfile.path));
     }
   }
 
@@ -171,7 +214,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       _isCameraPermissionGranted = status.isGranted;
     });
     if (status.isGranted) {
-      controller.loadRecentGalleryImages();
+      controller.loadRecentGalleryImages(context);
     }
   }
 
