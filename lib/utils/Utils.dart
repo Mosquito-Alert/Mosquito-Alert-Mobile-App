@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,22 @@ class Utils {
     imagePath!.removeWhere((element) => element['image'] == image);
   }
 
+  /// Check if device has internet connectivity
+  static Future<bool> hasInternetConnection() async {
+    try {
+      final List<ConnectivityResult> connectivityResult = 
+          await Connectivity().checkConnectivity();
+      
+      // Check if any connection is available (not just NONE)
+      return connectivityResult.any((result) => 
+          result != ConnectivityResult.none);
+    } catch (e) {
+      print('Error checking connectivity: $e');
+      // If we can't check connectivity, assume no connection to be safe
+      return false;
+    }
+  }
+
   static void closeSession() {
     session!.session_end_time = DateTime.now().toUtc().toIso8601String();
     ApiSingleton().closeSession(session!);
@@ -74,43 +91,66 @@ class Utils {
     double? lon,
     String? locationType,
   }) async {
-    if (session == null) {
-      reportsList = [];
+    try {
+      // Always initialize the reports list
+      if (reportsList == null) {
+        reportsList = [];
+      }
 
       var userUUID = await UserManager.getUUID();
+      
+      // Try to handle session creation offline-first
+      if (session == null) {
+        bool hasInternet = await hasInternetConnection();
+        
+        if (hasInternet) {
+          // Online: Try to get session from server
+          try {
+            dynamic response = await ApiSingleton().getLastSession(userUUID);
+            
+            if (response is bool && !response) {
+              print('Unable to get last session, creating offline session.');
+              session = _createOfflineSession(userUUID);
+            } else if (response is ApiResponse) {
+              print('Server error response, creating offline session.');
+              session = _createOfflineSession(userUUID);
+            } else {
+              // Successful response
+              int? sessionId = response + 1;
+              session = Session(
+                  session_ID: sessionId,
+                  user: userUUID,
+                  session_start_time: DateTime.now().toUtc().toIso8601String());
 
-      dynamic response = await ApiSingleton().getLastSession(userUUID);
-      if (response is bool && !response) {
-        print('Unable to get last session.');
-        return false;
+              // Try to create session on server
+              try {
+                session!.id = await ApiSingleton().createSession(session!);
+              } catch (e) {
+                print('Failed to create session on server: $e');
+                // Fallback to offline session
+                session = _createOfflineSession(userUUID);
+              }
+            }
+          } catch (e) {
+            print('Error getting session from server: $e');
+            session = _createOfflineSession(userUUID);
+          }
+        } else {
+          // Offline: Create offline session immediately
+          print('Device offline, creating offline session.');
+          session = _createOfflineSession(userUUID);
+        }
       }
 
-      if (response is ApiResponse) {
-        print('response is of type ApiResponse, not a number.');
-        return false;
-      }
-
-      int? sessionId = response + 1;
-
-      session = Session(
-          session_ID: sessionId,
-          user: userUUID,
-          session_start_time: DateTime.now().toUtc().toIso8601String());
-
-      print(language);
-      session!.id = await ApiSingleton().createSession(session!);
-    }
-
-    if (session?.id != null) {
+      // Create the report (this part works offline)
       var lang = await UserManager.getLanguage();
-      var userUUID = await UserManager.getUUID();
       report = Report(
           type: type,
           report_id: randomAlphaNumeric(4).toString(),
           version_number: 0,
           version_UUID: Uuid().v4(),
           user: userUUID,
-          session: session!.id,
+          session: session?.id ?? -1, // Use -1 for offline sessions
           responses: []);
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -146,10 +186,41 @@ class Utils {
           report!.current_location_lon = lon;
         }
       }
+      
+      print('Report created successfully (offline-capable)');
       return true;
+    } catch (e) {
+      print('Error creating report: $e');
+      // Even if there's an error, try to create a minimal offline report
+      try {
+        var userUUID = await UserManager.getUUID();
+        session = _createOfflineSession(userUUID);
+        
+        report = Report(
+            type: type,
+            report_id: randomAlphaNumeric(4).toString(),
+            version_number: 0,
+            version_UUID: Uuid().v4(),
+            user: userUUID,
+            session: -1, // Offline session
+            responses: []);
+        
+        return true;
+      } catch (fallbackError) {
+        print('Failed to create fallback offline report: $fallbackError');
+        return false;
+      }
     }
+  }
 
-    return false;
+  /// Creates an offline session for use when network is unavailable
+  static Session _createOfflineSession(String? userUUID) {
+    return Session(
+      session_ID: DateTime.now().millisecondsSinceEpoch, // Use timestamp as unique ID
+      user: userUUID ?? 'offline_user',
+      session_start_time: DateTime.now().toUtc().toIso8601String(),
+      id: -1, // Offline sessions use -1 as ID
+    );
   }
 
   static void resetReport() {
