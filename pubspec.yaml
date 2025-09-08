@@ -82,7 +82,7 @@ dev_dependencies:
   test: ^1.24.3
   integration_test:
     sdk: flutter
-  flutter_native_splash: ^2.4.4
+  flutter_native_splash: ^2.4.6
 
 flutter_launcher_icons:
   android: true
