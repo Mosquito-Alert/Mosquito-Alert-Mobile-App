@@ -38,7 +38,7 @@ def googlemapsKey = properties.getProperty('googlemaps.Key', System.getenv('GOOG
 
 android {
     namespace 'com.example.mosquito_alert_app'
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdk 36
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
@@ -57,7 +57,7 @@ android {
     defaultConfig {
         applicationId "ceab.movelab.tigatrapp"
         minSdkVersion 24
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
