@@ -157,6 +157,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _cameraController?.dispose();
     controller.dispose();
     panel.dispose();
@@ -166,13 +167,33 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      _checkCameraPermissionOnResume();
       _loadRecentPhotosIfPermissionGranted();
+    }
+  }
+
+  Future<void> _checkCameraPermissionOnResume() async {
+    if (!mounted) return;
+
+    final status = await Permission.camera.status;
+    if (status.isGranted != _isCameraPermissionGranted && mounted) {
+      setState(() {
+        _isCameraPermissionGranted = status.isGranted;
+      });
+      if (status.isGranted && mounted) {
+        controller.loadRecentGalleryImages(context);
+      }
+    }
+    // Also check photos permission and reload recent photos if needed
+    if (mounted) {
+      await _loadRecentPhotosIfPermissionGranted();
     }
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     controller = _WhatsAppCameraController(multiple: widget.multiple);
     _initializeCamera();
     _requestCameraPermission();
@@ -212,23 +233,31 @@ class _WhatsappCameraState extends State<WhatsappCamera>
 
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
-    setState(() {
-      _isCameraPermissionGranted = status.isGranted;
-    });
-    if (status.isGranted) {
-      controller.loadRecentGalleryImages(context);
+    if (mounted) {
+      setState(() {
+        _isCameraPermissionGranted = status.isGranted;
+      });
+      if (status.isGranted) {
+        controller.loadRecentGalleryImages(context);
+      }
     }
   }
 
   Future<void> _loadRecentPhotosIfPermissionGranted() async {
+    if (!mounted) return;
+
     final photosStatus = await Permission.photos.status;
     if (photosStatus.isGranted) {
-      controller.loadRecentGalleryImages(context);
+      if (mounted) {
+        controller.loadRecentGalleryImages(context);
+      }
     } else {
       // Request photos permission if not granted
       final requestedStatus = await Permission.photos.request();
-      if (requestedStatus.isGranted) {
+      if (requestedStatus.isGranted && mounted) {
         controller.loadRecentGalleryImages(context);
+        // Trigger a rebuild to show the recent photos strip immediately
+        setState(() {});
       }
     }
   }
@@ -259,7 +288,10 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                 ElevatedButton(
                   onPressed: () async {
                     if (await openAppSettings()) {
-                      Navigator.pop(context);
+                      // Check permission status when returning from settings
+                      if (mounted) {
+                        await _checkCameraPermissionOnResume();
+                      }
                     }
                   },
                   child: Text(MyLocalizations.of(context, 'open_settings')),
@@ -406,8 +438,13 @@ class _WhatsappCameraState extends State<WhatsappCamera>
           return;
         }
 
+        if (status.isGranted && mounted) {
+          // Trigger a rebuild to show recent photos strip if it wasn't visible before
+          setState(() {});
+        }
+
         await controller.openGallery().then((_) {
-          if (controller.selectedImages.isNotEmpty) {
+          if (controller.selectedImages.isNotEmpty && mounted) {
             Navigator.pop(context, controller.selectedImages);
           }
         });
