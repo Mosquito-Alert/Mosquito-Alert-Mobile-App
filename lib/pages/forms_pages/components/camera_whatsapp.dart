@@ -155,12 +155,11 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _checkCameraPermissionOnResume();
-      _loadRecentPhotosIfPermissionGranted();
+      _handlePermissionsOnResume();
     }
   }
 
-  Future<void> _checkCameraPermissionOnResume() async {
+  Future<void> _handlePermissionsOnResume() async {
     if (!mounted) return;
 
     final status = await Permission.camera.status;
@@ -172,7 +171,6 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         controller.loadRecentGalleryImages(context);
       }
     }
-    // Also check photos permission and reload recent photos if needed
     if (mounted) {
       await _loadRecentPhotosIfPermissionGranted();
     }
@@ -278,7 +276,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                     if (await openAppSettings()) {
                       // Check permission status when returning from settings
                       if (mounted) {
-                        await _checkCameraPermissionOnResume();
+                        await _handlePermissionsOnResume();
                       }
                     }
                   },
