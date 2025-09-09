@@ -3,14 +3,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_gallery/photo_gallery.dart';
-import 'package:provider/provider.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -61,35 +60,24 @@ class _WhatsAppCameraController extends ChangeNotifier {
   }
 
   Future<bool> isRecentPhotosFeatureEnabled(BuildContext context) async {
-    if (Platform.isAndroid) {
+    if (!Platform.isIOS) {
       return true;
     }
 
-    if (Platform.isIOS) {
-      try {
-        final deviceProvider =
-            Provider.of<DeviceProvider>(context, listen: false);
-        final systemVersion = await deviceProvider.getiOSVersion();
+    // Disable feature only for iOS 17+ due to a crash
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    final systemVersion = iosInfo.systemVersion;
 
-        if (systemVersion == null) {
-          return false; // Unable to get iOS version, disable for safety
-        }
+    final versionParts = systemVersion.split('.').map(int.parse).toList();
+    final majorVersion = versionParts.isNotEmpty ? versionParts[0] : 0;
 
-        final versionParts = systemVersion.split('.').map(int.parse).toList();
-        final majorVersion = versionParts.isNotEmpty ? versionParts[0] : 0;
-
-        if (majorVersion >= 17) {
-          // Disable feature for iOS 17+ where there's a known bug/crash
-          return false;
-        }
-
-        return true;
-      } catch (e) {
-        return false; // Disable if version unknown
-      }
+    if (majorVersion >= 17) {
+      // Disable feature for iOS 17+ where there's a known bug/crash
+      return false;
     }
 
-    return false; // Disable for other OS
+    return true;
   }
 
   Future<void> openGallery() async {
