@@ -74,8 +74,7 @@ class DeviceProvider with ChangeNotifier {
 
     final mobileApp = MobileAppRequest((b) => b
       ..packageName = packageInfo.packageName
-      ..packageVersion =
-          '35'); // TODO: This is hardcoded. Consider using packageInfo.buildNumber
+      ..packageVersion = '${packageInfo.version}+${packageInfo.buildNumber}');
 
     await _fetchDevice();
     if (device == null) {
