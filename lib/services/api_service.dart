@@ -9,8 +9,11 @@ class ApiService {
   late final MosquitoAlert _client;
 
   ApiService._({required this.authProvider, baseUrl}) {
+    final uri = Uri.parse(baseUrl);
+    final baseUrlWithPort = uri.replace(port: 443).toString();
+
     final BaseOptions options = BaseOptions(
-      baseUrl: baseUrl,
+      baseUrl: baseUrlWithPort,
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(
           milliseconds:
@@ -26,7 +29,7 @@ class ApiService {
           authProvider.setAccessToken(accessToken: newAccessToken);
         }));
 
-    _client = MosquitoAlert(dio: _dio);
+    _client = MosquitoAlert(dio: _dio, basePathOverride: baseUrlWithPort);
   }
 
   static Future<ApiService> init({required AuthProvider authProvider}) async {
