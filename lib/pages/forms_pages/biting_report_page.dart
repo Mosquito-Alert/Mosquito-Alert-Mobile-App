@@ -288,8 +288,8 @@ class _BitingReportPageState extends State<BitingReportPage> {
   }
 
   BiteRequestEventMomentEnum _mapMomentToEnum(int answerId) {
+    // TODO: Bug: "Last 24h" returns always answerId: 52 so it's not possible to select a different answer
     switch (answerId) {
-      // TODO: Check answerId
       case 51:
         return BiteRequestEventMomentEnum.now;
       case 52:
