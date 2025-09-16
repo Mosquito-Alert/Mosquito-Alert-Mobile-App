@@ -2,7 +2,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/api/api.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
@@ -313,9 +312,9 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       parameters: {'report_uuid': report.uuid},
     );
     Navigator.pop(context);
-
-    try {
-      final success = await ApiSingleton().deleteBiteReport(report.uuid);
+    // TODO: Call deleteBiteReport with new api
+    /*try {
+      final success = true;
       if (success) {
         setState(() {
           biteReports.removeWhere((b) => b.uuid == report.uuid);
@@ -333,6 +332,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
         MyLocalizations.of(context, 'save_report_ko_txt'),
         context,
       );
-    }
+    }*/
   }
 }

@@ -41,17 +41,6 @@ class ApiSingleton {
     return [];
   }
 
-  Future<bool> deleteBiteReport(String uuid) async {
-    try {
-      // TODO
-      print('Deleting bite report with UUID: $uuid');
-      return true;
-    } catch (e) {
-      print('Error deleting bite report: $e');
-      return false;
-    }
-  }
-
   //Images
   Future<bool> saveImage(String imagePath, String? versionUUID) async {
     try {
