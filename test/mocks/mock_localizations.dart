@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-// Test MyLocalizations that returns translation keys for easy testing
-// This eliminates duplication by avoiding hardcoded translations
+/// Test implementation of MyLocalizations that eliminates duplication
+/// 
+/// This class returns translation keys instead of translated text, which:
+/// - Eliminates duplication between mock translations and real translation files
+/// - Makes tests more maintainable by avoiding hardcoded translations
+/// - Allows tests to assert against keys (e.g., 'single_bite') instead of translated text
+/// - Prevents test failures when translations change in the actual JSON files
+///
+/// Usage in tests:
+/// - Widget tests can still verify localization keys are passed correctly
+/// - If tests need to verify actual translated text, they should use integration tests
+///   with real MyLocalizations that load from actual translation files
 class TestMyLocalizations extends MyLocalizations {
   TestMyLocalizations() : super(const Locale('en', 'US'));
 
   @override
   String translate(String? key) {
-    // Return the key itself for testing - this eliminates duplication
-    // Tests can assert against keys instead of translated text
+    // Return the key itself - this eliminates the need to maintain
+    // duplicate translations in test mocks
     return key ?? '';
   }
 
@@ -18,6 +28,7 @@ class TestMyLocalizations extends MyLocalizations {
   }
 }
 
+/// Localization delegate for tests that provides TestMyLocalizations
 class TestMyLocalizationsDelegate
     extends LocalizationsDelegate<MyLocalizations> {
   const TestMyLocalizationsDelegate();
@@ -32,4 +43,18 @@ class TestMyLocalizationsDelegate
 
   @override
   bool shouldReload(TestMyLocalizationsDelegate old) => false;
+}
+
+/// Helper for creating test widgets with proper localization setup
+class TestLocalizationHelper {
+  /// Creates a MaterialApp with TestMyLocalizations for widget testing
+  static Widget createTestApp({required Widget child}) {
+    return MaterialApp(
+      localizationsDelegates: const [
+        TestMyLocalizationsDelegate(),
+      ],
+      supportedLocales: const [Locale('en', 'US')],
+      home: child,
+    );
+  }
 }
