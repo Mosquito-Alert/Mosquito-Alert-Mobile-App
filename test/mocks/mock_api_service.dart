@@ -1,6 +1,5 @@
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
-import 'package:mosquito_alert_app/services/api_service.dart';
 import 'mock_mosquito_alert.dart';
 
 /// Test-specific API service that uses mocks

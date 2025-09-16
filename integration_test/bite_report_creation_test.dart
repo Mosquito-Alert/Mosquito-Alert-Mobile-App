@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:mosquito_alert_app/main.dart' as app;
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,6 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 
 // Test helpers
 import '../test/mocks/mocks.dart';
-import '../test/mocks/test_app.dart';
 
 Future<void> waitForWidget(
   WidgetTester tester,
@@ -255,14 +253,22 @@ void main() {
           reason: 'GPS longitude should be 0.0 as mocked');
 
       // Verify success by looking for success message or return to home
-      final successMessage = find.textContaining('success').or(find.textContaining('saved'));
+      final successMessage = find.textContaining('success');
+      final savedMessage = find.textContaining('saved');
       
       // Wait for either success message or return to home
       try {
-        await waitForWidget(tester, successMessage, timeout: Duration(seconds: 5));
-        print('✅ Success message found');
+        // Try to find success message first
+        try {
+          await waitForWidget(tester, successMessage, timeout: Duration(seconds: 3));
+          print('✅ Success message found');
+        } catch (_) {
+          // If no success message, try saved message
+          await waitForWidget(tester, savedMessage, timeout: Duration(seconds: 2));
+          print('✅ Saved message found');
+        }
       } catch (e) {
-        // If no success message, check if we're back at home (which indicates successful submission)
+        // If no success/saved message, check if we're back at home (which indicates successful submission)
         await waitForWidget(tester, find.byType(CustomCard), timeout: Duration(seconds: 5));
         print('✅ Returned to home page after submission');
       }
@@ -270,7 +276,17 @@ void main() {
       // Test passed - verify all expectations
       print('🎯 Test Results:');
       print('   📍 Location sent to API: (${request.location.point.latitude}, ${request.location.point.longitude})');
-      print('   📊 Bite count: ${request.counts?.head ?? 0 + request.counts?.leftArm ?? 0 + request.counts?.rightArm ?? 0}');
+      
+      // Calculate bite count safely
+      final headCount = request.counts?.head ?? 0;
+      final leftArmCount = request.counts?.leftArm ?? 0;
+      final rightArmCount = request.counts?.rightArm ?? 0;
+      final chestCount = request.counts?.chest ?? 0;
+      final leftLegCount = request.counts?.leftLeg ?? 0;
+      final rightLegCount = request.counts?.rightLeg ?? 0;
+      final totalBites = headCount + leftArmCount + rightArmCount + chestCount + leftLegCount + rightLegCount;
+      
+      print('   📊 Bite count: $totalBites');
       print('   📅 Created at: ${request.createdAt}');
       print('   ✅ Bite report creation test completed successfully');
     });

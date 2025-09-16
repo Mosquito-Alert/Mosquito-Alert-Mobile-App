@@ -25,7 +25,7 @@ void main() {
         ..source_ = sdk.LocationRequestSource_Enum.auto
         ..point.replace(location));
 
-      final counts = sdk.BiteCounts((b) => b
+      final counts = sdk.BiteCountsRequest((b) => b
         ..head = 1
         ..leftArm = 0
         ..rightArm = 0
@@ -69,7 +69,7 @@ void main() {
         ..source_ = sdk.LocationRequestSource_Enum.auto
         ..point.replace(location));
 
-      final counts = sdk.BiteCounts((b) => b
+      final counts = sdk.BiteCountsRequest((b) => b
         ..head = 1
         ..leftArm = 0
         ..rightArm = 0

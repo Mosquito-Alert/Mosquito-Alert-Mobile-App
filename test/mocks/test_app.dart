@@ -5,8 +5,6 @@ import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
 import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
