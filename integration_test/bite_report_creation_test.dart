@@ -66,33 +66,25 @@ Future<void> handleConsentFlow(WidgetTester tester) async {
 /// Helper to fill out bite report questions with error handling
 Future<void> fillBiteReportQuestions(WidgetTester tester) async {
   try {
-    print('🔍 Looking for + button to add bites...');
     final addBiteButton = find.text('+');
     await waitForWidget(tester, addBiteButton);
     await tester.tap(addBiteButton);
     await tester.pumpAndSettle(Duration(milliseconds: 500));
-    print('✅ Added bite count');
 
     // Step 2: Select body part by tapping on body diagram
-    print('🔍 Looking for body diagram...');
     final bodyImages = find.byType(Image);
     if (bodyImages.evaluate().isNotEmpty) {
       await tester.tap(bodyImages.first);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
-      print('✅ Tapped body diagram');
-    } else {
-      print('⚠️ No body diagram found, continuing...');
     }
 
     // Continue to location step
-    print('🔍 Looking for Continue button...');
     final continueBtn1 = find.text('Continue');
     await waitForWidget(tester, continueBtn1);
     await tester.tap(continueBtn1);
     await tester.pumpAndSettle(Duration(seconds: 2));
-    print('✅ Continued to next step');
   } catch (e) {
-    print('❌ Error in fillBiteReportQuestions: $e');
+    print('Error in fillBiteReportQuestions: $e');
     rethrow;
   }
 }
@@ -100,7 +92,6 @@ Future<void> fillBiteReportQuestions(WidgetTester tester) async {
 /// Helper to handle location form with better error handling
 Future<void> handleLocationForm(WidgetTester tester) async {
   try {
-    print('🔍 Handling location form...');
     // Wait for location to be processed automatically with our GPS mock
     await tester.pumpAndSettle(Duration(seconds: 3));
 
@@ -109,9 +100,6 @@ Future<void> handleLocationForm(WidgetTester tester) async {
     if (currentLocationOption.evaluate().isNotEmpty) {
       await tester.tap(currentLocationOption.first);
       await tester.pumpAndSettle(Duration(seconds: 1));
-      print('✅ Selected current location');
-    } else {
-      print('ℹ️ Current location option not found, might be auto-selected');
     }
 
     // Continue to next step
@@ -119,25 +107,56 @@ Future<void> handleLocationForm(WidgetTester tester) async {
     await waitForWidget(tester, continueBtn);
     await tester.tap(continueBtn);
     await tester.pumpAndSettle(Duration(seconds: 1));
-    print('✅ Continued from location form');
   } catch (e) {
-    print('❌ Error in handleLocationForm: $e');
+    print('Error in handleLocationForm: $e');
     rethrow;
   }
+}
+
+/// Helper to scroll and find the Send Report button
+Future<void> scrollToAndTapSendReport(WidgetTester tester) async {
+  final sendReportButton = find.text('Send Report');
+  
+  // First try to find without scrolling
+  if (sendReportButton.evaluate().isNotEmpty) {
+    await tester.tap(sendReportButton);
+    return;
+  }
+  
+  // If not found, scroll down to find it
+  final scrollableFinder = find.byType(Scrollable);
+  if (scrollableFinder.evaluate().isNotEmpty) {
+    // Scroll down in small increments to find the button
+    for (int i = 0; i < 5; i++) {
+      await tester.drag(scrollableFinder.first, Offset(0, -200));
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      
+      if (sendReportButton.evaluate().isNotEmpty) {
+        await tester.ensureVisible(sendReportButton);
+        await tester.tap(sendReportButton);
+        return;
+      }
+    }
+  }
+  
+  // If still not found, try scrolling the entire page
+  await tester.drag(find.byType(BitingReportPage), Offset(0, -300));
+  await tester.pumpAndSettle(Duration(seconds: 1));
+  
+  await waitForWidget(tester, sendReportButton, timeout: Duration(seconds: 5));
+  await tester.ensureVisible(sendReportButton);
+  await tester.tap(sendReportButton);
 }
 
 /// Helper to answer additional questions with better debugging
 Future<void> answerAdditionalQuestions(WidgetTester tester) async {
   try {
-    print('🔍 Answering additional questions...');
     var attempts = 0;
     const maxAttempts = 3;
 
     while (attempts < maxAttempts) {
       final questionOptions = find.byType(GestureDetector);
       if (questionOptions.evaluate().isNotEmpty) {
-        print(
-            '✅ Found question options, selecting first one (attempt ${attempts + 1})');
         await tester.tap(questionOptions.first);
         await tester.pumpAndSettle(Duration(milliseconds: 500));
 
@@ -147,17 +166,14 @@ Future<void> answerAdditionalQuestions(WidgetTester tester) async {
           await tester.pumpAndSettle(Duration(seconds: 1));
           attempts++;
         } else {
-          print('ℹ️ No continue button found, questions might be complete');
           break;
         }
       } else {
-        print('ℹ️ No more question options found');
         break;
       }
     }
-    print('✅ Completed additional questions');
   } catch (e) {
-    print('❌ Error in answerAdditionalQuestions: $e');
+    print('Error in answerAdditionalQuestions: $e');
     // Don't rethrow here, as additional questions might be optional
   }
 }
@@ -218,40 +234,29 @@ void main() {
     testWidgets(
         'User can create a bite report successfully and reach the API submission point',
         (tester) async {
-      print('🚀 Starting bite report integration test...');
-
+      
       // Initialize the real app with test environment (like the working background test)
       app.main(env: "test");
       await tester.pumpAndSettle(Duration(seconds: 3));
-      print('✅ App initialized');
 
       // Handle consent form if present
       await handleConsentFlow(tester);
-      print('✅ Consent flow handled');
 
       // Home page - find bite report card
-      print('🔍 Looking for home page cards...');
       final homePageButtons = find.byType(CustomCard);
       await waitForWidget(tester, homePageButtons);
-      final cardCount = homePageButtons.evaluate().length;
-      print('✅ Found $cardCount home page cards');
       expect(homePageButtons, findsAtLeastNWidgets(1));
 
       // Find the bite report card - try different approaches to locate it
-      print('🔍 Looking for bite report card...');
-      final biteReportCard =
-          homePageButtons.at(1); // Second card should be bite report
+      final biteReportCard = homePageButtons.at(1); // Second card should be bite report
       await waitForWidget(tester, biteReportCard);
       await tester.ensureVisible(biteReportCard);
       await tester.tap(biteReportCard);
-      print('✅ Tapped bite report card');
 
       await tester.pumpAndSettle(Duration(seconds: 2));
 
       // Verify we're in the BitingReportPage
-      print('🔍 Checking if we\'re in the bite report page...');
       expect(find.byType(BitingReportPage), findsOne);
-      print('✅ Successfully navigated to bite report page');
 
       // Fill out the bite report questions
       await fillBiteReportQuestions(tester);
@@ -262,54 +267,38 @@ void main() {
       // Answer any additional questions
       await answerAdditionalQuestions(tester);
 
-      // Final step - Submit the report
-      print('🔍 Looking for Send Report button...');
-      final sendReportButton = find.text('Send Report');
-      await waitForWidget(tester, sendReportButton,
-          timeout: Duration(seconds: 10));
-      await tester.tap(sendReportButton);
-      print('✅ Tapped Send Report button');
+      // Final step - Submit the report with scrolling support
+      await scrollToAndTapSendReport(tester);
       await tester.pumpAndSettle(Duration(seconds: 5));
 
-      // Since we're using the real app, we can't easily verify the mock API call
-      // Instead, verify that the flow completed successfully by:
+      // Verify that the flow completed successfully by:
       // 1. Looking for success message, OR
       // 2. Confirming we've returned to home page (indicating successful submission)
-
-      print('🔍 Checking for completion indicators...');
+      
       // Try to find success/saved message first
       try {
         final successMessage = find.textContaining('success');
-        await waitForWidget(tester, successMessage,
-            timeout: Duration(seconds: 3));
-        print(
-            '✅ Success message found - bite report flow completed successfully');
+        await waitForWidget(tester, successMessage, timeout: Duration(seconds: 3));
+        print('Success message found - bite report flow completed successfully');
       } catch (_) {
         try {
           final savedMessage = find.textContaining('saved');
-          await waitForWidget(tester, savedMessage,
-              timeout: Duration(seconds: 2));
-          print(
-              '✅ Saved message found - bite report flow completed successfully');
+          await waitForWidget(tester, savedMessage, timeout: Duration(seconds: 2));
+          print('Saved message found - bite report flow completed successfully');
         } catch (_) {
           // If no success/saved message, check if we're back at home
-          print('🔍 No success message found, checking if returned to home...');
           final homeCards = find.byType(CustomCard);
           await waitForWidget(tester, homeCards, timeout: Duration(seconds: 5));
           expect(homeCards, findsAtLeastNWidgets(1));
-          print(
-              '✅ Returned to home page - bite report flow completed successfully');
+          print('Returned to home page - bite report flow completed successfully');
         }
       }
 
       // Test passed - we successfully navigated through the entire bite report flow
-      // The GPS coordinates (0, 0) were used via our location mocking
-      // The flow reached the point where bitesApi.create would be called
-      print('🎯 Integration test completed successfully:');
-      print('   📍 GPS coordinates (0, 0) were used via location mocking');
-      print('   📋 User completed entire bite report form flow');
-      print(
-          '   🚀 Reached the API submission point (bitesApi.create would be called)');
+      print('Integration test completed successfully');
+      print('GPS coordinates (0, 0) were used via location mocking');
+      print('User completed entire bite report form flow');
+      print('Reached the API submission point (bitesApi.create would be called)');
     });
   });
 }
