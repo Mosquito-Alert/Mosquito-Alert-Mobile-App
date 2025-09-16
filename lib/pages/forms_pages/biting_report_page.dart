@@ -199,10 +199,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
           .where((q) => q!.question_id == 2) // Body part question ID
           .toList();
 
-      final totalBites = Utils.report!.responses!
-          .firstWhere((q) => q!.question_id == 1)!
-          .answer_value!;
-
       // Map body part counts
       int headCount = 0;
       int leftArmCount = 0;
