@@ -4,7 +4,7 @@ import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_bites.dart';
 import 'package:provider/provider.dart';
 
-// Import shared mocks
+// Import shared mocks and helpers
 import '../mocks/mocks.dart';
 
 Widget createReportsListBitesTestWidget({
@@ -24,43 +24,6 @@ Widget createReportsListBitesTestWidget({
   );
 }
 
-// Simple test helper without complex nested structures
-sdk.Bite createSimpleBite({
-  required String uuid,
-  DateTime? createdAt,
-  int totalBites = 1,
-}) {
-  // Create the location point with required latitude and longitude
-  final locationPoint = sdk.LocationPoint((p) => p
-    ..latitude = 41.3874
-    ..longitude = 2.1686);
-
-  // Create the location with required source and point
-  final location = sdk.Location((l) => l
-    ..source_ = sdk.LocationSource_Enum.auto
-    ..point.replace(locationPoint));
-
-  return sdk.Bite((b) => b
-    ..uuid = uuid
-    ..shortId = uuid.length >= 8 ? uuid.substring(0, 8) : uuid
-    ..userUuid = 'test-user-uuid'
-    ..createdAt = createdAt ?? DateTime.now()
-    ..createdAtLocal = createdAt ?? DateTime.now()
-    ..sentAt = createdAt ?? DateTime.now()
-    ..receivedAt = createdAt ?? DateTime.now()
-    ..updatedAt = createdAt ?? DateTime.now()
-    ..published = true
-    ..location.replace(location)
-    ..counts = sdk.BiteCounts((c) => c
-      ..head = totalBites
-      ..chest = 0
-      ..leftArm = 0
-      ..rightArm = 0
-      ..leftLeg = 0
-      ..rightLeg = 0
-      ..total = totalBites).toBuilder());
-}
-
 void main() {
   group('ReportsListBites Tests', () {
     late MockMosquitoAlert mockClient;
@@ -78,14 +41,14 @@ void main() {
 
     testWidgets('should display bite reports when bites are available',
         (WidgetTester tester) async {
-      // Given - Mock bite reports with simple structure
+      // Given - Mock bite reports using consolidated helper
       final testBites = [
-        createSimpleBite(
+        createTestBite(
           uuid: 'bite-1',
           createdAt: DateTime(2024, 9, 15, 10, 30),
           totalBites: 3,
         ),
-        createSimpleBite(
+        createTestBite(
           uuid: 'bite-2',
           createdAt: DateTime(2024, 9, 14, 15, 45),
           totalBites: 4,
@@ -97,13 +60,8 @@ void main() {
       await tester
           .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
 
-      try {
-        await tester.pumpAndSettle();
-      } catch (e) {
-        // Firebase exception is expected in test environment, continue with test
-        print(
-            "Expected Firebase exception: ${e.toString().substring(0, 100)}...");
-      }
+      // Handle expected Firebase exception
+      await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Verify bite reports are displayed as cards
       expect(find.byType(Card), findsNWidgets(2));
@@ -122,13 +80,8 @@ void main() {
       final widget = createReportsListBitesTestWidget(mockClient: mockClient);
       await tester.pumpWidget(widget);
 
-      try {
-        await tester.pumpAndSettle();
-      } catch (e) {
-        // Firebase exception is expected in test environment, continue with test
-        print(
-            "Expected Firebase exception: ${e.toString().substring(0, 100)}...");
-      }
+      // Handle expected Firebase exception
+      await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Verify empty state is displayed
       expect(find.byType(ReportsListBites), findsOneWidget);
@@ -145,9 +98,9 @@ void main() {
 
     testWidgets('should display single bite correctly',
         (WidgetTester tester) async {
-      // Given - Single bite with one bite count
+      // Given - Single bite with one bite count using consolidated helper
       final testBites = [
-        createSimpleBite(
+        createTestBite(
           uuid: 'bite-single',
           createdAt: DateTime(2024, 9, 15, 10, 30),
           totalBites: 1,
@@ -159,13 +112,8 @@ void main() {
       await tester
           .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
 
-      try {
-        await tester.pumpAndSettle();
-      } catch (e) {
-        // Firebase exception is expected in test environment, continue with test
-        print(
-            "Expected Firebase exception: ${e.toString().substring(0, 100)}...");
-      }
+      // Handle expected Firebase exception
+      await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Verify single bite is displayed correctly
       expect(find.byType(Card), findsOneWidget);
