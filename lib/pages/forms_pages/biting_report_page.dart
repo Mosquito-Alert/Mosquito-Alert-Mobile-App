@@ -292,9 +292,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
     switch (answerId) {
       case 51:
         return BiteRequestEventMomentEnum.now;
-      case 52:
-        // When user selects "last 24h" but no specific time, default to lastNight
-        return BiteRequestEventMomentEnum.lastNight;
       case 31:
         return BiteRequestEventMomentEnum.lastMorning;
       case 32:
