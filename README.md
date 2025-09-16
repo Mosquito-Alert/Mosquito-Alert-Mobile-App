@@ -62,25 +62,6 @@ If this project is useful for you, please consider starring this repository and 
     ```
 3. Commit as usual: Pre-commit hooks will run automatically before each commit. If any checks fail, the commit will be blocked.
 
-## Testing and Code Coverage
-
-This project maintains high code quality through comprehensive testing and code coverage tracking.
-
-### Running Tests
-```bash
-# Run all tests
-fvm flutter test
-
-# Run tests with coverage
-fvm flutter test --coverage
-```
-
-### Code Coverage
-- **Coverage Badge**: The coverage badge at the top of this README shows the current test coverage percentage
-- **Automated Reporting**: Coverage is automatically calculated and reported on every pull request
-- **Coverage Reports**: Detailed coverage reports are available at [Codecov](https://codecov.io/gh/Mosquito-Alert/Mosquito-Alert-Mobile-App)
-- **Local Coverage**: See [docs/COVERAGE.md](docs/COVERAGE.md) for details on generating and viewing coverage locally
-
 ## Features
 * Report mosquito bite.
 * Report mosquito sighting.
