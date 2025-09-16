@@ -21,7 +21,7 @@ Widget createTestWidget({
       ),
     ),
     localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
+      TestMyLocalizationsDelegate(),
     ],
     supportedLocales: const [Locale('en')],
   );
