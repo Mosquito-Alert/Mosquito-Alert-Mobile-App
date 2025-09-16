@@ -31,11 +31,10 @@ sdk.Bite createTestBite({
   int? rightArm,
   int? leftLeg,
   int? rightLeg,
-  int? totalBites, // Convenience parameter for simple cases
+  int? totalBites,
   double? latitude,
   double? longitude,
 }) {
-  // Use totalBites for convenience if individual body parts aren't specified
   final headCount = head ?? (totalBites ?? 0);
   final chestCount = chest ?? 0;
   final leftArmCount = leftArm ?? 0;
@@ -83,7 +82,6 @@ sdk.Bite createTestBite({
       ..total = total).toBuilder());
 }
 
-// Helper function to pump and settle widget while ignoring expected Firebase exceptions
 Future<void> pumpAndSettleIgnoringFirebaseException(WidgetTester tester) async {
   try {
     await tester.pumpAndSettle();
