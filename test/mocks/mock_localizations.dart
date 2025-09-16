@@ -1,53 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-// Mock MyLocalizations for testing
-class MockMyLocalizations extends MyLocalizations {
-  MockMyLocalizations() : super(const Locale('en'));
+// Test MyLocalizations that returns translation keys for easy testing
+// This eliminates duplication by avoiding hardcoded translations
+class TestMyLocalizations extends MyLocalizations {
+  TestMyLocalizations() : super(const Locale('en', 'US'));
 
   @override
   String translate(String? key) {
-    switch (key) {
-      case 'notifications_title':
-        return 'Notifications';
-      case 'no_notifications_yet_txt':
-        return 'No notifications yet';
-      case 'single_bite':
-        return 'Report Bite';
-      case 'continue_txt':
-        return 'Continue';
-      case 'current_location_txt':
-        return 'Current Location';
-      case 'select_location_txt':
-        return 'Select Location';
-      case 'send_report_txt':
-        return 'Send Report';
-      case 'save_report_ok_txt':
-        return 'Report saved successfully';
-      case 'save_report_ko_txt':
-        return 'Error saving report';
-      default:
-        return key ?? '';
-    }
+    // Return the key itself for testing - this eliminates duplication
+    // Tests can assert against keys instead of translated text
+    return key ?? '';
   }
 
-  static MockMyLocalizations of(BuildContext context) {
-    return MockMyLocalizations();
+  static TestMyLocalizations of(BuildContext context) {
+    return TestMyLocalizations();
   }
 }
 
-class MockMyLocalizationsDelegate
+class TestMyLocalizationsDelegate
     extends LocalizationsDelegate<MyLocalizations> {
-  const MockMyLocalizationsDelegate();
+  const TestMyLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => true;
 
   @override
   Future<MyLocalizations> load(Locale locale) async {
-    return MockMyLocalizations();
+    return TestMyLocalizations();
   }
 
   @override
-  bool shouldReload(MockMyLocalizationsDelegate old) => false;
+  bool shouldReload(TestMyLocalizationsDelegate old) => false;
 }
