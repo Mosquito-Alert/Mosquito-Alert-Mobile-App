@@ -119,8 +119,8 @@ void main() {
       mockBitesApi.setBites([]);
 
       // When - Create widget
-      await tester
-          .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
+      final widget = createReportsListBitesTestWidget(mockClient: mockClient);
+      await tester.pumpWidget(widget);
 
       try {
         await tester.pumpAndSettle();
@@ -136,8 +136,11 @@ void main() {
       // No cards should be displayed
       expect(find.byType(Card), findsNothing);
 
-      // Should display "no reports yet" message
-      expect(find.text('No registered reports'), findsOneWidget);
+      // Should display localized "no reports yet" message
+      // Get the localized text from the mock localizations
+      final mockLocalizations = MockMyLocalizations();
+      final expectedText = mockLocalizations.translate('no_reports_yet_txt');
+      expect(find.text(expectedText), findsOneWidget);
     });
 
     testWidgets('should display single bite correctly',
