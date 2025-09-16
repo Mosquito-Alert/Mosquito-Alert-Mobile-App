@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_bites.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:provider/provider.dart';
 
 // Import shared mocks and helpers
@@ -17,9 +18,6 @@ Widget createReportsListBitesTestWidget({
         child: ReportsListBites(),
       ),
     ),
-    localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
-    ],
     supportedLocales: const [Locale('en')],
   );
 }
@@ -91,7 +89,7 @@ void main() {
 
       // Should display localized "no reports yet" message
       // Get the localized text from the mock localizations
-      final mockLocalizations = MockMyLocalizations();
+      final mockLocalizations = MyLocalizations(Locale('en', 'US'));
       final expectedText = mockLocalizations.translate('no_reports_yet_txt');
       expect(find.text(expectedText), findsOneWidget);
     });
