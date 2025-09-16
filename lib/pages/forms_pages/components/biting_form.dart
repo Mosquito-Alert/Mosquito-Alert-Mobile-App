@@ -118,16 +118,13 @@ class _BitingFormState extends State<BitingForm> {
                     () {
                       bites = max(bites - 1, 0);
                       _textController.text = bites.toString();
-                      var question = widget.displayQuestions
-                          .where((q) => q['question']['id'] == 1)
-                          .toList();
 
                       removeBite();
 
                       setState(() {
                         questions = Utils.report!.responses;
                       });
-                      addToList(question[0]['question']['text'], '',
+                      addToList(MyLocalizations.of(context, 'question_1'), '',
                           question_id: BiteQuestion.howMany.id,
                           answer_value: _textController.text);
 
@@ -158,10 +155,7 @@ class _BitingFormState extends State<BitingForm> {
                     () {
                       bites = min(bites = bites + 1, 20);
                       _textController.text = bites.toString();
-                      var question = widget.displayQuestions
-                          .where((q) => q['question']['id'] == 1)
-                          .toList();
-                      addToList(question[0]['question']['text'], '',
+                      addToList(MyLocalizations.of(context, 'question_1'), '',
                           question_id: BiteQuestion.howMany.id,
                           answer_value: _textController.text);
                       var isValid = canContinue();

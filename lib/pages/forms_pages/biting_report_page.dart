@@ -49,10 +49,6 @@ class _BitingReportPageState extends State<BitingReportPage> {
 
   List<Map> displayQuestions = [
     {
-      'question': {'id': 1, 'text': 'question_1'},
-      'answers': []
-    },
-    {
       'question': {'id': 2, 'text': 'question_2'},
       'answers': [
         //Bites by body are - value equals number of bites in each area, must be = to total number of bites
@@ -121,14 +117,13 @@ class _BitingReportPageState extends State<BitingReportPage> {
           displayQuestions.elementAt(1),
           displayQuestions.elementAt(2),
           displayQuestions.elementAt(3),
-          displayQuestions.elementAt(4),
         ],
         setValid,
         goNextPage,
       ),
       LocationForm(
         setValid,
-        displayQuestions.elementAt(5)['question']['text'],
+        displayQuestions.elementAt(4)['question']['text'],
       ),
       AddOtherReportPage(_saveData, setValid, percentStream),
     ];
