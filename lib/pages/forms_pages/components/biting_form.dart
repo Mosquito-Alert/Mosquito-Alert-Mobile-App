@@ -129,7 +129,6 @@ class _BitingFormState extends State<BitingForm> {
                       });
                       addToList(question[0]['question']['text'], '',
                           question_id: BiteQuestion.howMany.id,
-                          //answer_id: 11, // TODO: It's an empty string, deprecate?
                           answer_value: _textController.text);
 
                       var isValid = canContinue();
@@ -164,7 +163,6 @@ class _BitingFormState extends State<BitingForm> {
                           .toList();
                       addToList(question[0]['question']['text'], '',
                           question_id: BiteQuestion.howMany.id,
-                          //answer_id: 11, // TODO: Empty value, deprecate?
                           answer_value: _textController.text);
                       var isValid = canContinue();
                       setState(() {

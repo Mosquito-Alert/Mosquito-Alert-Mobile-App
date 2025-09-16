@@ -50,10 +50,7 @@ class _BitingReportPageState extends State<BitingReportPage> {
   List<Map> displayQuestions = [
     {
       'question': {'id': 1, 'text': 'question_1'},
-      'answers': [
-        //Number of bites - value equals TOTAL number of bites
-        {'id': 11, 'text': 'question_1_answer_11'}
-      ]
+      'answers': []
     },
     {
       'question': {'id': 2, 'text': 'question_2'},
