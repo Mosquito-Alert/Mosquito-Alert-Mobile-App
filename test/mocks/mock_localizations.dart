@@ -26,6 +26,24 @@ class MockMyLocalizations extends MyLocalizations {
         return 'Report saved successfully';
       case 'save_report_ko_txt':
         return 'Error saving report';
+      case 'biting_report_txt':
+        return 'Bite Report';
+      case 'question_1':
+        return 'How many bites did you receive?';
+      case 'question_2':
+        return 'In which part of the body did you get bitten?';
+      case 'question_3':
+        return 'What time of day were you bitten?';
+      case 'question_4':
+        return 'Where were you when you got bitten?';
+      case 'question_5':
+        return 'When did you get bitten?';
+      case 'question_14':
+        return 'Location of the bite';
+      case 'app_name':
+        return 'Mosquito Alert';
+      case 'NSLocationWhenInUseUsageDescription':
+        return 'This app needs location access to record bite reports';
       default:
         return key ?? '';
     }
