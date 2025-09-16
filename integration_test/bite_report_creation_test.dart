@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mosquito_alert_app/main.dart' as app;
-import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
+import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 
 Future<void> waitForWidget(
   WidgetTester tester,
@@ -36,7 +36,8 @@ Future<void> waitForWidgetToDisappear(
 
 /// Helper to handle consent flow if present
 Future<void> handleConsentFlow(WidgetTester tester) async {
-  final acceptConditionsCheckbox = find.byKey(ValueKey("acceptConditionsCheckbox"));
+  final acceptConditionsCheckbox =
+      find.byKey(ValueKey("acceptConditionsCheckbox"));
   if (acceptConditionsCheckbox.evaluate().isNotEmpty) {
     await waitForWidget(tester, acceptConditionsCheckbox);
     await tester.ensureVisible(acceptConditionsCheckbox);
@@ -135,7 +136,8 @@ Future<void> answerAdditionalQuestions(WidgetTester tester) async {
     while (attempts < maxAttempts) {
       final questionOptions = find.byType(GestureDetector);
       if (questionOptions.evaluate().isNotEmpty) {
-        print('✅ Found question options, selecting first one (attempt ${attempts + 1})');
+        print(
+            '✅ Found question options, selecting first one (attempt ${attempts + 1})');
         await tester.tap(questionOptions.first);
         await tester.pumpAndSettle(Duration(milliseconds: 500));
 
@@ -216,9 +218,8 @@ void main() {
     testWidgets(
         'User can create a bite report successfully and reach the API submission point',
         (tester) async {
-      
       print('🚀 Starting bite report integration test...');
-      
+
       // Initialize the real app with test environment (like the working background test)
       app.main(env: "test");
       await tester.pumpAndSettle(Duration(seconds: 3));
@@ -238,7 +239,8 @@ void main() {
 
       // Find the bite report card - try different approaches to locate it
       print('🔍 Looking for bite report card...');
-      final biteReportCard = homePageButtons.at(1); // Second card should be bite report
+      final biteReportCard =
+          homePageButtons.at(1); // Second card should be bite report
       await waitForWidget(tester, biteReportCard);
       await tester.ensureVisible(biteReportCard);
       await tester.tap(biteReportCard);
@@ -263,7 +265,8 @@ void main() {
       // Final step - Submit the report
       print('🔍 Looking for Send Report button...');
       final sendReportButton = find.text('Send Report');
-      await waitForWidget(tester, sendReportButton, timeout: Duration(seconds: 10));
+      await waitForWidget(tester, sendReportButton,
+          timeout: Duration(seconds: 10));
       await tester.tap(sendReportButton);
       print('✅ Tapped Send Report button');
       await tester.pumpAndSettle(Duration(seconds: 5));
@@ -272,25 +275,30 @@ void main() {
       // Instead, verify that the flow completed successfully by:
       // 1. Looking for success message, OR
       // 2. Confirming we've returned to home page (indicating successful submission)
-      
+
       print('🔍 Checking for completion indicators...');
       // Try to find success/saved message first
       try {
         final successMessage = find.textContaining('success');
-        await waitForWidget(tester, successMessage, timeout: Duration(seconds: 3));
-        print('✅ Success message found - bite report flow completed successfully');
+        await waitForWidget(tester, successMessage,
+            timeout: Duration(seconds: 3));
+        print(
+            '✅ Success message found - bite report flow completed successfully');
       } catch (_) {
         try {
           final savedMessage = find.textContaining('saved');
-          await waitForWidget(tester, savedMessage, timeout: Duration(seconds: 2));
-          print('✅ Saved message found - bite report flow completed successfully');
+          await waitForWidget(tester, savedMessage,
+              timeout: Duration(seconds: 2));
+          print(
+              '✅ Saved message found - bite report flow completed successfully');
         } catch (_) {
           // If no success/saved message, check if we're back at home
           print('🔍 No success message found, checking if returned to home...');
           final homeCards = find.byType(CustomCard);
           await waitForWidget(tester, homeCards, timeout: Duration(seconds: 5));
           expect(homeCards, findsAtLeastNWidgets(1));
-          print('✅ Returned to home page - bite report flow completed successfully');
+          print(
+              '✅ Returned to home page - bite report flow completed successfully');
         }
       }
 
@@ -300,8 +308,8 @@ void main() {
       print('🎯 Integration test completed successfully:');
       print('   📍 GPS coordinates (0, 0) were used via location mocking');
       print('   📋 User completed entire bite report form flow');
-      print('   🚀 Reached the API submission point (bitesApi.create would be called)');
-    });
+      print(
+          '   🚀 Reached the API submission point (bitesApi.create would be called)');
     });
   });
 }

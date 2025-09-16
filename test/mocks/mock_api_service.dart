@@ -10,7 +10,8 @@ class MockApiService {
   MockApiService._({required this.authProvider})
       : _mockClient = MockMosquitoAlert();
 
-  static Future<MockApiService> init({required AuthProvider authProvider}) async {
+  static Future<MockApiService> init(
+      {required AuthProvider authProvider}) async {
     return MockApiService._(authProvider: authProvider);
   }
 
