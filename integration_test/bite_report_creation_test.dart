@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:mosquito_alert_app/main.dart' as app;
 import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
+
+// Test helpers
+import '../test/mocks/mocks.dart';
 
 Future<void> waitForWidget(
   WidgetTester tester,
@@ -228,6 +232,45 @@ void main() {
         return null;
       },
     );
+
+    // Mock Firebase Analytics to prevent any analytics calls
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('plugins.flutter.io/firebase_analytics'),
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'logEvent') {
+          return null; // Successfully logged (mocked)
+        }
+        return null;
+      },
+    );
+
+    // Mock Firebase Core initialization
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('plugins.flutter.io/firebase_core'),
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'Firebase#initializeCore') {
+          return null; // Successfully initialized (mocked)
+        }
+        if (methodCall.method == 'Firebase#initializeApp') {
+          return null; // Successfully initialized (mocked)
+        }
+        return null;
+      },
+    );
+
+    // Mock connectivity to prevent network status checks
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('dev.fluttercommunity.plus/connectivity'),
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'check') {
+          return 'wifi'; // Return wifi connectivity
+        }
+        return null;
+      },
+    );
   });
 
   group('Bite Report Integration Test', () {
@@ -235,9 +278,14 @@ void main() {
         'User can create a bite report successfully and reach the API submission point',
         (tester) async {
       
-      // Initialize the real app with test environment (like the working background test)
-      app.main(env: "test");
+      // Initialize the test app with mocks to prevent real API calls
+      final testApp = await initializeTestApp();
+      await tester.pumpWidget(testApp);
       await tester.pumpAndSettle(Duration(seconds: 3));
+
+      // Get reference to the mock API for later verification
+      final context = tester.element(find.byType(MaterialApp));
+      final mockMosquitoAlert = Provider.of<MosquitoAlert>(context, listen: false) as MockMosquitoAlert;
 
       // Handle consent form if present
       await handleConsentFlow(tester);
@@ -271,6 +319,19 @@ void main() {
       await scrollToAndTapSendReport(tester);
       await tester.pumpAndSettle(Duration(seconds: 5));
 
+      // Verify that the mock API was called
+      expect(mockMosquitoAlert.bitesApi.createCalled, isTrue,
+          reason: 'bitesApi.create should have been called');
+      expect(mockMosquitoAlert.bitesApi.lastBiteRequest, isNotNull,
+          reason: 'A bite request should have been sent');
+      
+      // Verify the bite request has expected location (0, 0)
+      final request = mockMosquitoAlert.bitesApi.lastBiteRequest!;
+      expect(request.location.point.latitude, equals(0.0),
+          reason: 'GPS latitude should be 0.0 as mocked');
+      expect(request.location.point.longitude, equals(0.0),
+          reason: 'GPS longitude should be 0.0 as mocked');
+
       // Verify that the flow completed successfully by:
       // 1. Looking for success message, OR
       // 2. Confirming we've returned to home page (indicating successful submission)
@@ -298,7 +359,7 @@ void main() {
       print('Integration test completed successfully');
       print('GPS coordinates (0, 0) were used via location mocking');
       print('User completed entire bite report form flow');
-      print('Reached the API submission point (bitesApi.create would be called)');
+      print('API call was successfully mocked and verified');
     });
   });
 }
