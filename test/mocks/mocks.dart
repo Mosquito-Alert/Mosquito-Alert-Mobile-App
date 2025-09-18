@@ -4,4 +4,6 @@ export 'mock_firebase_analytics.dart';
 export 'mock_localizations.dart';
 export 'mock_mosquito_alert.dart';
 export 'mock_notifications_api.dart';
+export 'mock_api_service.dart';
 export 'test_helpers.dart';
+export 'test_app.dart';
