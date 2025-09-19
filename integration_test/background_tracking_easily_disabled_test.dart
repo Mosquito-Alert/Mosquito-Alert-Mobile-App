@@ -21,7 +21,8 @@ Future<void> waitForWidget(
 
 void main() {
   patrolSetUp(() {
-    // Initialize patrol configuration for handling permissions
+    // Initialize patrol configuration for handling native permissions
+    // This replaces the previous workaround of using useAuth: false in test.json
   });
 
   group('end-to-end test', () {
@@ -30,9 +31,11 @@ void main() {
         ($) async {
       // Grant location permissions using patrol before any permission requests
       // This handles the system permission dialogs that would normally require manual interaction
+      // The app requires location permissions for background tracking functionality
       await $.native.grantPermissionWhenInUse();
       
-      // Start the app with dev config instead of test config to enable auth and permissions
+      // Start the app with dev config (useAuth: true) instead of test config (useAuth: false)
+      // This ensures we test the real authentication and permission flow instead of bypassing it
       app.main(env: "dev");
       await $.pumpAndSettle(Duration(seconds: 3));
 
@@ -54,10 +57,11 @@ void main() {
       await $.tap(continueButton);
 
       // Handle any potential location permission dialog that may appear
-      // Patrol's native permission handling should automatically handle system dialogs
+      // Patrol's native permission handling automatically handles system dialogs
+      // This allows the test to run in headless CI environments without manual intervention
       await Future.delayed(Duration(seconds: 2));
 
-      // Reject background tracking
+      // Reject background tracking - this is the main test scenario
       final rejectBtn = find.byKey(Key("rejectBackgroundTrackingBtn"));
       await waitForWidget($, rejectBtn);
       expect(rejectBtn, findsOne);
@@ -65,6 +69,7 @@ void main() {
       await $.tap(rejectBtn);
 
       // Home page should be displayed with the expected cards
+      // This verifies that the app continues to work normally after rejecting background tracking
       final homePageButtons = find.byType(CustomCard);
       await waitForWidget($, homePageButtons);
       expect(homePageButtons, findsNWidgets(4));
