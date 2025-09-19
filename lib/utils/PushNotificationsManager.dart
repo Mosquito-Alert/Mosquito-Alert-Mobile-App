@@ -21,21 +21,18 @@ class PushNotificationsManager {
   * Push Notification Manager Init
   */
   static Future<void> init() async {
-    final appConfig = await AppConfig.loadConfig();
-    if (appConfig.useAuth) {
-      await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.requestPermission();
 
-      // Foreground message handler
-      FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-        _handleForegroundMessage(remoteMessage);
-      });
+    // Foreground message handler
+    FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
+      _handleForegroundMessage(remoteMessage);
+    });
 
-      // When the app is opened from a background state
-      FirebaseMessaging.onMessageOpenedApp
-          .listen((RemoteMessage remoteMessage) {
-        _handleBackgroundMessage(remoteMessage);
-      });
-    }
+    // When the app is opened from a background state
+    FirebaseMessaging.onMessageOpenedApp
+        .listen((RemoteMessage remoteMessage) {
+      _handleBackgroundMessage(remoteMessage);
+    });
   }
 
   static void _handleForegroundMessage(RemoteMessage message) {

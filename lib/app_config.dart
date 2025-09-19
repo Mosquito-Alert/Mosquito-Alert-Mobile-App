@@ -6,9 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppConfig {
   final String baseUrl;
-  final bool useAuth;
 
-  AppConfig({required this.baseUrl, required this.useAuth});
+  AppConfig({required this.baseUrl});
 
   static Future<void> setEnvironment(String name) async {
     // Get the SharedPreferences instance
@@ -32,7 +31,6 @@ class AppConfig {
     final json = jsonDecode(contents);
 
     return AppConfig(
-        baseUrl: json['baseUrl'] ?? MosquitoAlert.basePath,
-        useAuth: json['useAuth']);
+        baseUrl: json['baseUrl'] ?? MosquitoAlert.basePath);
   }
 }

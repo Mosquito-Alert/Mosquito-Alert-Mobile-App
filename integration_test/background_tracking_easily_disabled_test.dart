@@ -22,7 +22,7 @@ Future<void> waitForWidget(
 void main() {
   patrolSetUp(() {
     // Initialize patrol configuration for handling native permissions
-    // This replaces the previous workaround of using useAuth: false in test.json
+    // The useAuth workaround has been completely removed from the codebase
   });
 
   group('end-to-end test', () {
@@ -34,8 +34,8 @@ void main() {
       // The app requires location permissions for background tracking functionality
       await $.native.grantPermissionWhenInUse();
       
-      // Start the app with dev config (useAuth: true) instead of test config (useAuth: false)
-      // This ensures we test the real authentication and permission flow instead of bypassing it
+      // Start the app with dev config since test.json has been removed
+      // Authentication and permissions are now always enabled
       app.main(env: "dev");
       await $.pumpAndSettle(Duration(seconds: 3));
 
