@@ -29,8 +29,7 @@ class PushNotificationsManager {
     });
 
     // When the app is opened from a background state
-    FirebaseMessaging.onMessageOpenedApp
-        .listen((RemoteMessage remoteMessage) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
       _handleBackgroundMessage(remoteMessage);
     });
   }

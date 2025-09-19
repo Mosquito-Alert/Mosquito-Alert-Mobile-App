@@ -30,7 +30,6 @@ class AppConfig {
 
     final json = jsonDecode(contents);
 
-    return AppConfig(
-        baseUrl: json['baseUrl'] ?? MosquitoAlert.basePath);
+    return AppConfig(baseUrl: json['baseUrl'] ?? MosquitoAlert.basePath);
   }
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:mosquito_alert_app/main.dart' as app;
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:patrol/patrol.dart';
 
 Future<void> waitForWidget(
-  PatrolTester $,
+  PatrolIntegrationTester $,
   Finder finder, {
   Duration timeout = const Duration(seconds: 15),
 }) async {
@@ -33,27 +32,27 @@ void main() {
       // This handles the system permission dialogs that would normally require manual interaction
       // The app requires location permissions for background tracking functionality
       await $.native.grantPermissionWhenInUse();
-      
+
       // Start the app with dev config since test.json has been removed
       // Authentication and permissions are now always enabled
       app.main(env: "dev");
-      await $.pumpAndSettle(Duration(seconds: 3));
+      await $.pumpAndSettle();
 
       // New user is created: Show consent form
       final acceptConditionsCheckbox =
           find.byKey(ValueKey("acceptConditionsCheckbox"));
       await waitForWidget($, acceptConditionsCheckbox);
-      await $.ensureVisible(acceptConditionsCheckbox);
+      //await $.ensureVisible(acceptConditionsCheckbox);
       await $.tap(acceptConditionsCheckbox);
 
       final acceptPrivacyPolicy = find.byKey(ValueKey("acceptPrivacyPolicy"));
       await waitForWidget($, acceptPrivacyPolicy);
-      await $.ensureVisible(acceptPrivacyPolicy);
+      //await $.ensureVisible(acceptPrivacyPolicy);
       await $.tap(acceptPrivacyPolicy);
 
       final continueButton = find.byKey(ValueKey("style.button"));
       await waitForWidget($, continueButton);
-      await $.ensureVisible(continueButton);
+      //await $.ensureVisible(continueButton);
       await $.tap(continueButton);
 
       // Handle any potential location permission dialog that may appear
@@ -65,7 +64,7 @@ void main() {
       final rejectBtn = find.byKey(Key("rejectBackgroundTrackingBtn"));
       await waitForWidget($, rejectBtn);
       expect(rejectBtn, findsOne);
-      await $.ensureVisible(rejectBtn);
+      //await $.ensureVisible(rejectBtn);
       await $.tap(rejectBtn);
 
       // Home page should be displayed with the expected cards
