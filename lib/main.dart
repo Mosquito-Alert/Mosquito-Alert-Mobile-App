@@ -47,9 +47,7 @@ Future<void> main({String env = 'prod'}) async {
   final deviceProvider = await DeviceProvider.create(apiClient: apiClient);
 
   final appConfig = await AppConfig.loadConfig();
-  if (appConfig.useAuth) {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-  }
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
   runApp(
     MultiProvider(

@@ -130,12 +130,6 @@ class _MainVCState extends State<MainVC>
   }
 
   Future<bool> initAuth() async {
-    final appConfig = await AppConfig.loadConfig();
-    if (!appConfig.useAuth) {
-      // Requesting permissions on automated tests creates many problems
-      // and mocking permission acceptance is difficult on Android and iOS
-      return true;
-    }
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final deviceProvider = Provider.of<DeviceProvider>(context, listen: false);

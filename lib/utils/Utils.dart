@@ -354,11 +354,6 @@ class Utils {
   }
 
   static void syncReports() async {
-    final appConfig = await AppConfig.loadConfig();
-    if (!appConfig.useAuth) {
-      return;
-    }
-
     List? savedReports = await UserManager.getReportList();
     List? savedImages = await UserManager.getImageList();
 
