@@ -46,10 +46,11 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Summary card
           Card(
@@ -121,7 +122,7 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
             onChanged: (value) => _updateNotes(),
           ),
 
-          Spacer(),
+          SizedBox(height: 24),
 
           // Submit section
           if (widget.isSubmitting) ...[
