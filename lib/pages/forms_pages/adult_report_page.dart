@@ -32,6 +32,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
   StreamController<double> percentStream = StreamController<double>.broadcast();
   double? index;
   late CampaignsApi campaignsApi;
+  late ObservationsApi observationsApi;
 
   // Define the events to log
   final List<Map<String, dynamic>> _pageEvents = [
@@ -75,6 +76,7 @@ class _AdultReportPageState extends State<AdultReportPage> {
     MosquitoAlert apiClient =
         Provider.of<MosquitoAlert>(context, listen: false);
     campaignsApi = apiClient.getCampaignsApi();
+    observationsApi = apiClient.getObservationsApi();
     _logFirebaseAnalytics();
     _pagesController = PageController();
     index = 0.0;
@@ -137,9 +139,10 @@ class _AdultReportPageState extends State<AdultReportPage> {
     loadingStream.add(true);
     await FirebaseAnalytics.instance
         .logEvent(name: 'submit_report', parameters: {'type': 'adult'});
-    var res = await Utils.createReport(); // TODO: Replace with issue #400
 
-    if (!res!) {
+    bool success = await sendAdultApiRequest();
+
+    if (!success) {
       _showAlertKo();
       return;
     }
@@ -176,6 +179,43 @@ class _AdultReportPageState extends State<AdultReportPage> {
           );
         },
       );
+    }
+  }
+
+  Future<bool> sendAdultApiRequest() async {
+    try {
+      // Step 1: Create location point with dummy data
+      final locationPoint = LocationPoint((b) => b
+        ..latitude = 41.3851
+        ..longitude = 2.1734);
+
+      // Step 2: Create location request using nested point structure
+      final locationRequestBuilder = LocationRequestBuilder();
+      locationRequestBuilder.source_ = LocationRequestSource_Enum.auto;
+      locationRequestBuilder.point.replace(locationPoint);
+      final locationRequest = locationRequestBuilder.build();
+
+      // Step 3: Create empty photos list (will be populated with actual photos later)
+      final photos = BuiltList<SimplePhotoRequest>.from([]);
+
+      // Step 4: Make API call
+      final response = await observationsApi.create(
+        createdAt: DateTime.now().toUtc(),
+        sentAt: DateTime.now().toUtc(),
+        location: locationRequest,
+        photos: photos,
+      );
+
+      if (response.statusCode == 201) {
+        print('SUCCESS: Observation created: ${response.data?.uuid}');
+        return true;
+      } else {
+        print('Unexpected status code: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('ERROR: $e');
+      return false;
     }
   }
 
