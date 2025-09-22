@@ -7,7 +7,7 @@ import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/breeding_report_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/map/public_map.dart';
-import 'package:mosquito_alert_app/pages/reports/adult/adult_report_entry.dart';
+import 'package:mosquito_alert_app/pages/reports/adult/adult_report_controller.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -171,9 +171,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _createAdultReport() async {
-    // New independent workflow - no Utils.createNewReport needed
     loadingStream.add(false);
-    await startAdultReportWorkflow(context);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdultReportController(),
+      ),
+    );
   }
 
   Future<void> _createSiteReport() async {
