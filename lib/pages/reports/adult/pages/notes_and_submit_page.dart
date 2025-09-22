@@ -52,33 +52,6 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Summary card
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.summarize, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text(
-                        'Report Summary',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(height: 20),
-
           // Notes section
           Text(
             '(HC) Additional Notes (Optional)',
@@ -107,8 +80,8 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               hintText:
-                  'e.g., "Found near standing water", "Very active", "Unusual markings"...',
-              labelText: 'Notes',
+                  '(HC) e.g., "Found near standing water", "Very active", "Unusual markings"...',
+              labelText: '(HC) Notes',
             ),
             onChanged: (value) => _updateNotes(),
           ),
@@ -129,7 +102,7 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                   CircularProgressIndicator(),
                   SizedBox(height: 12),
                   Text(
-                    'Submitting your report...',
+                    '(HC) Submitting your report...',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

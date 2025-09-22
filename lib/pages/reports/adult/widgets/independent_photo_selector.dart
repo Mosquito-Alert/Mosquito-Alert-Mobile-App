@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/camera_whatsapp.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-/// Independent photo selection widget for adult reports
-/// No dependencies on Utils.dart or legacy models
 class IndependentPhotoSelector extends StatefulWidget {
   final List<File> selectedPhotos;
   final VoidCallback onPhotosChanged;
@@ -37,7 +35,7 @@ class _IndependentPhotoSelectorState extends State<IndependentPhotoSelector> {
   @override
   void initState() {
     super.initState();
-    // Auto-open camera when component loads (like before)
+    // Auto-open camera when component loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_hasRequestedInitialPhoto && widget.selectedPhotos.isEmpty) {
         _requestPhotoFromCamera();
