@@ -60,7 +60,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
 
         manifestPlaceholders = [
             googlemapsKey: googlemapsKey
@@ -83,12 +84,20 @@ android {
             minifyEnabled false
             shrinkResources false
         }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
     }
 
     lint {
         abortOnError false
         checkReleaseBuilds false
         disable 'InvalidPackage'
+    }
+
+    testOptions {
+        execution "ANDROIDX_TEST_ORCHESTRATOR"
     }
 }
 
@@ -100,4 +109,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.7.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestUtil 'androidx.test:orchestrator:1.5.1'
 }
