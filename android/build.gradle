@@ -8,6 +8,12 @@ allprojects {
                 force "androidx.test:runner:1.7.0"
                 force "androidx.test.espresso:espresso-core:3.7.0"
                 force "androidx.test:orchestrator:1.5.1"
+                
+                // Force compatible versions for SDK 34
+                force "androidx.activity:activity-ktx:1.8.1"
+                force "androidx.activity:activity:1.8.1"
+                force "androidx.core:core:1.13.1"
+                force "androidx.core:core-ktx:1.13.1"
             }
         }
     }
@@ -25,6 +31,17 @@ allprojects {
                     if (namespace == null) {
                         namespace project.group
                     }
+                    
+                    // Ensure compile SDK version is at least 34 for all modules
+                    compileSdk 34
+                    
+                    // Ensure minimum SDK version is at least 21 for all modules
+                    defaultConfig {
+                        if (minSdkVersion == null || minSdkVersion.apiLevel < 21) {
+                            minSdkVersion 21
+                        }
+                    }
+                    
                     compileOptions {
                         sourceCompatibility JavaVersion.VERSION_21
                         targetCompatibility JavaVersion.VERSION_21

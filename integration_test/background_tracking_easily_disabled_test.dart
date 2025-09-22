@@ -6,6 +6,7 @@ import 'package:patrol/patrol.dart';
 void main() {
   patrolTest(
       'Test background tracking can be easily disabled on first use, to satisfy Google/Apple requirements',
+      framePolicy: LiveTestWidgetsFlutterBindingFramePolicy.fullyLive,
       ($) async {
     // Initialize the app for testing
     app.main(env: "test");
