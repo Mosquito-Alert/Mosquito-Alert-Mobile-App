@@ -328,11 +328,11 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Coordinates: ${widget.reportData.locationDescription}',
+                    '(HC) Coordinates: ${widget.reportData.locationDescription}',
                     style: TextStyle(fontSize: 14),
                   ),
                   Text(
-                    'Source: ${widget.reportData.locationSource == 'auto' ? 'GPS' : 'Manual'}',
+                    '(HC) Source: ${widget.reportData.locationSource == 'auto' ? 'GPS' : 'Manual'}',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
