@@ -28,6 +28,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
   final _latController = TextEditingController();
   final _lonController = TextEditingController();
   Set<Marker> _markers = {};
+  GoogleMapController? _mapController;
 
   static const LatLng _defaultCenter =
       LatLng(41.3851, 2.1734); // Default: Barcelona
@@ -61,6 +62,19 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     }
   }
 
+  Future<void> _moveMapToLocation(double latitude, double longitude) async {
+    if (_mapController != null) {
+      await _mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(latitude, longitude),
+            zoom: 16.0,
+          ),
+        ),
+      );
+    }
+  }
+
   void _onMapTap(LatLng position) {
     setState(() {
       widget.reportData.latitude = position.latitude;
@@ -77,6 +91,10 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         ),
       };
     });
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
   }
 
   @override
@@ -126,6 +144,8 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         _lonController.text = position.longitude.toStringAsFixed(6);
       });
       _updateMapMarkers();
+      // Move map to the GPS location
+      await _moveMapToLocation(position.latitude, position.longitude);
     } catch (e) {
       setState(() {
         _locationError = e.toString();
@@ -147,33 +167,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Instructions
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text(
-                        '(HC) Location Selection',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(height: 20),
-
           // GPS Location Button
           SizedBox(
             width: double.infinity,
@@ -237,7 +230,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: GoogleMap(
-                //onMapCreated: _onMapCreated,
+                onMapCreated: _onMapCreated,
                 onTap: _onMapTap,
                 initialCameraPosition: CameraPosition(
                   target: widget.reportData.latitude != null &&
@@ -274,48 +267,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                       _locationError!,
                       style: TextStyle(color: Colors.red[700]),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          SizedBox(height: 20),
-
-          // Current location display
-          if (_canProceed) ...[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                border: Border.all(color: Colors.green[200]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.check_circle, color: Colors.green),
-                      SizedBox(width: 8),
-                      Text(
-                        'Location Selected',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green[700],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '(HC) Coordinates: ${widget.reportData.locationDescription}',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  Text(
-                    '(HC) Source: ${widget.reportData.locationSource == api.LocationRequestSource_Enum.auto ? 'GPS' : 'Manual'}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
