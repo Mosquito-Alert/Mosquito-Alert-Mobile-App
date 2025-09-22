@@ -1,13 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/models/report.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/adult_report_page.dart';
-import 'package:mosquito_alert_app/pages/forms_pages/biting_report_page.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_other_report_form.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/add_photo_button_widget.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/location_form.dart';
@@ -15,7 +10,6 @@ import 'package:mosquito_alert_app/pages/forms_pages/components/questions_breedi
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:provider/provider.dart';
 
 class BreedingReportPage extends StatefulWidget {
   @override
@@ -28,7 +22,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   StreamController<bool> validStream = StreamController<bool>.broadcast();
   StreamController<double> percentStream = StreamController<double>.broadcast();
-  late api.BreedingSitesApi breedingSitesApi;
 
   // Define the events to log
   final List<Map<String, dynamic>> _pageEvents = [
@@ -107,12 +100,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     super.initState();
     _logFirebaseAnalytics();
     _pagesController = PageController();
-
-    // Initialize API client
-    api.MosquitoAlert apiClient =
-        Provider.of<api.MosquitoAlert>(context, listen: false);
-    breedingSitesApi = apiClient.getBreedingSitesApi();
-
     _formsReport = [
       QuestionsBreedingForm(displayQuestions.elementAt(0), setValid, true,
           goNextPage, 'assets/img/bottoms/breeding_1.webp'),
@@ -195,27 +182,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     });
   }
 
-  void navigateOtherReport() async {
-    switch (otherReport) {
-      case 'bite':
-        Utils.addOtherReport('bite', context);
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BitingReportPage()),
-        );
-        break;
-      case 'adult':
-        Utils.addOtherReport('adult', context);
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdultReportPage()),
-        );
-        break;
-      default:
-        break;
-    }
-  }
-
   void _createReport() async {
     setState(() {
       percentStream.add(0.8);
@@ -223,60 +189,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     loadingStream.add(true);
     await FirebaseAnalytics.instance
         .logEvent(name: 'submit_report', parameters: {'type': 'breeding_site'});
-    await sendBreedingApiRequest();
-  }
-
-  Future<void> sendBreedingApiRequest() async {
-    try {
-      // Build location
-      final locationPoint = api.LocationPoint((b) => b
-            ..latitude = 41.3851 // TODO: Replace with actual lat
-            ..longitude = 2.1734 // TODO: Replace with actual lon
-          );
-
-      final locationRequestBuilder = api.LocationRequestBuilder();
-      locationRequestBuilder.source_ = api.LocationRequestSource_Enum.manual;
-      locationRequestBuilder.point.replace(locationPoint);
-      final locationRequest = locationRequestBuilder.build();
-
-      // Build photos list from Utils.report.photos
-      final List<Photo>? reportPhotos = Utils.report?.photos;
-      final List<api.SimplePhotoRequest> simplePhotoRequests = [];
-      if (reportPhotos != null && reportPhotos.isNotEmpty) {
-        for (final photo in reportPhotos) {
-          if (photo.photo != null) {
-            // Assuming photo.photo is a file path, read as bytes
-            final file = File(photo.photo!);
-            if (await file.exists()) {
-              final bytes = await file.readAsBytes();
-              simplePhotoRequests
-                  .add(api.SimplePhotoRequest((b) => b..file = bytes));
-            }
-          }
-        }
-      }
-      final photos = BuiltList<api.SimplePhotoRequest>(simplePhotoRequests);
-
-      final response = await breedingSitesApi.create(
-        createdAt: DateTime.now().toUtc(),
-        sentAt: DateTime.now().toUtc(),
-        location: locationRequest,
-        photos: photos,
-      );
-
-      if (response.statusCode == 201) {
-        _showAlertOk();
-        setState(() {
-          percentStream.add(1.0);
-        });
-      } else {
-        print("debug");
-        _showAlertKo();
-      }
-    } catch (e) {
-      print(e);
-      _showAlertKo();
-    }
   }
 
   @override
@@ -367,13 +279,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
                                                 _pagesController!.page;
 
                                             if (currentPage == 0.0) {
-                                              goNextPage();
-                                            } else if (currentPage == 4.0) {
-                                              if (otherReport == 'adult' ||
-                                                  otherReport == 'bite') {
-                                                navigateOtherReport();
-                                              }
-                                            } else {
                                               goNextPage();
                                             }
                                           }),
