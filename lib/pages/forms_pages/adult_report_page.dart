@@ -140,9 +140,9 @@ class _AdultReportPageState extends State<AdultReportPage> {
     await FirebaseAnalytics.instance
         .logEvent(name: 'submit_report', parameters: {'type': 'adult'});
 
-    bool success = await sendAdultApiRequest();
+    var res = await Utils.createReport(); // TODO: Replace with issue #400
 
-    if (!success) {
+    if (!res!) {
       _showAlertKo();
       return;
     }
@@ -179,43 +179,6 @@ class _AdultReportPageState extends State<AdultReportPage> {
           );
         },
       );
-    }
-  }
-
-  Future<bool> sendAdultApiRequest() async {
-    try {
-      // Step 1: Create location point with dummy data
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = 41.3851
-        ..longitude = 2.1734);
-
-      // Step 2: Create location request using nested point structure
-      final locationRequestBuilder = LocationRequestBuilder();
-      locationRequestBuilder.source_ = LocationRequestSource_Enum.auto;
-      locationRequestBuilder.point.replace(locationPoint);
-      final locationRequest = locationRequestBuilder.build();
-
-      // Step 3: Create empty photos list (will be populated with actual photos later)
-      final photos = BuiltList<SimplePhotoRequest>.from([]);
-
-      // Step 4: Make API call
-      final response = await observationsApi.create(
-        createdAt: DateTime.now().toUtc(),
-        sentAt: DateTime.now().toUtc(),
-        location: locationRequest,
-        photos: photos,
-      );
-
-      if (response.statusCode == 201) {
-        print('SUCCESS: Observation created: ${response.data?.uuid}');
-        return true;
-      } else {
-        print('Unexpected status code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('ERROR: $e');
-      return false;
     }
   }
 

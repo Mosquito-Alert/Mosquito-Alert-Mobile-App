@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 import '../models/adult_report_data.dart';
@@ -81,7 +82,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       setState(() {
         widget.reportData.latitude = position.latitude;
         widget.reportData.longitude = position.longitude;
-        widget.reportData.locationSource = 'auto';
+        widget.reportData.locationSource = api.LocationRequestSource_Enum.auto;
         _latController.text = position.latitude.toStringAsFixed(6);
         _lonController.text = position.longitude.toStringAsFixed(6);
       });
@@ -104,7 +105,8 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
       setState(() {
         widget.reportData.latitude = lat;
         widget.reportData.longitude = lon;
-        widget.reportData.locationSource = 'manual';
+        widget.reportData.locationSource =
+            api.LocationRequestSource_Enum.manual;
       });
     }
   }
@@ -120,7 +122,8 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             setState(() {
               widget.reportData.latitude = latitude;
               widget.reportData.longitude = longitude;
-              widget.reportData.locationSource = 'manual';
+              widget.reportData.locationSource =
+                  api.LocationRequestSource_Enum.manual;
               _latController.text = latitude.toStringAsFixed(6);
               _lonController.text = longitude.toStringAsFixed(6);
             });
@@ -332,7 +335,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                     style: TextStyle(fontSize: 14),
                   ),
                   Text(
-                    '(HC) Source: ${widget.reportData.locationSource == 'auto' ? 'GPS' : 'Manual'}',
+                    '(HC) Source: ${widget.reportData.locationSource == api.LocationRequestSource_Enum.auto ? 'GPS' : 'Manual'}',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],

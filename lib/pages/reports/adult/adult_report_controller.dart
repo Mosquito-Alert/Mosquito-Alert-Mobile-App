@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
 import 'models/adult_report_data.dart';
@@ -97,9 +98,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
       // Step 2: Create location request
       final locationRequest = api.LocationRequest((b) => b
-        ..source_ = _reportData.locationSource == 'auto'
-            ? api.LocationRequestSource_Enum.auto
-            : api.LocationRequestSource_Enum.manual
+        ..source_ = _reportData.locationSource
         ..point.replace(locationPoint));
 
       // Step 3: Process photos
@@ -112,12 +111,13 @@ class _AdultReportControllerState extends State<AdultReportController> {
       }
       final photos = BuiltList<api.SimplePhotoRequest>(photoRequests);
 
-      // Step 4: Create notes with environment info
-      final notes = [
-        'Environment: ${_reportData.environmentDisplayText}',
-        if (_reportData.notes != null && _reportData.notes!.isNotEmpty)
-          'Notes: ${_reportData.notes}',
-      ].join('\n');
+      // Step 4: Prepare notes
+      final notes =
+          _reportData.notes?.isNotEmpty == true ? _reportData.notes! : '';
+
+      // Steo 5: Tags
+      final userTags = await UserManager.getHashtags();
+      final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
       // Step 5: Make API call
       final response = await _observationsApi.create(
@@ -126,6 +126,9 @@ class _AdultReportControllerState extends State<AdultReportController> {
         location: locationRequest,
         photos: photos,
         note: notes,
+        eventEnvironment: _reportData.apiEnvironmentValue ?? '',
+        eventMoment: _reportData.eventMoment,
+        tags: tags,
       );
 
       if (response.statusCode == 201) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
-/// Independent adult report data model - no dependencies on legacy Utils or models
+import 'package:mosquito_alert/mosquito_alert.dart' as api;
+
 class AdultReportData {
   // Step 1: Photos
   List<File> photos = [];
@@ -8,12 +9,17 @@ class AdultReportData {
   // Step 2: Location
   double? latitude;
   double? longitude;
-  String locationSource = 'auto'; // 'auto' or 'manual'
+  api.LocationRequestSource_Enum locationSource =
+      api.LocationRequestSource_Enum.auto;
 
   // Step 3: Environment question
-  String? environmentAnswer; // 'vehicle', 'building', 'outdoors'
+  String? environmentAnswer; // 'vehicle', 'indoors', 'outdoors', '', null
 
-  // Step 4: Notes
+  // Step 4: Event timing (when the mosquito was found)
+  String?
+      eventMoment; // 'now', 'last_morning', 'last_midday', 'last_afternoon', 'last_night', '', null,
+
+  // Step 5: Notes
   String? notes;
 
   // Metadata
@@ -49,13 +55,28 @@ class AdultReportData {
     }
   }
 
+  /// Maps environment answer to API format
+  String? get apiEnvironmentValue {
+    switch (environmentAnswer) {
+      case 'vehicle':
+        return 'vehicle';
+      case 'building':
+        return 'indoors'; // Map 'building' to 'indoors' for API
+      case 'outdoors':
+        return 'outdoors';
+      default:
+        return null;
+    }
+  }
+
   /// Resets all data
   void reset() {
     photos.clear();
     latitude = null;
     longitude = null;
-    locationSource = 'auto';
+    locationSource = api.LocationRequestSource_Enum.auto;
     environmentAnswer = null;
+    eventMoment = 'now';
     notes = null;
     createdAt = DateTime.now();
   }
@@ -68,6 +89,7 @@ class AdultReportData {
     copy.longitude = longitude;
     copy.locationSource = locationSource;
     copy.environmentAnswer = environmentAnswer;
+    copy.eventMoment = eventMoment;
     copy.notes = notes;
     copy.createdAt = createdAt;
     return copy;
