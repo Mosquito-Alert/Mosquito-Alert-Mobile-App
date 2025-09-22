@@ -329,37 +329,6 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     );
   }
 
-  void _showAlertOk() {
-    loadingStream.add(false);
-    Utils.showAlert(
-      MyLocalizations.of(context, 'app_name'),
-      MyLocalizations.of(context, 'save_report_ok_txt'),
-      context,
-      onPressed: () {
-        Navigator.pop(context);
-        Utils.resetReport();
-        Navigator.of(context).popUntil((r) => r.isFirst);
-        Utils.requestInAppReview();
-      },
-      barrierDismissible: false,
-    );
-  }
-
-  void _showAlertKo() {
-    loadingStream.add(false);
-    Utils.showAlert(
-      MyLocalizations.of(context, 'app_name'),
-      MyLocalizations.of(context, 'save_report_ko_txt'),
-      context,
-      onPressed: () {
-        Navigator.pop(context);
-        Utils.resetReport();
-        Navigator.of(context).popUntil((r) => r.isFirst);
-      },
-      barrierDismissible: false,
-    );
-  }
-
   void _onWillPop() {
     var responses = Utils.report?.responses ?? [];
     if (responses.isNotEmpty) {

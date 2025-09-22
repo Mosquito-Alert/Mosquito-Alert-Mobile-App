@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 import '../models/adult_report_data.dart';
-import '../widgets/map_location_picker.dart';
 
 class LocationSelectionPage extends StatefulWidget {
   final AdultReportData reportData;
@@ -27,6 +27,10 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
   String? _locationError;
   final _latController = TextEditingController();
   final _lonController = TextEditingController();
+  Set<Marker> _markers = {};
+
+  static const LatLng _defaultCenter =
+      LatLng(41.3851, 2.1734); // Default: Barcelona
 
   @override
   void initState() {
@@ -38,6 +42,41 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     if (widget.reportData.longitude != null) {
       _lonController.text = widget.reportData.longitude!.toStringAsFixed(6);
     }
+    _updateMapMarkers();
+  }
+
+  void _updateMapMarkers() {
+    if (widget.reportData.latitude != null &&
+        widget.reportData.longitude != null) {
+      setState(() {
+        _markers = {
+          Marker(
+            markerId: MarkerId('selected_location'),
+            position: LatLng(
+                widget.reportData.latitude!, widget.reportData.longitude!),
+            infoWindow: InfoWindow(title: 'Selected Location'),
+          ),
+        };
+      });
+    }
+  }
+
+  void _onMapTap(LatLng position) {
+    setState(() {
+      widget.reportData.latitude = position.latitude;
+      widget.reportData.longitude = position.longitude;
+      widget.reportData.locationSource = api.LocationRequestSource_Enum.manual;
+      _latController.text = position.latitude.toStringAsFixed(6);
+      _lonController.text = position.longitude.toStringAsFixed(6);
+
+      _markers = {
+        Marker(
+          markerId: MarkerId('selected_location'),
+          position: position,
+          infoWindow: InfoWindow(title: 'Selected Location'),
+        ),
+      };
+    });
   }
 
   @override
@@ -86,6 +125,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         _latController.text = position.latitude.toStringAsFixed(6);
         _lonController.text = position.longitude.toStringAsFixed(6);
       });
+      _updateMapMarkers();
     } catch (e) {
       setState(() {
         _locationError = e.toString();
@@ -95,42 +135,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         _isGettingLocation = false;
       });
     }
-  }
-
-  void _updateManualLocation() {
-    final lat = double.tryParse(_latController.text);
-    final lon = double.tryParse(_lonController.text);
-
-    if (lat != null && lon != null) {
-      setState(() {
-        widget.reportData.latitude = lat;
-        widget.reportData.longitude = lon;
-        widget.reportData.locationSource =
-            api.LocationRequestSource_Enum.manual;
-      });
-    }
-  }
-
-  Future<void> _selectLocationOnMap() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MapLocationPicker(
-          initialLatitude: widget.reportData.latitude,
-          initialLongitude: widget.reportData.longitude,
-          onLocationSelected: (latitude, longitude) {
-            setState(() {
-              widget.reportData.latitude = latitude;
-              widget.reportData.longitude = longitude;
-              widget.reportData.locationSource =
-                  api.LocationRequestSource_Enum.manual;
-              _latController.text = latitude.toStringAsFixed(6);
-              _lonController.text = longitude.toStringAsFixed(6);
-            });
-          },
-        ),
-      ),
-    );
   }
 
   bool get _canProceed =>
@@ -155,18 +159,13 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                       Icon(Icons.location_on, color: Colors.blue),
                       SizedBox(width: 8),
                       Text(
-                        'Location Selection',
+                        '(HC) Location Selection',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Select where you found the mosquito. You can use your current GPS location or enter coordinates manually.',
-                    style: TextStyle(fontSize: 14),
                   ),
                 ],
               ),
@@ -175,63 +174,86 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
 
           SizedBox(height: 20),
 
-          // Location selection buttons
-          Row(
-            children: [
-              // GPS Location Button
-              Expanded(
-                child: _isGettingLocation
-                    ? ElevatedButton(
-                        onPressed: null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          disabledBackgroundColor: Colors.grey[400],
+          // GPS Location Button
+          SizedBox(
+            width: double.infinity,
+            child: _isGettingLocation
+                ? ElevatedButton(
+                    onPressed: null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      disabledBackgroundColor: Colors.grey[400],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Text('(HC) Getting...'),
-                          ],
-                        ),
-                      )
-                    : ElevatedButton.icon(
-                        onPressed: _getCurrentLocation,
-                        icon: Icon(Icons.gps_fixed),
-                        label: Text('(HC) Use GPS'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-              ),
-              SizedBox(width: 12),
-              // Map Selection Button
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: _selectLocationOnMap,
-                  icon: Icon(Icons.map),
-                  label: Text('(HC) Select on Map'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                        SizedBox(width: 8),
+                        Text('(HC) Getting location...'),
+                      ],
+                    ),
+                  )
+                : ElevatedButton.icon(
+                    onPressed: _getCurrentLocation,
+                    icon: Icon(Icons.gps_fixed),
+                    label: Text('(HC) Use Current GPS Location'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
                   ),
+          ),
+
+          SizedBox(height: 16),
+
+          // Map for manual selection
+          Text(
+            '(HC) Or tap on the map to select location manually:',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8),
+
+          // Embedded Google Map
+          Container(
+            height: 300,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: GoogleMap(
+                //onMapCreated: _onMapCreated,
+                onTap: _onMapTap,
+                initialCameraPosition: CameraPosition(
+                  target: widget.reportData.latitude != null &&
+                          widget.reportData.longitude != null
+                      ? LatLng(widget.reportData.latitude!,
+                          widget.reportData.longitude!)
+                      : _defaultCenter,
+                  zoom: 15,
                 ),
+                markers: _markers,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: true,
+                mapToolbarEnabled: false,
               ),
-            ],
+            ),
           ),
 
           if (_locationError != null) ...[
@@ -257,49 +279,6 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
               ),
             ),
           ],
-
-          SizedBox(height: 20),
-
-          // Manual location input
-          Text(
-            'Or enter coordinates manually:',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          SizedBox(height: 12),
-
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _latController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: 'Latitude',
-                    border: OutlineInputBorder(),
-                    hintText: '41.385064',
-                  ),
-                  onChanged: (value) => _updateManualLocation(),
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  controller: _lonController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: 'Longitude',
-                    border: OutlineInputBorder(),
-                    hintText: '2.173404',
-                  ),
-                  onChanged: (value) => _updateManualLocation(),
-                ),
-              ),
-            ],
-          ),
 
           SizedBox(height: 20),
 
