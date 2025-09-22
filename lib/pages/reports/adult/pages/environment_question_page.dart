@@ -24,19 +24,19 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
   final List<Map<String, dynamic>> _environmentOptions = [
     {
       'value': 'vehicle',
-      'title': '(HC) Inside a vehicle',
+      'titleKey': 'question_4_answer_41',
       'description': '(HC) Car, bus, train, or any other vehicle',
       'icon': Icons.directions_car,
     },
     {
-      'value': 'building',
-      'title': '(HC) In a building',
+      'value': 'indoors',
+      'titleKey': 'question_4_answer_42',
       'description': '(HC) House, office, shop, or any indoor space',
       'icon': Icons.home,
     },
     {
       'value': 'outdoors',
-      'title': '(HC) Outdoors',
+      'titleKey': 'question_4_answer_43',
       'description': '(HC) Garden, park, street, or any outdoor space',
       'icon': Icons.nature,
     },
@@ -151,7 +151,8 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  option['title'],
+                                  MyLocalizations.of(
+                                      context, option['titleKey']),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -187,33 +188,6 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
               },
             ),
           ),
-
-          // Current selection display
-          if (_canProceed) ...[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                border: Border.all(color: Colors.green[200]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green),
-                  SizedBox(width: 8),
-                  Text(
-                    'Selected: ${widget.reportData.environmentDisplayText}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green[700],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
 
           // Navigation buttons
           Row(

@@ -72,15 +72,6 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 12),
-                  _buildSummaryRow(
-                      'Photos', '${widget.reportData.photos.length} selected'),
-                  _buildSummaryRow(
-                      'Location', widget.reportData.locationDescription),
-                  _buildSummaryRow(
-                      'Environment', widget.reportData.environmentDisplayText),
-                  _buildSummaryRow('Date',
-                      widget.reportData.createdAt.toString().substring(0, 19)),
                 ],
               ),
             ),
@@ -90,7 +81,7 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
 
           // Notes section
           Text(
-            'Additional Notes (Optional)',
+            '(HC) Additional Notes (Optional)',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -100,7 +91,7 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
           SizedBox(height: 8),
 
           Text(
-            'Add any additional observations or details about the mosquito or circumstances.',
+            '(HC) Add any additional observations or details about the mosquito or circumstances.',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],
@@ -146,52 +137,16 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Please wait while we process your mosquito report.',
+                    '(HC) Please wait while we process your mosquito report.',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ] else ...[
-            // Ready to submit
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                border: Border.all(color: Colors.green[200]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 32),
-                  SizedBox(height: 8),
-                  Text(
-                    'Ready to Submit!',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green[700],
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Your mosquito report will help scientists track mosquito populations and prevent disease transmission.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
           ],
-
-          SizedBox(height: 16),
 
           // Navigation buttons
           Row(
@@ -242,33 +197,6 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryRow(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              '$label:',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(fontSize: 14),
-            ),
           ),
         ],
       ),

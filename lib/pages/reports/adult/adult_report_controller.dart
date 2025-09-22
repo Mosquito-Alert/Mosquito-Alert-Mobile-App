@@ -126,8 +126,8 @@ class _AdultReportControllerState extends State<AdultReportController> {
         location: locationRequest,
         photos: photos,
         note: notes,
-        eventEnvironment: _reportData.apiEnvironmentValue ?? '',
-        eventMoment: _reportData.eventMoment,
+        eventEnvironment: _reportData.environmentAnswer ?? '',
+        eventMoment: _reportData.eventMoment ?? 'now',
         tags: tags,
       );
 

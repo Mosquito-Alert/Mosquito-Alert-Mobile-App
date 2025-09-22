@@ -100,6 +100,7 @@ class _BreedingReportPageState extends State<BreedingReportPage> {
     super.initState();
     _logFirebaseAnalytics();
     _pagesController = PageController();
+
     _formsReport = [
       QuestionsBreedingForm(displayQuestions.elementAt(0), setValid, true,
           goNextPage, 'assets/img/bottoms/breeding_1.webp'),

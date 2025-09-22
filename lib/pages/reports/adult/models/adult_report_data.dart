@@ -41,34 +41,6 @@ class AdultReportData {
     return 'No location selected';
   }
 
-  /// Gets environment answer display text
-  String get environmentDisplayText {
-    switch (environmentAnswer) {
-      case 'vehicle':
-        return 'Inside a vehicle';
-      case 'building':
-        return 'In a building';
-      case 'outdoors':
-        return 'Outdoors';
-      default:
-        return 'Not selected';
-    }
-  }
-
-  /// Maps environment answer to API format
-  String? get apiEnvironmentValue {
-    switch (environmentAnswer) {
-      case 'vehicle':
-        return 'vehicle';
-      case 'building':
-        return 'indoors'; // Map 'building' to 'indoors' for API
-      case 'outdoors':
-        return 'outdoors';
-      default:
-        return null;
-    }
-  }
-
   /// Resets all data
   void reset() {
     photos.clear();
@@ -76,7 +48,7 @@ class AdultReportData {
     longitude = null;
     locationSource = api.LocationRequestSource_Enum.auto;
     environmentAnswer = null;
-    eventMoment = 'now';
+    eventMoment = null;
     notes = null;
     createdAt = DateTime.now();
   }
