@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -137,8 +136,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription<List<ConnectivityResult>> subscription;
-
   MyLocalizationsDelegate _newLocaleDelegate = MyLocalizationsDelegate();
 
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
@@ -164,7 +161,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
-    subscription.cancel();
   }
 
   @override
