@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/pages/reports/adult/pages/photo_selection_page.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import 'models/adult_report_data.dart';
 import 'pages/environment_question_page.dart';
-import 'pages/location_selection_page.dart';
 import 'pages/notes_and_submit_page.dart';
 
 /// Main controller for the adult report workflow
@@ -78,6 +78,16 @@ class _AdultReportControllerState extends State<AdultReportController> {
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  /// Handle location selection callback
+  void _onLocationSelected(double latitude, double longitude,
+      api.LocationRequestSource_Enum source) {
+    setState(() {
+      _reportData.latitude = latitude;
+      _reportData.longitude = longitude;
+      _reportData.locationSource = source;
+    });
   }
 
   /// Submit the adult report via API
@@ -230,10 +240,19 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   reportData: _reportData,
                   onNext: _nextStep,
                 ),
-                LocationSelectionPage(
-                  reportData: _reportData,
+                SharedLocationSelectionPage(
+                  title: MyLocalizations.of(context, 'question_11'),
+                  subtitle:
+                      '(HC) Please indicate where you spotted the mosquito:',
+                  initialLatitude: _reportData.latitude,
+                  initialLongitude: _reportData.longitude,
+                  onLocationSelected: _onLocationSelected,
                   onNext: _nextStep,
                   onPrevious: _previousStep,
+                  canProceed: _reportData.latitude != null &&
+                      _reportData.longitude != null,
+                  locationDescription: _reportData.locationDescription,
+                  locationSource: _reportData.locationSource,
                 ),
                 EnvironmentQuestionPage(
                   reportData: _reportData,

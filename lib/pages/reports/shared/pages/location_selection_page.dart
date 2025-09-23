@@ -3,37 +3,42 @@ import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/location_selector.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-import '../models/breeding_site_report_data.dart';
-
-class LocationSelectionPage extends StatefulWidget {
-  final BreedingSiteReportData reportData;
+/// Shared location selection page that can be used by any report workflow
+/// Configurable title, subtitle, and location handling through callbacks
+class SharedLocationSelectionPage extends StatefulWidget {
+  final String title;
+  final String subtitle;
+  final double? initialLatitude;
+  final double? initialLongitude;
+  final Function(double latitude, double longitude,
+      api.LocationRequestSource_Enum source) onLocationSelected;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
+  final bool canProceed;
+  final String? locationDescription;
+  final api.LocationRequestSource_Enum? locationSource;
 
-  const LocationSelectionPage({
+  const SharedLocationSelectionPage({
     Key? key,
-    required this.reportData,
+    required this.title,
+    required this.subtitle,
+    this.initialLatitude,
+    this.initialLongitude,
+    required this.onLocationSelected,
     required this.onNext,
     required this.onPrevious,
+    required this.canProceed,
+    this.locationDescription,
+    this.locationSource,
   }) : super(key: key);
 
   @override
-  _LocationSelectionPageState createState() => _LocationSelectionPageState();
+  _SharedLocationSelectionPageState createState() =>
+      _SharedLocationSelectionPageState();
 }
 
-class _LocationSelectionPageState extends State<LocationSelectionPage> {
-  void _onLocationSelected(double latitude, double longitude,
-      api.LocationRequestSource_Enum source) {
-    setState(() {
-      widget.reportData.latitude = latitude;
-      widget.reportData.longitude = longitude;
-      widget.reportData.locationSource = source;
-    });
-  }
-
-  bool get _canProceed =>
-      widget.reportData.latitude != null && widget.reportData.longitude != null;
-
+class _SharedLocationSelectionPageState
+    extends State<SharedLocationSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,7 +48,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
         children: [
           // Title
           Text(
-            MyLocalizations.of(context, 'question_16'),
+            widget.title,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -54,7 +59,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
 
           // Subtitle
           Text(
-            '(HC) Please indicate where the breeding site is located:',
+            widget.subtitle,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -66,16 +71,16 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
           // Location selector
           Expanded(
             child: LocationSelector(
-              initialLatitude: widget.reportData.latitude,
-              initialLongitude: widget.reportData.longitude,
-              onLocationSelected: _onLocationSelected,
+              initialLatitude: widget.initialLatitude,
+              initialLongitude: widget.initialLongitude,
+              onLocationSelected: widget.onLocationSelected,
             ),
           ),
 
           SizedBox(height: 16),
 
           // Current location info
-          if (_canProceed)
+          if (widget.canProceed)
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -98,23 +103,25 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                             color: Colors.green[700],
                           ),
                         ),
-                        Text(
-                          widget.reportData.locationDescription,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.green[600],
+                        if (widget.locationDescription != null)
+                          Text(
+                            widget.locationDescription!,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green[600],
+                            ),
                           ),
-                        ),
-                        Text(
-                          widget.reportData.locationSource ==
-                                  api.LocationRequestSource_Enum.auto
-                              ? '(HC) GPS Location'
-                              : '(HC) Manual Selection',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.green[600],
+                        if (widget.locationSource != null)
+                          Text(
+                            widget.locationSource ==
+                                    api.LocationRequestSource_Enum.auto
+                                ? '(HC) GPS Location'
+                                : '(HC) Manual Selection',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green[600],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -142,7 +149,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
               Expanded(
                 flex: 2,
                 child: ElevatedButton(
-                  onPressed: _canProceed ? widget.onNext : null,
+                  onPressed: widget.canProceed ? widget.onNext : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
