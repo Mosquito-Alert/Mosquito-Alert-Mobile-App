@@ -136,7 +136,6 @@ class _NotesAndSubmitWidgetState extends State<NotesAndSubmitWidget> {
 
           SizedBox(height: 16),
 
-          // Navigation buttons - fixed at bottom
           Row(
             children: [
               Expanded(
