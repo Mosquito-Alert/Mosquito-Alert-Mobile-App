@@ -31,23 +31,24 @@ class _BreedingSiteReportControllerState
   int _currentStep = 0;
   bool _isSubmitting = false;
 
-  List<String> get _baseStepTitles => [
-        '(HC) Site Type',
-        '(HC) Take Photos',
-        '(HC) Water Status',
-        '(HC) Larvae Check',
-        '(HC) Select Location',
-        '(HC) Notes & Submit'
-      ];
-
   /// Gets the current step titles based on water status
   List<String> get _stepTitles {
-    final titles = List<String>.from(_baseStepTitles);
+    final titles = <String>[
+      '(HC) Site Type',        // 0
+      '(HC) Take Photos',      // 1
+      '(HC) Water Status',     // 2
+    ];
     
-    // If no water, remove the larvae check step
-    if (_reportData.hasWater == false) {
-      titles.removeAt(3); // Remove "Larvae Check"
+    // Add larvae step only if water is present
+    if (_reportData.hasWater == true) {
+      titles.add('(HC) Larvae Check'); // 3
     }
+    
+    // Always add final steps
+    titles.addAll([
+      '(HC) Select Location',  // 3 or 4
+      '(HC) Notes & Submit'    // 4 or 5
+    ]);
     
     return titles;
   }
@@ -245,6 +246,14 @@ class _BreedingSiteReportControllerState
 
   /// Gets the current page widget based on the current step
   Widget get _currentPage {
+    // Step numbers are consistent:
+    // 0: Site Type
+    // 1: Photos  
+    // 2: Water
+    // 3: Larvae (only if hasWater == true) OR Location (if hasWater == false)
+    // 4: Location (if hasWater == true) OR Notes (if hasWater == false)
+    // 5: Notes (only if hasWater == true)
+    
     switch (_currentStep) {
       case 0:
         return SiteTypeSelectionPage(
@@ -270,27 +279,31 @@ class _BreedingSiteReportControllerState
           onPrevious: _previousStep,
         );
       case 3:
-        // Larvae question (only if water is present)
+        // This step depends on water status
         if (_reportData.hasWater == true) {
+          // Show larvae question
           return LarvaeQuestionPage(
             reportData: _reportData,
             onNext: _nextStep,
             onPrevious: _previousStep,
           );
         } else {
-          // Skip to location if no water
+          // Skip to location
           return _getLocationPage();
         }
       case 4:
         if (_reportData.hasWater == true) {
+          // Location page after larvae
           return _getLocationPage();
         } else {
+          // Notes page (final step when no water)
           return _getNotesPage();
-        }
+        }  
       case 5:
+        // Notes page (final step when water is present)
         return _getNotesPage();
       default:
-        return Container(); // Fallback
+        return Container();
     }
   }
 
@@ -324,9 +337,14 @@ class _BreedingSiteReportControllerState
 
   @override
   Widget build(BuildContext context) {
+    final stepTitles = _stepTitles;
+    final currentTitle = _currentStep < stepTitles.length 
+        ? stepTitles[_currentStep] 
+        : stepTitles.last;
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text(_stepTitles[_currentStep]),
+        title: Text(currentTitle),
         leading: _currentStep > 0
             ? IconButton(
                 icon: Icon(Icons.arrow_back),
@@ -342,8 +360,8 @@ class _BreedingSiteReportControllerState
           // Progress indicator
           ReportProgressIndicator(
             currentStep: _currentStep,
-            totalSteps: _stepTitles.length,
-            stepTitles: _stepTitles,
+            totalSteps: stepTitles.length,
+            stepTitles: stepTitles,
           ),
 
           // Main content
