@@ -15,7 +15,6 @@ import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
@@ -152,24 +151,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    //backgroud sync reports
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
-      print('Connectivity status changed to $results');
-      for (var result in results) {
-        switch (result) {
-          case ConnectivityResult.mobile:
-          case ConnectivityResult.wifi:
-            Utils.syncReports();
-            break;
-          case ConnectivityResult.none:
-            break;
-          default:
-            break;
-        }
-      }
-    });
     application.onLocaleChanged = onLocaleChange;
   }
 

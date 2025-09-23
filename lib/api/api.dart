@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/models/report.dart';
 import 'package:path/path.dart' as path;
 
 class ApiSingleton {
@@ -28,17 +27,6 @@ class ApiSingleton {
 
   static ApiSingleton getInstance() {
     return ApiSingleton();
-  }
-
-  //Reports
-  Future<dynamic> createReport(Report report) async {
-    // TODO: Delete?
-    return null;
-  }
-
-  Future<List<Report>> getReportsList() async {
-    // TODO
-    return [];
   }
 
   //Images
