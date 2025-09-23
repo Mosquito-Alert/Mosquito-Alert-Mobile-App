@@ -9,7 +9,6 @@ class NotesAndSubmitPage extends StatefulWidget {
   final VoidCallback onSubmit;
   final VoidCallback onPrevious;
   final bool isSubmitting;
-  final String notesHint;
   final String submitLoadingText;
 
   const NotesAndSubmitPage({
@@ -19,8 +18,6 @@ class NotesAndSubmitPage extends StatefulWidget {
     required this.onSubmit,
     required this.onPrevious,
     required this.isSubmitting,
-    this.notesHint =
-        '(HC) e.g., "Found near standing water", "Very active", "Unusual markings"...',
     this.submitLoadingText = '(HC) Submitting your report...',
   }) : super(key: key);
 
@@ -37,7 +34,6 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
       onSubmit: widget.onSubmit,
       onPrevious: widget.onPrevious,
       isSubmitting: widget.isSubmitting,
-      notesHint: widget.notesHint,
       submitLoadingText: widget.submitLoadingText,
     );
   }

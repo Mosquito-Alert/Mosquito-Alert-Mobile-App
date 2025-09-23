@@ -8,7 +8,6 @@ class NotesAndSubmitWidget extends StatefulWidget {
   final VoidCallback onSubmit;
   final VoidCallback onPrevious;
   final bool isSubmitting;
-  final String notesHint;
   final String submitLoadingText;
 
   const NotesAndSubmitWidget({
@@ -18,8 +17,6 @@ class NotesAndSubmitWidget extends StatefulWidget {
     required this.onSubmit,
     required this.onPrevious,
     required this.isSubmitting,
-    this.notesHint =
-        '(HC) e.g., "Found near standing water", "Very active", "Unusual markings"...',
     this.submitLoadingText = '(HC) Submitting your report...',
   }) : super(key: key);
 
@@ -99,7 +96,7 @@ class _NotesAndSubmitWidgetState extends State<NotesAndSubmitWidget> {
                         borderSide:
                             BorderSide(color: Style.colorPrimary, width: 2),
                       ),
-                      hintText: widget.notesHint,
+                      hintText: MyLocalizations.of(context, "comments_txt"),
                     ),
                     onChanged: (value) => _updateNotes(),
                   ),
