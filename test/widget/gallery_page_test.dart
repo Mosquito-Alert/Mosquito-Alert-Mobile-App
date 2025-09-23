@@ -2,21 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
-import 'package:flutter/services.dart';
 
 // Import shared mocks
 import '../mocks/mocks.dart';
-
-/// Helper function to handle Firebase exceptions during pump and settle
-Future<void> pumpAndSettleIgnoringFirebaseException(WidgetTester tester) async {
-  try {
-    await tester.pumpAndSettle();
-  } catch (e) {
-    // Firebase exception is expected in test environment, continue with test
-    print("Expected Firebase exception: ${e.toString().substring(0, 100)}...");
-    await tester.pump();
-  }
-}
 
 /// Creates a test widget wrapping GalleryPage with required dependencies
 Widget createTestWidget({
@@ -56,25 +44,11 @@ void main() {
       final introSlider = tester.widget<IntroSlider>(find.byType(IntroSlider));
       expect(introSlider.slides?.length, equals(9));
     });
-      // Given
-      await tester.pumpWidget(createTestWidget());
-      await pumpAndSettleIgnoringFirebaseException(tester);
-
-      // Then
-      expect(find.byType(GalleryPage), findsOneWidget);
-      expect(find.byType(IntroSlider), findsOneWidget);
-      expect(find.byType(Scaffold), findsOneWidget);
-      
-      // Verify the slider has 9 slides by checking for slide indicator dots
-      // IntroSlider creates dots for each slide
-      final introSlider = tester.widget<IntroSlider>(find.byType(IntroSlider));
-      expect(introSlider.slides?.length, equals(9));
-    });
 
     testWidgets('should display first slide content initially', (WidgetTester tester) async {
       // Given
       await tester.pumpWidget(createTestWidget());
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       // Then - Check if first slide content is visible
       // Look for the text content of the first slide
@@ -84,7 +58,7 @@ void main() {
     testWidgets('should navigate forward through slides using next button', (WidgetTester tester) async {
       // Given
       await tester.pumpWidget(createTestWidget());
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       // Initially on slide 1
       expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'), findsOneWidget);
@@ -94,7 +68,7 @@ void main() {
       expect(nextButton, findsOneWidget);
       
       await tester.tap(nextButton);
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       // Then - Should be on slide 2
       expect(find.textContaining('Mosquito Identification - Slide 2'), findsOneWidget);
@@ -104,7 +78,7 @@ void main() {
     testWidgets('should navigate through multiple slides sequentially', (WidgetTester tester) async {
       // Given
       await tester.pumpWidget(createTestWidget());
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       final nextButton = find.byIcon(Icons.navigate_next);
       
@@ -114,27 +88,27 @@ void main() {
       
       // Go to slide 2
       await tester.tap(nextButton);
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
       expect(find.textContaining('Slide 2'), findsOneWidget);
       
       // Go to slide 3
       await tester.tap(nextButton);
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
       expect(find.textContaining('Slide 3'), findsOneWidget);
     });
 
     testWidgets('should support navigation gestures within IntroSlider', (WidgetTester tester) async {
       // Given - Navigate to slide 3 first
       await tester.pumpWidget(createTestWidget());
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       final nextButton = find.byIcon(Icons.navigate_next);
       
       // Go to slide 3
       await tester.tap(nextButton); // to slide 2
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
       await tester.tap(nextButton); // to slide 3
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
       
       expect(find.textContaining('Breeding Sites - Slide 3'), findsOneWidget);
 
@@ -145,7 +119,7 @@ void main() {
       
       // Try a swipe gesture (this may or may not work depending on IntroSlider settings)
       await tester.drag(introSlider, const Offset(300, 0)); // Swipe right
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       // Then - Verify IntroSlider is still functional (regardless of gesture outcome)
       expect(find.byType(IntroSlider), findsOneWidget);
@@ -181,14 +155,14 @@ void main() {
           callbackArgument = index;
         },
       ));
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       final nextButton = find.byIcon(Icons.navigate_next);
       
       // Navigate to last slide (slide 9) - simplified navigation
       for (int i = 0; i < 8; i++) {
         await tester.tap(nextButton);
-        await pumpAndSettleIgnoringFirebaseException(tester);
+        await tester.pumpAndSettle();
       }
 
       // Verify we're on the last slide
@@ -199,7 +173,7 @@ void main() {
       expect(doneButton, findsOneWidget);
       
       await tester.tap(doneButton);
-      await pumpAndSettleIgnoringFirebaseException(tester);
+      await tester.pumpAndSettle();
 
       // Then - Callback should be invoked with argument 0 (homepage index)
       expect(callbackInvoked, isTrue);
