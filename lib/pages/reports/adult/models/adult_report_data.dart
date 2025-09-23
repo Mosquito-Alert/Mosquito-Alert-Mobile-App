@@ -27,10 +27,7 @@ class AdultReportData {
 
   /// Validates if the report data is complete enough to submit
   bool get isValid {
-    return photos.isNotEmpty &&
-        latitude != null &&
-        longitude != null &&
-        environmentAnswer != null;
+    return photos.isNotEmpty && latitude != null && longitude != null;
   }
 
   /// Gets a user-friendly location description
