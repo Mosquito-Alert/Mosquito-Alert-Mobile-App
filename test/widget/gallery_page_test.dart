@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
+import 'package:flutter/services.dart';
 
 // Import shared mocks
 import '../mocks/mocks.dart';
@@ -35,13 +36,26 @@ Widget createTestWidget({
 }
 
 void main() {
+  // Initialize Firebase mocks before any tests run
+  TestWidgetsFlutterBinding.ensureInitialized();
+  MockFirebaseAnalytics.setMockMethodCallHandler();
+  
   group('GalleryPage Tests', () {
-    setUpAll(() async {
-      TestWidgetsFlutterBinding.ensureInitialized();
-      MockFirebaseAnalytics.setMockMethodCallHandler();
-    });
-
     testWidgets('should render GalleryPage with IntroSlider and 9 slides', (WidgetTester tester) async {
+      // Given
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.byType(GalleryPage), findsOneWidget);
+      expect(find.byType(IntroSlider), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
+      
+      // Verify the slider has 9 slides by checking for slide indicator dots
+      // IntroSlider creates dots for each slide
+      final introSlider = tester.widget<IntroSlider>(find.byType(IntroSlider));
+      expect(introSlider.slides?.length, equals(9));
+    });
       // Given
       await tester.pumpWidget(createTestWidget());
       await pumpAndSettleIgnoringFirebaseException(tester);
