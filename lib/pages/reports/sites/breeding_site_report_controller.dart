@@ -9,10 +9,10 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
 import 'models/breeding_site_report_data.dart';
-import 'pages/site_type_selection_page.dart';
-import 'pages/photo_selection_page.dart';
-import 'pages/water_question_page.dart';
 import 'pages/notes_and_submit_page.dart';
+import 'pages/photo_selection_page.dart';
+import 'pages/site_type_selection_page.dart';
+import 'pages/water_question_page.dart';
 
 /// Main controller for the breeding site report workflow
 /// Uses PageView slider architecture for step-by-step progression
