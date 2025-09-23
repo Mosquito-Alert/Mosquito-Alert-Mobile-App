@@ -154,7 +154,7 @@ class _MainVCState extends State<MainVC>
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to create user: $e'),
+              content: Text('(HC) Failed to create user: $e'),
               backgroundColor: Colors.red,
               duration: Duration(seconds: 3),
             ),
@@ -179,7 +179,7 @@ class _MainVCState extends State<MainVC>
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Login failed: $e'),
+                content: Text('(HC) Login failed: $e'),
                 backgroundColor: Colors.red,
                 duration: Duration(seconds: 3),
               ),

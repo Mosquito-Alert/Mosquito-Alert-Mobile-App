@@ -308,7 +308,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Could not update language on server.'),
+          content: Text('(HC) Could not update language on server.'),
           duration: Duration(seconds: 3),
         ),
       );
