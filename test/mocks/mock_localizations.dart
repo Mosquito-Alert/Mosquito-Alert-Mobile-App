@@ -6,8 +6,6 @@ class TestMyLocalizations extends MyLocalizations {
 
   @override
   String translate(String? key) {
-    // Return the key itself - this eliminates the need to maintain
-    // duplicate translations in test mocks
     return key ?? '';
   }
 
