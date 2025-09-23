@@ -43,6 +43,17 @@ class MockFirebaseAnalytics {
                 'pluginConstants': {},
               }
             ];
+          case 'Firebase#app':
+            return {
+              'name': '[DEFAULT]',
+              'options': {
+                'apiKey': 'test-api-key',
+                'appId': 'test-app-id',
+                'messagingSenderId': 'test-sender-id',
+                'projectId': 'test-project-id',
+              },
+              'pluginConstants': {},
+            };
           default:
             return null;
         }
