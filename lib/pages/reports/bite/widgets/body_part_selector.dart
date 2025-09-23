@@ -64,45 +64,37 @@ class BodyPartSelector extends StatelessWidget {
               (value) => data.chestBites = value,
               const Rect.fromLTWH(0.375, 0.25, 0.25, 0.3),
             ),
-            // Left hand tap region - aligned with actual left arm/hand
             _buildBodyPartOverlay(
               context,
               data,
               'left_hand',
               data.leftHandBites,
               (value) => data.leftHandBites = value,
-              const Rect.fromLTWH(
-                  0.05, 0.3, 0.25, 0.2), // Left hand - on actual arm
+              const Rect.fromLTWH(0.05, 0.3, 0.25, 0.2),
             ),
-            // Right hand tap region - aligned with actual right arm/hand
             _buildBodyPartOverlay(
               context,
               data,
               'right_hand',
               data.rightHandBites,
               (value) => data.rightHandBites = value,
-              const Rect.fromLTWH(
-                  0.75, 0.3, 0.25, 0.2), // Right hand - on actual arm
+              const Rect.fromLTWH(0.75, 0.3, 0.25, 0.2),
             ),
-            // Left leg tap region - aligned with actual left leg
             _buildBodyPartOverlay(
               context,
               data,
               'left_leg',
               data.leftLegBites,
               (value) => data.leftLegBites = value,
-              const Rect.fromLTWH(
-                  0.3, 0.55, 0.2, 0.4), // Left leg - half height
+              const Rect.fromLTWH(0.25, 0.55, 0.25, 0.4),
             ),
-            // Right leg tap region - aligned with actual right leg
             _buildBodyPartOverlay(
               context,
               data,
               'right_leg',
               data.rightLegBites,
               (value) => data.rightLegBites = value,
-              const Rect.fromLTWH(
-                  0.5, 0.55, 0.2, 0.4), // Right leg - half height
+              const Rect.fromLTWH(0.5, 0.55, 0.25, 0.4),
             ),
           ],
         ),
@@ -130,13 +122,13 @@ class BodyPartSelector extends StatelessWidget {
           decoration: BoxDecoration(
             // More visible borders for debugging positioning
             color: biteCount > 0
-                ? Colors.red.withOpacity(0.15)
-                : Colors.blue.withOpacity(0.1),
+                ? Colors.red.withValues(alpha: 0.15)
+                : Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
                 color: biteCount > 0
-                    ? Colors.red.withOpacity(0.6)
-                    : Colors.blue.withOpacity(0.4),
+                    ? Colors.red.withValues(alpha: 0.6)
+                    : Colors.blue.withValues(alpha: 0.4),
                 width: 2),
           ),
           child: Stack(
@@ -150,7 +142,7 @@ class BodyPartSelector extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.touch_app,
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.blue.withValues(alpha: 0.3),
                       size: 16,
                     ),
                   ),
@@ -169,7 +161,7 @@ class BodyPartSelector extends StatelessWidget {
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 4,
                           offset: Offset(0, 2),
                         ),
@@ -278,7 +270,9 @@ class BodyPartSelector extends StatelessWidget {
                         height: 60,
                         decoration: BoxDecoration(
                           color: tempCount > 0
-                              ? Theme.of(context).primaryColor.withOpacity(0.1)
+                              ? Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: 0.1)
                               : Colors.white,
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -442,7 +436,7 @@ class BodyPartSelector extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.red.withOpacity(0.3),
+                color: Colors.red.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: Offset(0, 4),
               ),
