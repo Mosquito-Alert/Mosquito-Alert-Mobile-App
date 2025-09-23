@@ -6,7 +6,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 /// Shared photo selection page that can be used by any report workflow
 /// Configurable PhotoSelector properties and navigation through callbacks
-class SharedPhotoSelectionPage extends StatefulWidget {
+class PhotoSelectionPage extends StatefulWidget {
   final List<File> photos;
   final VoidCallback onPhotosChanged;
   final VoidCallback onNext;
@@ -18,7 +18,7 @@ class SharedPhotoSelectionPage extends StatefulWidget {
   final String? subtitleKey;
   final String? infoBadgeTextKey;
 
-  const SharedPhotoSelectionPage({
+  const PhotoSelectionPage({
     Key? key,
     required this.photos,
     required this.onPhotosChanged,
@@ -32,11 +32,10 @@ class SharedPhotoSelectionPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SharedPhotoSelectionPageState createState() =>
-      _SharedPhotoSelectionPageState();
+  _PhotoSelectionPageState createState() => _PhotoSelectionPageState();
 }
 
-class _SharedPhotoSelectionPageState extends State<SharedPhotoSelectionPage> {
+class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
   bool get _canProceed => widget.photos.length >= widget.minPhotos;
 
   @override

@@ -250,7 +250,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
               physics:
                   NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: [
-                SharedPhotoSelectionPage(
+                PhotoSelectionPage(
                   photos: _reportData.photos,
                   onPhotosChanged: _onPhotosChanged,
                   onNext: _nextStep,
@@ -261,7 +261,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   subtitleKey: 'ensure_single_mosquito_photos',
                   infoBadgeTextKey: 'one_mosquito_reminder_badge',
                 ),
-                SharedLocationSelectionPage(
+                LocationSelectionPage(
                   title: MyLocalizations.of(context, 'question_11'),
                   subtitle:
                       '(HC) Please indicate where you spotted the mosquito:',
@@ -280,7 +280,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   onNext: _nextStep,
                   onPrevious: _previousStep,
                 ),
-                SharedNotesAndSubmitPage(
+                NotesAndSubmitPage(
                   initialNotes: _reportData.notes,
                   onNotesChanged: _onNotesChanged,
                   onSubmit: _submitReport,

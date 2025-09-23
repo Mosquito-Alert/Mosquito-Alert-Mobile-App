@@ -5,7 +5,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 /// Shared location selection page that can be used by any report workflow
 /// Configurable title, subtitle, and location handling through callbacks
-class SharedLocationSelectionPage extends StatefulWidget {
+class LocationSelectionPage extends StatefulWidget {
   final String title;
   final String subtitle;
   final double? initialLatitude;
@@ -18,7 +18,7 @@ class SharedLocationSelectionPage extends StatefulWidget {
   final String? locationDescription;
   final api.LocationRequestSource_Enum? locationSource;
 
-  const SharedLocationSelectionPage({
+  const LocationSelectionPage({
     Key? key,
     required this.title,
     required this.subtitle,
@@ -33,12 +33,10 @@ class SharedLocationSelectionPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SharedLocationSelectionPageState createState() =>
-      _SharedLocationSelectionPageState();
+  _LocationSelectionPageState createState() => _LocationSelectionPageState();
 }
 
-class _SharedLocationSelectionPageState
-    extends State<SharedLocationSelectionPage> {
+class _LocationSelectionPageState extends State<LocationSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(

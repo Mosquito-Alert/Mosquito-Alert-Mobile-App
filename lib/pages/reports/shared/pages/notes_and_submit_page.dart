@@ -3,7 +3,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/widgets/notes_and_submit
 
 /// Shared notes and submit page that can be used by any report workflow
 /// Configurable notes handling and submit behavior through callbacks
-class SharedNotesAndSubmitPage extends StatefulWidget {
+class NotesAndSubmitPage extends StatefulWidget {
   final String? initialNotes;
   final Function(String?) onNotesChanged;
   final VoidCallback onSubmit;
@@ -12,7 +12,7 @@ class SharedNotesAndSubmitPage extends StatefulWidget {
   final String notesHint;
   final String submitLoadingText;
 
-  const SharedNotesAndSubmitPage({
+  const NotesAndSubmitPage({
     Key? key,
     this.initialNotes,
     required this.onNotesChanged,
@@ -25,11 +25,10 @@ class SharedNotesAndSubmitPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SharedNotesAndSubmitPageState createState() =>
-      _SharedNotesAndSubmitPageState();
+  _NotesAndSubmitPageState createState() => _NotesAndSubmitPageState();
 }
 
-class _SharedNotesAndSubmitPageState extends State<SharedNotesAndSubmitPage> {
+class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
   @override
   Widget build(BuildContext context) {
     return NotesAndSubmitWidget(

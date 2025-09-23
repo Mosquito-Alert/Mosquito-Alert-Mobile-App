@@ -263,7 +263,7 @@ class _BreedingSiteReportControllerState
                   reportData: _reportData,
                   onNext: _nextStep,
                 ),
-                SharedPhotoSelectionPage(
+                PhotoSelectionPage(
                   photos: _reportData.photos,
                   onPhotosChanged: _onPhotosChanged,
                   onNext: _nextStep,
@@ -279,7 +279,7 @@ class _BreedingSiteReportControllerState
                   onNext: _nextStep,
                   onPrevious: _previousStep,
                 ),
-                SharedLocationSelectionPage(
+                LocationSelectionPage(
                   title: MyLocalizations.of(context, 'question_16'),
                   subtitle:
                       '(HC) Please indicate where the breeding site is located:',
@@ -293,7 +293,7 @@ class _BreedingSiteReportControllerState
                   locationDescription: _reportData.locationDescription,
                   locationSource: _reportData.locationSource,
                 ),
-                SharedNotesAndSubmitPage(
+                NotesAndSubmitPage(
                   initialNotes: _reportData.notes,
                   onNotesChanged: _onNotesChanged,
                   onSubmit: _submitReport,
