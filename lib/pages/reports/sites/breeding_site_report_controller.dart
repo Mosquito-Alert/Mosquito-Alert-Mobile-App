@@ -2,36 +2,40 @@ import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
-import 'package:mosquito_alert_app/pages/reports/adult/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
-import 'models/adult_report_data.dart';
-import 'pages/environment_question_page.dart';
+import 'models/breeding_site_report_data.dart';
 import 'pages/location_selection_page.dart';
 import 'pages/notes_and_submit_page.dart';
+import 'pages/photo_selection_page.dart';
+import 'pages/site_type_selection_page.dart';
+import 'pages/water_question_page.dart';
 
-/// Main controller for the adult report workflow
+/// Main controller for the breeding site report workflow
 /// Uses PageView slider architecture for step-by-step progression
-class AdultReportController extends StatefulWidget {
+class BreedingSiteReportController extends StatefulWidget {
   @override
-  _AdultReportControllerState createState() => _AdultReportControllerState();
+  _BreedingSiteReportControllerState createState() =>
+      _BreedingSiteReportControllerState();
 }
 
-class _AdultReportControllerState extends State<AdultReportController> {
+class _BreedingSiteReportControllerState
+    extends State<BreedingSiteReportController> {
   late PageController _pageController;
-  late AdultReportData _reportData;
+  late BreedingSiteReportData _reportData;
   late api.ObservationsApi _observationsApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
 
   List<String> get _stepTitles => [
+        '(HC) Site Type',
         '(HC) Take Photos',
+        '(HC) Water Status',
         '(HC) Select Location',
-        '(HC) Environment',
         '(HC) Notes & Submit'
       ];
 
@@ -39,13 +43,13 @@ class _AdultReportControllerState extends State<AdultReportController> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    _reportData = AdultReportData();
+    _reportData = BreedingSiteReportData();
 
     // Initialize API
     final apiClient = Provider.of<api.MosquitoAlert>(context, listen: false);
     _observationsApi = apiClient.getObservationsApi();
 
-    _logAnalyticsEvent('adult_report_started');
+    _logAnalyticsEvent('breeding_site_report_started');
   }
 
   @override
@@ -80,7 +84,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     }
   }
 
-  /// Submit the adult report via API
+  /// Submit the breeding site report via API
   Future<void> _submitReport() async {
     if (!_reportData.isValid || _isSubmitting) return;
 
@@ -89,7 +93,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     });
 
     try {
-      await _logAnalyticsEvent('adult_report_submit_attempt');
+      await _logAnalyticsEvent('breeding_site_report_submit_attempt');
 
       // Step 1: Create location point
       final locationPoint = api.LocationPoint((b) => b
@@ -115,33 +119,38 @@ class _AdultReportControllerState extends State<AdultReportController> {
       final notes =
           _reportData.notes?.isNotEmpty == true ? _reportData.notes! : '';
 
-      // Steo 5: Tags
+      // Step 5: Tags
       final userTags = await UserManager.getHashtags();
       final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
       // Step 6: Make API call
+      // Note: This assumes ObservationsApi can handle breeding sites too
+      // You may need to adapt this based on the actual API structure
+      // TODO: Add breeding site specific fields (siteType, hasWater) to API call
       final response = await _observationsApi.create(
         createdAt: _reportData.createdAt.toUtc(),
         sentAt: DateTime.now().toUtc(),
         location: locationRequest,
         photos: photos,
         note: notes,
-        eventEnvironment: _reportData.environmentAnswer ?? '',
-        eventMoment: _reportData.eventMoment ?? 'now',
+        // Add breeding site specific fields
         tags: tags,
+        // TODO: Map breeding site specific fields to API parameters
+        // This may need adjustment based on actual API schema
       );
 
       if (response.statusCode == 201) {
-        await _logAnalyticsEvent('adult_report_submit_success');
+        await _logAnalyticsEvent('breeding_site_report_submit_success');
         _showSuccessDialog();
       } else {
-        await _logAnalyticsEvent('adult_report_submit_error', parameters: {
-          'status_code': response.statusCode?.toString() ?? 'unknown'
-        });
+        await _logAnalyticsEvent('breeding_site_report_submit_error',
+            parameters: {
+              'status_code': response.statusCode?.toString() ?? 'unknown'
+            });
         _showErrorDialog('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      await _logAnalyticsEvent('adult_report_submit_error',
+      await _logAnalyticsEvent('breeding_site_report_submit_error',
           parameters: {'error': e.toString()});
       _showErrorDialog('Failed to submit report: $e');
     } finally {
@@ -226,16 +235,21 @@ class _AdultReportControllerState extends State<AdultReportController> {
               physics:
                   NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: [
-                PhotoSelectionPage(
+                SiteTypeSelectionPage(
                   reportData: _reportData,
                   onNext: _nextStep,
                 ),
-                LocationSelectionPage(
+                PhotoSelectionPage(
                   reportData: _reportData,
                   onNext: _nextStep,
                   onPrevious: _previousStep,
                 ),
-                EnvironmentQuestionPage(
+                WaterQuestionPage(
+                  reportData: _reportData,
+                  onNext: _nextStep,
+                  onPrevious: _previousStep,
+                ),
+                LocationSelectionPage(
                   reportData: _reportData,
                   onNext: _nextStep,
                   onPrevious: _previousStep,

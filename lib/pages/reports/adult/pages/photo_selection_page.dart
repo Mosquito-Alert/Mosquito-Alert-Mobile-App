@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/reports/adult/models/adult_report_data.dart';
-import 'package:mosquito_alert_app/pages/reports/adult/widgets/photo_selector.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/widgets/photo_selector.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class PhotoSelectionPage extends StatefulWidget {
