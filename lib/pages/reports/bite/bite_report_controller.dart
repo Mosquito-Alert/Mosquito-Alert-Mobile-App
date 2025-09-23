@@ -74,25 +74,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
-  /// Handle bite count updates
-  void _updateBiteCounts({
-    int? head,
-    int? leftArm,
-    int? rightArm,
-    int? chest,
-    int? leftLeg,
-    int? rightLeg,
-  }) {
-    setState(() {
-      if (head != null) _reportData.headCount = head;
-      if (leftArm != null) _reportData.leftArmCount = leftArm;
-      if (rightArm != null) _reportData.rightArmCount = rightArm;
-      if (chest != null) _reportData.chestCount = chest;
-      if (leftLeg != null) _reportData.leftLegCount = leftLeg;
-      if (rightLeg != null) _reportData.rightLegCount = rightLeg;
-    });
-  }
-
   /// Handle environment selection
   void _updateEnvironment(api.BiteRequestEventEnvironmentEnum environment) {
     setState(() {
@@ -162,12 +143,12 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
       // Create bite counts request
       final counts = api.BiteCountsRequest((b) => b
-        ..head = _reportData.headCount
-        ..leftArm = _reportData.leftArmCount
-        ..rightArm = _reportData.rightArmCount
-        ..chest = _reportData.chestCount
-        ..leftLeg = _reportData.leftLegCount
-        ..rightLeg = _reportData.rightLegCount);
+        ..head = _reportData.headBites
+        ..leftArm = _reportData.leftHandBites
+        ..rightArm = _reportData.rightHandBites
+        ..chest = _reportData.chestBites
+        ..leftLeg = _reportData.leftLegBites
+        ..rightLeg = _reportData.rightLegBites);
 
       // Create the bite request
       final biteRequest = api.BiteRequest((b) => b
@@ -286,83 +267,84 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) {
-        if (!didPop) {
-          _handleBackPressed();
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: _handleBackPressed,
-          ),
-          title: Text(
-            MyLocalizations.of(context, 'biting_report_txt'),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+    return ChangeNotifierProvider.value(
+      value: _reportData,
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, Object? result) {
+          if (!didPop) {
+            _handleBackPressed();
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: _handleBackPressed,
             ),
-          ),
-          centerTitle: true,
-        ),
-        body: Column(
-          children: [
-            // Progress indicator
-            ReportProgressIndicator(
-              currentStep: _currentStep,
-              totalSteps: _stepTitles.length,
-              stepTitles: _stepTitles,
-            ),
-
-            // Page view content
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: NeverScrollableScrollPhysics(), // Disable swipe
-                children: [
-                  // Step 1: Bite questions
-                  BiteQuestionsPage(
-                    reportData: _reportData,
-                    onBiteCountsChanged: _updateBiteCounts,
-                    onEnvironmentChanged: _updateEnvironment,
-                    onTimingChanged: _updateTiming,
-                    onNext: _canProceed ? _nextStep : null,
-                    onPrevious: _previousStep,
-                    canProceed: _canProceed,
-                  ),
-
-                  // Step 2: Location selection
-                  LocationSelectionPage(
-                    title: '(HC) Select Location',
-                    subtitle: '(HC) Where did the biting occur?',
-                    initialLatitude: _reportData.latitude,
-                    initialLongitude: _reportData.longitude,
-                    onLocationSelected: _updateLocation,
-                    onNext: _nextStep,
-                    onPrevious: _previousStep,
-                    canProceed: _canProceed,
-                    locationDescription: _reportData.locationDescription,
-                    locationSource: _reportData.locationSource,
-                  ),
-
-                  // Step 3: Notes and submit
-                  NotesAndSubmitPage(
-                    initialNotes: _reportData.notes ?? '',
-                    onNotesChanged: _updateNotes,
-                    onSubmit: _submitReport,
-                    onPrevious: _previousStep,
-                    isSubmitting: _isSubmitting,
-                  ),
-                ],
+            title: Text(
+              MyLocalizations.of(context, 'biting_report_txt'),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ],
+            centerTitle: true,
+          ),
+          body: Column(
+            children: [
+              // Progress indicator
+              ReportProgressIndicator(
+                currentStep: _currentStep,
+                totalSteps: _stepTitles.length,
+                stepTitles: _stepTitles,
+              ),
+
+              // Page view content
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: NeverScrollableScrollPhysics(), // Disable swipe
+                  children: [
+                    // Step 1: Bite questions
+                    BiteQuestionsPage(
+                      onEnvironmentChanged: _updateEnvironment,
+                      onTimingChanged: _updateTiming,
+                      onNext: _canProceed ? _nextStep : null,
+                      onPrevious: _previousStep,
+                      canProceed: _canProceed,
+                    ),
+
+                    // Step 2: Location selection
+                    LocationSelectionPage(
+                      title: '(HC) Select Location',
+                      subtitle: '(HC) Where did the biting occur?',
+                      initialLatitude: _reportData.latitude,
+                      initialLongitude: _reportData.longitude,
+                      onLocationSelected: _updateLocation,
+                      onNext: _nextStep,
+                      onPrevious: _previousStep,
+                      canProceed: _canProceed,
+                      locationDescription: _reportData.locationDescription,
+                      locationSource: _reportData.locationSource,
+                    ),
+
+                    // Step 3: Notes and submit
+                    NotesAndSubmitPage(
+                      initialNotes: _reportData.notes ?? '',
+                      onNotesChanged: _updateNotes,
+                      onSubmit: _submitReport,
+                      onPrevious: _previousStep,
+                      isSubmitting: _isSubmitting,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
