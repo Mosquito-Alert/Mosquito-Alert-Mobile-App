@@ -2,8 +2,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
-import 'package:mosquito_alert_app/pages/reports/adult/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
@@ -87,6 +87,13 @@ class _AdultReportControllerState extends State<AdultReportController> {
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
+    });
+  }
+
+  /// Handle photo selection callback
+  void _onPhotosChanged() {
+    setState(() {
+      // Trigger rebuild to update any photo-dependent UI
     });
   }
 
@@ -236,9 +243,16 @@ class _AdultReportControllerState extends State<AdultReportController> {
               physics:
                   NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: [
-                PhotoSelectionPage(
-                  reportData: _reportData,
+                SharedPhotoSelectionPage(
+                  photos: _reportData.photos,
+                  onPhotosChanged: _onPhotosChanged,
                   onNext: _nextStep,
+                  // No onPrevious for adult reports (first step)
+                  maxPhotos: 3,
+                  minPhotos: 1,
+                  titleKey: 'bs_info_adult_title',
+                  subtitleKey: 'ensure_single_mosquito_photos',
+                  infoBadgeTextKey: 'one_mosquito_reminder_badge',
                 ),
                 SharedLocationSelectionPage(
                   title: MyLocalizations.of(context, 'question_11'),

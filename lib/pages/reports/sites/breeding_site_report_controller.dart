@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import 'models/breeding_site_report_data.dart';
 import 'pages/notes_and_submit_page.dart';
-import 'pages/photo_selection_page.dart';
 import 'pages/site_type_selection_page.dart';
 import 'pages/water_question_page.dart';
 
@@ -91,6 +91,13 @@ class _BreedingSiteReportControllerState
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
+    });
+  }
+
+  /// Handle photo selection callback
+  void _onPhotosChanged() {
+    setState(() {
+      // Trigger rebuild to update any photo-dependent UI
     });
   }
 
@@ -249,10 +256,16 @@ class _BreedingSiteReportControllerState
                   reportData: _reportData,
                   onNext: _nextStep,
                 ),
-                PhotoSelectionPage(
-                  reportData: _reportData,
+                SharedPhotoSelectionPage(
+                  photos: _reportData.photos,
+                  onPhotosChanged: _onPhotosChanged,
                   onNext: _nextStep,
                   onPrevious: _previousStep,
+                  maxPhotos: 3,
+                  minPhotos: 1,
+                  titleKey: 'bs_info_adult_title',
+                  subtitleKey: 'camera_info_breeding_txt_01',
+                  infoBadgeTextKey: 'camera_info_breeding_txt_02',
                 ),
                 WaterQuestionPage(
                   reportData: _reportData,
