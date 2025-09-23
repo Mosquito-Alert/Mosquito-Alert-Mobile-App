@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/reports/adult/models/adult_report_data.dart';
+import 'package:mosquito_alert_app/pages/reports/adult/widgets/photo_selector.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-
-import '../models/adult_report_data.dart';
-import '../widgets/independent_photo_selector.dart';
 
 class PhotoSelectionPage extends StatefulWidget {
   final AdultReportData reportData;

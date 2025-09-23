@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
+import 'package:mosquito_alert_app/pages/reports/adult/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,6 @@ import 'models/adult_report_data.dart';
 import 'pages/environment_question_page.dart';
 import 'pages/location_selection_page.dart';
 import 'pages/notes_and_submit_page.dart';
-import 'pages/photo_selection_page.dart';
 import 'widgets/progress_indicator.dart';
 
 /// Main controller for the adult report workflow
