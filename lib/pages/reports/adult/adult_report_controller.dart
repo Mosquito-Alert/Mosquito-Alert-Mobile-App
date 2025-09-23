@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as api;
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -11,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import 'models/adult_report_data.dart';
 import 'pages/environment_question_page.dart';
-import 'pages/notes_and_submit_page.dart';
 
 /// Main controller for the adult report workflow
 /// Uses PageView slider architecture for step-by-step progression
@@ -94,6 +94,13 @@ class _AdultReportControllerState extends State<AdultReportController> {
   void _onPhotosChanged() {
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
+    });
+  }
+
+  /// Handle notes changes callback
+  void _onNotesChanged(String? notes) {
+    setState(() {
+      _reportData.notes = notes;
     });
   }
 
@@ -273,11 +280,15 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   onNext: _nextStep,
                   onPrevious: _previousStep,
                 ),
-                NotesAndSubmitPage(
-                  reportData: _reportData,
+                SharedNotesAndSubmitPage(
+                  initialNotes: _reportData.notes,
+                  onNotesChanged: _onNotesChanged,
                   onSubmit: _submitReport,
                   onPrevious: _previousStep,
                   isSubmitting: _isSubmitting,
+                  notesHint:
+                      '(HC) e.g., "Found near standing water", "Very active", "Unusual markings"...',
+                  submitLoadingText: '(HC) Submitting your mosquito report...',
                 ),
               ],
             ),
