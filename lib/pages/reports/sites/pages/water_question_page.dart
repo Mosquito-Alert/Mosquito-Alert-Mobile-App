@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 
 import '../models/breeding_site_report_data.dart';
 
@@ -204,31 +205,17 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: widget.onPrevious,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Theme.of(context).primaryColor,
-                    side: BorderSide(color: Theme.of(context).primaryColor),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: Text('(HC) Back'),
+                child: Style.outlinedButton(
+                  '(HC) Back',
+                  widget.onPrevious,
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
                 flex: 2,
-                child: ElevatedButton(
-                  onPressed: _canProceed ? widget.onNext : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    disabledBackgroundColor: Colors.grey[300],
-                  ),
-                  child: Text(
-                    MyLocalizations.of(context, 'continue_txt'),
-                    style: TextStyle(fontSize: 16),
-                  ),
+                child: Style.button(
+                  MyLocalizations.of(context, 'continue_txt'),
+                  _canProceed ? widget.onNext : null,
                 ),
               ),
             ],
