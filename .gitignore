@@ -98,3 +98,4 @@ svc-keyfile.json
 # Lockfiles
 Podfile.lock
 yarn.lock
+ios/Flutter/ephemeral/
