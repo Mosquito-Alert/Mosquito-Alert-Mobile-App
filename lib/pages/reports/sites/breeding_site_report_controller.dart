@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
 import 'models/breeding_site_report_data.dart';
+import 'pages/larvae_question_page.dart';
 import 'pages/site_type_selection_page.dart';
 import 'pages/water_question_page.dart';
 
@@ -24,25 +25,36 @@ class BreedingSiteReportController extends StatefulWidget {
 
 class _BreedingSiteReportControllerState
     extends State<BreedingSiteReportController> {
-  late PageController _pageController;
   late BreedingSiteReportData _reportData;
   late api.ObservationsApi _observationsApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
 
-  List<String> get _stepTitles => [
+  List<String> get _baseStepTitles => [
         '(HC) Site Type',
         '(HC) Take Photos',
         '(HC) Water Status',
+        '(HC) Larvae Check',
         '(HC) Select Location',
         '(HC) Notes & Submit'
       ];
 
+  /// Gets the current step titles based on water status
+  List<String> get _stepTitles {
+    final titles = List<String>.from(_baseStepTitles);
+    
+    // If no water, remove the larvae check step
+    if (_reportData.hasWater == false) {
+      titles.removeAt(3); // Remove "Larvae Check"
+    }
+    
+    return titles;
+  }
+
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     _reportData = BreedingSiteReportData();
 
     // Initialize API
@@ -54,7 +66,6 @@ class _BreedingSiteReportControllerState
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -64,11 +75,19 @@ class _BreedingSiteReportControllerState
       setState(() {
         _currentStep++;
       });
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
     }
+  }
+
+  /// Navigate to next step after water question, handling conditional larvae question
+  void _nextStepAfterWater() {
+    if (_reportData.hasWater == false) {
+      // Clear any larvae response if water is not present
+      _reportData.hasLarvae = null;
+    }
+    
+    setState(() {
+      _currentStep++;
+    });
   }
 
   /// Navigate to previous step
@@ -77,10 +96,6 @@ class _BreedingSiteReportControllerState
       setState(() {
         _currentStep--;
       });
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
     }
   }
 
@@ -228,6 +243,85 @@ class _BreedingSiteReportControllerState
     );
   }
 
+  /// Gets the current page widget based on the current step
+  Widget get _currentPage {
+    switch (_currentStep) {
+      case 0:
+        return SiteTypeSelectionPage(
+          reportData: _reportData,
+          onNext: _nextStep,
+        );
+      case 1:
+        return PhotoSelectionPage(
+          photos: _reportData.photos,
+          onPhotosChanged: _onPhotosChanged,
+          onNext: _nextStep,
+          onPrevious: _previousStep,
+          maxPhotos: 3,
+          minPhotos: 1,
+          titleKey: 'bs_info_adult_title',
+          subtitleKey: 'camera_info_breeding_txt_01',
+          infoBadgeTextKey: 'camera_info_breeding_txt_02',
+        );
+      case 2:
+        return WaterQuestionPage(
+          reportData: _reportData,
+          onNext: _nextStepAfterWater,
+          onPrevious: _previousStep,
+        );
+      case 3:
+        // Larvae question (only if water is present)
+        if (_reportData.hasWater == true) {
+          return LarvaeQuestionPage(
+            reportData: _reportData,
+            onNext: _nextStep,
+            onPrevious: _previousStep,
+          );
+        } else {
+          // Skip to location if no water
+          return _getLocationPage();
+        }
+      case 4:
+        if (_reportData.hasWater == true) {
+          return _getLocationPage();
+        } else {
+          return _getNotesPage();
+        }
+      case 5:
+        return _getNotesPage();
+      default:
+        return Container(); // Fallback
+    }
+  }
+
+  Widget _getLocationPage() {
+    return LocationSelectionPage(
+      title: MyLocalizations.of(context, 'question_16'),
+      subtitle: '(HC) Please indicate where the breeding site is located:',
+      initialLatitude: _reportData.latitude,
+      initialLongitude: _reportData.longitude,
+      onLocationSelected: _onLocationSelected,
+      onNext: _nextStep,
+      onPrevious: _previousStep,
+      canProceed: _reportData.latitude != null && _reportData.longitude != null,
+      locationDescription: _reportData.locationDescription,
+      locationSource: _reportData.locationSource,
+    );
+  }
+
+  Widget _getNotesPage() {
+    return NotesAndSubmitPage(
+      initialNotes: _reportData.notes,
+      onNotesChanged: _onNotesChanged,
+      onSubmit: _submitReport,
+      onPrevious: _previousStep,
+      isSubmitting: _isSubmitting,
+      notesHint:
+          '(HC) e.g., "Large container", "Near construction site", "Visible mosquito larvae"...',
+      submitLoadingText: '(HC) Submitting your breeding site report...',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,58 +348,7 @@ class _BreedingSiteReportControllerState
 
           // Main content
           Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics:
-                  NeverScrollableScrollPhysics(), // Disable swipe navigation
-              children: [
-                SiteTypeSelectionPage(
-                  reportData: _reportData,
-                  onNext: _nextStep,
-                ),
-                PhotoSelectionPage(
-                  photos: _reportData.photos,
-                  onPhotosChanged: _onPhotosChanged,
-                  onNext: _nextStep,
-                  onPrevious: _previousStep,
-                  maxPhotos: 3,
-                  minPhotos: 1,
-                  titleKey: 'bs_info_adult_title',
-                  subtitleKey: 'camera_info_breeding_txt_01',
-                  infoBadgeTextKey: 'camera_info_breeding_txt_02',
-                ),
-                WaterQuestionPage(
-                  reportData: _reportData,
-                  onNext: _nextStep,
-                  onPrevious: _previousStep,
-                ),
-                LocationSelectionPage(
-                  title: MyLocalizations.of(context, 'question_16'),
-                  subtitle:
-                      '(HC) Please indicate where the breeding site is located:',
-                  initialLatitude: _reportData.latitude,
-                  initialLongitude: _reportData.longitude,
-                  onLocationSelected: _onLocationSelected,
-                  onNext: _nextStep,
-                  onPrevious: _previousStep,
-                  canProceed: _reportData.latitude != null &&
-                      _reportData.longitude != null,
-                  locationDescription: _reportData.locationDescription,
-                  locationSource: _reportData.locationSource,
-                ),
-                NotesAndSubmitPage(
-                  initialNotes: _reportData.notes,
-                  onNotesChanged: _onNotesChanged,
-                  onSubmit: _submitReport,
-                  onPrevious: _previousStep,
-                  isSubmitting: _isSubmitting,
-                  notesHint:
-                      '(HC) e.g., "Large container", "Near construction site", "Visible mosquito larvae"...',
-                  submitLoadingText:
-                      '(HC) Submitting your breeding site report...',
-                ),
-              ],
-            ),
+            child: _currentPage,
           ),
         ],
       ),
