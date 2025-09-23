@@ -33,7 +33,7 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
       children: [
         // Photo selector component
         Expanded(
-          child: IndependentPhotoSelector(
+          child: PhotoSelector(
             selectedPhotos: widget.reportData.photos,
             onPhotosChanged: _onPhotosChanged,
             maxPhotos: 3,

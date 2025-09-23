@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/forms_pages/components/camera_whatsapp.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class IndependentPhotoSelector extends StatefulWidget {
+class PhotoSelector extends StatefulWidget {
   final List<File> selectedPhotos;
   final VoidCallback onPhotosChanged;
   final int maxPhotos;
@@ -13,7 +13,7 @@ class IndependentPhotoSelector extends StatefulWidget {
   final String? subtitleKey;
   final String? infoBadgeTextKey;
 
-  const IndependentPhotoSelector({
+  const PhotoSelector({
     Key? key,
     required this.selectedPhotos,
     required this.onPhotosChanged,
@@ -25,11 +25,10 @@ class IndependentPhotoSelector extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _IndependentPhotoSelectorState createState() =>
-      _IndependentPhotoSelectorState();
+  _PhotoSelectorState createState() => _PhotoSelectorState();
 }
 
-class _IndependentPhotoSelectorState extends State<IndependentPhotoSelector> {
+class _PhotoSelectorState extends State<PhotoSelector> {
   bool _hasRequestedInitialPhoto = false;
 
   @override
@@ -38,46 +37,30 @@ class _IndependentPhotoSelectorState extends State<IndependentPhotoSelector> {
     // Auto-open camera when component loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_hasRequestedInitialPhoto && widget.selectedPhotos.isEmpty) {
-        _requestPhotoFromCamera();
+        _pickPhoto();
       }
     });
   }
 
-  Future<void> _requestPhotoFromCamera() async {
-    if (_hasRequestedInitialPhoto) return;
-
-    setState(() {
-      _hasRequestedInitialPhoto = true;
-    });
-
-    // Use existing WhatsappCamera
-    final List<File>? newFiles = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WhatsappCamera(
-          multiple: false, // Start with single photo, can add more later
-          infoBadgeTextKey: widget.infoBadgeTextKey,
-        ),
-      ),
-    );
-
-    if (newFiles != null && newFiles.isNotEmpty) {
-      _addPhotos(newFiles);
-    }
-  }
-
-  Future<void> _addMorePhotos() async {
-    final remainingSlots = widget.maxPhotos - widget.selectedPhotos.length;
-    if (remainingSlots <= 0) {
+  Future<void> _pickPhoto() async {
+    // Check if we can add more photos
+    if (widget.selectedPhotos.length >= widget.maxPhotos) {
       _showMaxPhotosAlert();
       return;
     }
 
+    // Mark as requested if this is the initial photo request
+    if (!_hasRequestedInitialPhoto && widget.selectedPhotos.isEmpty) {
+      setState(() {
+        _hasRequestedInitialPhoto = true;
+      });
+    }
+
     final List<File>? newFiles = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WhatsappCamera(
-          multiple: remainingSlots > 1,
+          multiple: false,
           infoBadgeTextKey: widget.infoBadgeTextKey,
         ),
       ),
@@ -210,7 +193,7 @@ class _IndependentPhotoSelectorState extends State<IndependentPhotoSelector> {
               // Add photo button
               if (index == widget.selectedPhotos.length) {
                 return GestureDetector(
-                  onTap: _addMorePhotos,
+                  onTap: _pickPhoto,
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey[400]!, width: 2),

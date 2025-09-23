@@ -119,7 +119,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
       final userTags = await UserManager.getHashtags();
       final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
-      // Step 5: Make API call
+      // Step 6: Make API call
       final response = await _observationsApi.create(
         createdAt: _reportData.createdAt.toUtc(),
         sentAt: DateTime.now().toUtc(),
