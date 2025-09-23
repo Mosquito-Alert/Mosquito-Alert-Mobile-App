@@ -54,7 +54,7 @@ void main() {
       // Verify the slider has 9 slides by checking for slide indicator dots
       // IntroSlider creates dots for each slide
       final introSlider = tester.widget<IntroSlider>(find.byType(IntroSlider));
-      expect(introSlider.slides.length, equals(9));
+      expect(introSlider.slides?.length, equals(9));
     });
 
     testWidgets('should display first slide content initially', (WidgetTester tester) async {
