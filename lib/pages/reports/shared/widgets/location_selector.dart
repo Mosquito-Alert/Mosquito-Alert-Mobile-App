@@ -47,7 +47,7 @@ class _LocationSelectorState extends State<LocationSelector> {
           Marker(
             markerId: MarkerId('selected_location'),
             position: LatLng(widget.initialLatitude!, widget.initialLongitude!),
-            infoWindow: InfoWindow(title: 'Selected Location'),
+            infoWindow: InfoWindow(title: '(HC) Selected Location'),
           ),
         };
       });
@@ -76,7 +76,7 @@ class _LocationSelectorState extends State<LocationSelector> {
         Marker(
           markerId: MarkerId('selected_location'),
           position: position,
-          infoWindow: InfoWindow(title: 'Selected Location'),
+          infoWindow: InfoWindow(title: '(HC) Selected Location'),
         ),
       };
     });
@@ -132,7 +132,7 @@ class _LocationSelectorState extends State<LocationSelector> {
           Marker(
             markerId: MarkerId('selected_location'),
             position: LatLng(position.latitude, position.longitude),
-            infoWindow: InfoWindow(title: 'Current Location'),
+            infoWindow: InfoWindow(title: '(HC) Current Location'),
           ),
         };
       });
