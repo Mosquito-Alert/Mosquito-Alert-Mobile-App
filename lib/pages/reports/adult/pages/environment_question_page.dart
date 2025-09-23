@@ -67,7 +67,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.quiz, color: Colors.blue),
+                      Icon(Icons.quiz, color: Style.colorPrimary),
                       SizedBox(width: 8),
                       Text(
                         'Environment Question',
@@ -121,9 +121,11 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: isSelected
-                            ? Border.all(color: Colors.green[600]!, width: 2)
-                            : null,
-                        color: isSelected ? Colors.green[50] : null,
+                            ? Border.all(color: Style.colorPrimary, width: 2)
+                            : Border.all(color: Colors.grey[300]!, width: 1),
+                        color: isSelected
+                            ? Style.colorPrimary.withValues(alpha: 0.05)
+                            : Colors.white,
                       ),
                       child: Row(
                         children: [
@@ -132,7 +134,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? Colors.green[600]
+                                  ? Style.colorPrimary
                                   : Colors.grey[300],
                               shape: BoxShape.circle,
                             ),
@@ -158,7 +160,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: isSelected
-                                        ? Colors.green[700]
+                                        ? Style.colorPrimary
                                         : Colors.black,
                                   ),
                                 ),
@@ -178,7 +180,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                           if (isSelected)
                             Icon(
                               Icons.check_circle,
-                              color: Colors.green[600],
+                              color: Style.colorPrimary,
                               size: 24,
                             ),
                         ],

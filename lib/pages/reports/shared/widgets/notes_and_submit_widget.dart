@@ -100,9 +100,6 @@ class _NotesAndSubmitWidgetState extends State<NotesAndSubmitWidget> {
                             BorderSide(color: Style.colorPrimary, width: 2),
                       ),
                       hintText: widget.notesHint,
-                      labelText: '(HC) Notes',
-                      labelStyle: TextStyle(color: Colors.grey[600]),
-                      floatingLabelStyle: TextStyle(color: Style.colorPrimary),
                     ),
                     onChanged: (value) => _updateNotes(),
                   ),
@@ -115,12 +112,17 @@ class _NotesAndSubmitWidgetState extends State<NotesAndSubmitWidget> {
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.blue[50],
+                        color: Style.colorPrimary.withValues(alpha: 0.1),
+                        border: Border.all(
+                            color: Style.colorPrimary.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         children: [
-                          CircularProgressIndicator(),
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Style.colorPrimary),
+                          ),
                           SizedBox(height: 12),
                           Text(
                             widget.submitLoadingText,

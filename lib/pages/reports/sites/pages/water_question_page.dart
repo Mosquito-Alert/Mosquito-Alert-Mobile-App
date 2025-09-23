@@ -94,15 +94,13 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: isSelected
-                              ? Theme.of(context).primaryColor
+                              ? Style.colorPrimary
                               : Colors.grey[300]!,
                           width: isSelected ? 2 : 1,
                         ),
                         borderRadius: BorderRadius.circular(12),
                         color: isSelected
-                            ? Theme.of(context)
-                                .primaryColor
-                                .withValues(alpha: 0.1)
+                            ? Style.colorPrimary.withValues(alpha: 0.1)
                             : Colors.white,
                       ),
                       child: Row(
@@ -135,7 +133,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                     color: isSelected
-                                        ? Theme.of(context).primaryColor
+                                        ? Style.colorPrimary
                                         : Colors.black87,
                                   ),
                                 ),
@@ -156,7 +154,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
                             Container(
                               padding: EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                                color: Style.colorPrimary,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -178,20 +176,21 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.amber[50],
-              border: Border.all(color: Colors.amber[200]!),
+              color: Style.colorPrimary.withValues(alpha: 0.1),
+              border:
+                  Border.all(color: Style.colorPrimary.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: Colors.amber[700]),
+                Icon(Icons.lightbulb_outline, color: Style.colorPrimary),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     '(HC) Water presence is important for mosquito breeding. Even small amounts can be significant.',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.amber[700],
+                      color: Style.colorPrimary,
                     ),
                   ),
                 ),
