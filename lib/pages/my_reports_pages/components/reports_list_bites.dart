@@ -58,7 +58,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     }
   }
 
-  // Helper methods for formatting and display
   String _formatCreationTime(Bite report) {
     return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAt.toLocal());
   }
@@ -113,8 +112,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
 
     return locations.join(', ');
   }
-
-  // Location helper methods - moved to _ReportFormatters class
 
   @override
   Widget build(BuildContext context) {
