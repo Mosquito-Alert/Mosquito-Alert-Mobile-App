@@ -590,18 +590,13 @@ class Utils {
     for (final (apiName, fetcher) in apiFetchers) {
       try {
         final response = await fetcher();
-
-        // Extract count safely, handling both int and double types
         final data = response.data;
         if (data == null) continue;
 
-        final count = (data as dynamic).count;
-        if (count == null) continue;
+        final count = (data as dynamic).count as int;
 
-        final reportCount = count is int ? count : (count as num).toInt();
-
-        if (reportCount > 0) {
-          totalReports += reportCount;
+        if (count > 0) {
+          totalReports += count;
 
           if (totalReports >= minimumRequired) {
             break;
