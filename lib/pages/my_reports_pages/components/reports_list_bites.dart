@@ -38,6 +38,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     try {
       // TODO: Handle pagination like in notifications page with infinite scrolling view
       final response = await bitesApi.listMine();
+
       final reports = response.data?.results?.toList() ?? [];
 
       if (mounted) {
