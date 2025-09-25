@@ -179,6 +179,7 @@ class _MyReportsListState extends State<ReportsList> {
     var hasValidLocation = report.getLocation() != null;
     var location = report.getLocation();
     var campaign = await _fetchFirstActiveCampaign(report.country);
+
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
         context: context,
         dismissible: true,
