@@ -1,7 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
@@ -27,7 +27,7 @@ class BreedingSiteReportController extends StatefulWidget {
 class _BreedingSiteReportControllerState
     extends State<BreedingSiteReportController> {
   late BreedingSiteReportData _reportData;
-  late sdk.ObservationsApi _observationsApi;
+  late ObservationsApi _observationsApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -60,7 +60,7 @@ class _BreedingSiteReportControllerState
     _reportData = BreedingSiteReportData();
 
     // Initialize API
-    final apiClient = Provider.of<sdk.MosquitoAlert>(context, listen: false);
+    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _observationsApi = apiClient.getObservationsApi();
 
     _logAnalyticsEvent('breeding_site_report_started');
@@ -103,7 +103,7 @@ class _BreedingSiteReportControllerState
 
   /// Handle location selection callback
   void _onLocationSelected(double latitude, double longitude,
-      sdk.LocationRequestSource_Enum source) {
+      LocationRequestSource_Enum source) {
     setState(() {
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
@@ -137,24 +137,24 @@ class _BreedingSiteReportControllerState
       await _logAnalyticsEvent('breeding_site_report_submit_attempt');
 
       // Step 1: Create location point
-      final locationPoint = sdk.LocationPoint((b) => b
+      final locationPoint = LocationPoint((b) => b
         ..latitude = _reportData.latitude!
         ..longitude = _reportData.longitude!);
 
       // Step 2: Create location request
-      final locationRequest = sdk.LocationRequest((b) => b
+      final locationRequest = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
         ..point.replace(locationPoint));
 
       // Step 3: Process photos
-      final List<sdk.SimplePhotoRequest> photoRequests = [];
+      final List<SimplePhotoRequest> photoRequests = [];
       for (final photo in _reportData.photos) {
         if (await photo.exists()) {
           final bytes = await photo.readAsBytes();
-          photoRequests.add(sdk.SimplePhotoRequest((b) => b..file = bytes));
+          photoRequests.add(SimplePhotoRequest((b) => b..file = bytes));
         }
       }
-      final photos = BuiltList<sdk.SimplePhotoRequest>(photoRequests);
+      final photos = BuiltList<SimplePhotoRequest>(photoRequests);
 
       // Step 4: Prepare notes
       final notes =

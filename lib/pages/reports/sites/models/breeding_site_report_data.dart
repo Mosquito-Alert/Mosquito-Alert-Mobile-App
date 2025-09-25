@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:mosquito_alert/mosquito_alert.dart';
 
 class BreedingSiteReportData {
   // Step 1: Site type
@@ -18,8 +18,8 @@ class BreedingSiteReportData {
   // Step 4: Location
   double? latitude;
   double? longitude;
-  sdk.LocationRequestSource_Enum locationSource =
-      sdk.LocationRequestSource_Enum.auto;
+  LocationRequestSource_Enum locationSource =
+      LocationRequestSource_Enum.auto;
 
   // Step 5: Notes
   String? notes;
@@ -78,7 +78,7 @@ class BreedingSiteReportData {
     hasLarvae = null;
     latitude = null;
     longitude = null;
-    locationSource = sdk.LocationRequestSource_Enum.auto;
+    locationSource = LocationRequestSource_Enum.auto;
     notes = null;
     createdAt = DateTime.now();
   }

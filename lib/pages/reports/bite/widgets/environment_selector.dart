@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 /// Widget for selecting the environment where biting occurred
 class EnvironmentSelector extends StatelessWidget {
-  final sdk.BiteRequestEventEnvironmentEnum? selectedEnvironment;
-  final Function(sdk.BiteRequestEventEnvironmentEnum) onEnvironmentChanged;
+  final BiteRequestEventEnvironmentEnum? selectedEnvironment;
+  final Function(BiteRequestEventEnvironmentEnum) onEnvironmentChanged;
 
   const EnvironmentSelector({
     Key? key,
@@ -19,7 +19,7 @@ class EnvironmentSelector extends StatelessWidget {
       children: [
         _buildOptionTile(
           context,
-          sdk.BiteRequestEventEnvironmentEnum.indoors,
+          BiteRequestEventEnvironmentEnum.indoors,
           '(HC) Indoors',
           '(HC) Inside a building, house, office, etc.',
           Icons.home,
@@ -27,7 +27,7 @@ class EnvironmentSelector extends StatelessWidget {
         SizedBox(height: 12),
         _buildOptionTile(
           context,
-          sdk.BiteRequestEventEnvironmentEnum.outdoors,
+          BiteRequestEventEnvironmentEnum.outdoors,
           '(HC) Outdoors',
           '(HC) Outside in open air, garden, park, etc.',
           Icons.park,
@@ -35,7 +35,7 @@ class EnvironmentSelector extends StatelessWidget {
         SizedBox(height: 12),
         _buildOptionTile(
           context,
-          sdk.BiteRequestEventEnvironmentEnum.vehicle,
+          BiteRequestEventEnvironmentEnum.vehicle,
           '(HC) In a Vehicle',
           '(HC) Inside a car, bus, train, etc.',
           Icons.directions_car,
@@ -46,7 +46,7 @@ class EnvironmentSelector extends StatelessWidget {
 
   Widget _buildOptionTile(
     BuildContext context,
-    sdk.BiteRequestEventEnvironmentEnum environment,
+    BiteRequestEventEnvironmentEnum environment,
     String title,
     String subtitle,
     IconData icon,
