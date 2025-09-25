@@ -232,9 +232,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 }
 
-// Separate widget classes for better maintainability
-
-/// Formatters helper class to keep formatting logic organized
 class _ReportFormatters {
   final BuildContext context;
 
@@ -278,7 +275,6 @@ class _ReportFormatters {
   }
 }
 
-/// Main detail sheet widget for bite reports
 class _BiteReportDetailSheet extends StatelessWidget {
   final Bite report;
   final VoidCallback onDelete;
@@ -338,7 +334,6 @@ class _BiteReportDetailSheet extends StatelessWidget {
   }
 }
 
-/// Google Maps widget for the report location
 class _ReportMapWidget extends StatefulWidget {
   final Bite report;
 
@@ -384,7 +379,6 @@ class _ReportMapWidgetState extends State<_ReportMapWidget> {
   }
 }
 
-/// Header widget with title and delete button
 class _ReportHeaderWidget extends StatelessWidget {
   final Bite report;
   final _ReportFormatters formatters;
@@ -439,7 +433,6 @@ class _ReportHeaderWidget extends StatelessWidget {
   }
 }
 
-/// Location information widget
 class _ReportLocationWidget extends StatelessWidget {
   final Bite report;
   final _ReportFormatters formatters;
