@@ -10,8 +10,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'MyLocalizations.dart';
@@ -554,13 +556,68 @@ class Utils {
     return placemarks.first.locality;
   }
 
-  static void requestInAppReview() async {
-    // TODO: Do with new API
-    //var myReports = await ApiSingleton().getReportsList();
-    //var numReports = myReports.length;
-    var numReports = 1;
+  static void requestInAppReview(BuildContext context) async {
+    const int minimumReportsForReview = 3;
 
-    if (numReports < 3) {
+    try {
+      // TODO: Get a single api endpoint to retrieve report count?
+      final totalReports =
+          await _getTotalReportCount(context, minimumReportsForReview);
+      await _processReviewRequest(totalReports, minimumReportsForReview);
+    } catch (e) {
+      print('Error in requestInAppReview: $e');
+    }
+  }
+
+  static Future<int> _getTotalReportCount(
+      BuildContext context, int minimumRequired) async {
+    final apiClient = Provider.of<sdk.MosquitoAlert>(context, listen: false);
+
+    final apiFetchers = [
+      (
+        'observations',
+        () => apiClient.getObservationsApi().listMine(pageSize: 4)
+      ),
+      ('bites', () => apiClient.getBitesApi().listMine(pageSize: 4)),
+      (
+        'breeding_sites',
+        () => apiClient.getBreedingSitesApi().listMine(pageSize: 4)
+      ),
+    ];
+
+    int totalReports = 0;
+
+    for (final (apiName, fetcher) in apiFetchers) {
+      try {
+        final response = await fetcher();
+
+        // Extract count safely, handling both int and double types
+        final data = response.data;
+        if (data == null) continue;
+
+        final count = (data as dynamic).count;
+        if (count == null) continue;
+
+        final reportCount = count is int ? count : (count as num).toInt();
+
+        if (reportCount > 0) {
+          totalReports += reportCount;
+
+          if (totalReports >= minimumRequired) {
+            break;
+          }
+        }
+      } catch (e) {
+        print('Error fetching $apiName: $e');
+      }
+    }
+
+    return totalReports;
+  }
+
+  static Future<void> _processReviewRequest(
+      int numReports, int minimumReports) async {
+    if (numReports < minimumReports) {
       return;
     }
 
@@ -568,9 +625,9 @@ class Utils {
     final lastReportCount = await UserManager.getLastReportCount() ?? 0;
     final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
 
-    var shouldRequestReview = (numReports == 3 ||
-        numReports == 4 ||
-        numReports >= lastReportCount + 3 ||
+    var shouldRequestReview = (numReports == minimumReports ||
+        numReports == minimumReports + 1 ||
+        numReports >= lastReportCount + minimumReports ||
         now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000);
 
     if (!shouldRequestReview) {

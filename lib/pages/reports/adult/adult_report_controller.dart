@@ -9,6 +9,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicat
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:provider/provider.dart';
 
 import 'models/adult_report_data.dart';
@@ -177,6 +178,9 @@ class _AdultReportControllerState extends State<AdultReportController> {
   }
 
   void _showSuccessDialog() {
+    // Request in-app review after successful submission
+    Utils.requestInAppReview(context);
+
     showDialog(
       context: context,
       barrierDismissible: false,
