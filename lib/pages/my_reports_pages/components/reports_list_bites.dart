@@ -111,9 +111,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       }
     }
 
-    return locations.isEmpty
-        ? MyLocalizations.of(context, 'unknown')
-        : locations.join(', ');
+    return locations.join(', ');
   }
 
   // Location helper methods - moved to _ReportFormatters class
@@ -264,30 +262,6 @@ class _ReportFormatters {
         .round();
   }
 
-  String formatBiteLocations(BiteCounts counts) {
-    final locations = <String>[];
-
-    final bodyParts = [
-      {'count': counts.head, 'key': 'bite_report_bodypart_head'},
-      {'count': counts.chest, 'key': 'bite_report_bodypart_chest'},
-      {'count': counts.leftArm, 'key': 'bite_report_bodypart_leftarm'},
-      {'count': counts.rightArm, 'key': 'bite_report_bodypart_rightarm'},
-      {'count': counts.leftLeg, 'key': 'bite_report_bodypart_leftleg'},
-      {'count': counts.rightLeg, 'key': 'bite_report_bodypart_rightleg'},
-    ];
-
-    for (final part in bodyParts) {
-      final count = (part['count'] as num?)?.toInt();
-      if (count != null && count > 0) {
-        locations.add(MyLocalizations.of(context, part['key'] as String));
-      }
-    }
-
-    return locations.isEmpty
-        ? MyLocalizations.of(context, 'unknown')
-        : locations.join(', ');
-  }
-
   String formatDetailedDateTime(Bite report) {
     final localTime = report.createdAt.toLocal();
     final dateString =
@@ -390,9 +364,6 @@ class _ReportMapWidgetState extends State<_ReportMapWidget> {
           zoomControlsEnabled: false,
           zoomGesturesEnabled: false,
           myLocationButtonEnabled: false,
-          onMapCreated: (GoogleMapController controller) {
-            // Map controller can be stored here if needed for future functionality
-          },
           initialCameraPosition: CameraPosition(
             target: location,
             zoom: 15.0,
