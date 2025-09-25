@@ -185,7 +185,10 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   void _reportBottomSheet(Bite report, BuildContext context) async {
-    await _logReportView(report);
+    await FirebaseAnalytics.instance.logSelectContent(
+      contentType: 'bite_report',
+      itemId: report.uuid,
+    );
 
     await CustomShowModalBottomSheet.customShowModalBottomSheet(
       context: context,
@@ -195,13 +198,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
         onDelete: () => _deleteReport(report),
         formatters: _ReportFormatters(context),
       ),
-    );
-  }
-
-  Future<void> _logReportView(Bite report) async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'bite_report',
-      itemId: report.uuid,
     );
   }
 
@@ -356,6 +352,9 @@ class _BiteReportDetailSheet extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Divider(),
               ),
+              _ReportIdAndBiteDetailsWidget(
+                  report: report, formatters: formatters),
+              const SizedBox(height: 20),
               _ReportDetailsWidget(report: report, formatters: formatters),
               const SizedBox(height: 20),
             ],
@@ -522,6 +521,80 @@ class _ReportLocationWidget extends StatelessWidget {
   }
 }
 
+class _ReportIdAndBiteDetailsWidget extends StatelessWidget {
+  final Bite report;
+  final _ReportFormatters formatters;
+
+  const _ReportIdAndBiteDetailsWidget({
+    required this.report,
+    required this.formatters,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Report ID
+        Row(
+          children: [
+            Style.titleMedium(
+              '${MyLocalizations.of(context, 'identifier_small')}: ',
+              fontSize: 14,
+            ),
+            Style.body(
+              report.uuid,
+              fontSize: 14,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        // Question about bites and body parts
+        Style.titleMedium(
+          MyLocalizations.of(context, 'bytes_and_place_report_txt'),
+          fontSize: 14,
+        ),
+        const SizedBox(height: 8),
+
+        // Answer: Number of bites and locations
+        Style.body(
+          formatters.formatBiteLocations(report.counts),
+          fontSize: 14,
+        ),
+        const SizedBox(height: 8),
+
+        // Environment/location where biting occurred
+        if (report.eventEnvironment != null) ...[
+          Style.body(
+            _getEnvironmentTranslation(context, report.eventEnvironment!),
+            fontSize: 14,
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _getEnvironmentTranslation(BuildContext context, dynamic environment) {
+    // Map environment enum values to user-friendly text
+    switch (environment.toString()) {
+      case 'BiteRequestEventEnvironmentEnum.indoors':
+        return MyLocalizations.of(
+            context, 'question_4_answer_42'); // "Inside a building"
+      case 'BiteRequestEventEnvironmentEnum.vehicle':
+        return MyLocalizations.of(
+            context, 'question_4_answer_41'); // "Inside a vehicle"
+      case 'BiteRequestEventEnvironmentEnum.outdoors':
+        return MyLocalizations.of(
+            context, 'question_4_answer_43'); // "Outdoors"
+      default:
+        return environment
+            .toString()
+            .replaceAll('BiteRequestEventEnvironmentEnum.', '');
+    }
+  }
+}
+
 /// Details section widget
 class _ReportDetailsWidget extends StatelessWidget {
   final Bite report;
@@ -537,27 +610,16 @@ class _ReportDetailsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _DetailSection(
-          title: MyLocalizations.of(context, 'bite_locations'),
-          content: formatters.formatBiteLocations(report.counts),
-        ),
-        if (report.eventEnvironment != null) ...[
-          const SizedBox(height: 20),
-          _DetailSection(
-            title: MyLocalizations.of(context, 'environment'),
-            content:
-                _getEnvironmentTranslation(context, report.eventEnvironment!),
-          ),
-        ],
+        // Only show timing information if available (environment is now shown above)
         if (report.eventMoment != null) ...[
-          const SizedBox(height: 20),
           _DetailSection(
             title: MyLocalizations.of(context, 'moment'),
             content: _getMomentTranslation(context, report.eventMoment!),
           ),
+          if (report.note?.isNotEmpty ?? false) const SizedBox(height: 20),
         ],
+        // Notes section
         if (report.note?.isNotEmpty ?? false) ...[
-          const SizedBox(height: 20),
           _DetailSection(
             title: MyLocalizations.of(context, 'notes'),
             content: report.note!,
@@ -565,13 +627,6 @@ class _ReportDetailsWidget extends StatelessWidget {
         ],
       ],
     );
-  }
-
-  String _getEnvironmentTranslation(BuildContext context, dynamic environment) {
-    // TODO: Add proper translation mapping for environment values
-    return environment
-        .toString()
-        .replaceAll('BiteRequestEventEnvironmentEnum.', '');
   }
 
   String _getMomentTranslation(BuildContext context, dynamic moment) {
