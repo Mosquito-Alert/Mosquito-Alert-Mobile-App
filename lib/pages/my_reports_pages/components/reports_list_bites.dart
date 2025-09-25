@@ -253,13 +253,14 @@ class _ReportFormatters {
   }
 
   int _getTotalBiteCount(BiteCounts counts) {
-    return ((counts.head ?? 0) +
-            (counts.chest ?? 0) +
-            (counts.leftArm ?? 0) +
-            (counts.rightArm ?? 0) +
-            (counts.leftLeg ?? 0) +
-            (counts.rightLeg ?? 0))
-        .round();
+    final head = (counts.head ?? 0).round();
+    final chest = (counts.chest ?? 0).round();
+    final leftArm = (counts.leftArm ?? 0).round();
+    final rightArm = (counts.rightArm ?? 0).round();
+    final leftLeg = (counts.leftLeg ?? 0).round();
+    final rightLeg = (counts.rightLeg ?? 0).round();
+
+    return head + chest + leftArm + rightArm + leftLeg + rightLeg;
   }
 
   String formatDetailedDateTime(Bite report) {
