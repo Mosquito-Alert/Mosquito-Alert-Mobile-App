@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as api;
+import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 
 class BiteReportData extends ChangeNotifier {
   // Bite counts by body part
@@ -52,14 +52,14 @@ class BiteReportData extends ChangeNotifier {
   // Location
   double? latitude;
   double? longitude;
-  api.LocationRequestSource_Enum locationSource =
-      api.LocationRequestSource_Enum.auto;
+  sdk.LocationRequestSource_Enum locationSource =
+      sdk.LocationRequestSource_Enum.auto;
 
   // Environment question (where did the biting occur)
-  api.BiteRequestEventEnvironmentEnum? eventEnvironment;
+  sdk.BiteRequestEventEnvironmentEnum? eventEnvironment;
 
   // Event timing (when did the biting occur)
-  api.BiteRequestEventMomentEnum? eventMoment;
+  sdk.BiteRequestEventMomentEnum? eventMoment;
 
   // Notes
   String? notes;
@@ -124,7 +124,7 @@ class BiteReportData extends ChangeNotifier {
     rightLegBites = 0;
     latitude = null;
     longitude = null;
-    locationSource = api.LocationRequestSource_Enum.auto;
+    locationSource = sdk.LocationRequestSource_Enum.auto;
     eventEnvironment = null;
     eventMoment = null;
     notes = null;
