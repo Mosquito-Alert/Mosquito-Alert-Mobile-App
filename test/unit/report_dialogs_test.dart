@@ -4,7 +4,8 @@ import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dar
 
 void main() {
   group('ReportDialogs showSuccessDialog', () {
-    testWidgets('should show success dialog with correct content', (WidgetTester tester) async {
+    testWidgets('should show success dialog with correct content',
+        (WidgetTester tester) async {
       // Build a test app with MaterialApp wrapper
       await tester.pumpWidget(MaterialApp(
         home: Builder(
@@ -27,17 +28,19 @@ void main() {
 
       // Verify dialog appears
       expect(find.byType(AlertDialog), findsOneWidget);
-      
+
       // Verify dialog is not dismissible (barrierDismissible: false)
       await tester.tapAt(const Offset(10, 10)); // Tap outside dialog
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget); // Dialog should still be present
-      
+      expect(find.byType(AlertDialog),
+          findsOneWidget); // Dialog should still be present
+
       // Verify OK button exists
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('should dismiss dialog and navigate when OK pressed', (WidgetTester tester) async {
+    testWidgets('should dismiss dialog and navigate when OK pressed',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Navigator(
           onGenerateRoute: (RouteSettings settings) {

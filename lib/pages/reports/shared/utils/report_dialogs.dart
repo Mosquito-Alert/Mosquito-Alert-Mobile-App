@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/utils/InAppReviewManager.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -7,6 +8,9 @@ class ReportDialogs {
   /// Show success dialog for report submissions
   /// Uses navigation pattern to return to app home screen
   static Future<void> showSuccessDialog(BuildContext context) {
+    // Request in-app review after successful submission
+    InAppReviewManager.requestInAppReview(context);
+
     return showDialog(
       context: context,
       barrierDismissible: false,
