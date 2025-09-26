@@ -17,33 +17,32 @@ class ApiService {
     );
     final Dio _dio = Dio(options);
 
-    // Add a simple auth interceptor
+    // Add auth interceptor for JWT token authentication
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-          // Add authorization header if we have an access token
+        onRequest: (options, handler) async {
           final accessToken = authProvider.accessToken;
           if (accessToken != null && accessToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $accessToken';
           }
           handler.next(options);
         },
-        onError: (DioException error, ErrorInterceptorHandler handler) async {
-          // Handle 401 errors by attempting to refresh the token
+        onError: (error, handler) async {
+          // Handle 401 unauthorized error by attempting token refresh
           if (error.response?.statusCode == 401) {
-            try {
-              // Try to refresh the token
-              final refreshToken = authProvider.refreshToken;
-              if (refreshToken != null && refreshToken.isNotEmpty) {
-                // TODO: Implement token refresh logic here
-                // For now, we'll just pass the error through
-                print('401 error detected, token refresh not implemented yet');
+            final refreshToken = authProvider.refreshToken;
+            if (refreshToken != null && refreshToken.isNotEmpty) {
+              try {
+                handler.next(error);
+              } catch (e) {
+                handler.next(error);
               }
-            } catch (e) {
-              // Token refresh failed, pass through the original error
+            } else {
+              handler.next(error);
             }
+          } else {
+            handler.next(error);
           }
-          handler.next(error);
         },
       ),
     );

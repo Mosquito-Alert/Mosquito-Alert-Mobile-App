@@ -160,9 +160,13 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         value: isBgTrackingEnabled,
-                        activeColor: Colors.orange,
+                        activeThumbColor: Style.colorPrimary,
                         secondary: isBgTrackingLoading
-                            ? CircularProgressIndicator()
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Style.colorPrimary,
+                                ),
+                              )
                             : null,
                         onChanged: (bool value) async {
                           if (value) {
