@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as api;
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/location_selector.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -11,13 +11,14 @@ class LocationSelectionPage extends StatefulWidget {
   final String subtitle;
   final double? initialLatitude;
   final double? initialLongitude;
-  final Function(double latitude, double longitude,
-      api.LocationRequestSource_Enum source) onLocationSelected;
+  final Function(
+          double latitude, double longitude, LocationRequestSource_Enum source)
+      onLocationSelected;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final bool canProceed;
   final String? locationDescription;
-  final api.LocationRequestSource_Enum? locationSource;
+  final LocationRequestSource_Enum? locationSource;
 
   const LocationSelectionPage({
     Key? key,
@@ -113,7 +114,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
                         if (widget.locationSource != null)
                           Text(
                             widget.locationSource ==
-                                    api.LocationRequestSource_Enum.auto
+                                    LocationRequestSource_Enum.auto
                                 ? '(HC) GPS Location'
                                 : '(HC) Manual Selection',
                             style: TextStyle(
