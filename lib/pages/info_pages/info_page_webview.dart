@@ -47,7 +47,8 @@ class _InfoPageInWebviewState extends State<InfoPageInWebview> {
       _loadHtmlFromAssets();
     } else {
       _controller.loadRequest(
-          Uri.parse(widget.url ?? 'https://www.mosquitoalert.com/'));
+        Uri.parse(widget.url ?? 'https://www.mosquitoalert.com/'),
+      );
     }
   }
 
@@ -60,34 +61,30 @@ class _InfoPageInWebviewState extends State<InfoPageInWebview> {
             backgroundColor: Colors.white,
             centerTitle: true,
             title: title == null
-                ? Image.asset(
-                    'assets/img/ic_logo.webp',
-                    height: 45,
-                  )
+                ? Image.asset('assets/img/ic_logo.webp', height: 45)
                 : Text(title),
           ),
           body: SafeArea(
             child: Stack(
               children: [
-                Builder(builder: (BuildContext context) {
-                  return WebViewWidget(
-                    controller: _controller,
-                  );
-                }),
+                Builder(
+                  builder: (BuildContext context) {
+                    return WebViewWidget(controller: _controller);
+                  },
+                ),
                 StreamBuilder<bool>(
-                    stream: loadingStream.stream,
-                    initialData: true,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<bool> snapLoading) {
-                      if (snapLoading.data == true) {
-                        return Container(
-                          child: Center(
-                            child: Utils.loading(true),
-                          ),
-                        );
-                      }
-                      return Container();
-                    }),
+                  stream: loadingStream.stream,
+                  initialData: true,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                        if (snapLoading.data == true) {
+                          return Container(
+                            child: Center(child: Utils.loading(true)),
+                          );
+                        }
+                        return Container();
+                      },
+                ),
               ],
             ),
           ),
@@ -100,8 +97,13 @@ class _InfoPageInWebviewState extends State<InfoPageInWebview> {
     loadingStream.add(true);
     var fileText = await rootBundle.loadString(widget.url!);
     try {
-      await _controller.loadRequest(Uri.dataFromString(fileText,
-          mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
+      await _controller.loadRequest(
+        Uri.dataFromString(
+          fileText,
+          mimeType: 'text/html',
+          encoding: Encoding.getByName('utf-8'),
+        ),
+      );
     } catch (e) {
       print('Error loading local HTML: $e');
     }

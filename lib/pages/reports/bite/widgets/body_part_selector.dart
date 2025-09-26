@@ -48,7 +48,6 @@ class BodyPartSelector extends StatelessWidget {
             // Clickable regions using relative coordinates (0.0 to 1.0)
             // Format: Rect.fromLTWH(left, top, width, height)
             // All values are percentages of container (320x480)
-
             _buildBodyPartOverlay(
               context,
               data,
@@ -127,10 +126,11 @@ class BodyPartSelector extends StatelessWidget {
                 : Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-                color: biteCount > 0
-                    ? Colors.red.withValues(alpha: 0.6)
-                    : Colors.blue.withValues(alpha: 0.4),
-                width: 2),
+              color: biteCount > 0
+                  ? Colors.red.withValues(alpha: 0.6)
+                  : Colors.blue.withValues(alpha: 0.4),
+              width: 2,
+            ),
           ),
           child: Stack(
             children: [
@@ -202,162 +202,158 @@ class BodyPartSelector extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         int tempCount = currentCount;
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  _getBodyPartIcon(bodyPart),
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(width: 8),
-                Text('$displayName Bites'),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'How many bites on your ${displayName.toLowerCase()}?',
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-
-                // Enhanced counter with better UX
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[300]!),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    _getBodyPartIcon(bodyPart),
+                    color: Theme.of(context).primaryColor,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Decrease button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: tempCount > 0
-                              ? () {
-                                  setState(() {
-                                    tempCount--;
-                                  });
-                                }
-                              : null,
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: tempCount > 0
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.remove,
-                              color: Colors.white,
-                              size: 24,
+                  SizedBox(width: 8),
+                  Text('$displayName Bites'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'How many bites on your ${displayName.toLowerCase()}?',
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Enhanced counter with better UX
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Decrease button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(24),
+                            onTap: tempCount > 0
+                                ? () {
+                                    setState(() {
+                                      tempCount--;
+                                    });
+                                  }
+                                : null,
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: tempCount > 0
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[300],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.remove,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      // Count display
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: tempCount > 0
-                              ? Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1)
-                              : Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
+                        // Count display
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
                             color: tempCount > 0
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey[300]!,
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '$tempCount',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                                ? Theme.of(
+                                    context,
+                                  ).primaryColor.withValues(alpha: 0.1)
+                                : Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
                               color: tempCount > 0
                                   ? Theme.of(context).primaryColor
-                                  : Colors.grey[600],
+                                  : Colors.grey[300]!,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$tempCount',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: tempCount > 0
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[600],
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      // Increase button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: tempCount < 20
-                              ? () {
-                                  setState(() {
-                                    tempCount++;
-                                  });
-                                }
-                              : null,
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: tempCount < 20
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 24,
+                        // Increase button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(24),
+                            onTap: tempCount < 20
+                                ? () {
+                                    setState(() {
+                                      tempCount++;
+                                    });
+                                  }
+                                : null,
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: tempCount < 20
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[300],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                if (tempCount >= 20)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      'Maximum 20 bites per body part',
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 12,
-                      ),
+                      ],
                     ),
                   ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancel'),
+
+                  if (tempCount >= 20)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        'Maximum 20 bites per body part',
+                        style: TextStyle(color: Colors.orange, fontSize: 12),
+                      ),
+                    ),
+                ],
               ),
-              Style.button(
-                'Save',
-                () {
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel'),
+                ),
+                Style.button('Save', () {
                   onChanged(tempCount);
                   Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+                }),
+              ],
+            );
+          },
+        );
       },
     );
   }
@@ -380,7 +376,8 @@ class BodyPartSelector extends StatelessWidget {
   }
 
   Widget _buildBiteSummary(BuildContext context, BiteReportData data) {
-    final totalBites = data.headBites +
+    final totalBites =
+        data.headBites +
         data.chestBites +
         data.leftHandBites +
         data.rightHandBites +
@@ -397,19 +394,15 @@ class BodyPartSelector extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.touch_app,
-              color: Colors.blue[600],
-              size: 20,
-            ),
+            Icon(Icons.touch_app, color: Colors.blue[600], size: 20),
             SizedBox(width: 8),
             Expanded(
               child: Text(
                 'Tap on body parts above to report bites',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.blue[700],
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: Colors.blue[700],
+                  fontWeight: FontWeight.w500,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -442,18 +435,14 @@ class BodyPartSelector extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.bug_report,
-                color: Colors.white,
-                size: 24,
-              ),
+              Icon(Icons.bug_report, color: Colors.white, size: 24),
               SizedBox(width: 8),
               Text(
                 'Total bites: $totalBites',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -465,9 +454,9 @@ class BodyPartSelector extends StatelessWidget {
         Text(
           'Breakdown by body part:',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[700],
+          ),
         ),
 
         const SizedBox(height: 8),
@@ -484,13 +473,22 @@ class BodyPartSelector extends StatelessWidget {
               _buildBiteChip('Left Hand', data.leftHandBites, Icons.front_hand),
             if (data.rightHandBites > 0)
               _buildBiteChip(
-                  'Right Hand', data.rightHandBites, Icons.front_hand),
+                'Right Hand',
+                data.rightHandBites,
+                Icons.front_hand,
+              ),
             if (data.leftLegBites > 0)
               _buildBiteChip(
-                  'Left Leg', data.leftLegBites, Icons.directions_walk),
+                'Left Leg',
+                data.leftLegBites,
+                Icons.directions_walk,
+              ),
             if (data.rightLegBites > 0)
               _buildBiteChip(
-                  'Right Leg', data.rightLegBites, Icons.directions_walk),
+                'Right Leg',
+                data.rightLegBites,
+                Icons.directions_walk,
+              ),
           ],
         ),
       ],
@@ -508,11 +506,7 @@ class BodyPartSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: Colors.red[700],
-          ),
+          Icon(icon, size: 16, color: Colors.red[700]),
           SizedBox(width: 4),
           Text(
             '$label: $count',

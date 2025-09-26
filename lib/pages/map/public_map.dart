@@ -46,34 +46,27 @@ class _PublicMapState extends State<PublicMap> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Image.asset(
-          'assets/img/ic_logo.webp',
-          height: 40,
-        ),
+        title: Image.asset('assets/img/ic_logo.webp', height: 40),
       ),
       body: SafeArea(
         child: Stack(
           children: [
-            Builder(builder: (BuildContext context) {
-              return WebViewWidget(
-                controller: _controller,
-              );
-            }),
+            Builder(
+              builder: (BuildContext context) {
+                return WebViewWidget(controller: _controller);
+              },
+            ),
             StreamBuilder<bool>(
-                stream: loadingStream.stream,
-                initialData: true,
-                builder:
-                    (BuildContext context, AsyncSnapshot<bool> snapLoading) {
-                  if (snapLoading.data != true) {
-                    return Container();
-                  }
+              stream: loadingStream.stream,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapLoading) {
+                if (snapLoading.data != true) {
+                  return Container();
+                }
 
-                  return Container(
-                    child: Center(
-                      child: Utils.loading(true),
-                    ),
-                  );
-                }),
+                return Container(child: Center(child: Utils.loading(true)));
+              },
+            ),
           ],
         ),
       ),

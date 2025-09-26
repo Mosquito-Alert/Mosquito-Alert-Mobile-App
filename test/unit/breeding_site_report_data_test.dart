@@ -15,28 +15,31 @@ void main() {
     });
 
     test(
-        'should be valid when all required fields are present and water is false',
-        () {
-      reportData.siteType = 'storm_drain';
-      reportData.photos = [File('/tmp/test.jpg')];
-      reportData.hasWater = false;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      'should be valid when all required fields are present and water is false',
+      () {
+        reportData.siteType = 'storm_drain';
+        reportData.photos = [File('/tmp/test.jpg')];
+        reportData.hasWater = false;
+        reportData.latitude = 40.7128;
+        reportData.longitude = -74.0060;
 
-      expect(reportData.isValid, true);
-    });
+        expect(reportData.isValid, true);
+      },
+    );
 
-    test('should be invalid when water is true but larvae status is not set',
-        () {
-      reportData.siteType = 'storm_drain';
-      reportData.photos = [File('/tmp/test.jpg')];
-      reportData.hasWater = true;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
-      // hasLarvae is null
+    test(
+      'should be invalid when water is true but larvae status is not set',
+      () {
+        reportData.siteType = 'storm_drain';
+        reportData.photos = [File('/tmp/test.jpg')];
+        reportData.hasWater = true;
+        reportData.latitude = 40.7128;
+        reportData.longitude = -74.0060;
+        // hasLarvae is null
 
-      expect(reportData.isValid, false);
-    });
+        expect(reportData.isValid, false);
+      },
+    );
 
     test('should be valid when water is true and larvae status is set', () {
       reportData.siteType = 'storm_drain';

@@ -56,12 +56,14 @@ class MyLocalizations {
         'tr_TR',
       ];
 
-      final code = supportedLanguages
-          .firstWhere((lang) => lang.startsWith(locale.languageCode));
+      final code = supportedLanguages.firstWhere(
+        (lang) => lang.startsWith(locale.languageCode),
+      );
 
       try {
-        jsonContent =
-            await rootBundle.loadString('assets/language/' + code + '.json');
+        jsonContent = await rootBundle.loadString(
+          'assets/language/' + code + '.json',
+        );
       } catch (_) {
         // Load the default language
         jsonContent = await rootBundle.loadString('assets/language/en_US.json');
@@ -89,7 +91,9 @@ class MyLocalizations {
   }
 
   static String of(BuildContext context, String? key) {
-    return Localizations.of<MyLocalizations>(context, MyLocalizations)!
-        .translate(key);
+    return Localizations.of<MyLocalizations>(
+      context,
+      MyLocalizations,
+    )!.translate(key);
   }
 }

@@ -40,10 +40,12 @@ class MockBitesApi extends sdk.BitesApi {
     return Response<sdk.Bite>(
       statusCode: 201,
       requestOptions: RequestOptions(path: '/bites/'),
-      data: sdk.Bite((b) => b
-        ..uuid = 'test-uuid-123'
-        ..createdAt = DateTime.now()
-        ..updatedAt = DateTime.now()),
+      data: sdk.Bite(
+        (b) => b
+          ..uuid = 'test-uuid-123'
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now(),
+      ),
     );
   }
 
@@ -88,11 +90,13 @@ class MockBitesApi extends sdk.BitesApi {
     return Response<sdk.PaginatedBiteList>(
       statusCode: 200,
       requestOptions: RequestOptions(path: '/bites/'),
-      data: sdk.PaginatedBiteList((b) => b
-        ..count = _bites.length
-        ..next = hasNext ? 'next-page-url' : null
-        ..previous = currentPage > 1 ? 'previous-page-url' : null
-        ..results = BuiltList<sdk.Bite>(paginatedResults).toBuilder()),
+      data: sdk.PaginatedBiteList(
+        (b) => b
+          ..count = _bites.length
+          ..next = hasNext ? 'next-page-url' : null
+          ..previous = currentPage > 1 ? 'previous-page-url' : null
+          ..results = BuiltList<sdk.Bite>(paginatedResults).toBuilder(),
+      ),
     );
   }
 

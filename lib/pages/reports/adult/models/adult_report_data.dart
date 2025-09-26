@@ -16,7 +16,7 @@ class AdultReportData {
 
   // Step 4: Event timing (when the mosquito was found)
   String?
-      eventMoment; // 'now', 'last_morning', 'last_midday', 'last_afternoon', 'last_night', '', null,
+  eventMoment; // 'now', 'last_morning', 'last_midday', 'last_afternoon', 'last_night', '', null,
 
   // Step 5: Notes
   String? notes;

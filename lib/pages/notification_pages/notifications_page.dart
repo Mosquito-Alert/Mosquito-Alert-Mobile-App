@@ -30,21 +30,23 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   bool _isLastPage = false;
   static const _pageSize = 20;
-  late final _pagingController =
-      PagingController<int, sdk.Notification>(getNextPageKey: (state) {
-    return _isLastPage ? null : state.nextIntPageKey;
-  }, fetchPage: (pageKey) async {
-    final response = await notificationsApi.listMine(
-      page: pageKey,
-      pageSize: _pageSize,
-      orderBy: BuiltList<String>(["-created_at"]),
-    );
-    final data = response.data;
-    if (data == null) return [];
-    _isLastPage = data.next == null;
+  late final _pagingController = PagingController<int, sdk.Notification>(
+    getNextPageKey: (state) {
+      return _isLastPage ? null : state.nextIntPageKey;
+    },
+    fetchPage: (pageKey) async {
+      final response = await notificationsApi.listMine(
+        page: pageKey,
+        pageSize: _pageSize,
+        orderBy: BuiltList<String>(["-created_at"]),
+      );
+      final data = response.data;
+      if (data == null) return [];
+      _isLastPage = data.next == null;
 
-    return data.results?.toList() ?? [];
-  });
+      return data.results?.toList() ?? [];
+    },
+  );
 
   StreamController<bool> loadingStream = StreamController<bool>.broadcast();
   late sdk.NotificationsApi notificationsApi;
@@ -53,8 +55,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   void initState() {
     super.initState();
-    sdk.MosquitoAlert apiClient =
-        Provider.of<sdk.MosquitoAlert>(context, listen: false);
+    sdk.MosquitoAlert apiClient = Provider.of<sdk.MosquitoAlert>(
+      context,
+      listen: false,
+    );
     notificationsApi = apiClient.getNotificationsApi();
     _analyticsService = widget.analyticsService ?? FirebaseAnalyticsService();
     _logScreenView();
@@ -63,8 +67,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     if (widget.notificationId != null) {
       // Delay until the first frame is rendered
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final notification =
-            await fetchNotificationById(widget.notificationId!);
+        final notification = await fetchNotificationById(
+          widget.notificationId!,
+        );
         if (notification != null && mounted) {
           _showNotificationBottomSheet(context, notification);
         }
@@ -125,8 +130,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    color:
-                        notification.isRead ? Colors.grey[200] : Colors.white,
+                    color: notification.isRead
+                        ? Colors.grey[200]
+                        : Colors.white,
                     child: ListTile(
                       contentPadding: EdgeInsets.all(12),
                       onTap: () {
@@ -142,9 +148,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       ),
                       subtitle: Text(
-                          _parseHtmlString(notification.message.body),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
+                        _parseHtmlString(notification.message.body),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   );
                 },
@@ -154,13 +161,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                 ),
                 firstPageProgressIndicatorBuilder: (context) => Center(
-                    child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Style.colorPrimary),
-                )),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Style.colorPrimary,
+                    ),
+                  ),
+                ),
                 newPageProgressIndicatorBuilder: (context) => Center(
-                    child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Style.colorPrimary),
-                )),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Style.colorPrimary,
+                    ),
+                  ),
+                ),
               ),
             );
           },
@@ -170,65 +183,68 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   void _showNotificationBottomSheet(
-      BuildContext context, sdk.Notification notification) async {
+    BuildContext context,
+    sdk.Notification notification,
+  ) async {
     await _analyticsService.logSelectContent(
-        contentType: 'notification', itemId: '${notification.id}');
+      contentType: 'notification',
+      itemId: '${notification.id}',
+    );
 
     if (!notification.isRead) {
       await markNotificationAsRead(notification);
     }
 
     CustomShowModalBottomSheet.customShowModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            bottom: false,
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          bottom: false,
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  )),
-              child: Container(
-                margin:
-                    EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Style.titleMedium(notification.message.title),
-                      Style.bodySmall(
-                          DateFormat('dd-MM-yyyy HH:mm')
-                              .format(notification.createdAt.toLocal()),
-                          color: Colors.grey),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      html.Html(
-                        data: notification.message.body
-                            .replaceAll('<p><a', '<a')
-                            .replaceAll('</a></p>', '</a>'),
-                        style: {
-                          '*': html.Style(
-                            padding: html.HtmlPaddings.zero,
-                            margin: html.Margins.zero,
-                          ),
-                        },
-                      )
-                    ],
-                  ),
+            ),
+            child: Container(
+              margin: EdgeInsets.only(left: 20, right: 10, top: 10, bottom: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 15),
+                    Style.titleMedium(notification.message.title),
+                    Style.bodySmall(
+                      DateFormat(
+                        'dd-MM-yyyy HH:mm',
+                      ).format(notification.createdAt.toLocal()),
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 10),
+                    html.Html(
+                      data: notification.message.body
+                          .replaceAll('<p><a', '<a')
+                          .replaceAll('</a></p>', '</a>'),
+                      style: {
+                        '*': html.Style(
+                          padding: html.HtmlPaddings.zero,
+                          margin: html.Margins.zero,
+                        ),
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Future<void> markNotificationAsRead(sdk.Notification notification) async {
@@ -237,8 +253,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     sdk.PatchedNotificationRequest patchedNotificationRequest =
         sdk.PatchedNotificationRequest((b) => b..isRead = true);
     final response = await notificationsApi.partialUpdate(
-        id: notification.id,
-        patchedNotificationRequest: patchedNotificationRequest);
+      id: notification.id,
+      patchedNotificationRequest: patchedNotificationRequest,
+    );
 
     final sdk.Notification? newNotification = response.data;
     if (newNotification == null || response.statusCode != 200) {
@@ -248,7 +265,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     // Update the notification in the paging controller
     // See: https://github.com/EdsonBueno/infinite_scroll_pagination/issues/389
-    _pagingController.mapItems((sdk.Notification item) =>
-        item.id == newNotification.id ? newNotification : item);
+    _pagingController.mapItems(
+      (sdk.Notification item) =>
+          item.id == newNotification.id ? newNotification : item,
+    );
   }
 }

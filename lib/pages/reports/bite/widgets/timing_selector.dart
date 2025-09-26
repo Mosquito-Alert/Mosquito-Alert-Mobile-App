@@ -117,10 +117,7 @@ class TimingSelector extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -128,11 +125,7 @@ class TimingSelector extends StatelessWidget {
 
             // Selection indicator
             if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: Style.colorPrimary,
-                size: 24,
-              )
+              Icon(Icons.check_circle, color: Style.colorPrimary, size: 24)
             else
               Icon(
                 Icons.radio_button_unchecked,

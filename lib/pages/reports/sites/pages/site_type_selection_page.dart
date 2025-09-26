@@ -55,10 +55,7 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
           // Title
           Text(
             MyLocalizations.of(context, 'question_12'),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
           SizedBox(height: 8),
@@ -66,10 +63,7 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
           // Subtitle
           Text(
             '(HC) Select the type of breeding site you found:',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
 
           SizedBox(height: 24),
@@ -140,7 +134,9 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
                               children: [
                                 Text(
                                   MyLocalizations.of(
-                                      context, option['titleKey']),
+                                    context,
+                                    option['titleKey'],
+                                  ),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -189,8 +185,9 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Style.colorPrimary.withValues(alpha: 0.1),
-              border:
-                  Border.all(color: Style.colorPrimary.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: Style.colorPrimary.withValues(alpha: 0.3),
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -200,10 +197,7 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
                 Expanded(
                   child: Text(
                     '(HC) We focus on breeding sites in public spaces that may require community attention.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Style.colorPrimary,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Style.colorPrimary),
                   ),
                 ),
               ],

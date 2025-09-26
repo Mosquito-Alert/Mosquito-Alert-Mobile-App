@@ -36,101 +36,117 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _logScreenView() async {
     await FirebaseAnalytics.instance.logScreenView(
-        screenName: '/home',
-        parameters: {'action_text_id': _suggestedActionTextId});
+      screenName: '/home',
+      parameters: {'action_text_id': _suggestedActionTextId},
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Scaffold(body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Image.asset(
-                          'assets/img/bottoms/bottom_main.webp',
-                          width: double.infinity,
-                          fit: BoxFit.fitWidth,
-                          alignment: Alignment.bottomCenter,
-                        ),
+        Scaffold(
+          body: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              const SizedBox(
-                                height: 24,
+                      child: IntrinsicHeight(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Image.asset(
+                                'assets/img/bottoms/bottom_main.webp',
+                                width: double.infinity,
+                                fit: BoxFit.fitWidth,
+                                alignment: Alignment.bottomCenter,
                               ),
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
                                   children: <Widget>[
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Style.body(
-                                                MyLocalizations.of(context,
-                                                    _suggestedActionTextId),
-                                                fontSize: 16),
-                                          ]),
-                                    )
-                                  ]),
-                              const SizedBox(height: 30),
-                              CustomCard(
-                                  text: 'single_mosquito',
-                                  image_path:
-                                      'assets/img/ic_mosquito_report.webp',
-                                  color: '40DFD458',
-                                  onTap: _createAdultReport),
-                              const SizedBox(height: 10),
-                              CustomCard(
-                                  text: 'single_bite',
-                                  image_path: 'assets/img/ic_bite_report.webp',
-                                  color: '40D28A73',
-                                  onTap: _createBiteReport),
-                              const SizedBox(height: 10),
-                              CustomCard(
-                                  text: 'single_breeding_site',
-                                  image_path:
-                                      'assets/img/ic_breeding_report.webp',
-                                  color: '407D9393',
-                                  onTap: _createSiteReport),
-                              const SizedBox(height: 10),
-                              CustomCard(
-                                  text: 'public_map_tab',
-                                  image_path: 'assets/img/ic_public_map.webp',
-                                  color: 'FFebf1cc',
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PublicMap()),
-                                    );
-                                  }),
-                            ],
-                          ),
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Style.body(
+                                                MyLocalizations.of(
+                                                  context,
+                                                  _suggestedActionTextId,
+                                                ),
+                                                fontSize: 16,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30),
+                                    CustomCard(
+                                      text: 'single_mosquito',
+                                      image_path:
+                                          'assets/img/ic_mosquito_report.webp',
+                                      color: '40DFD458',
+                                      onTap: _createAdultReport,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    CustomCard(
+                                      text: 'single_bite',
+                                      image_path:
+                                          'assets/img/ic_bite_report.webp',
+                                      color: '40D28A73',
+                                      onTap: _createBiteReport,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    CustomCard(
+                                      text: 'single_breeding_site',
+                                      image_path:
+                                          'assets/img/ic_breeding_report.webp',
+                                      color: '407D9393',
+                                      onTap: _createSiteReport,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    CustomCard(
+                                      text: 'public_map_tab',
+                                      image_path:
+                                          'assets/img/ic_public_map.webp',
+                                      color: 'FFebf1cc',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PublicMap(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        )),
+                    ),
+                  );
+                },
+          ),
+        ),
         Positioned.fill(
           child: StreamBuilder<bool>(
             stream: loadingStream.stream,
@@ -139,12 +155,10 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.hasData == false || snapshot.data == false) {
                 return Container();
               }
-              return Utils.loading(
-                snapshot.data,
-              );
+              return Utils.loading(snapshot.data);
             },
           ),
-        )
+        ),
       ],
     );
   }
@@ -159,9 +173,7 @@ class _HomePageState extends State<HomePage> {
     loadingStream.add(false);
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => AdultReportController(),
-      ),
+      MaterialPageRoute(builder: (context) => AdultReportController()),
     );
   }
 
@@ -169,9 +181,7 @@ class _HomePageState extends State<HomePage> {
     loadingStream.add(false);
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BiteReportController(),
-      ),
+      MaterialPageRoute(builder: (context) => BiteReportController()),
     );
   }
 
@@ -179,9 +189,7 @@ class _HomePageState extends State<HomePage> {
     loadingStream.add(false);
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BreedingSiteReportController(),
-      ),
+      MaterialPageRoute(builder: (context) => BreedingSiteReportController()),
     );
   }
 }

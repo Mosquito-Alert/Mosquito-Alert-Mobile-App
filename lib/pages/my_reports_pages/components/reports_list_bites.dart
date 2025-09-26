@@ -29,8 +29,10 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   void _initializeApi() {
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+      context,
+      listen: false,
+    );
     bitesApi = apiClient.getBitesApi();
   }
 
@@ -94,12 +96,12 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       {'count': counts.leftArm as num?, 'key': 'bite_report_bodypart_leftarm'},
       {
         'count': counts.rightArm as num?,
-        'key': 'bite_report_bodypart_rightarm'
+        'key': 'bite_report_bodypart_rightarm',
       },
       {'count': counts.leftLeg as num?, 'key': 'bite_report_bodypart_leftleg'},
       {
         'count': counts.rightLeg as num?,
-        'key': 'bite_report_bodypart_rightleg'
+        'key': 'bite_report_bodypart_rightleg',
       },
     ];
 
@@ -147,8 +149,11 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                 children: [
                   ...[
                     const WidgetSpan(
-                      child: Icon(Icons.place_outlined,
-                          size: 16, color: Colors.grey),
+                      child: Icon(
+                        Icons.place_outlined,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
                     ),
                     TextSpan(
                       text: ' ${_getBiteLocations(report.counts)}\n',
@@ -159,8 +164,11 @@ class _ReportsListBitesState extends State<ReportsListBites> {
                     ),
                   ],
                   const WidgetSpan(
-                    child: Icon(Icons.calendar_today,
-                        size: 16, color: Colors.grey),
+                    child: Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                   ),
                   TextSpan(
                     text: ' ${_formatCreationTime(report)}',
@@ -259,9 +267,10 @@ class _ReportFormatters {
 
   String formatDetailedDateTime(Bite report) {
     final localTime = report.createdAt.toLocal();
-    final dateString =
-        DateFormat('EEEE, dd MMMM yyyy', Utils.language.languageCode)
-            .format(localTime);
+    final dateString = DateFormat(
+      'EEEE, dd MMMM yyyy',
+      Utils.language.languageCode,
+    ).format(localTime);
     final timeString = DateFormat.Hms().format(localTime);
     return '$dateString\n${MyLocalizations.of(context, 'at_time_txt')}: $timeString ${MyLocalizations.of(context, 'hours')}';
   }
@@ -322,7 +331,9 @@ class _BiteReportDetailSheet extends StatelessWidget {
                 child: Divider(),
               ),
               _ReportIdAndBiteDetailsWidget(
-                  report: report, formatters: formatters),
+                report: report,
+                formatters: formatters,
+              ),
             ],
           ),
         ),
@@ -357,10 +368,7 @@ class _ReportMapWidgetState extends State<_ReportMapWidget> {
           zoomControlsEnabled: false,
           zoomGesturesEnabled: false,
           myLocationButtonEnabled: false,
-          initialCameraPosition: CameraPosition(
-            target: location,
-            zoom: 15.0,
-          ),
+          initialCameraPosition: CameraPosition(target: location, zoom: 15.0),
           markers: {
             Marker(
               markerId: const MarkerId('bite_location'),
@@ -434,10 +442,7 @@ class _ReportLocationWidget extends StatelessWidget {
   final Bite report;
   final _ReportFormatters formatters;
 
-  const _ReportLocationWidget({
-    required this.report,
-    required this.formatters,
-  });
+  const _ReportLocationWidget({required this.report, required this.formatters});
 
   @override
   Widget build(BuildContext context) {
@@ -502,10 +507,7 @@ class _ReportIdAndBiteDetailsWidget extends StatelessWidget {
               '${MyLocalizations.of(context, 'identifier_small')}: ',
               fontSize: 14,
             ),
-            Style.body(
-              report.uuid,
-              fontSize: 14,
-            ),
+            Style.body(report.uuid, fontSize: 14),
           ],
         ),
       ],

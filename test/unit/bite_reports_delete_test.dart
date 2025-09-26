@@ -66,9 +66,7 @@ void main() {
       // Given
       const validUuid =
           '550e8400-e29b-41d4-a716-446655440000'; // Valid UUID format
-      mockBitesApi.setBites([
-        createTestBite(uuid: validUuid, totalBites: 1),
-      ]);
+      mockBitesApi.setBites([createTestBite(uuid: validUuid, totalBites: 1)]);
 
       // When
       final response = await mockBitesApi.destroy(uuid: validUuid);
@@ -78,7 +76,9 @@ void main() {
       expect(mockBitesApi.destroyCalled, isTrue);
       expect(mockBitesApi.lastDestroyedUuid, equals(validUuid));
       expect(
-          validUuid.length, equals(36)); // UUID should be exactly 36 characters
+        validUuid.length,
+        equals(36),
+      ); // UUID should be exactly 36 characters
     });
 
     test('should remove bite from list after successful delete', () async {
@@ -111,9 +111,7 @@ void main() {
     test('should not remove bite from list if delete fails', () async {
       // Given
       const biteUuid = 'bite-delete-fail';
-      final initialBites = [
-        createTestBite(uuid: biteUuid, totalBites: 1),
-      ];
+      final initialBites = [createTestBite(uuid: biteUuid, totalBites: 1)];
       mockBitesApi.setBites(initialBites);
       mockBitesApi.shouldFailDestroy = true;
 

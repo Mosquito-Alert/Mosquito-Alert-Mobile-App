@@ -65,20 +65,14 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                   // Notes section
                   Text(
                     '(HC) Additional Notes (Optional)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   SizedBox(height: 8),
 
                   Text(
                     '(HC) Add any additional observations or details.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
 
                   SizedBox(height: 12),
@@ -95,8 +89,10 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                         borderSide: BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Style.colorPrimary, width: 2),
+                        borderSide: BorderSide(
+                          color: Style.colorPrimary,
+                          width: 2,
+                        ),
                       ),
                       hintText: MyLocalizations.of(context, "comments_txt"),
                     ),
@@ -113,14 +109,16 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
                       decoration: BoxDecoration(
                         color: Style.colorPrimary.withValues(alpha: 0.1),
                         border: Border.all(
-                            color: Style.colorPrimary.withValues(alpha: 0.3)),
+                          color: Style.colorPrimary.withValues(alpha: 0.3),
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         children: [
                           CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Style.colorPrimary),
+                              Style.colorPrimary,
+                            ),
                           ),
                           SizedBox(height: 12),
                           Text(
@@ -161,10 +159,7 @@ class _NotesAndSubmitPageState extends State<NotesAndSubmitPage> {
               Expanded(
                 flex: 2,
                 child: widget.isSubmitting
-                    ? Style.button(
-                        '(HC) Submitting...',
-                        null,
-                      )
+                    ? Style.button('(HC) Submitting...', null)
                     : Style.button(
                         MyLocalizations.of(context, 'send_data'),
                         widget.onSubmit,

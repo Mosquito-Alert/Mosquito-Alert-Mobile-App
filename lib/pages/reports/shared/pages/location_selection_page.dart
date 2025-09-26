@@ -12,8 +12,11 @@ class LocationSelectionPage extends StatefulWidget {
   final double? initialLatitude;
   final double? initialLongitude;
   final Function(
-          double latitude, double longitude, LocationRequestSource_Enum source)
-      onLocationSelected;
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  )
+  onLocationSelected;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final bool canProceed;
@@ -49,10 +52,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
           // Title
           Text(
             widget.title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
           SizedBox(height: 8),
@@ -60,10 +60,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
           // Subtitle
           Text(
             widget.subtitle,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
 
           SizedBox(height: 16),
@@ -135,10 +132,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
           Row(
             children: [
               Expanded(
-                child: Style.outlinedButton(
-                  '(HC) Back',
-                  widget.onPrevious,
-                ),
+                child: Style.outlinedButton('(HC) Back', widget.onPrevious),
               ),
               SizedBox(width: 12),
               Expanded(

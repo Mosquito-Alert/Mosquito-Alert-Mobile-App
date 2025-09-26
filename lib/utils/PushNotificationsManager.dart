@@ -31,8 +31,9 @@ class PushNotificationsManager {
       });
 
       // When the app is opened from a background state
-      FirebaseMessaging.onMessageOpenedApp
-          .listen((RemoteMessage remoteMessage) {
+      FirebaseMessaging.onMessageOpenedApp.listen((
+        RemoteMessage remoteMessage,
+      ) {
         _handleBackgroundMessage(remoteMessage);
       });
     }
@@ -66,10 +67,9 @@ class PushNotificationsManager {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => NotificationsPage(
-                      notificationId: notifId,
-                    ),
-                fullscreenDialog: true),
+              builder: (context) => NotificationsPage(notificationId: notifId),
+              fullscreenDialog: true,
+            ),
           );
         },
       );
@@ -94,10 +94,9 @@ class PushNotificationsManager {
       Navigator.push(
         navigatorKey.currentContext!,
         MaterialPageRoute(
-            builder: (context) => NotificationsPage(
-                  notificationId: notifId,
-                ),
-            fullscreenDialog: true),
+          builder: (context) => NotificationsPage(notificationId: notifId),
+          fullscreenDialog: true,
+        ),
       );
       ;
     });

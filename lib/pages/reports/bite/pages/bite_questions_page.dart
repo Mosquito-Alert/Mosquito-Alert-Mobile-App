@@ -42,10 +42,7 @@ class _BiteQuestionsPageState extends State<BiteQuestionsPage> {
               // Title
               Text(
                 '(HC) Bite Information',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
 
               // Scrollable content
@@ -103,10 +100,7 @@ class _BiteQuestionsPageState extends State<BiteQuestionsPage> {
               Row(
                 children: [
                   Expanded(
-                    child: Style.outlinedButton(
-                      '(HC) Back',
-                      widget.onPrevious,
-                    ),
+                    child: Style.outlinedButton('(HC) Back', widget.onPrevious),
                   ),
                   SizedBox(width: 12),
                   Expanded(

@@ -10,16 +10,16 @@ class CustomShowModalBottomSheet {
   }) {
     assert(debugCheckHasMaterialLocalizations(context));
     return Navigator.push(
-        context,
-        _CullModalBottomSheetRoute<T>(
-          builder: builder,
-          theme: Theme.of(
-            context,
-          ),
-          barrierLabel:
-              MaterialLocalizations.of(context).modalBarrierDismissLabel,
-          dismissible: dismissible,
-        ));
+      context,
+      _CullModalBottomSheetRoute<T>(
+        builder: builder,
+        theme: Theme.of(context),
+        barrierLabel: MaterialLocalizations.of(
+          context,
+        ).modalBarrierDismissLabel,
+        dismissible: dismissible,
+      ),
+    );
   }
 }
 
@@ -53,14 +53,18 @@ class _CullModalBottomSheetRoute<T> extends PopupRoute<T> {
   @override
   AnimationController createAnimationController() {
     assert(_animationController == null);
-    _animationController =
-        BottomSheet.createAnimationController(navigator!.overlay!);
+    _animationController = BottomSheet.createAnimationController(
+      navigator!.overlay!,
+    );
     return _animationController!;
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     // By definition, the bottom sheet is aligned to the bottom of the page
     // and isn't exposed to the top padding of the MediaQuery.
     Widget bottomSheet = MediaQuery.removePadding(
@@ -107,30 +111,31 @@ class _CustomModalBottomSheetState<T>
     return Theme(
       data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
       child: AnimatedBuilder(
-          animation: widget.route!.animation!,
-          builder: (BuildContext context, Widget? child) {
-            // Disable the initial animation when accessible navigation is on so
-            // that the semantics are added to the tree at the correct time.
-            final animationValue = mediaQuery.accessibleNavigation
-                ? 1.0
-                : widget.route!.animation!.value;
-            return Semantics(
-              scopesRoute: true,
-              namesRoute: true,
-              label: routeLabel,
-              explicitChildNodes: true,
-              child: ClipRect(
-                child: CustomSingleChildLayout(
-                  delegate: _CustomModalBottomSheetLayout(animationValue),
-                  child: BottomSheet(
-                    animationController: widget.route!._animationController,
-                    onClosing: () => Navigator.pop(context),
-                    builder: widget.route!.builder!,
-                  ),
+        animation: widget.route!.animation!,
+        builder: (BuildContext context, Widget? child) {
+          // Disable the initial animation when accessible navigation is on so
+          // that the semantics are added to the tree at the correct time.
+          final animationValue = mediaQuery.accessibleNavigation
+              ? 1.0
+              : widget.route!.animation!.value;
+          return Semantics(
+            scopesRoute: true,
+            namesRoute: true,
+            label: routeLabel,
+            explicitChildNodes: true,
+            child: ClipRect(
+              child: CustomSingleChildLayout(
+                delegate: _CustomModalBottomSheetLayout(animationValue),
+                child: BottomSheet(
+                  animationController: widget.route!._animationController,
+                  onClosing: () => Navigator.pop(context),
+                  builder: widget.route!.builder!,
                 ),
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -143,10 +148,11 @@ class _CustomModalBottomSheetLayout extends SingleChildLayoutDelegate {
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
     return BoxConstraints(
-        minWidth: constraints.maxWidth,
-        maxWidth: constraints.maxWidth,
-        minHeight: 0.0,
-        maxHeight: constraints.maxHeight);
+      minWidth: constraints.maxWidth,
+      maxWidth: constraints.maxWidth,
+      minHeight: 0.0,
+      maxHeight: constraints.maxHeight,
+    );
   }
 
   @override

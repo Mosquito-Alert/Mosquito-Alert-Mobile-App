@@ -51,10 +51,7 @@ Widget _buildEnableButton(BuildContext context, ThemeData theme) {
             backgroundColor: theme.primaryColorDark,
             foregroundColor: Colors.white,
           ),
-          child: Text(MyLocalizations.of(
-            context,
-            'turn_on_location_button',
-          )),
+          child: Text(MyLocalizations.of(context, 'turn_on_location_button')),
         ),
       ),
     ],
@@ -71,10 +68,7 @@ Future<void> _onEnableTracking(BuildContext context) async {
 
   // Start background tracking
   try {
-    await BackgroundTracking.start(
-      shouldRun: true,
-      requestPermissions: true,
-    );
+    await BackgroundTracking.start(shouldRun: true, requestPermissions: true);
   } finally {
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();

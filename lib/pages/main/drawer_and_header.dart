@@ -90,8 +90,10 @@ class _MainVCState extends State<MainVC>
     if (initSuccess) {
       await initBackgroundTracking();
       FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-        final deviceProvider =
-            Provider.of<DeviceProvider>(context, listen: false);
+        final deviceProvider = Provider.of<DeviceProvider>(
+          context,
+          listen: false,
+        );
         await deviceProvider.updateFcmToken(fcmToken);
       });
     }
@@ -105,8 +107,10 @@ class _MainVCState extends State<MainVC>
   Future<void> _fetchNotificationCount() async {
     int count = 0;
     try {
-      MosquitoAlert apiClient =
-          Provider.of<MosquitoAlert>(context, listen: false);
+      MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+        context,
+        listen: false,
+      );
       NotificationsApi notificationsApi = apiClient.getNotificationsApi();
 
       final Response<PaginatedNotificationList> response =
@@ -146,8 +150,8 @@ class _MainVCState extends State<MainVC>
       // Create a guest user
       password = Utils.getRandomPassword(10);
       try {
-        final GuestRegistration guestRegistration =
-            await authProvider.createGuestUser(password: password);
+        final GuestRegistration guestRegistration = await authProvider
+            .createGuestUser(password: password);
         username = guestRegistration.username;
       } catch (e) {
         print('Error creating guest user: $e');
@@ -233,37 +237,39 @@ class _MainVCState extends State<MainVC>
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Image.asset(
-          'assets/img/ic_logo.webp',
-          height: 40,
-        ),
+        title: Image.asset('assets/img/ic_logo.webp', height: 40),
         actions: <Widget>[
           badges.Badge(
-              position: badges.BadgePosition.topEnd(top: 0, end: 3),
-              showBadge: unreadNotifications > 0,
-              badgeContent: Text(
-                  unreadNotifications > 9 ? '+9' : '$unreadNotifications',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: unreadNotifications > 9 ? 10 : 13)),
-              badgeStyle: badges.BadgeStyle(
-                padding: unreadNotifications > 9
-                    ? EdgeInsets.all(5)
-                    : EdgeInsets.all(6),
-                shape: badges.BadgeShape.circle,
-                badgeColor: Colors.red,
-                borderSide:
-                    BorderSide(color: Colors.white, width: 2), // white border
+            position: badges.BadgePosition.topEnd(top: 0, end: 3),
+            showBadge: unreadNotifications > 0,
+            badgeContent: Text(
+              unreadNotifications > 9 ? '+9' : '$unreadNotifications',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: unreadNotifications > 9 ? 10 : 13,
               ),
-              child: IconButton(
-                  icon: Icon(Icons.notifications_none),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationsPage()),
-                    );
-                  }))
+            ),
+            badgeStyle: badges.BadgeStyle(
+              padding: unreadNotifications > 9
+                  ? EdgeInsets.all(5)
+                  : EdgeInsets.all(6),
+              shape: badges.BadgeShape.circle,
+              badgeColor: Colors.red,
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 2,
+              ), // white border
+            ),
+            child: IconButton(
+              icon: Icon(Icons.notifications_none),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationsPage()),
+                );
+              },
+            ),
+          ),
         ],
       ),
       body: Center(
@@ -275,15 +281,15 @@ class _MainVCState extends State<MainVC>
         await _onDrawerChanged(isOpened);
       },
       drawer: Drawer(
-          backgroundColor: Colors.white,
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    DrawerHeader(
-                        child: Row(
+        backgroundColor: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    child: Row(
                       children: <Widget>[
                         // User score
                         InkWell(
@@ -291,9 +297,11 @@ class _MainVCState extends State<MainVC>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  settings: RouteSettings(name: '/user_score'),
-                                  builder: (context) => InfoPageInWebview(
-                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
+                                settings: RouteSettings(name: '/user_score'),
+                                builder: (context) => InfoPageInWebview(
+                                  "${MyLocalizations.of(context, 'url_point_1')}$userUuid",
+                                ),
+                              ),
                             );
                           },
                           child: Container(
@@ -313,9 +321,10 @@ class _MainVCState extends State<MainVC>
                                     maxFontSize: 26,
                                     minFontSize: 16,
                                     style: TextStyle(
-                                        color: Color(0xFF4B3D04),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
+                                      color: Color(0xFF4B3D04),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24,
+                                    ),
                                   ),
                                 );
                               },
@@ -337,36 +346,43 @@ class _MainVCState extends State<MainVC>
                             ),
                             _uuidWithClipboard(),
                           ],
-                        )
+                        ),
                       ],
-                    )),
-                    _buildCustomTile(0, Icons.home, 'home_tab', context),
-                    _buildCustomTile(
-                        1, Icons.file_copy, 'your_reports_txt', context),
-                    _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
-                    _buildCustomTile(3, Icons.info, 'info_tab', context),
-                    _buildCustomTile(
-                        4, Icons.settings, 'settings_title', context),
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    packageInfo != null
-                        ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
-                        : '',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 8.0,
                     ),
                   ),
+                  _buildCustomTile(0, Icons.home, 'home_tab', context),
+                  _buildCustomTile(
+                    1,
+                    Icons.file_copy,
+                    'your_reports_txt',
+                    context,
+                  ),
+                  _buildCustomTile(2, Icons.biotech, 'guide_tab', context),
+                  _buildCustomTile(3, Icons.info, 'info_tab', context),
+                  _buildCustomTile(
+                    4,
+                    Icons.settings,
+                    'settings_title',
+                    context,
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Text(
+                  packageInfo != null
+                      ? 'version ${packageInfo.version} (build ${packageInfo.buildNumber})'
+                      : '',
+                  style: TextStyle(color: Colors.grey, fontSize: 8.0),
                 ),
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -392,27 +408,25 @@ class _MainVCState extends State<MainVC>
               child: Text(
                 uuid,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 8,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 8),
               ),
             ),
             GestureDetector(
-              child: Icon(
-                Icons.copy_rounded,
-                size: 12,
-              ),
+              child: Icon(Icons.copy_rounded, size: 12),
               onTap: () {
                 Clipboard.setData(ClipboardData(text: uuid));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(MyLocalizations.of(
-                        context, 'copied_to_clipboard_success')),
+                    content: Text(
+                      MyLocalizations.of(
+                        context,
+                        'copied_to_clipboard_success',
+                      ),
+                    ),
                   ),
                 );
               },
-            )
+            ),
           ],
         );
       },
@@ -430,12 +444,11 @@ class _MainVCState extends State<MainVC>
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: ListTile(
-          title: Text(MyLocalizations.of(context, title),
-              style: TextStyle(color: Colors.black)),
-          leading: Icon(
-            icon,
-            color: Colors.black,
+          title: Text(
+            MyLocalizations.of(context, title),
+            style: TextStyle(color: Colors.black),
           ),
+          leading: Icon(icon, color: Colors.black),
           minLeadingWidth: 0,
           selected: _selectedIndex == index,
           onTap: () {
