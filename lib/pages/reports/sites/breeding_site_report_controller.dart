@@ -9,7 +9,6 @@ import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dar
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
 import 'models/breeding_site_report_data.dart';
@@ -189,7 +188,8 @@ class _BreedingSiteReportControllerState
             parameters: {
               'status_code': response.statusCode?.toString() ?? 'unknown'
             });
-        ReportDialogs.showErrorDialog(context, 'Server error: ${response.statusCode}');
+        ReportDialogs.showErrorDialog(
+            context, 'Server error: ${response.statusCode}');
       }
     } catch (e) {
       await _logAnalyticsEvent('breeding_site_report_submit_error',

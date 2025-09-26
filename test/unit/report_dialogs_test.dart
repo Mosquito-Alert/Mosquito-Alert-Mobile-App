@@ -110,7 +110,8 @@ void main() {
       expect(find.text('Navigate'), findsOneWidget); // Should be back at root
     });
 
-    testWidgets('should show error dialog with custom message', (WidgetTester tester) async {
+    testWidgets('should show error dialog with custom message',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         localizationsDelegates: const [
           MockMyLocalizationsDelegate(),
@@ -121,7 +122,8 @@ void main() {
             return Scaffold(
               body: ElevatedButton(
                 onPressed: () {
-                  ReportDialogs.showErrorDialog(context, 'Custom error message');
+                  ReportDialogs.showErrorDialog(
+                      context, 'Custom error message');
                 },
                 child: Text('Show Error'),
               ),
@@ -140,7 +142,9 @@ void main() {
       expect(find.text('OK'), findsOneWidget);
     });
 
-    testWidgets('should show error dialog with default message when no message provided', (WidgetTester tester) async {
+    testWidgets(
+        'should show error dialog with default message when no message provided',
+        (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         localizationsDelegates: const [
           MockMyLocalizationsDelegate(),
