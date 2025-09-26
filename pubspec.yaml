@@ -5,7 +5,7 @@ publish_to: none
 
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -16,18 +16,18 @@ dependencies:
   uuid: ^4.5.1
   shared_preferences: ^2.5.3
   http: ^1.2.2
-  geolocator: ^11.1.0
+  geolocator: ^14.0.2
   geocoding: ^4.0.0
   dio: ^5.8.0+1
   markdown: ^7.3.0
-  firebase_messaging: ^15.2.4
-  firebase_core: ^3.13.0
+  firebase_messaging: ^16.0.2
+  firebase_core: ^4.1.1
   auto_size_text: ^3.0.0
-  device_info_plus: ^9.1.2
-  package_info_plus: ^8.3.0
+  device_info_plus: ^12.1.0
+  package_info_plus: ^8.3.1
   url_launcher: ^6.3.1
   intro_slider: ^3.0.10
-  permission_handler: ^11.4.0
+  permission_handler: ^12.0.1
   language_picker: ^0.4.5
   overlay_support: ^2.1.0
 
@@ -42,7 +42,7 @@ dependencies:
         url: https://github.com/fluttercommunity/flutter_workmanager.git
         path: workmanager
         ref: 4ce0651
-  battery_plus: ^6.2.2
+  battery_plus: ^7.0.0
   badges: ^3.1.2
   cached_network_image: ^3.3.1
   camera: ^0.11.2
@@ -51,7 +51,7 @@ dependencies:
   photo_manager: ^3.5.1
   textfield_tags: ^3.0.1
   in_app_review: ^2.0.9
-  firebase_analytics: ^11.4.6
+  firebase_analytics: ^12.0.2
   mosquito_alert:
     git:
       url: https://github.com/Mosquito-Alert/mosquito-alert-dart-sdk.git
