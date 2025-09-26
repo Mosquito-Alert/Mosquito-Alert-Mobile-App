@@ -17,6 +17,9 @@
 *.zip
 *.tar.xz
 
+# Dart SDK
+dart-sdk/
+
 # IntelliJ related
 *.iml
 *.ipr
