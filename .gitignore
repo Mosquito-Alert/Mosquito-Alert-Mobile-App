@@ -84,6 +84,7 @@ android/JRBP_Keystore
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
+**/ios/Flutter/ephemeral/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
