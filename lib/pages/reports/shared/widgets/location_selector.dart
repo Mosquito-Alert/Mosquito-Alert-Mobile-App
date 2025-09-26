@@ -8,8 +8,11 @@ class LocationSelector extends StatefulWidget {
   final double? initialLatitude;
   final double? initialLongitude;
   final Function(
-          double latitude, double longitude, LocationRequestSource_Enum source)
-      onLocationSelected;
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  )
+  onLocationSelected;
 
   const LocationSelector({
     Key? key,
@@ -59,10 +62,7 @@ class _LocationSelectorState extends State<LocationSelector> {
     if (_mapController != null) {
       await _mapController!.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(latitude, longitude),
-            zoom: 16.0,
-          ),
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 16.0),
         ),
       );
     }
@@ -122,8 +122,10 @@ class _LocationSelectorState extends State<LocationSelector> {
 
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: Duration(seconds: 30),
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 30),
+        ),
       );
 
       setState(() {
@@ -167,10 +169,7 @@ class _LocationSelectorState extends State<LocationSelector> {
         SizedBox(
           width: double.infinity,
           child: _isGettingLocation
-              ? Style.button(
-                  '(HC) Getting location...',
-                  null,
-                )
+              ? Style.button('(HC) Getting location...', null)
               : Style.button(
                   '(HC) Use Current GPS Location',
                   _getCurrentLocation,
@@ -182,10 +181,7 @@ class _LocationSelectorState extends State<LocationSelector> {
         // Map for manual selection
         Text(
           '(HC) Or tap on the map to select location manually:',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 8),
 
@@ -202,7 +198,8 @@ class _LocationSelectorState extends State<LocationSelector> {
               onMapCreated: _onMapCreated,
               onTap: _onMapTap,
               initialCameraPosition: CameraPosition(
-                target: widget.initialLatitude != null &&
+                target:
+                    widget.initialLatitude != null &&
                         widget.initialLongitude != null
                     ? LatLng(widget.initialLatitude!, widget.initialLongitude!)
                     : _defaultCenter,

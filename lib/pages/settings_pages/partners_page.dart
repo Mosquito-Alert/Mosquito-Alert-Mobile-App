@@ -29,8 +29,10 @@ class _PartnersPageState extends State<PartnersPage> {
   @override
   void initState() {
     super.initState();
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+      context,
+      listen: false,
+    );
     partnersApi = apiClient.getPartnersApi();
     _logScreenView();
     getInitialData();
@@ -44,8 +46,9 @@ class _PartnersPageState extends State<PartnersPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance
-        .logScreenView(screenName: '/info/partners');
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: '/info/partners',
+    );
   }
 
   getInitialData() async {
@@ -58,19 +61,21 @@ class _PartnersPageState extends State<PartnersPage> {
       if (partners == null || partners.results == null) return;
 
       for (var partner in partners.results!) {
-        markers.add(Marker(
-          markerId: MarkerId(partner.id.toString()),
-          position: LatLng(partner.point.latitude, partner.point.longitude),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                settings: RouteSettings(name: '/info/partners/${partner.id}'),
-                builder: (context) => InfoPageInWebview(partner.url),
-              ),
-            );
-          },
-        ));
+        markers.add(
+          Marker(
+            markerId: MarkerId(partner.id.toString()),
+            position: LatLng(partner.point.latitude, partner.point.longitude),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  settings: RouteSettings(name: '/info/partners/${partner.id}'),
+                  builder: (context) => InfoPageInWebview(partner.url),
+                ),
+              );
+            },
+          ),
+        );
       }
 
       markersStream.add(markers);
@@ -93,8 +98,10 @@ class _PartnersPageState extends State<PartnersPage> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             centerTitle: true,
-            title: Style.title(MyLocalizations.of(context, 'partners_txt'),
-                fontSize: 16),
+            title: Style.title(
+              MyLocalizations.of(context, 'partners_txt'),
+              fontSize: 16,
+            ),
           ),
           body: Column(
             children: [
@@ -102,20 +109,23 @@ class _PartnersPageState extends State<PartnersPage> {
                 child: StreamBuilder<List<Marker>>(
                   stream: markersStream.stream,
                   initialData: [],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Marker>> snapshot) {
-                    return GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      mapToolbarEnabled: false,
-                      myLocationButtonEnabled: false,
-                      initialCameraPosition: CameraPosition(
-                        // Address: St 2188, 91347 Aufseß, Germany
-                        target: LatLng(49.895268, 11.2773223),
-                        zoom: 3.5,
-                      ),
-                      markers: Set<Marker>.of(snapshot.data!),
-                    );
-                  },
+                  builder:
+                      (
+                        BuildContext context,
+                        AsyncSnapshot<List<Marker>> snapshot,
+                      ) {
+                        return GoogleMap(
+                          onMapCreated: _onMapCreated,
+                          mapToolbarEnabled: false,
+                          myLocationButtonEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                            // Address: St 2188, 91347 Aufseß, Germany
+                            target: LatLng(49.895268, 11.2773223),
+                            zoom: 3.5,
+                          ),
+                          markers: Set<Marker>.of(snapshot.data!),
+                        );
+                      },
                 ),
               ),
             ],
@@ -129,12 +139,10 @@ class _PartnersPageState extends State<PartnersPage> {
               if (snapshot.hasData == false || snapshot.data == false) {
                 return Container();
               }
-              return Utils.loading(
-                snapshot.data,
-              );
+              return Utils.loading(snapshot.data);
             },
           ),
-        )
+        ),
       ],
     );
   }

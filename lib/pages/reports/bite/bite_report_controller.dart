@@ -27,8 +27,11 @@ class _BiteReportControllerState extends State<BiteReportController> {
   int _currentStep = 0;
   bool _isSubmitting = false;
 
-  List<String> get _stepTitles =>
-      ['(HC) Bite Information', '(HC) Select Location', '(HC) Notes & Submit'];
+  List<String> get _stepTitles => [
+    '(HC) Bite Information',
+    '(HC) Select Location',
+    '(HC) Notes & Submit',
+  ];
 
   @override
   void initState() {
@@ -92,7 +95,10 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
   /// Handle location selection
   void _updateLocation(
-      double latitude, double longitude, LocationRequestSource_Enum source) {
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  ) {
     setState(() {
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
@@ -103,8 +109,9 @@ class _BiteReportControllerState extends State<BiteReportController> {
   /// Handle notes update
   void _updateNotes(String? notes) {
     setState(() {
-      _reportData.notes =
-          (notes?.trim().isEmpty ?? true) ? null : notes!.trim();
+      _reportData.notes = (notes?.trim().isEmpty ?? true)
+          ? null
+          : notes!.trim();
     });
   }
 
@@ -134,33 +141,41 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
     try {
       // Create location point
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
+      final locationPoint = LocationPoint(
+        (b) => b
+          ..latitude = _reportData.latitude!
+          ..longitude = _reportData.longitude!,
+      );
 
       // Create location request
-      final location = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+      final location = LocationRequest(
+        (b) => b
+          ..source_ = _reportData.locationSource
+          ..point.replace(locationPoint),
+      );
 
       // Create bite counts request
-      final counts = BiteCountsRequest((b) => b
-        ..head = _reportData.headBites
-        ..leftArm = _reportData.leftHandBites
-        ..rightArm = _reportData.rightHandBites
-        ..chest = _reportData.chestBites
-        ..leftLeg = _reportData.leftLegBites
-        ..rightLeg = _reportData.rightLegBites);
+      final counts = BiteCountsRequest(
+        (b) => b
+          ..head = _reportData.headBites
+          ..leftArm = _reportData.leftHandBites
+          ..rightArm = _reportData.rightHandBites
+          ..chest = _reportData.chestBites
+          ..leftLeg = _reportData.leftLegBites
+          ..rightLeg = _reportData.rightLegBites,
+      );
 
       // Create the bite request
-      final biteRequest = BiteRequest((b) => b
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..location.replace(location)
-        ..note = _reportData.notes
-        ..eventEnvironment = _reportData.eventEnvironment!
-        ..eventMoment = _reportData.eventMoment!
-        ..counts.replace(counts));
+      final biteRequest = BiteRequest(
+        (b) => b
+          ..createdAt = DateTime.now().toUtc()
+          ..sentAt = DateTime.now().toUtc()
+          ..location.replace(location)
+          ..note = _reportData.notes
+          ..eventEnvironment = _reportData.eventEnvironment!
+          ..eventMoment = _reportData.eventMoment!
+          ..counts.replace(counts),
+      );
 
       // Submit the request
       final response = await _bitesApi.create(biteRequest: biteRequest);
@@ -205,14 +220,13 @@ class _BiteReportControllerState extends State<BiteReportController> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text(MyLocalizations.of(context, 'app_name')),
-          content:
-              Text(MyLocalizations.of(context, 'close_report_no_save_txt')),
+          content: Text(
+            MyLocalizations.of(context, 'close_report_no_save_txt'),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[600],
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
               child: Text('Cancel'),
             ),
             TextButton(
@@ -220,9 +234,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Style.colorPrimary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
               child: Text('Exit'),
             ),
           ],

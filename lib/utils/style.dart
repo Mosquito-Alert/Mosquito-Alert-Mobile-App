@@ -101,8 +101,15 @@ class Style {
 
   ///Buttons
 
-  static Widget button(text, onPressed,
-      {color, textColor, borderColor, elevation, Key? key}) {
+  static Widget button(
+    text,
+    onPressed, {
+    color,
+    textColor,
+    borderColor,
+    elevation,
+    Key? key,
+  }) {
     return ElevatedButton(
       key: key,
       onPressed: onPressed,
@@ -112,22 +119,28 @@ class Style {
         padding: const EdgeInsets.symmetric(vertical: 14),
         backgroundColor: color ?? colorPrimary,
         foregroundColor: textColor ?? Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
       child: Text(
         text,
         style: TextStyle(
-            color: textColor ?? Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
+          color: textColor ?? Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
 
-  static Widget outlinedButton(text, onPressed,
-      {color, textColor, borderColor, elevation, Key? key}) {
+  static Widget outlinedButton(
+    text,
+    onPressed, {
+    color,
+    textColor,
+    borderColor,
+    elevation,
+    Key? key,
+  }) {
     return OutlinedButton(
       key: key,
       onPressed: onPressed,
@@ -136,16 +149,15 @@ class Style {
         padding: const EdgeInsets.symmetric(vertical: 14),
         foregroundColor: color ?? colorPrimary,
         side: BorderSide(color: borderColor ?? color ?? colorPrimary),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
       child: Text(
         text,
         style: TextStyle(
-            color: textColor ?? color ?? colorPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
+          color: textColor ?? color ?? colorPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -174,16 +186,17 @@ class Style {
       autofocus: false,
       controller: controller,
       style: TextStyle(
-          fontSize: 15,
-          color: enabled ? textColor : textColor.withValues(alpha: 0.6)),
+        fontSize: 15,
+        color: enabled ? textColor : textColor.withValues(alpha: 0.6),
+      ),
       textInputAction: textInputAction ?? TextInputAction.done,
       focusNode: focusNode,
       obscureText: obscure ?? false,
       decoration: textFieldDecoration(hint, suffixIcon),
       maxLines:
           expands != null && expands || keyboardType == TextInputType.multiline
-              ? maxLines
-              : 1,
+          ? maxLines
+          : 1,
       expands: expands ?? false,
       textAlignVertical: textAlignVertical ?? TextAlignVertical.center,
       textAlign: TextAlign.start,
@@ -194,40 +207,45 @@ class Style {
 
   static InputDecoration textFieldDecoration(hint, suffixIcon) {
     return InputDecoration(
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.white,
-        hintText: hint,
-        hintMaxLines: 5,
-        hintStyle: const TextStyle(fontSize: 17),
-        contentPadding: const EdgeInsets.fromLTRB(15.0, 16.0, 10.0, 16.0),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          borderSide:
-              BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
+      suffixIcon: suffixIcon,
+      filled: true,
+      fillColor: Colors.white,
+      hintText: hint,
+      hintMaxLines: 5,
+      hintStyle: const TextStyle(fontSize: 17),
+      contentPadding: const EdgeInsets.fromLTRB(15.0, 16.0, 10.0, 16.0),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3.0),
+        borderSide: BorderSide(
+          color: Colors.black.withValues(alpha: 0.1),
+          width: 1,
         ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          borderSide:
-              BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3.0),
+        borderSide: BorderSide(
+          color: Colors.black.withValues(alpha: 0.1),
+          width: 1,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          borderSide:
-              BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3.0),
+        borderSide: BorderSide(
+          color: Colors.black.withValues(alpha: 0.1),
+          width: 1,
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(3.0),
-          borderSide: BorderSide(color: Colors.red, width: 1.0),
-        ),
-        alignLabelWithHint: true);
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3.0),
+        borderSide: BorderSide(color: Colors.red, width: 1.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(3.0),
+        borderSide: BorderSide(color: Colors.red, width: 1.0),
+      ),
+      alignLabelWithHint: true,
+    );
   }
 
-  static Widget get bottomOffset => SizedBox(
-        height: 75,
-      );
+  static Widget get bottomOffset => SizedBox(height: 75);
 }

@@ -7,9 +7,12 @@ class MessageNotification extends StatelessWidget {
   final String? message;
   final GestureTapCallback? onTap;
 
-  const MessageNotification(
-      {Key? key, required this.title, required this.message, this.onTap})
-      : super(key: key);
+  const MessageNotification({
+    Key? key,
+    required this.title,
+    required this.message,
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +29,13 @@ class MessageNotification extends StatelessWidget {
               padding: EdgeInsets.all(12),
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                      color: Theme.of(context).colorScheme.surface,
-                      width: 0.5)),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 0.5,
+                ),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,30 +43,22 @@ class MessageNotification extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      SizedBox(
-                        width: 12,
-                      ),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 6,
-                            ),
+                            SizedBox(height: 6),
                             Style.body(title, maxLines: 1),
-                            SizedBox(
-                              height: 2,
-                            ),
+                            SizedBox(height: 2),
                             Style.bodySmall(message, maxLines: 2),
-                            SizedBox(
-                              height: 6,
-                            ),
+                            SizedBox(height: 6),
                           ],
                         ),
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

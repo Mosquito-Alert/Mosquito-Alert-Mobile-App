@@ -30,11 +30,11 @@ class _AdultReportControllerState extends State<AdultReportController> {
   bool _isSubmitting = false;
 
   List<String> get _stepTitles => [
-        '(HC) Take Photos',
-        '(HC) Select Location',
-        '(HC) Environment',
-        '(HC) Notes & Submit'
-      ];
+    '(HC) Take Photos',
+    '(HC) Select Location',
+    '(HC) Environment',
+    '(HC) Notes & Submit',
+  ];
 
   @override
   void initState() {
@@ -83,7 +83,10 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
   /// Handle location selection callback
   void _onLocationSelected(
-      double latitude, double longitude, LocationRequestSource_Enum source) {
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  ) {
     setState(() {
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
@@ -117,14 +120,18 @@ class _AdultReportControllerState extends State<AdultReportController> {
       await _logAnalyticsEvent('adult_report_submit_attempt');
 
       // Step 1: Create location point
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
+      final locationPoint = LocationPoint(
+        (b) => b
+          ..latitude = _reportData.latitude!
+          ..longitude = _reportData.longitude!,
+      );
 
       // Step 2: Create location request
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+      final locationRequest = LocationRequest(
+        (b) => b
+          ..source_ = _reportData.locationSource
+          ..point.replace(locationPoint),
+      );
 
       // Step 3: Process photos
       final List<SimplePhotoRequest> photoRequests = [];
@@ -137,8 +144,9 @@ class _AdultReportControllerState extends State<AdultReportController> {
       final photos = BuiltList<SimplePhotoRequest>(photoRequests);
 
       // Step 4: Prepare notes
-      final notes =
-          _reportData.notes?.isNotEmpty == true ? _reportData.notes! : '';
+      final notes = _reportData.notes?.isNotEmpty == true
+          ? _reportData.notes!
+          : '';
 
       // Steo 5: Tags
       final userTags = await UserManager.getHashtags();
@@ -160,15 +168,22 @@ class _AdultReportControllerState extends State<AdultReportController> {
         await _logAnalyticsEvent('adult_report_submit_success');
         ReportDialogs.showSuccessDialog(context);
       } else {
-        await _logAnalyticsEvent('adult_report_submit_error', parameters: {
-          'status_code': response.statusCode?.toString() ?? 'unknown'
-        });
+        await _logAnalyticsEvent(
+          'adult_report_submit_error',
+          parameters: {
+            'status_code': response.statusCode?.toString() ?? 'unknown',
+          },
+        );
         ReportDialogs.showErrorDialog(
-            context, 'Server error: ${response.statusCode}');
+          context,
+          'Server error: ${response.statusCode}',
+        );
       }
     } catch (e) {
-      await _logAnalyticsEvent('adult_report_submit_error',
-          parameters: {'error': e.toString()});
+      await _logAnalyticsEvent(
+        'adult_report_submit_error',
+        parameters: {'error': e.toString()},
+      );
       ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
     } finally {
       setState(() {
@@ -177,8 +192,10 @@ class _AdultReportControllerState extends State<AdultReportController> {
     }
   }
 
-  Future<void> _logAnalyticsEvent(String eventName,
-      {Map<String, Object>? parameters}) async {
+  Future<void> _logAnalyticsEvent(
+    String eventName, {
+    Map<String, Object>? parameters,
+  }) async {
     await FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: parameters ?? {},
@@ -191,10 +208,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
       appBar: AppBar(
         title: Text(_stepTitles[_currentStep]),
         leading: _currentStep > 0
-            ? IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: _previousStep,
-              )
+            ? IconButton(icon: Icon(Icons.arrow_back), onPressed: _previousStep)
             : IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () => Navigator.of(context).pop(),
@@ -236,7 +250,8 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   onLocationSelected: _onLocationSelected,
                   onNext: _nextStep,
                   onPrevious: _previousStep,
-                  canProceed: _reportData.latitude != null &&
+                  canProceed:
+                      _reportData.latitude != null &&
                       _reportData.longitude != null,
                   locationDescription: _reportData.locationDescription,
                   locationSource: _reportData.locationSource,

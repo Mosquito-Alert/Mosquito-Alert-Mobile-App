@@ -15,8 +15,13 @@ class Utils {
   static Locale language = Locale('en', 'US');
 
   //Alerts
-  static Future showAlert(String? title, String? text, BuildContext? context,
-      {onPressed, barrierDismissible}) {
+  static Future showAlert(
+    String? title,
+    String? text,
+    BuildContext? context, {
+    onPressed,
+    barrierDismissible,
+  }) {
     if (Platform.isAndroid) {
       return showDialog(
         context: context!,
@@ -25,11 +30,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(text!),
-                ],
-              ),
+              child: ListBody(children: <Widget>[Text(text!)]),
             ),
             actions: <Widget>[
               TextButton(
@@ -52,19 +53,11 @@ class Utils {
         context: context!, //
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text(
-              title!,
-              style: TextStyle(letterSpacing: -0.3),
-            ),
+            title: Text(title!, style: TextStyle(letterSpacing: -0.3)),
             content: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  text!,
-                  style: TextStyle(height: 1.2),
-                )
+                SizedBox(height: 4),
+                Text(text!, style: TextStyle(height: 1.2)),
               ],
             ),
             actions: <Widget>[
@@ -87,8 +80,12 @@ class Utils {
   }
 
   static Future showCustomAlert(
-      String? title, Widget body, BuildContext context,
-      {onPressed, barrierDismissible}) {
+    String? title,
+    Widget body,
+    BuildContext context, {
+    onPressed,
+    barrierDismissible,
+  }) {
     if (Platform.isAndroid) {
       return showDialog(
         context: context,
@@ -97,11 +94,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  body,
-                ],
-              ),
+              child: ListBody(children: <Widget>[body]),
             ),
             actions: <Widget>[
               TextButton(
@@ -124,18 +117,8 @@ class Utils {
         context: context, //
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text(
-              title!,
-              style: TextStyle(letterSpacing: -0.3),
-            ),
-            content: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                body,
-              ],
-            ),
+            title: Text(title!, style: TextStyle(letterSpacing: -0.3)),
+            content: Column(children: <Widget>[SizedBox(height: 4), body]),
             actions: <Widget>[
               CupertinoDialogAction(
                 isDefaultAction: true,
@@ -168,11 +151,7 @@ class Utils {
           return AlertDialog(
             title: Text(title!),
             content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(text!),
-                ],
-              ),
+              child: ListBody(children: <Widget>[Text(text!)]),
             ),
             actions: <Widget>[
               TextButton(
@@ -199,14 +178,7 @@ class Utils {
           return CupertinoAlertDialog(
             title: Text(title!),
             content: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  text!,
-                )
-              ],
+              children: <Widget>[SizedBox(height: 4), Text(text!)],
             ),
             actions: <Widget>[
               CupertinoDialogAction(
@@ -234,14 +206,16 @@ class Utils {
     return _isLoading == true
         ? IgnorePointer(
             child: Container(
-            color: Colors.transparent,
-            child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    indicatorColor ?? Style.colorPrimary),
+              color: Colors.transparent,
+              child: Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    indicatorColor ?? Style.colorPrimary,
+                  ),
+                ),
               ),
             ),
-          ))
+          )
         : Container();
   }
 
@@ -283,7 +257,9 @@ class Utils {
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
     final rand = Random.secure();
-    return List.generate(length, (index) => chars[rand.nextInt(chars.length)])
-        .join();
+    return List.generate(
+      length,
+      (index) => chars[rand.nextInt(chars.length)],
+    ).join();
   }
 }

@@ -20,9 +20,7 @@ class ReportDialogs {
             onPressed: () {
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
             child: Text(MyLocalizations.of(context, 'ok')),
           ),
         ],
@@ -36,14 +34,13 @@ class ReportDialogs {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: Text(MyLocalizations.of(context, 'app_name')),
-        content:
-            Text(message ?? MyLocalizations.of(context, 'save_report_ko_txt')),
+        content: Text(
+          message ?? MyLocalizations.of(context, 'save_report_ko_txt'),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
             child: Text(MyLocalizations.of(context, 'ok')),
           ),
         ],

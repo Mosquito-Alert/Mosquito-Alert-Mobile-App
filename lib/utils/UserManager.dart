@@ -16,22 +16,18 @@ class UserManager {
     var firstTime = prefs.getBool('firstTime');
 
     if (firstTime == null || !firstTime) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ConsentForm(),
-        ),
-      );
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => ConsentForm()));
 
       await prefs.setBool('firstTime', true);
 
       await setLanguage(Utils.language.languageCode);
       await setLanguageCountry(Utils.language.countryCode);
 
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => LocationConsentScreen(),
-        ),
-      );
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => LocationConsentScreen()));
     } else {
       var languageCode = await getLanguage();
       var countryCode = await getLanguageCountry();
