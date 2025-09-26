@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 void main() {
   group('ReportDialogs showSuccessDialog', () {
@@ -39,8 +38,6 @@ void main() {
     });
 
     testWidgets('should dismiss dialog and navigate when OK pressed', (WidgetTester tester) async {
-      bool navigatedToRoot = false;
-      
       await tester.pumpWidget(MaterialApp(
         home: Navigator(
           onGenerateRoute: (RouteSettings settings) {
