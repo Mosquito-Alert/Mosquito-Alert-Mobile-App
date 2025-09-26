@@ -5,6 +5,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -166,7 +167,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
       if (response.statusCode == 201) {
         _logAnalyticsEvent('bite_report_submitted');
-        _showSuccessDialog();
+        Utils.showReportSuccessDialog(context);
       } else {
         _showErrorDialog();
       }
@@ -178,29 +179,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
         _isSubmitting = false;
       });
     }
-  }
-
-  /// Show success dialog
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content: Text(MyLocalizations.of(context, 'save_report_ok_txt')),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   /// Show error dialog

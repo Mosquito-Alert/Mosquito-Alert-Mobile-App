@@ -114,6 +114,30 @@ class Utils {
     }
   }
 
+  /// Show success dialog for report submissions
+  /// Uses the navigation pattern specified in the problem statement
+  static Future showReportSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(MyLocalizations.of(context, 'app_name')),
+        content: Text(MyLocalizations.of(context, 'save_report_ok_txt')),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Style.colorPrimary,
+            ),
+            child: Text(MyLocalizations.of(context, 'ok')),
+          ),
+        ],
+      ),
+    );
+  }
+
   static Future showCustomAlert(
       String? title, Widget body, BuildContext context,
       {onPressed, barrierDismissible}) {

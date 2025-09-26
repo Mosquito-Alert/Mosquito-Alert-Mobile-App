@@ -8,6 +8,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_pa
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -182,7 +183,7 @@ class _BreedingSiteReportControllerState
 
       if (response.statusCode == 201) {
         await _logAnalyticsEvent('breeding_site_report_submit_success');
-        _showSuccessDialog();
+        Utils.showReportSuccessDialog(context);
       } else {
         await _logAnalyticsEvent('breeding_site_report_submit_error',
             parameters: {
@@ -199,29 +200,6 @@ class _BreedingSiteReportControllerState
         _isSubmitting = false;
       });
     }
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content: Text(MyLocalizations.of(context, 'save_report_ok_txt')),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Return to home
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text(MyLocalizations.of(context, 'ok')),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showErrorDialog(String message) {
