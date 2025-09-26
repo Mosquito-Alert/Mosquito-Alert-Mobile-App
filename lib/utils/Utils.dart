@@ -271,8 +271,11 @@ class Utils {
 
   static Future<String?> getCityNameFromCoords(double lat, double lon) async {
     var locale = await UserManager.getUserLocale();
-    await setLocaleIdentifier(locale!);
-    var placemarks = await placemarkFromCoordinates(lat, lon);
+    var placemarks = await placemarkFromCoordinates(
+      lat, 
+      lon,
+      localeIdentifier: locale,
+    );
     if (placemarks.isEmpty) {
       return null;
     }
