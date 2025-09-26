@@ -12,7 +12,7 @@ class PhotoSelectionPage extends StatefulWidget {
   final VoidCallback onPhotosChanged;
   final VoidCallback onNext;
   final VoidCallback?
-      onPrevious; // Optional for workflows that don't need back button
+  onPrevious; // Optional for workflows that don't need back button
   final int maxPhotos;
   final int minPhotos;
   final String? titleKey;

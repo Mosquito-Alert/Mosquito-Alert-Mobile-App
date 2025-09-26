@@ -33,7 +33,7 @@ allprojects {
                     }
                     
                     // Ensure compile SDK version is at least 34 for all modules
-                    compileSdk 34
+                    //compileSdk 34
                     
                     // Ensure minimum SDK version is at least 21 for all modules
                     defaultConfig {

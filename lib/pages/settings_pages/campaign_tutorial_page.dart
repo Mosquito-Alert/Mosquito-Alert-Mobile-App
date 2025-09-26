@@ -25,8 +25,9 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance
-        .logScreenView(screenName: '/info/campaigns');
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: '/info/campaigns',
+    );
   }
 
   @override
@@ -46,11 +47,9 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
           },
         ),
         title: Style.title(
-            MyLocalizations.of(
-              context,
-              'campaign_tutorial_txt',
-            ),
-            fontSize: 16),
+          MyLocalizations.of(context, 'campaign_tutorial_txt'),
+          fontSize: 16,
+        ),
       ),
       body: IntroSlider(
         slides: initSlides(),
@@ -59,9 +58,11 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
         renderDoneBtn: renderDoneBtn(),
         onDonePress: onDonePress,
         doneButtonStyle: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-                Style.colorPrimary.withValues(alpha: 0.2)),
-            overlayColor: WidgetStateProperty.all(Style.colorPrimary)),
+          backgroundColor: WidgetStateProperty.all(
+            Style.colorPrimary.withValues(alpha: 0.2),
+          ),
+          overlayColor: WidgetStateProperty.all(Style.colorPrimary),
+        ),
         colorDot: Style.colorPrimary.withValues(alpha: 0.4),
         sizeDot: 6.0,
         colorActiveDot: Style.colorPrimary,
@@ -72,8 +73,9 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
         },
         hideStatusBar: false,
         prevButtonStyle: ButtonStyle(
-            foregroundColor: WidgetStateProperty.all(Style.colorPrimary),
-            overlayColor: WidgetStateProperty.all(Style.colorPrimary)),
+          foregroundColor: WidgetStateProperty.all(Style.colorPrimary),
+          overlayColor: WidgetStateProperty.all(Style.colorPrimary),
+        ),
       ),
     );
   }
@@ -82,13 +84,17 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
   List<Slide> initSlides() {
     slides.clear();
     for (var idx = 0; idx < 9; idx++) {
-      slides.add(Slide(
+      slides.add(
+        Slide(
           title: '',
-          description:
-              MyLocalizations.of(context, 'tutorial_send_module_00${idx + 1}'),
+          description: MyLocalizations.of(
+            context,
+            'tutorial_send_module_00${idx + 1}',
+          ),
           pathImage: 'assets/img/sendmodule/fg_module_00${idx + 1}.webp',
-          backgroundImage:
-              'assets/img/sendmodule/fg_module_00${idx + 1}.webp'));
+          backgroundImage: 'assets/img/sendmodule/fg_module_00${idx + 1}.webp',
+        ),
+      );
     }
     return slides;
   }
@@ -101,18 +107,11 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
   }
 
   Widget renderNextBtn() {
-    return Icon(
-      Icons.navigate_next,
-      color: Style.colorPrimary,
-      size: 35.0,
-    );
+    return Icon(Icons.navigate_next, color: Style.colorPrimary, size: 35.0);
   }
 
   Widget renderDoneBtn() {
-    return Icon(
-      Icons.done,
-      color: Style.colorPrimary,
-    );
+    return Icon(Icons.done, color: Style.colorPrimary);
   }
 
   List<Widget> renderListCustomTabs() {
@@ -120,31 +119,34 @@ class _CampaignTutorialPageState extends State<CampaignTutorialPage> {
 
     for (var i = 0; i < slides.length; i++) {
       var currentSlide = slides[i];
-      tabs.add(Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 0),
-          child: ListView(
-            children: <Widget>[
-              GestureDetector(
+      tabs.add(
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 0),
+            child: ListView(
+              children: <Widget>[
+                GestureDetector(
                   child: Image.asset(
-                currentSlide.pathImage!,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-              )),
-              Container(
-                margin: EdgeInsets.all(12.0),
-                child: Text(
-                  currentSlide.description!,
-                  textAlign: TextAlign.center,
-                  maxLines: 20,
+                    currentSlide.pathImage!,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                  margin: EdgeInsets.all(12.0),
+                  child: Text(
+                    currentSlide.description!,
+                    textAlign: TextAlign.center,
+                    maxLines: 20,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ));
+      );
     }
     return tabs;
   }

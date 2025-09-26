@@ -79,7 +79,8 @@ class AuthProvider with ChangeNotifier {
         GuestRegistrationRequest((b) => b..password = password);
     try {
       final Response<GuestRegistration> response = await authApi.signupGuest(
-          guestRegistrationRequest: guestRegistrationRequest);
+        guestRegistrationRequest: guestRegistrationRequest,
+      );
 
       if (response.statusCode == 201 && response.data != null) {
         return response.data!;
@@ -95,19 +96,22 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> login(
-      {required String username,
-      required String password,
-      Device? device}) async {
+  Future<void> login({
+    required String username,
+    required String password,
+    Device? device,
+  }) async {
     try {
       final AppUserTokenObtainPairRequest request =
-          AppUserTokenObtainPairRequest((b) => b
-            ..username = username
-            ..password = password
-            ..deviceId = device?.deviceId ?? _deviceId);
+          AppUserTokenObtainPairRequest(
+            (b) => b
+              ..username = username
+              ..password = password
+              ..deviceId = device?.deviceId ?? _deviceId,
+          );
 
-      final Response<AppUserTokenObtainPair> response =
-          await authApi.obtainToken(appUserTokenObtainPairRequest: request);
+      final Response<AppUserTokenObtainPair> response = await authApi
+          .obtainToken(appUserTokenObtainPairRequest: request);
 
       if (response.statusCode == 200 && response.data != null) {
         _setUsername(username: username);
@@ -118,7 +122,8 @@ class AuthProvider with ChangeNotifier {
         return;
       } else {
         throw Exception(
-            'Login failed: Server responded with status ${response.statusCode}');
+          'Login failed: Server responded with status ${response.statusCode}',
+        );
       }
     } catch (e) {
       print("Login failed: $e");

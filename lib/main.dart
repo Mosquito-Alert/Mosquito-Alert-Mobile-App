@@ -37,8 +37,9 @@ Future<void> main({String env = 'prod'}) async {
   final authProvider = AuthProvider();
   await authProvider.init();
 
-  final ApiService apiService =
-      await ApiService.init(authProvider: authProvider);
+  final ApiService apiService = await ApiService.init(
+    authProvider: authProvider,
+  );
   final MosquitoAlert apiClient = apiService.client;
 
   authProvider.setApiClient(apiClient);
@@ -75,8 +76,9 @@ void callbackDispatcher() {
     final authProvider = AuthProvider();
     await authProvider.init();
 
-    final ApiService apiService =
-        await ApiService.init(authProvider: authProvider);
+    final ApiService apiService = await ApiService.init(
+      authProvider: authProvider,
+    );
     final MosquitoAlert apiClient = apiService.client;
 
     authProvider.setApiClient(apiClient);
@@ -87,7 +89,8 @@ void callbackDispatcher() {
     String? password = authProvider.password;
     if (username == null && password == null) {
       return Future.value(
-          false); // No user credentials available, cannot proceed
+        false,
+      ); // No user credentials available, cannot proceed
     }
     try {
       await authProvider.login(username: username!, password: password!);
@@ -120,7 +123,8 @@ void callbackDispatcher() {
             inputData?['numTaskAlreadyScheduled'] ?? 0;
         // NOTE: do not use await, it should return a Future value
         return BackgroundTracking.scheduleDailyTrackingTask(
-            numScheduledTasks: numTaskAlreadyScheduled);
+          numScheduledTasks: numTaskAlreadyScheduled,
+        );
       default:
         // If the task doesn't match, return true as a fallback
         return Future.value(true);
@@ -166,90 +170,90 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport(
-        child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Style.colorPrimary,
-          brightness: Brightness.light,
-          primary: Style.colorPrimary,
-          secondary: Style.colorPrimary,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Style.colorPrimary,
+            brightness: Brightness.light,
+            primary: Style.colorPrimary,
+            secondary: Style.colorPrimary,
+          ),
+          scaffoldBackgroundColor: Colors.white,
+          useMaterial3: true,
+          // Explicitly set component themes to use your primary color
+          checkboxTheme: CheckboxThemeData(
+            fillColor: WidgetStateProperty.resolveWith<Color>((
+              Set<WidgetState> states,
+            ) {
+              if (states.contains(WidgetState.selected)) {
+                return Style.colorPrimary;
+              }
+              return Colors.transparent;
+            }),
+            checkColor: WidgetStateProperty.all(Colors.white),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Style.colorPrimary,
+              foregroundColor: Colors.white,
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Style.colorPrimary,
+              side: BorderSide(color: Style.colorPrimary),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
+          ),
+          // Configure text themes to use your primary color
+          textTheme: TextTheme(
+            headlineLarge: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            headlineMedium: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            headlineSmall: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            titleLarge: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            titleMedium: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+            titleSmall: TextStyle(
+              color: Style.colorPrimary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          // Override primary color references
+          primaryColor: Style.colorPrimary,
+          primaryColorDark: Style.colorPrimary,
+          primaryColorLight: Style.colorPrimary,
         ),
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
-        // Explicitly set component themes to use your primary color
-        checkboxTheme: CheckboxThemeData(
-          fillColor:
-              WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-            if (states.contains(WidgetState.selected)) {
-              return Style.colorPrimary;
-            }
-            return Colors.transparent;
-          }),
-          checkColor: WidgetStateProperty.all(Colors.white),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Style.colorPrimary,
-            foregroundColor: Colors.white,
-          ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Style.colorPrimary,
-            side: BorderSide(color: Style.colorPrimary),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Style.colorPrimary,
-          ),
-        ),
-        // Configure text themes to use your primary color
-        textTheme: TextTheme(
-          headlineLarge: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineMedium: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineSmall: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          titleLarge: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          titleMedium: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-          titleSmall: TextStyle(
-            color: Style.colorPrimary,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        // Override primary color references
-        primaryColor: Style.colorPrimary,
-        primaryColorDark: Style.colorPrimary,
-        primaryColorLight: Style.colorPrimary,
+        navigatorKey: navigatorKey,
+        navigatorObservers: <NavigatorObserver>[
+          observer,
+          ObserverUtils.routeObserver,
+        ],
+        home: MainVC(),
+        localizationsDelegates: [
+          _newLocaleDelegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: application.supportedLocales(),
       ),
-      navigatorKey: navigatorKey,
-      navigatorObservers: <NavigatorObserver>[
-        observer,
-        ObserverUtils.routeObserver
-      ],
-      home: MainVC(),
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: application.supportedLocales(),
-    ));
+    );
   }
 }

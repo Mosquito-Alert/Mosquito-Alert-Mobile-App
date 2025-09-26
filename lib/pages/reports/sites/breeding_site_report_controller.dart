@@ -49,7 +49,7 @@ class _BreedingSiteReportControllerState
     // Always add final steps
     titles.addAll([
       '(HC) Select Location', // 3 or 4
-      '(HC) Notes & Submit' // 4 or 5
+      '(HC) Notes & Submit', // 4 or 5
     ]);
 
     return titles;
@@ -104,7 +104,10 @@ class _BreedingSiteReportControllerState
 
   /// Handle location selection callback
   void _onLocationSelected(
-      double latitude, double longitude, LocationRequestSource_Enum source) {
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  ) {
     setState(() {
       _reportData.latitude = latitude;
       _reportData.longitude = longitude;
@@ -138,13 +141,17 @@ class _BreedingSiteReportControllerState
       await _logAnalyticsEvent('breeding_site_report_submit_attempt');
 
       // Step 1: Create location request
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
+      final locationPoint = LocationPoint(
+        (b) => b
+          ..latitude = _reportData.latitude!
+          ..longitude = _reportData.longitude!,
+      );
 
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+      final locationRequest = LocationRequest(
+        (b) => b
+          ..source_ = _reportData.locationSource
+          ..point.replace(locationPoint),
+      );
 
       // Step 2: Process photos
       final List<SimplePhotoRequest> photoRequests = [];
@@ -177,15 +184,19 @@ class _BreedingSiteReportControllerState
         await _logAnalyticsEvent('breeding_site_report_submit_success');
         _showSuccessDialog();
       } else {
-        await _logAnalyticsEvent('breeding_site_report_submit_error',
-            parameters: {
-              'status_code': response.statusCode?.toString() ?? 'unknown'
-            });
+        await _logAnalyticsEvent(
+          'breeding_site_report_submit_error',
+          parameters: {
+            'status_code': response.statusCode?.toString() ?? 'unknown',
+          },
+        );
         _showErrorDialog('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      await _logAnalyticsEvent('breeding_site_report_submit_error',
-          parameters: {'error': e.toString()});
+      await _logAnalyticsEvent(
+        'breeding_site_report_submit_error',
+        parameters: {'error': e.toString()},
+      );
       _showErrorDialog('Failed to submit report: $e');
     } finally {
       setState(() {
@@ -210,9 +221,7 @@ class _BreedingSiteReportControllerState
               Navigator.of(context).pop(); // Close dialog
               Navigator.of(context).pop(); // Return to home
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
             child: Text(MyLocalizations.of(context, 'ok')),
           ),
         ],
@@ -229,9 +238,7 @@ class _BreedingSiteReportControllerState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
+            style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
             child: Text(MyLocalizations.of(context, 'ok')),
           ),
         ],
@@ -239,8 +246,10 @@ class _BreedingSiteReportControllerState
     );
   }
 
-  Future<void> _logAnalyticsEvent(String eventName,
-      {Map<String, Object>? parameters}) async {
+  Future<void> _logAnalyticsEvent(
+    String eventName, {
+    Map<String, Object>? parameters,
+  }) async {
     await FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: parameters ?? {},
@@ -347,10 +356,7 @@ class _BreedingSiteReportControllerState
       appBar: AppBar(
         title: Text(currentTitle),
         leading: _currentStep > 0
-            ? IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: _previousStep,
-              )
+            ? IconButton(icon: Icon(Icons.arrow_back), onPressed: _previousStep)
             : IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () => Navigator.of(context).pop(),
@@ -366,9 +372,7 @@ class _BreedingSiteReportControllerState
           ),
 
           // Main content
-          Expanded(
-            child: _currentPage,
-          ),
+          Expanded(child: _currentPage),
         ],
       ),
     );

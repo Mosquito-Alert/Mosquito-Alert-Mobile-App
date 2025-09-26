@@ -56,10 +56,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
           // Title
           Text(
             MyLocalizations.of(context, 'question_10'),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
           SizedBox(height: 8),
@@ -67,10 +64,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
           // Subtitle
           Text(
             '(HC) Please indicate if you can see water in the breeding site:',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
 
           SizedBox(height: 24),
@@ -128,7 +122,9 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
                               children: [
                                 Text(
                                   MyLocalizations.of(
-                                      context, option['titleKey']),
+                                    context,
+                                    option['titleKey'],
+                                  ),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -177,8 +173,9 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Style.colorPrimary.withValues(alpha: 0.1),
-              border:
-                  Border.all(color: Style.colorPrimary.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: Style.colorPrimary.withValues(alpha: 0.3),
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -188,10 +185,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
                 Expanded(
                   child: Text(
                     '(HC) Water presence is important for mosquito breeding. Even small amounts can be significant.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Style.colorPrimary,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Style.colorPrimary),
                   ),
                 ),
               ],
@@ -204,10 +198,7 @@ class _WaterQuestionPageState extends State<WaterQuestionPage> {
           Row(
             children: [
               Expanded(
-                child: Style.outlinedButton(
-                  '(HC) Back',
-                  widget.onPrevious,
-                ),
+                child: Style.outlinedButton('(HC) Back', widget.onPrevious),
               ),
               SizedBox(width: 12),
               Expanded(

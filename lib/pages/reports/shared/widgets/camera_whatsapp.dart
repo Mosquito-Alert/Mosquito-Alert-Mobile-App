@@ -9,7 +9,7 @@ import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_gallery/photo_gallery.dart';
+//import 'package:photo_gallery/photo_gallery.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -26,7 +26,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
   ///
   final bool multiple;
   final selectedImages = <File>[];
-  var images = <Medium>[];
+  var images = <dynamic>[];
 
   Future<void> loadRecentGalleryImages(BuildContext context) async {
     if (!(await isRecentPhotosFeatureEnabled(context))) {
@@ -40,15 +40,12 @@ class _WhatsAppCameraController extends ChangeNotifier {
     if (status.isPermanentlyDenied) return;
 
     try {
-      final albums =
-          await PhotoGallery.listAlbums(mediumType: MediumType.image);
+      final albums = null;
+      //await PhotoGallery.listAlbums(mediumType: MediumType.image);
       if (albums.isEmpty) return;
 
       final recentAlbum = albums.first;
-      final media = await recentAlbum.listMedia(
-        skip: 0,
-        take: 10,
-      );
+      final media = await recentAlbum.listMedia(skip: 0, take: 10);
 
       images = media.items;
       notifyListeners();
@@ -205,12 +202,15 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         enableAudio: false,
       );
 
-      _initializeControllerFuture = _cameraController!
-          .initialize()
-          .timeout(const Duration(seconds: 3), onTimeout: () {
-        print("Error: _initializeCamera timed out before it could initialize.");
-        Navigator.pop(context);
-      });
+      _initializeControllerFuture = _cameraController!.initialize().timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          print(
+            "Error: _initializeCamera timed out before it could initialize.",
+          );
+          Navigator.pop(context);
+        },
+      );
       setState(() {});
     } catch (e) {
       print('Camera error: $e');
@@ -328,23 +328,26 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   }
 
   Widget cameraAndGalleryButtons(
-      BuildContext context, _WhatsAppCameraController controller) {
+    BuildContext context,
+    _WhatsAppCameraController controller,
+  ) {
     return Positioned(
-        bottom: 32 + MediaQuery.of(context).padding.bottom,
-        left: 0,
-        right: 0,
-        child: Row(
-          children: [
-            Expanded(child: SizedBox()), // empty on the left
-            captureImageButton(),
-            Expanded(
-              child: Align(
-                alignment: Alignment.center,
-                child: galleryButton(context, controller),
-              ),
+      bottom: 32 + MediaQuery.of(context).padding.bottom,
+      left: 0,
+      right: 0,
+      child: Row(
+        children: [
+          Expanded(child: SizedBox()), // empty on the left
+          captureImageButton(),
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: galleryButton(context, controller),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget captureImageButton() {
@@ -353,10 +356,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       child: Container(
         width: 64,
         height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         child: Icon(Icons.camera_alt, color: Colors.black, size: 28),
       ),
     );
@@ -383,17 +383,19 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         child: Padding(
           padding: const EdgeInsets.only(top: 70),
           child: Container(
-              width: 0.5 * MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade300,
-                borderRadius: BorderRadius.circular(10),
+            width: 0.5 * MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.orange.shade300,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              heightFactor: 1.5,
+              child: Text(
+                MyLocalizations.of(context, widget.infoBadgeTextKey),
+                style: TextStyle(color: Colors.white),
               ),
-              child: Center(
-                heightFactor: 1.5,
-                child: Text(
-                    MyLocalizations.of(context, widget.infoBadgeTextKey),
-                    style: TextStyle(color: Colors.white)),
-              )),
+            ),
+          ),
         ),
       ),
     );
@@ -416,7 +418,9 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   }
 
   Widget galleryButton(
-      BuildContext context, _WhatsAppCameraController controller) {
+    BuildContext context,
+    _WhatsAppCameraController controller,
+  ) {
     return GestureDetector(
       onTap: () async {
         final status = await Permission.photos.request();
@@ -439,17 +443,16 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       child: Container(
         width: 50,
         height: 50,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         child: Icon(Icons.photo_library, color: Colors.black, size: 24),
       ),
     );
   }
 
   Widget recentPhotosStrip(
-      BuildContext context, _WhatsAppCameraController controller) {
+    BuildContext context,
+    _WhatsAppCameraController controller,
+  ) {
     return FutureBuilder<PermissionStatus>(
       future: Permission.photos.status,
       builder: (context, snapshot) {
@@ -501,8 +504,11 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     );
   }
 
-  Future<Widget> _buildImage(BuildContext context,
-      _WhatsAppCameraController controller, Medium medium) async {
+  Future<Widget> _buildImage(
+    BuildContext context,
+    _WhatsAppCameraController controller,
+    var medium,
+  ) async {
     final List<int> thumbnailData = await medium.getThumbnail(
       width: 200,
       height: 200,

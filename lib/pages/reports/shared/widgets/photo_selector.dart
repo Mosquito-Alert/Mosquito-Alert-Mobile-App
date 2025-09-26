@@ -154,8 +154,9 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color:
-                      _hasMinimumPhotos ? Style.colorPrimary : Colors.red[700],
+                  color: _hasMinimumPhotos
+                      ? Style.colorPrimary
+                      : Colors.red[700],
                 ),
               ),
               if (!_hasMinimumPhotos)
@@ -233,10 +234,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                     width: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        photo,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.file(photo, fit: BoxFit.cover),
                     ),
                   ),
 
@@ -256,16 +254,9 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                     ),
                     child: IconButton(
                       onPressed: () => _removePhoto(index),
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 16,
-                      ),
+                      icon: Icon(Icons.close, color: Colors.white, size: 16),
                       padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(
-                        minWidth: 28,
-                        minHeight: 28,
-                      ),
+                      constraints: BoxConstraints(minWidth: 28, minHeight: 28),
                     ),
                   ),
                 ],

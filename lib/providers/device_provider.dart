@@ -35,8 +35,9 @@ class DeviceProvider with ChangeNotifier {
     _currentDeviceId = deviceId;
   }
 
-  static Future<DeviceProvider> create(
-      {required MosquitoAlert apiClient}) async {
+  static Future<DeviceProvider> create({
+    required MosquitoAlert apiClient,
+  }) async {
     final devicesApi = apiClient.getDevicesApi();
     final _appSetIdPlugin = AppSetId();
 
@@ -59,7 +60,9 @@ class DeviceProvider with ChangeNotifier {
     if (device == null) return null;
     final request = PatchedDeviceUpdateRequest((b) => b..fcmToken = fcmToken);
     await devicesApi.partialUpdate(
-        deviceId: device!.deviceId, patchedDeviceUpdateRequest: request);
+      deviceId: device!.deviceId,
+      patchedDeviceUpdateRequest: request,
+    );
   }
 
   Future<void> registerDevice() async {
@@ -67,26 +70,32 @@ class DeviceProvider with ChangeNotifier {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final String? fcmToken = await _getFcmToken();
 
-    final os = DeviceOsRequest((b) => b
-      ..nameValue = deviceInfoData.osName
-      ..version = deviceInfoData.osVersion
-      ..locale = _getBcp47Locale());
+    final os = DeviceOsRequest(
+      (b) => b
+        ..nameValue = deviceInfoData.osName
+        ..version = deviceInfoData.osVersion
+        ..locale = _getBcp47Locale(),
+    );
 
-    final mobileApp = MobileAppRequest((b) => b
-      ..packageName = packageInfo.packageName
-      ..packageVersion = '${packageInfo.version}+${packageInfo.buildNumber}');
+    final mobileApp = MobileAppRequest(
+      (b) => b
+        ..packageName = packageInfo.packageName
+        ..packageVersion = '${packageInfo.version}+${packageInfo.buildNumber}',
+    );
 
     await _fetchDevice();
     if (device == null) {
       // Create a new device
-      final request = DeviceRequest((b) => b
-        ..deviceId = _currentDeviceId
-        ..fcmToken = fcmToken
-        ..type = deviceInfoData.type
-        ..manufacturer = deviceInfoData.manufacturer
-        ..model = deviceInfoData.model
-        ..os = os.toBuilder()
-        ..mobileApp = mobileApp.toBuilder());
+      final request = DeviceRequest(
+        (b) => b
+          ..deviceId = _currentDeviceId
+          ..fcmToken = fcmToken
+          ..type = deviceInfoData.type
+          ..manufacturer = deviceInfoData.manufacturer
+          ..model = deviceInfoData.model
+          ..os = os.toBuilder()
+          ..mobileApp = mobileApp.toBuilder(),
+      );
 
       final response = await devicesApi.create(deviceRequest: request);
       if (response.statusCode == 201) {
@@ -94,13 +103,17 @@ class DeviceProvider with ChangeNotifier {
       }
     } else {
       // Update existing device
-      final request = DeviceUpdateRequest((b) => b
-        ..fcmToken = fcmToken
-        ..os = os.toBuilder()
-        ..mobileApp = mobileApp.toBuilder());
+      final request = DeviceUpdateRequest(
+        (b) => b
+          ..fcmToken = fcmToken
+          ..os = os.toBuilder()
+          ..mobileApp = mobileApp.toBuilder(),
+      );
 
       await devicesApi.update(
-          deviceId: device!.deviceId, deviceUpdateRequest: request);
+        deviceId: device!.deviceId,
+        deviceUpdateRequest: request,
+      );
       await _fetchDevice();
     }
   }
@@ -141,25 +154,28 @@ class DeviceProvider with ChangeNotifier {
 
     if (deviceInfo is AndroidDeviceInfo) {
       return DeviceInfoData(
-          manufacturer: deviceInfo.manufacturer,
-          model: deviceInfo.model,
-          osName: 'Android',
-          osVersion: deviceInfo.version.release,
-          type: DeviceRequestTypeEnum.android);
+        manufacturer: deviceInfo.manufacturer,
+        model: deviceInfo.model,
+        osName: 'Android',
+        osVersion: deviceInfo.version.release,
+        type: DeviceRequestTypeEnum.android,
+      );
     } else if (deviceInfo is IosDeviceInfo) {
       return DeviceInfoData(
-          manufacturer: 'Apple',
-          model: deviceInfo.model,
-          osName: deviceInfo.systemName,
-          osVersion: deviceInfo.systemVersion,
-          type: DeviceRequestTypeEnum.ios);
+        manufacturer: 'Apple',
+        model: deviceInfo.model,
+        osName: deviceInfo.systemName,
+        osVersion: deviceInfo.systemVersion,
+        type: DeviceRequestTypeEnum.ios,
+      );
     } else {
       return DeviceInfoData(
-          manufacturer: null,
-          model: 'unknown',
-          osName: null,
-          osVersion: 'unknown',
-          type: DeviceRequestTypeEnum.unknownDefaultOpenApi);
+        manufacturer: null,
+        model: 'unknown',
+        osName: null,
+        osVersion: 'unknown',
+        type: DeviceRequestTypeEnum.unknownDefaultOpenApi,
+      );
     }
   }
 
@@ -168,8 +184,9 @@ class DeviceProvider with ChangeNotifier {
       await FirebaseMessaging.instance.getAPNSToken();
     }
 
-    return await FirebaseMessaging.instance
-        .getToken()
-        .timeout(Duration(seconds: 10), onTimeout: () => null);
+    return await FirebaseMessaging.instance.getToken().timeout(
+      Duration(seconds: 10),
+      onTimeout: () => null,
+    );
   }
 }

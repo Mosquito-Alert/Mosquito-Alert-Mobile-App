@@ -81,18 +81,12 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                   SizedBox(height: 8),
                   Text(
                     MyLocalizations.of(context, "question_13"),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(height: 4),
                   Text(
                     '(HC) This information helps researchers understand mosquito behavior and habitat preferences.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -140,8 +134,9 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                             ),
                             child: Icon(
                               option['icon'],
-                              color:
-                                  isSelected ? Colors.white : Colors.grey[600],
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.grey[600],
                               size: 24,
                             ),
                           ),
@@ -155,7 +150,9 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
                               children: [
                                 Text(
                                   MyLocalizations.of(
-                                      context, option['titleKey']),
+                                    context,
+                                    option['titleKey'],
+                                  ),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -196,10 +193,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
           Row(
             children: [
               Expanded(
-                child: Style.outlinedButton(
-                  '(HC) Back',
-                  widget.onPrevious,
-                ),
+                child: Style.outlinedButton('(HC) Back', widget.onPrevious),
               ),
               SizedBox(width: 12),
               Expanded(

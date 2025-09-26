@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 // Import shared mocks and helpers
 import '../mocks/mocks.dart';
 
-Widget createReportsListBitesTestWidget({
-  MockMosquitoAlert? mockClient,
-}) {
+Widget createReportsListBitesTestWidget({MockMosquitoAlert? mockClient}) {
   return MaterialApp(
     home: Scaffold(
       body: Provider<sdk.MosquitoAlert>(
@@ -17,9 +15,7 @@ Widget createReportsListBitesTestWidget({
         child: ReportsListBites(),
       ),
     ),
-    localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
-    ],
+    localizationsDelegates: const [MockMyLocalizationsDelegate()],
     supportedLocales: const [Locale('en')],
   );
 }
@@ -39,8 +35,9 @@ void main() {
       mockBitesApi = mockClient.bitesApi;
     });
 
-    testWidgets('should display bite reports when bites are available',
-        (WidgetTester tester) async {
+    testWidgets('should display bite reports when bites are available', (
+      WidgetTester tester,
+    ) async {
       // Given - Mock bite reports using consolidated helper
       final testBites = [
         createTestBite(
@@ -57,8 +54,9 @@ void main() {
       mockBitesApi.setBites(testBites);
 
       // When - Create widget
-      await tester
-          .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
+      await tester.pumpWidget(
+        createReportsListBitesTestWidget(mockClient: mockClient),
+      );
 
       // Handle expected Firebase exception
       await pumpAndSettleIgnoringFirebaseException(tester);
@@ -71,33 +69,36 @@ void main() {
       expect(find.text('4 bites'), findsOneWidget);
     });
 
-    testWidgets('should display no reports message when no bites are available',
-        (WidgetTester tester) async {
-      // Given - Empty bite reports
-      mockBitesApi.setBites([]);
+    testWidgets(
+      'should display no reports message when no bites are available',
+      (WidgetTester tester) async {
+        // Given - Empty bite reports
+        mockBitesApi.setBites([]);
 
-      // When - Create widget
-      final widget = createReportsListBitesTestWidget(mockClient: mockClient);
-      await tester.pumpWidget(widget);
+        // When - Create widget
+        final widget = createReportsListBitesTestWidget(mockClient: mockClient);
+        await tester.pumpWidget(widget);
 
-      // Handle expected Firebase exception
-      await pumpAndSettleIgnoringFirebaseException(tester);
+        // Handle expected Firebase exception
+        await pumpAndSettleIgnoringFirebaseException(tester);
 
-      // Then - Verify empty state is displayed
-      expect(find.byType(ReportsListBites), findsOneWidget);
+        // Then - Verify empty state is displayed
+        expect(find.byType(ReportsListBites), findsOneWidget);
 
-      // No cards should be displayed
-      expect(find.byType(Card), findsNothing);
+        // No cards should be displayed
+        expect(find.byType(Card), findsNothing);
 
-      // Should display localized "no reports yet" message
-      // Get the localized text from the mock localizations
-      final mockLocalizations = MockMyLocalizations();
-      final expectedText = mockLocalizations.translate('no_reports_yet_txt');
-      expect(find.text(expectedText), findsOneWidget);
-    });
+        // Should display localized "no reports yet" message
+        // Get the localized text from the mock localizations
+        final mockLocalizations = MockMyLocalizations();
+        final expectedText = mockLocalizations.translate('no_reports_yet_txt');
+        expect(find.text(expectedText), findsOneWidget);
+      },
+    );
 
-    testWidgets('should display single bite correctly',
-        (WidgetTester tester) async {
+    testWidgets('should display single bite correctly', (
+      WidgetTester tester,
+    ) async {
       // Given - Single bite with one bite count using consolidated helper
       final testBites = [
         createTestBite(
@@ -109,8 +110,9 @@ void main() {
       mockBitesApi.setBites(testBites);
 
       // When - Create widget
-      await tester
-          .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
+      await tester.pumpWidget(
+        createReportsListBitesTestWidget(mockClient: mockClient),
+      );
 
       // Handle expected Firebase exception
       await pumpAndSettleIgnoringFirebaseException(tester);
@@ -120,8 +122,9 @@ void main() {
       expect(find.text('1 bite'), findsOneWidget);
     });
 
-    testWidgets('should render bite report cards correctly',
-        (WidgetTester tester) async {
+    testWidgets('should render bite report cards correctly', (
+      WidgetTester tester,
+    ) async {
       // Given - Mock bite reports
       final testBites = [
         createTestBite(
@@ -138,8 +141,9 @@ void main() {
       mockBitesApi.setBites(testBites);
 
       // When - Create widget and wait for loading
-      await tester
-          .pumpWidget(createReportsListBitesTestWidget(mockClient: mockClient));
+      await tester.pumpWidget(
+        createReportsListBitesTestWidget(mockClient: mockClient),
+      );
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Verify cards are displayed correctly

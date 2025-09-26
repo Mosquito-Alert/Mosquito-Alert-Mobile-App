@@ -7,7 +7,7 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 class StringMultilineTags extends StatefulWidget {
   const StringMultilineTags({Key? key, required this.updateTagsNum})
-      : super(key: key);
+    : super(key: key);
   final void Function(int) updateTagsNum;
 
   @override
@@ -50,154 +50,163 @@ class _StringMultilineTagsState extends State<StringMultilineTags> {
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
-        focusNode: FocusNode(),
-        onKeyEvent: (value) {
-          if (value.logicalKey.keyLabel == 'Backspace' &&
-              value is KeyDownEvent &&
-              currentWord == '') {
-            onBackspace();
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Column(
-            children: [
-              if (isLoading)
-                CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Style.colorPrimary),
-                )
-              else
-                TextFieldTags<String>(
-                  textfieldTagsController: _stringTagController,
-                  initialTags: hashtags,
-                  textSeparators: const [' ', ','],
-                  letterCase: LetterCase.normal,
-                  inputFieldBuilder: (context, inputFieldValues) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: TextField(
-                          onTap: () {
-                            _stringTagController.getFocusNode?.requestFocus();
-                          },
-                          controller: inputFieldValues.textEditingController,
-                          focusNode: inputFieldValues.focusNode,
-                          decoration: InputDecoration(
-                              isDense: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Style.colorPrimary,
-                                  width: 2.0,
-                                ),
+      focusNode: FocusNode(),
+      onKeyEvent: (value) {
+        if (value.logicalKey.keyLabel == 'Backspace' &&
+            value is KeyDownEvent &&
+            currentWord == '') {
+          onBackspace();
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          children: [
+            if (isLoading)
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Style.colorPrimary),
+              )
+            else
+              TextFieldTags<String>(
+                textfieldTagsController: _stringTagController,
+                initialTags: hashtags,
+                textSeparators: const [' ', ','],
+                letterCase: LetterCase.normal,
+                inputFieldBuilder: (context, inputFieldValues) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: TextField(
+                      onTap: () {
+                        _stringTagController.getFocusNode?.requestFocus();
+                      },
+                      controller: inputFieldValues.textEditingController,
+                      focusNode: inputFieldValues.focusNode,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Style.colorPrimary,
+                            width: 2.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Style.colorPrimary,
+                            width: 2.0,
+                          ),
+                        ),
+                        hintText: inputFieldValues.tags.isNotEmpty
+                            ? ''
+                            : MyLocalizations.of(
+                                context,
+                                'auto_tagging_settings_placeholder',
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1.0,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Style.colorPrimary,
-                                  width: 2.0,
-                                ),
-                              ),
-                              hintText: inputFieldValues.tags.isNotEmpty
-                                  ? ''
-                                  : MyLocalizations.of(context,
-                                      'auto_tagging_settings_placeholder'),
-                              hintStyle: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey[600],
-                              ),
-                              errorText: inputFieldValues.error,
-                              prefixIconConstraints: BoxConstraints(
-                                  maxWidth: _distanceToField * 0.8),
-                              prefixIcon: inputFieldValues.tags.isEmpty
-                                  ? null
-                                  : SingleChildScrollView(
-                                      controller:
-                                          inputFieldValues.tagScrollController,
-                                      scrollDirection: Axis.vertical,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 8,
-                                          bottom: 8,
-                                          left: 8,
+                        hintStyle: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                        ),
+                        errorText: inputFieldValues.error,
+                        prefixIconConstraints: BoxConstraints(
+                          maxWidth: _distanceToField * 0.8,
+                        ),
+                        prefixIcon: inputFieldValues.tags.isEmpty
+                            ? null
+                            : SingleChildScrollView(
+                                controller:
+                                    inputFieldValues.tagScrollController,
+                                scrollDirection: Axis.vertical,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 8,
+                                    bottom: 8,
+                                    left: 8,
+                                  ),
+                                  child: Wrap(
+                                    runSpacing: 4.0,
+                                    spacing: 4.0,
+                                    children: inputFieldValues.tags.map((
+                                      String tag,
+                                    ) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0),
+                                          ),
+                                          color: Style.colorPrimary,
                                         ),
-                                        child: Wrap(
-                                            runSpacing: 4.0,
-                                            spacing: 4.0,
-                                            children: inputFieldValues.tags
-                                                .map((String tag) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(20.0),
-                                                  ),
-                                                  color: Style.colorPrimary,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 5.0,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            InkWell(
+                                              child: Text(
+                                                '#$tag',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
                                                 ),
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0,
-                                                        vertical: 5.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    InkWell(
-                                                      child: Text(
-                                                        '#$tag',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 4.0),
-                                                    InkWell(
-                                                      child: const Icon(
-                                                        Icons.cancel,
-                                                        size: 14.0,
-                                                        color: Colors.white,
-                                                      ),
-                                                      onTap: () {
-                                                        inputFieldValues
-                                                            .onTagRemoved(tag);
-                                                        hashtags.remove(tag);
-                                                        UserManager.setHashtags(
-                                                            hashtags);
-                                                        widget.updateTagsNum(
-                                                            hashtags.length);
-                                                      },
-                                                    )
-                                                  ],
-                                                ),
-                                              );
-                                            }).toList()),
-                                      ),
-                                    )),
-                          onChanged: (String change) {
-                            currentWord = change;
-                            if (change.endsWith(' ')) {
-                              // Space was pressed
-                              addNewHashtag(change, inputFieldValues);
-                            }
-                            inputFieldValues.onTagChanged(change);
-                          },
-                          onSubmitted: (String newTag) {
-                            addNewHashtag(newTag, inputFieldValues);
-                          }),
-                    );
-                  },
-                ),
-            ],
-          ),
-        ));
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4.0),
+                                            InkWell(
+                                              child: const Icon(
+                                                Icons.cancel,
+                                                size: 14.0,
+                                                color: Colors.white,
+                                              ),
+                                              onTap: () {
+                                                inputFieldValues.onTagRemoved(
+                                                  tag,
+                                                );
+                                                hashtags.remove(tag);
+                                                UserManager.setHashtags(
+                                                  hashtags,
+                                                );
+                                                widget.updateTagsNum(
+                                                  hashtags.length,
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                      ),
+                      onChanged: (String change) {
+                        currentWord = change;
+                        if (change.endsWith(' ')) {
+                          // Space was pressed
+                          addNewHashtag(change, inputFieldValues);
+                        }
+                        inputFieldValues.onTagChanged(change);
+                      },
+                      onSubmitted: (String newTag) {
+                        addNewHashtag(newTag, inputFieldValues);
+                      },
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   void addNewHashtag(String newTag, InputFieldValues<String> inputFieldValues) {
