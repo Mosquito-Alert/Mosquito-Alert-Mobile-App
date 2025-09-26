@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ import 'package:mosquito_alert_app/utils/Application.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
@@ -137,8 +136,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription<List<ConnectivityResult>> subscription;
-
   MyLocalizationsDelegate _newLocaleDelegate = MyLocalizationsDelegate();
 
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
@@ -152,24 +149,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    //backgroud sync reports
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
-      print('Connectivity status changed to $results');
-      for (var result in results) {
-        switch (result) {
-          case ConnectivityResult.mobile:
-          case ConnectivityResult.wifi:
-            Utils.syncReports();
-            break;
-          case ConnectivityResult.none:
-            break;
-          default:
-            break;
-        }
-      }
-    });
     application.onLocaleChanged = onLocaleChange;
   }
 
@@ -182,7 +161,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
-    subscription.cancel();
   }
 
   @override
@@ -191,8 +169,73 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Style.colorPrimary,
+          brightness: Brightness.light,
+          primary: Style.colorPrimary,
+          secondary: Style.colorPrimary,
+        ),
         scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
+        // Explicitly set component themes to use your primary color
+        checkboxTheme: CheckboxThemeData(
+          fillColor:
+              WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+            if (states.contains(WidgetState.selected)) {
+              return Style.colorPrimary;
+            }
+            return Colors.transparent;
+          }),
+          checkColor: WidgetStateProperty.all(Colors.white),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Style.colorPrimary,
+            foregroundColor: Colors.white,
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Style.colorPrimary,
+            side: BorderSide(color: Style.colorPrimary),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: Style.colorPrimary,
+          ),
+        ),
+        // Configure text themes to use your primary color
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineMedium: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineSmall: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          titleLarge: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+          titleSmall: TextStyle(
+            color: Style.colorPrimary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        // Override primary color references
+        primaryColor: Style.colorPrimary,
+        primaryColorDark: Style.colorPrimary,
+        primaryColorLight: Style.colorPrimary,
       ),
       navigatorKey: navigatorKey,
       navigatorObservers: <NavigatorObserver>[
