@@ -6,9 +6,9 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -159,7 +159,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
       if (response.statusCode == 201) {
         await _logAnalyticsEvent('adult_report_submit_success');
-        Utils.showReportSuccessDialog(context);
+        ReportDialogs.showSuccessDialog(context);
       } else {
         await _logAnalyticsEvent('adult_report_submit_error', parameters: {
           'status_code': response.statusCode?.toString() ?? 'unknown'

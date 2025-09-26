@@ -4,8 +4,8 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -167,7 +167,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
       if (response.statusCode == 201) {
         _logAnalyticsEvent('bite_report_submitted');
-        Utils.showReportSuccessDialog(context);
+        ReportDialogs.showSuccessDialog(context);
       } else {
         _showErrorDialog();
       }

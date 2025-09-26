@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 void main() {
-  group('Utils showReportSuccessDialog', () {
+  group('ReportDialogs showSuccessDialog', () {
     testWidgets('should show success dialog with correct content', (WidgetTester tester) async {
       // Build a test app with MaterialApp wrapper
       await tester.pumpWidget(MaterialApp(
@@ -13,7 +13,7 @@ void main() {
             return Scaffold(
               body: ElevatedButton(
                 onPressed: () {
-                  Utils.showReportSuccessDialog(context);
+                  ReportDialogs.showSuccessDialog(context);
                 },
                 child: Text('Show Dialog'),
               ),
@@ -58,7 +58,7 @@ void main() {
                               builder: (context) => Scaffold(
                                 body: ElevatedButton(
                                   onPressed: () {
-                                    Utils.showReportSuccessDialog(context);
+                                    ReportDialogs.showSuccessDialog(context);
                                   },
                                   child: Text('Show Dialog'),
                                 ),
