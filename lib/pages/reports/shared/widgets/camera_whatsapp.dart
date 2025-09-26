@@ -9,7 +9,7 @@ import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_gallery/photo_gallery.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class _WhatsAppCameraController extends ChangeNotifier {
   ///
@@ -26,7 +26,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
   ///
   final bool multiple;
   final selectedImages = <File>[];
-  var images = <Medium>[];
+  var images = <AssetEntity>[];
 
   Future<void> loadRecentGalleryImages(BuildContext context) async {
     if (!(await isRecentPhotosFeatureEnabled(context))) {
@@ -35,22 +35,24 @@ class _WhatsAppCameraController extends ChangeNotifier {
       return;
     }
 
-    final status = await Permission.photos.request();
-    if (status.isDenied) return;
-    if (status.isPermanentlyDenied) return;
+    final result = await PhotoManager.requestPermissionExtend();
+    if (!result.isAuth) return;
 
     try {
-      final albums =
-          await PhotoGallery.listAlbums(mediumType: MediumType.image);
+      final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+        onlyAll: true,
+      );
+      
       if (albums.isEmpty) return;
 
       final recentAlbum = albums.first;
-      final media = await recentAlbum.listMedia(
-        skip: 0,
-        take: 10,
+      final List<AssetEntity> recentAssets = await recentAlbum.getAssetListRange(
+        start: 0,
+        end: 10,
       );
 
-      images = media.items;
+      images = recentAssets;
       notifyListeners();
     } catch (e) {
       print('Error loading gallery images: $e');
@@ -233,15 +235,9 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   Future<void> _loadRecentPhotosIfPermissionGranted() async {
     if (!mounted) return;
 
-    final photosStatus = await Permission.photos.status;
-    if (photosStatus.isGranted) {
+    final result = await PhotoManager.requestPermissionExtend();
+    if (result.isAuth) {
       if (mounted) {
-        controller.loadRecentGalleryImages(context);
-      }
-    } else {
-      // Request photos permission if not granted
-      final requestedStatus = await Permission.photos.request();
-      if (requestedStatus.isGranted && mounted) {
         controller.loadRecentGalleryImages(context);
         // Trigger a rebuild to show the recent photos strip immediately
         setState(() {});
@@ -419,13 +415,13 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       BuildContext context, _WhatsAppCameraController controller) {
     return GestureDetector(
       onTap: () async {
-        final status = await Permission.photos.request();
-        if (status.isPermanentlyDenied) {
+        final result = await PhotoManager.requestPermissionExtend();
+        if (!result.isAuth) {
           await openAppSettings();
           return;
         }
 
-        if (status.isGranted && mounted) {
+        if (result.isAuth && mounted) {
           // Trigger a rebuild to show recent photos strip if it wasn't visible before
           setState(() {});
         }
@@ -450,10 +446,10 @@ class _WhatsappCameraState extends State<WhatsappCamera>
 
   Widget recentPhotosStrip(
       BuildContext context, _WhatsAppCameraController controller) {
-    return FutureBuilder<PermissionStatus>(
-      future: Permission.photos.status,
+    return FutureBuilder<PermissionState>(
+      future: PhotoManager.requestPermissionExtend(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data != PermissionStatus.granted) {
+        if (!snapshot.hasData || !snapshot.data!.isAuth) {
           return Container();
         }
 
@@ -480,9 +476,9 @@ class _WhatsappCameraState extends State<WhatsappCamera>
                   scrollDirection: Axis.horizontal,
                   itemCount: controller.images.length,
                   itemBuilder: (context, index) {
-                    final medium = controller.images[index];
+                    final asset = controller.images[index];
                     return FutureBuilder<Widget>(
-                      future: _buildImage(context, controller, medium),
+                      future: _buildImage(context, controller, asset),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done &&
                             snapshot.hasData) {
@@ -502,22 +498,25 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   }
 
   Future<Widget> _buildImage(BuildContext context,
-      _WhatsAppCameraController controller, Medium medium) async {
-    final List<int> thumbnailData = await medium.getThumbnail(
-      width: 200,
-      height: 200,
-      highQuality: true,
+      _WhatsAppCameraController controller, AssetEntity asset) async {
+    final Uint8List? thumbnailData = await asset.thumbnailDataWithSize(
+      ThumbnailSize(200, 200),
+      quality: 80,
     );
 
-    final Uint8List thumbnail = Uint8List.fromList(thumbnailData);
+    if (thumbnailData == null) {
+      return Container();
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: GestureDetector(
         onTap: () async {
-          final file = await medium.getFile();
-          controller.captureImage(file);
-          Navigator.pop(context, controller.selectedImages);
+          final file = await asset.file;
+          if (file != null) {
+            controller.captureImage(file);
+            Navigator.pop(context, controller.selectedImages);
+          }
         },
         child: Container(
           width: 70,
@@ -528,7 +527,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Image.memory(
-              thumbnail,
+              thumbnailData,
               width: 70,
               height: 70,
               fit: BoxFit.cover,
