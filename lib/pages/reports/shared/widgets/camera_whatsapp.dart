@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:image_picker/image_picker.dart';
@@ -63,26 +62,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
   }
 
   Future<bool> isRecentPhotosFeatureEnabled(BuildContext context) async {
-    if (!Platform.isIOS) return true;
-
-    try {
-      // Disable feature only for iOS 17+ due to a crash
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      final systemVersion = iosInfo.systemVersion;
-
-      final versionParts = systemVersion.split('.').map(int.parse).toList();
-      final majorVersion = versionParts.isNotEmpty ? versionParts[0] : 0;
-
-      if (majorVersion >= 17) {
-        // Disable feature for iOS 17+ where there's a known bug/crash
-        return false;
-      }
-
-      return true;
-    } catch (e) {
-      return true;
-    }
+    return true;
   }
 
   Future<void> openGallery() async {
