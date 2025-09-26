@@ -122,8 +122,10 @@ class _LocationSelectorState extends State<LocationSelector> {
 
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: Duration(seconds: 30),
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 30),
+        ),
       );
 
       setState(() {

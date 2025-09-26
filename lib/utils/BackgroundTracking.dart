@@ -226,7 +226,9 @@ class BackgroundTracking {
       }
 
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ));
       int batteryLevel = await Battery().batteryLevel;
       String trackingUuid = await BackgroundTracking._getTrackingUUID();
 
