@@ -271,10 +271,17 @@ class Utils {
 
   static Future<String?> getCityNameFromCoords(double lat, double lon) async {
     var locale = await UserManager.getUserLocale();
+    
+    // Handle case where locale might be null or invalid (e.g., "null_null")
+    String? validLocale = locale;
+    if (locale == null || locale.contains('null')) {
+      validLocale = null; // Let geocoding use system default
+    }
+    
     var placemarks = await placemarkFromCoordinates(
       lat, 
       lon,
-      localeIdentifier: locale,
+      localeIdentifier: validLocale,
     );
     if (placemarks.isEmpty) {
       return null;
