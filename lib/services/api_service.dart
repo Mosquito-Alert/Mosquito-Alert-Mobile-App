@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
 
@@ -18,13 +17,33 @@ class ApiService {
     );
     final Dio _dio = Dio(options);
 
-    _dio.interceptors.add(JwtAuthInterceptor(
-        options: options,
-        getAccessToken: () async => authProvider.accessToken ?? '',
-        getRefreshToken: () async => authProvider.refreshToken ?? '',
-        onTokenUpdateCallback: (newAccessToken) {
-          authProvider.setAccessToken(accessToken: newAccessToken);
-        }));
+    // Add auth interceptor for JWT token authentication
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final accessToken = authProvider.accessToken;
+        if (accessToken != null && accessToken.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $accessToken';
+        }
+        handler.next(options);
+      },
+      onError: (error, handler) async {
+        // Handle 401 unauthorized error by attempting token refresh
+        if (error.response?.statusCode == 401) {
+          final refreshToken = authProvider.refreshToken;
+          if (refreshToken != null && refreshToken.isNotEmpty) {
+            try {
+              handler.next(error);
+            } catch (e) {
+              handler.next(error);
+            }
+          } else {
+            handler.next(error);
+          }
+        } else {
+          handler.next(error);
+        }
+      },
+    ));
 
     _client = MosquitoAlert(dio: _dio);
   }
