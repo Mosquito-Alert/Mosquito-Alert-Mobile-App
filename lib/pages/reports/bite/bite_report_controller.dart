@@ -169,39 +169,16 @@ class _BiteReportControllerState extends State<BiteReportController> {
         _logAnalyticsEvent('bite_report_submitted');
         ReportDialogs.showSuccessDialog(context);
       } else {
-        _showErrorDialog();
+        ReportDialogs.showErrorDialog(context);
       }
     } catch (e) {
       print('Error creating bite report: $e');
-      _showErrorDialog();
+      ReportDialogs.showErrorDialog(context);
     } finally {
       setState(() {
         _isSubmitting = false;
       });
     }
-  }
-
-  /// Show error dialog
-  void _showErrorDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content: Text(MyLocalizations.of(context, 'save_report_ko_txt')),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   /// Log analytics event

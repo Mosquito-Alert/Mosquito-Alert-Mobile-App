@@ -164,36 +164,17 @@ class _AdultReportControllerState extends State<AdultReportController> {
         await _logAnalyticsEvent('adult_report_submit_error', parameters: {
           'status_code': response.statusCode?.toString() ?? 'unknown'
         });
-        _showErrorDialog('Server error: ${response.statusCode}');
+        ReportDialogs.showErrorDialog(context, 'Server error: ${response.statusCode}');
       }
     } catch (e) {
       await _logAnalyticsEvent('adult_report_submit_error',
           parameters: {'error': e.toString()});
-      _showErrorDialog('Failed to submit report: $e');
+      ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
     } finally {
       setState(() {
         _isSubmitting = false;
       });
     }
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text(MyLocalizations.of(context, 'ok')),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _logAnalyticsEvent(String eventName,

@@ -56,6 +56,8 @@ class MockMyLocalizations extends MyLocalizations {
         return 'No';
       case 'app_name':
         return 'Mosquito Alert';
+      case 'ok':
+        return 'OK';
       case 'gallery_info_01':
         return 'Welcome to the Mosquito Guide - Slide 1';
       case 'gallery_info_02':

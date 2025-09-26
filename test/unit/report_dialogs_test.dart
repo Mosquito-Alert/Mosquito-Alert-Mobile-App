@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
+import '../mocks/mock_localizations.dart';
 
 void main() {
   group('ReportDialogs showSuccessDialog', () {
@@ -8,6 +9,10 @@ void main() {
         (WidgetTester tester) async {
       // Build a test app with MaterialApp wrapper
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: const [
+          MockMyLocalizationsDelegate(),
+        ],
+        supportedLocales: const [Locale('en')],
         home: Builder(
           builder: (BuildContext context) {
             return Scaffold(
@@ -42,6 +47,10 @@ void main() {
     testWidgets('should dismiss dialog and navigate when OK pressed',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: const [
+          MockMyLocalizationsDelegate(),
+        ],
+        supportedLocales: const [Locale('en')],
         home: Navigator(
           onGenerateRoute: (RouteSettings settings) {
             if (settings.name == '/') {
@@ -99,6 +108,66 @@ void main() {
       // Verify dialog is dismissed and we're back at root
       expect(find.byType(AlertDialog), findsNothing);
       expect(find.text('Navigate'), findsOneWidget); // Should be back at root
+    });
+
+    testWidgets('should show error dialog with custom message', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: const [
+          MockMyLocalizationsDelegate(),
+        ],
+        supportedLocales: const [Locale('en')],
+        home: Builder(
+          builder: (BuildContext context) {
+            return Scaffold(
+              body: ElevatedButton(
+                onPressed: () {
+                  ReportDialogs.showErrorDialog(context, 'Custom error message');
+                },
+                child: Text('Show Error'),
+              ),
+            );
+          },
+        ),
+      ));
+
+      // Tap the button to show dialog
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      // Verify error dialog appears with custom message
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('Custom error message'), findsOneWidget);
+      expect(find.text('OK'), findsOneWidget);
+    });
+
+    testWidgets('should show error dialog with default message when no message provided', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: const [
+          MockMyLocalizationsDelegate(),
+        ],
+        supportedLocales: const [Locale('en')],
+        home: Builder(
+          builder: (BuildContext context) {
+            return Scaffold(
+              body: ElevatedButton(
+                onPressed: () {
+                  ReportDialogs.showErrorDialog(context);
+                },
+                child: Text('Show Error'),
+              ),
+            );
+          },
+        ),
+      ));
+
+      // Tap the button to show dialog
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      // Verify error dialog appears with default message
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('Error saving report'), findsOneWidget);
+      expect(find.text('OK'), findsOneWidget);
     });
   });
 }

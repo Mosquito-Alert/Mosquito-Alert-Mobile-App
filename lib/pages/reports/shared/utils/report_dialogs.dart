@@ -31,4 +31,26 @@ class ReportDialogs {
       ),
     );
   }
+
+  /// Show error dialog for report submission failures
+  /// If message is null, uses the default error message
+  static Future<void> showErrorDialog(BuildContext context, [String? message]) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(MyLocalizations.of(context, 'app_name')),
+        content: Text(message ?? MyLocalizations.of(context, 'save_report_ko_txt')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(
+              foregroundColor: Style.colorPrimary,
+            ),
+            child: Text(MyLocalizations.of(context, 'ok')),
+          ),
+        ],
+      ),
+    );
+  }
 }
