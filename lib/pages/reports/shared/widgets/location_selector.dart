@@ -8,8 +8,11 @@ class LocationSelector extends StatefulWidget {
   final double? initialLatitude;
   final double? initialLongitude;
   final Function(
-          double latitude, double longitude, LocationRequestSource_Enum source)
-      onLocationSelected;
+    double latitude,
+    double longitude,
+    LocationRequestSource_Enum source,
+  )
+  onLocationSelected;
 
   const LocationSelector({
     Key? key,
@@ -59,10 +62,7 @@ class _LocationSelectorState extends State<LocationSelector> {
     if (_mapController != null) {
       await _mapController!.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(latitude, longitude),
-            zoom: 16.0,
-          ),
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 16.0),
         ),
       );
     }
@@ -160,87 +160,87 @@ class _LocationSelectorState extends State<LocationSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // GPS Location Button
-        SizedBox(
-          width: double.infinity,
-          child: _isGettingLocation
-              ? Style.button(
-                  '(HC) Getting location...',
-                  null,
-                )
-              : Style.button(
-                  '(HC) Use Current GPS Location',
-                  _getCurrentLocation,
-                ),
-        ),
-
-        SizedBox(height: 16),
-
-        // Map for manual selection
-        Text(
-          '(HC) Or tap on the map to select location manually:',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // GPS Location Button
+          SizedBox(
+            width: double.infinity,
+            child: _isGettingLocation
+                ? Style.button('(HC) Getting location...', null)
+                : Style.button(
+                    '(HC) Use Current GPS Location',
+                    _getCurrentLocation,
+                  ),
           ),
-        ),
-        SizedBox(height: 8),
 
-        // Embedded Google Map
-        Container(
-          height: 300,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[300]!),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: GoogleMap(
-              onMapCreated: _onMapCreated,
-              onTap: _onMapTap,
-              initialCameraPosition: CameraPosition(
-                target: widget.initialLatitude != null &&
-                        widget.initialLongitude != null
-                    ? LatLng(widget.initialLatitude!, widget.initialLongitude!)
-                    : _defaultCenter,
-                zoom: 15,
-              ),
-              markers: _markers,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: true,
-              mapToolbarEnabled: false,
-            ),
-          ),
-        ),
+          SizedBox(height: 16),
 
-        if (_locationError != null) ...[
-          SizedBox(height: 12),
+          // Map for manual selection
+          Text(
+            '(HC) Or tap on the map to select location manually:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 8),
+
+          // Embedded Google Map
           Container(
-            padding: EdgeInsets.all(12),
+            height: 300,
             decoration: BoxDecoration(
-              color: Colors.red[50],
-              border: Border.all(color: Colors.red[200]!),
+              border: Border.all(color: Colors.grey[300]!),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.red),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    _locationError!,
-                    style: TextStyle(color: Colors.red[700]),
-                  ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: GoogleMap(
+                onMapCreated: _onMapCreated,
+                onTap: _onMapTap,
+                initialCameraPosition: CameraPosition(
+                  target:
+                      widget.initialLatitude != null &&
+                          widget.initialLongitude != null
+                      ? LatLng(
+                          widget.initialLatitude!,
+                          widget.initialLongitude!,
+                        )
+                      : _defaultCenter,
+                  zoom: 15,
                 ),
-              ],
+                markers: _markers,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: true,
+                mapToolbarEnabled: false,
+              ),
             ),
           ),
+
+          if (_locationError != null) ...[
+            SizedBox(height: 12),
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red[50],
+                border: Border.all(color: Colors.red[200]!),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.error_outline, color: Colors.red),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _locationError!,
+                      style: TextStyle(color: Colors.red[700]),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 
