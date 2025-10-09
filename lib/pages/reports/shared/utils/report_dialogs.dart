@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/reports/shared/utils/InAppReviewManager.dart';
+import 'package:mosquito_alert_app/utils/InAppReviewManager.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 

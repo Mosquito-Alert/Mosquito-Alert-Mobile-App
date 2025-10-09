@@ -186,8 +186,8 @@ class BackgroundTracking {
       List<TimeOfDay> randomTimes =
           _getRandomTimes(numTasks, minTime: TimeOfDay.now());
 
-      // Schedule tasks asynchronously
-      randomTimes.forEach((time) async {
+      // Schedule tasks sequentially to ensure they complete
+      for (final time in randomTimes) {
         DateTime scheduledTime = DateTime(
           now.year,
           now.month,
@@ -196,7 +196,7 @@ class BackgroundTracking {
           time.minute,
         );
 
-        print('Scheduled new tracking task to be run at ${scheduledTime}');
+        print('Scheduled new tracking task to be run at $scheduledTime');
 
         await Workmanager().registerOneOffTask(
           'tracking_task_${scheduledTime.millisecondsSinceEpoch}',
@@ -205,7 +205,7 @@ class BackgroundTracking {
           tag: 'trackingTask',
           constraints: Constraints(networkType: NetworkType.connected),
         );
-      });
+      }
 
       return true;
     } catch (e) {
