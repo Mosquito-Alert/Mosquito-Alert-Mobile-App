@@ -33,11 +33,9 @@ class ApiService {
           final refreshToken = authProvider.refreshToken;
           if (refreshToken != null && refreshToken.isNotEmpty) {
             try {
-              // Attempt to refresh the token
               final newAccessToken =
                   await _refreshAccessToken(refreshToken, baseUrl);
               if (newAccessToken != null) {
-                // Update the stored access token
                 authProvider.setAccessToken(accessToken: newAccessToken);
 
                 // Retry the original request with the new token
@@ -51,6 +49,7 @@ class ApiService {
               }
             } catch (e) {
               // Token refresh failed, continue with original error
+              print(e);
             }
           }
         }
