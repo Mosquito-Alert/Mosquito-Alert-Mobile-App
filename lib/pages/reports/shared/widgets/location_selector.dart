@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class LocationSelector extends StatefulWidget {
   final double? initialLatitude;
@@ -77,7 +78,8 @@ class _LocationSelectorState extends State<LocationSelector> {
             Marker(
               markerId: MarkerId('selected_location'),
               position: LatLng(position.latitude, position.longitude),
-              infoWindow: InfoWindow(title: '(HC) Current Location'),
+              infoWindow: InfoWindow(
+                  title: MyLocalizations.of(context, "current_location_txt")),
             ),
           };
         });
