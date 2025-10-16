@@ -39,7 +39,7 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
       'value': 'outdoors',
       'titleKey': 'question_4_answer_43',
       'description': '(HC) Garden, park, street, or any outdoor space',
-      'icon': Icons.nature,
+      'icon': Icons.park,
     },
   ];
 
@@ -193,23 +193,12 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
           ),
 
           // Navigation buttons
-          Row(
-            children: [
-              Expanded(
-                child: Style.outlinedButton(
-                  '(HC) Back',
-                  widget.onPrevious,
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: Style.button(
-                  MyLocalizations.of(context, 'continue_txt'),
-                  _canProceed ? widget.onNext : null,
-                ),
-              ),
-            ],
+          SizedBox(
+            width: double.infinity,
+            child: Style.button(
+              MyLocalizations.of(context, 'continue_txt'),
+              _canProceed ? widget.onNext : null,
+            ),
           ),
         ],
       ),
