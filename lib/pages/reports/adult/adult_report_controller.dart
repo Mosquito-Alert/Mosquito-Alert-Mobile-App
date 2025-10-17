@@ -240,6 +240,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
                       _reportData.longitude != null,
                   locationDescription: _reportData.locationDescription,
                   locationSource: _reportData.locationSource,
+                  analyticsReportType: "adult",
                 ),
                 EnvironmentQuestionPage(
                   reportData: _reportData,

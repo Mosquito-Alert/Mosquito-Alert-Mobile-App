@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/location_selector.dart';
@@ -19,6 +20,7 @@ class LocationSelectionPage extends StatefulWidget {
   final bool canProceed;
   final String? locationDescription;
   final LocationRequestSource_Enum? locationSource;
+  final String analyticsReportType;
 
   const LocationSelectionPage({
     Key? key,
@@ -32,6 +34,7 @@ class LocationSelectionPage extends StatefulWidget {
     required this.canProceed,
     this.locationDescription,
     this.locationSource,
+    required this.analyticsReportType,
   }) : super(key: key);
 
   @override
@@ -39,6 +42,16 @@ class LocationSelectionPage extends StatefulWidget {
 }
 
 class _LocationSelectionPageState extends State<LocationSelectionPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseAnalytics.instance.logEvent(
+      name: 'report_add_location',
+      parameters: {'type': widget.analyticsReportType!},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
