@@ -274,6 +274,7 @@ class _BreedingSiteReportControllerState
       canProceed: _reportData.latitude != null && _reportData.longitude != null,
       locationDescription: _reportData.locationDescription,
       locationSource: _reportData.locationSource,
+      analyticsReportType: "breeding_site",
     );
   }
 

@@ -41,6 +41,9 @@ class _BiteReportControllerState extends State<BiteReportController> {
     _bitesApi = apiClient.getBitesApi();
 
     _logAnalyticsEvent('bite_report_started');
+
+    FirebaseAnalytics.instance
+        .logEvent(name: 'start_report', parameters: {'type': 'bite'});
   }
 
   @override
@@ -167,6 +170,10 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
       if (response.statusCode == 201) {
         _logAnalyticsEvent('bite_report_submitted');
+
+        await FirebaseAnalytics.instance
+            .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
+
         ReportDialogs.showSuccessDialog(context);
       } else {
         ReportDialogs.showErrorDialog(context);
@@ -298,6 +305,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
                       canProceed: _canProceed,
                       locationDescription: _reportData.locationDescription,
                       locationSource: _reportData.locationSource,
+                      analyticsReportType: "bite",
                     ),
 
                     // Step 3: Notes and submit
