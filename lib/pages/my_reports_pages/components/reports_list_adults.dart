@@ -140,7 +140,10 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
   }
 
   Future<void> _deleteReport(Observation report) async {
-    await _logReportDeletion(report);
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'delete_report',
+      parameters: {'report_uuid': report.uuid},
+    );
     Navigator.pop(context);
 
     try {
@@ -153,13 +156,6 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
     } catch (e) {
       await _showDeleteError();
     }
-  }
-
-  Future<void> _logReportDeletion(Observation report) async {
-    await FirebaseAnalytics.instance.logEvent(
-      name: 'delete_report',
-      parameters: {'report_uuid': report.uuid},
-    );
   }
 
   Future<void> _showDeleteError() async {
