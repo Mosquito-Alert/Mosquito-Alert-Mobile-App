@@ -49,12 +49,6 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       }
     } catch (e) {
       print('Error loading adult reports: $e');
-      if (mounted) {
-        setState(() {
-          adultReports = [];
-          isLoading = false;
-        });
-      }
     }
   }
 
