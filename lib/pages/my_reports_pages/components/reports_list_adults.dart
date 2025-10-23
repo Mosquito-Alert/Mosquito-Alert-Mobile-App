@@ -62,29 +62,6 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
     return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAt.toLocal());
   }
 
-  String _getTitle(BuildContext context, Observation report) {
-    // Check if identification exists and is not null
-    if (report.identification == null) {
-      return MyLocalizations.of(context, 'non_identified_specie');
-    }
-
-    // Navigate through nested nullable fields
-    final identification = report.identification;
-    final result = identification?.result;
-    final taxon = result?.taxon;
-    final commonName = taxon?.commonName;
-
-    if (commonName == null || commonName.isEmpty) {
-      return MyLocalizations.of(context, 'non_identified_specie');
-    }
-
-    return commonName;
-  }
-
-  bool _shouldItalicizeTitle(Observation report) {
-    return report.identification?.result?.taxon?.italicize ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -105,8 +82,9 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       itemCount: adultReports.length,
       itemBuilder: (context, index) {
         final report = adultReports[index];
-        final title = _getTitle(context, report);
-        final shouldItalicize = _shouldItalicizeTitle(report);
+        final formatters = _ReportFormatters(context);
+        final title = formatters.formatTitle(report);
+        final shouldItalicize = formatters.shouldItalicizeTitle(report);
 
         return Card(
           color: Colors.white,
@@ -199,7 +177,6 @@ class _ReportFormatters {
   _ReportFormatters(this.context);
 
   String formatTitle(Observation report) {
-    // Check if identification exists and is not null
     if (report.identification == null) {
       return MyLocalizations.of(context, 'non_identified_specie');
     }
