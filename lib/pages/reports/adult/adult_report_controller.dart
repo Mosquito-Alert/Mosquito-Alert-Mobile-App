@@ -46,7 +46,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _observationsApi = apiClient.getObservationsApi();
 
-    _logAnalyticsEvent('adult_report_started');
+    _logAnalyticsEvent('start_report');
   }
 
   @override
@@ -96,6 +96,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
     });
+    _logAnalyticsEvent('report_add_photo');
   }
 
   /// Handle notes changes callback
@@ -103,6 +104,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       _reportData.notes = notes;
     });
+    _logAnalyticsEvent('report_add_note');
   }
 
   /// Submit the adult report via API
@@ -112,10 +114,9 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       _isSubmitting = true;
     });
+    _logAnalyticsEvent('submit_report');
 
     try {
-      await _logAnalyticsEvent('adult_report_submit_attempt');
-
       // Step 1: Create location point
       final locationPoint = LocationPoint((b) => b
         ..latitude = _reportData.latitude!
@@ -157,18 +158,12 @@ class _AdultReportControllerState extends State<AdultReportController> {
       );
 
       if (response.statusCode == 201) {
-        await _logAnalyticsEvent('adult_report_submit_success');
         ReportDialogs.showSuccessDialog(context);
       } else {
-        await _logAnalyticsEvent('adult_report_submit_error', parameters: {
-          'status_code': response.statusCode?.toString() ?? 'unknown'
-        });
         ReportDialogs.showErrorDialog(
             context, 'Server error: ${response.statusCode}');
       }
     } catch (e) {
-      await _logAnalyticsEvent('adult_report_submit_error',
-          parameters: {'error': e.toString()});
       ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
     } finally {
       setState(() {
@@ -177,11 +172,10 @@ class _AdultReportControllerState extends State<AdultReportController> {
     }
   }
 
-  Future<void> _logAnalyticsEvent(String eventName,
-      {Map<String, Object>? parameters}) async {
+  Future<void> _logAnalyticsEvent(String eventName) async {
     await FirebaseAnalytics.instance.logEvent(
       name: eventName,
-      parameters: parameters ?? {},
+      parameters: {'type': 'adult'},
     );
   }
 
@@ -240,7 +234,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
                       _reportData.longitude != null,
                   locationDescription: _reportData.locationDescription,
                   locationSource: _reportData.locationSource,
-                  analyticsReportType: "adult",
                 ),
                 EnvironmentQuestionPage(
                   reportData: _reportData,

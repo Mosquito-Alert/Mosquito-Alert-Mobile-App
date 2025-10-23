@@ -40,10 +40,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _bitesApi = apiClient.getBitesApi();
 
-    _logAnalyticsEvent('bite_report_started');
-
-    FirebaseAnalytics.instance
-        .logEvent(name: 'start_report', parameters: {'type': 'bite'});
+    _logAnalyticsEvent('start_report');
   }
 
   @override
@@ -62,7 +59,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-      _logAnalyticsEvent('bite_report_step_${_currentStep + 1}');
     }
   }
 
@@ -101,6 +97,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
+    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle notes update
@@ -109,6 +106,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.notes =
           (notes?.trim().isEmpty ?? true) ? null : notes!.trim();
     });
+    _logAnalyticsEvent('report_add_note');
   }
 
   /// Check if current step is complete
@@ -134,7 +132,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     setState(() {
       _isSubmitting = true;
     });
-
+    _logAnalyticsEvent('submit_report');
     try {
       // Create location point
       final locationPoint = LocationPoint((b) => b
@@ -169,11 +167,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
       final response = await _bitesApi.create(biteRequest: biteRequest);
 
       if (response.statusCode == 201) {
-        _logAnalyticsEvent('bite_report_submitted');
-
-        await FirebaseAnalytics.instance
-            .logEvent(name: 'submit_report', parameters: {'type': 'bite'});
-
         ReportDialogs.showSuccessDialog(context);
       } else {
         ReportDialogs.showErrorDialog(context);
@@ -190,6 +183,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
   /// Log analytics event
   void _logAnalyticsEvent(String eventName) {
+    // TODO: Missing report_add_bites
     FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: {'type': 'bite'},
@@ -208,6 +202,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
   /// Show exit confirmation if data exists
   void _showExitConfirmation() {
     if (_reportData.totalBites > 0) {
+      // TODO: Refactor early return
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -305,7 +300,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
                       canProceed: _canProceed,
                       locationDescription: _reportData.locationDescription,
                       locationSource: _reportData.locationSource,
-                      analyticsReportType: "bite",
                     ),
 
                     // Step 3: Notes and submit

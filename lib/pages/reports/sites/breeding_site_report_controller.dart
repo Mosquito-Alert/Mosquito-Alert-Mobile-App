@@ -60,7 +60,7 @@ class _BreedingSiteReportControllerState
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _breedingSitesApi = apiClient.getBreedingSitesApi();
 
-    _logAnalyticsEvent('breeding_site_report_started');
+    _logAnalyticsEvent('start_report');
   }
 
   @override
@@ -83,6 +83,7 @@ class _BreedingSiteReportControllerState
       // Clear any larvae response if water is not present
       _reportData.hasLarvae = null;
     }
+    _logAnalyticsEvent('report_add_has_water');
 
     setState(() {
       _currentStep++;
@@ -113,6 +114,7 @@ class _BreedingSiteReportControllerState
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
     });
+    _logAnalyticsEvent('report_add_photos');
   }
 
   /// Handle notes changes callback
@@ -120,6 +122,7 @@ class _BreedingSiteReportControllerState
     setState(() {
       _reportData.notes = notes;
     });
+    _logAnalyticsEvent('report_add_note');
   }
 
   /// Submit the breeding site report via API
@@ -129,10 +132,9 @@ class _BreedingSiteReportControllerState
     setState(() {
       _isSubmitting = true;
     });
+    _logAnalyticsEvent('submit_report');
 
     try {
-      await _logAnalyticsEvent('breeding_site_report_submit_attempt');
-
       // Step 1: Create location request
       final locationPoint = LocationPoint((b) => b
         ..latitude = _reportData.latitude!
@@ -170,19 +172,12 @@ class _BreedingSiteReportControllerState
       );
 
       if (response.statusCode == 201) {
-        await _logAnalyticsEvent('breeding_site_report_submit_success');
         ReportDialogs.showSuccessDialog(context);
       } else {
-        await _logAnalyticsEvent('breeding_site_report_submit_error',
-            parameters: {
-              'status_code': response.statusCode?.toString() ?? 'unknown'
-            });
         ReportDialogs.showErrorDialog(
             context, 'Server error: ${response.statusCode}');
       }
     } catch (e) {
-      await _logAnalyticsEvent('breeding_site_report_submit_error',
-          parameters: {'error': e.toString()});
       ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
     } finally {
       setState(() {
@@ -191,11 +186,12 @@ class _BreedingSiteReportControllerState
     }
   }
 
-  Future<void> _logAnalyticsEvent(String eventName,
-      {Map<String, Object>? parameters}) async {
+  Future<void> _logAnalyticsEvent(
+    String eventName,
+  ) async {
     await FirebaseAnalytics.instance.logEvent(
       name: eventName,
-      parameters: parameters ?? {},
+      parameters: {'type': 'breeding_site'},
     );
   }
 
@@ -274,7 +270,6 @@ class _BreedingSiteReportControllerState
       canProceed: _reportData.latitude != null && _reportData.longitude != null,
       locationDescription: _reportData.locationDescription,
       locationSource: _reportData.locationSource,
-      analyticsReportType: "breeding_site",
     );
   }
 
