@@ -202,7 +202,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
   /// Show exit confirmation if data exists
   void _showExitConfirmation() {
     if (_reportData.totalBites > 0) {
-      // TODO: Refactor early return
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
