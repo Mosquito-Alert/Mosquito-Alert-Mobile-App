@@ -175,13 +175,13 @@ class _ReportFormatters {
     final identification = report.identification;
     final result = identification?.result;
     final taxon = result?.taxon;
-    final commonName = taxon?.commonName;
+    final nameValue = taxon?.nameValue;
 
-    if (commonName == null || commonName.isEmpty) {
+    if (nameValue == null || nameValue.isEmpty) {
       return MyLocalizations.of(context, 'non_identified_specie');
     }
 
-    return commonName;
+    return nameValue;
   }
 
   bool shouldItalicizeTitle(Observation report) {
