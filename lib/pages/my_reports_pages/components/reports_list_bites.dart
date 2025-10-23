@@ -63,7 +63,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   String _getTitle(BuildContext context, Bite report) {
-    final totalBites = _getTotalBiteCount(report.counts);
+    final totalBites = report.counts.total;
 
     if (totalBites == 0) {
       return MyLocalizations.of(context, 'no_bites');
@@ -72,17 +72,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     } else {
       return '$totalBites ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
     }
-  }
-
-  int _getTotalBiteCount(BiteCounts counts) {
-    final head = (counts.head ?? 0).round();
-    final chest = (counts.chest ?? 0).round();
-    final leftArm = (counts.leftArm ?? 0).round();
-    final rightArm = (counts.rightArm ?? 0).round();
-    final leftLeg = (counts.leftLeg ?? 0).round();
-    final rightLeg = (counts.rightLeg ?? 0).round();
-
-    return head + chest + leftArm + rightArm + leftLeg + rightLeg;
   }
 
   String _getBiteLocations(BiteCounts counts) {
@@ -235,7 +224,7 @@ class _ReportFormatters {
   _ReportFormatters(this.context);
 
   String formatTitle(Bite report) {
-    final totalBites = _getTotalBiteCount(report.counts);
+    final totalBites = report.counts.total;
 
     if (totalBites == 0) {
       return MyLocalizations.of(context, 'no_bites');
@@ -244,17 +233,6 @@ class _ReportFormatters {
     } else {
       return '$totalBites ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
     }
-  }
-
-  int _getTotalBiteCount(BiteCounts counts) {
-    final head = (counts.head ?? 0).round();
-    final chest = (counts.chest ?? 0).round();
-    final leftArm = (counts.leftArm ?? 0).round();
-    final rightArm = (counts.rightArm ?? 0).round();
-    final leftLeg = (counts.leftLeg ?? 0).round();
-    final rightLeg = (counts.rightLeg ?? 0).round();
-
-    return head + chest + leftArm + rightArm + leftLeg + rightLeg;
   }
 
   String formatDetailedDateTime(Bite report) {
