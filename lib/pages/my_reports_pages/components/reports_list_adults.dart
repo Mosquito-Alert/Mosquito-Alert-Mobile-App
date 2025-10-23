@@ -524,36 +524,7 @@ class _ReportIdAndIdentificationWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        // Identification details
-        Text(
-          '(HC) Species:',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 5),
-        _buildIdentificationText(context),
       ],
     );
-  }
-
-  Widget _buildIdentificationText(BuildContext context) {
-    final title = formatters.formatTitle(report);
-    final shouldItalicize = formatters.shouldItalicizeTitle(report);
-
-    return shouldItalicize
-        ? Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-            ),
-          )
-        : Text(
-            title,
-            style: const TextStyle(fontSize: 14),
-          );
   }
 }
