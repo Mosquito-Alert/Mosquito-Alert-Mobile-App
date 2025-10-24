@@ -59,7 +59,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   String _formatCreationTime(Bite report) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAt.toLocal());
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
   }
 
   Future<String> _getLocationDescription(Bite report) async {
@@ -242,7 +242,7 @@ class _ReportFormatters {
   }
 
   String formatDetailedDateTime(Bite report) {
-    final localTime = report.createdAt.toLocal();
+    final localTime = report.createdAtLocal;
     final dateString =
         DateFormat('EEEE, dd MMMM yyyy', Utils.language.languageCode)
             .format(localTime);
