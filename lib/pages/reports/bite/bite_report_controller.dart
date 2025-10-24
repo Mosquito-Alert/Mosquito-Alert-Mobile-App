@@ -179,7 +179,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
   }
 
   void _logAnalyticsEvent(String eventName) {
-    // TODO: Missing report_add_bites
     FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: {'type': 'bite'},
