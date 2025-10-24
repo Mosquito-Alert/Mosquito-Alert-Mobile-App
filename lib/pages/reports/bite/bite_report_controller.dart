@@ -39,7 +39,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _bitesApi = apiClient.getBitesApi();
 
-    _logAnalyticsEvent('bite_report_started');
+    _logAnalyticsEvent('start_report');
   }
 
   @override
@@ -58,7 +58,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-      _logAnalyticsEvent('bite_report_step_${_currentStep + 1}');
     }
   }
 
@@ -80,6 +79,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     setState(() {
       _reportData.eventEnvironment = environment;
     });
+    _logAnalyticsEvent('report_add_environment');
   }
 
   /// Handle timing selection
@@ -97,6 +97,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
+    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle notes update
@@ -105,6 +106,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.notes =
           (notes?.trim().isEmpty ?? true) ? null : notes!.trim();
     });
+    _logAnalyticsEvent('report_add_note');
   }
 
   /// Check if current step is complete
@@ -130,7 +132,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     setState(() {
       _isSubmitting = true;
     });
-
+    _logAnalyticsEvent('submit_report');
     try {
       // Create location request
       final location = LocationRequest((b) => b
@@ -161,7 +163,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
       final response = await _bitesApi.create(biteRequest: biteRequest);
 
       if (response.statusCode == 201) {
-        _logAnalyticsEvent('bite_report_submitted');
         ReportDialogs.showSuccessDialog(context);
       } else {
         ReportDialogs.showErrorDialog(context);
@@ -176,7 +177,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
-  /// Log analytics event
   void _logAnalyticsEvent(String eventName) {
     FirebaseAnalytics.instance.logEvent(
       name: eventName,

@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -41,6 +42,10 @@ class _SiteTypeSelectionPageState extends State<SiteTypeSelectionPage> {
     setState(() {
       widget.reportData.siteType = siteType;
     });
+    FirebaseAnalytics.instance.logEvent(
+      name: 'report_add_site_type',
+      parameters: {'type': 'breeding_site'},
+    );
     // Auto-proceed to next step
     widget.onNext();
   }

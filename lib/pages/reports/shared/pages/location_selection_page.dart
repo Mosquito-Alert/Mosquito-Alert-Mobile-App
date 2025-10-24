@@ -36,6 +36,11 @@ class LocationSelectionPage extends StatefulWidget {
 
 class _LocationSelectionPageState extends State<LocationSelectionPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(

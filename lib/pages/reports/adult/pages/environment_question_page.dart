@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -47,6 +48,10 @@ class _EnvironmentQuestionPageState extends State<EnvironmentQuestionPage> {
     setState(() {
       widget.reportData.environmentAnswer = value;
     });
+    FirebaseAnalytics.instance.logEvent(
+      name: 'report_add_environment',
+      parameters: {'type': 'adult'},
+    );
   }
 
   bool get _canProceed => widget.reportData.environmentAnswer != null;
