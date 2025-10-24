@@ -59,7 +59,7 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
   }
 
   String _formatCreationTime(Observation report) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAt.toLocal());
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
   }
 
   @override
