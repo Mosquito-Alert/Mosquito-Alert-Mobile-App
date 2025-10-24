@@ -101,18 +101,14 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
               fit: BoxFit.contain,
               filterQuality: FilterQuality.high,
             ),
-            title: shouldItalicize
-                ? Text(
-                    title,
-                    style: const TextStyle(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                : Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+            title: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontStyle:
+                    shouldItalicize ? FontStyle.italic : FontStyle.normal,
+              ),
+            ),
             subtitle: Text(_formatCreationTime(report)),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () => _reportBottomSheet(report, context),
@@ -353,22 +349,14 @@ class _ReportHeaderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: shouldItalicize
-              ? Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                )
-              : Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
+            ),
+          ),
         ),
         PopupMenuButton<int>(
           onSelected: (value) {
