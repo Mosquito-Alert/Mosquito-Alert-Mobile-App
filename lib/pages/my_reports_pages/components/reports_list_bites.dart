@@ -63,22 +63,27 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   Future<String> _getLocationDescription(Bite report) async {
+    final point = report.location.point;
+
+    // First try: display name from backend
+    final displayName = report.location.displayName;
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+
+    // Second try: geocoding service
     try {
-      final point = report.location.point;
       final cityName =
           await Utils.getCityNameFromCoords(point.latitude, point.longitude);
-
       if (cityName != null && cityName.isNotEmpty) {
         return cityName;
-      } else {
-        // Fallback to coordinates if city name is not available
-        return '${point.latitude.toStringAsFixed(3)}, ${point.longitude.toStringAsFixed(3)}';
       }
     } catch (e) {
-      // Fallback to coordinates if geocoding fails
-      final point = report.location.point;
-      return '${point.latitude.toStringAsFixed(3)}, ${point.longitude.toStringAsFixed(3)}';
+      // Continue to fallback
     }
+
+    // Final fallback: coordinates
+    return '${point.latitude.toStringAsFixed(3)}, ${point.longitude.toStringAsFixed(3)}';
   }
 
   @override
