@@ -56,8 +56,7 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
             child: SafeArea(
               child: Container(
                 padding: EdgeInsets.all(16),
-                child: // Navigation button
-                    SizedBox(
+                child: SizedBox(
                   width: double.infinity,
                   child: Style.button(
                     MyLocalizations.of(context, 'continue_txt'),
