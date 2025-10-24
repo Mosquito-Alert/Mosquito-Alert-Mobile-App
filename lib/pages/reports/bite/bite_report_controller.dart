@@ -80,6 +80,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     setState(() {
       _reportData.eventEnvironment = environment;
     });
+    _logAnalyticsEvent('report_add_environment');
   }
 
   /// Handle timing selection
@@ -177,7 +178,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
-  /// Log analytics event
   void _logAnalyticsEvent(String eventName) {
     // TODO: Missing report_add_bites
     FirebaseAnalytics.instance.logEvent(

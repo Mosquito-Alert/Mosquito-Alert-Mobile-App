@@ -90,6 +90,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
+    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle photo selection callback

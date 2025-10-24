@@ -108,6 +108,7 @@ class _BreedingSiteReportControllerState
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
+    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle photo selection callback
@@ -115,7 +116,7 @@ class _BreedingSiteReportControllerState
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
     });
-    _logAnalyticsEvent('report_add_photos');
+    _logAnalyticsEvent('report_add_photo');
   }
 
   /// Handle notes changes callback
