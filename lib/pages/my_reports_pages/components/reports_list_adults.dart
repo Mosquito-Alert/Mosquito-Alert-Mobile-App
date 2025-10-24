@@ -367,7 +367,12 @@ class _ReportHeaderWidget extends StatelessWidget {
         PopupMenuButton<int>(
           onSelected: (value) {
             if (value == 1) {
-              onDelete();
+              Utils.showAlertYesNo(
+                MyLocalizations.of(context, 'delete_report_title'),
+                MyLocalizations.of(context, 'delete_report_txt'),
+                onDelete,
+                context,
+              );
             }
           },
           itemBuilder: (context) => [
