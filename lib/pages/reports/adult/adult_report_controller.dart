@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -117,25 +118,22 @@ class _AdultReportControllerState extends State<AdultReportController> {
     _logAnalyticsEvent('submit_report');
 
     try {
-      // Step 1: Create location point
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
+      await _logAnalyticsEvent('adult_report_submit_attempt');
 
-      // Step 2: Create location request
+      // Step 1: Create location request
       final locationRequest = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+        ..point.latitude = _reportData.latitude!
+        ..point.longitude = _reportData.longitude!);
 
       // Step 3: Process photos
-      final List<SimplePhotoRequest> photoRequests = [];
+      final List<MultipartFile> photos = [];
       for (final photo in _reportData.photos) {
         if (await photo.exists()) {
-          final bytes = await photo.readAsBytes();
-          photoRequests.add(SimplePhotoRequest((b) => b..file = bytes));
+          photos.add(await MultipartFile.fromFile(photo.path));
         }
       }
-      final photos = BuiltList<SimplePhotoRequest>(photoRequests);
+      final photosRequest = BuiltList<MultipartFile>(photos);
 
       // Step 4: Prepare notes
       final notes =
@@ -150,7 +148,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
         createdAt: _reportData.createdAt.toUtc(),
         sentAt: DateTime.now().toUtc(),
         location: locationRequest,
-        photos: photos,
+        photos: photosRequest,
         note: notes,
         eventEnvironment: _reportData.environmentAnswer ?? '',
         eventMoment: _reportData.eventMoment ?? 'now',

@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -136,23 +137,19 @@ class _BreedingSiteReportControllerState
 
     try {
       // Step 1: Create location request
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
-
       final locationRequest = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+        ..point.latitude = _reportData.latitude!
+        ..point.longitude = _reportData.longitude!);
 
       // Step 2: Process photos
-      final List<SimplePhotoRequest> photoRequests = [];
+      final List<MultipartFile> photos = [];
       for (final photo in _reportData.photos) {
         if (await photo.exists()) {
-          final bytes = await photo.readAsBytes();
-          photoRequests.add(SimplePhotoRequest((b) => b..file = bytes));
+          photos.add(await MultipartFile.fromFile(photo.path));
         }
       }
-      final photos = BuiltList<SimplePhotoRequest>(photoRequests);
+      final photosRequest = BuiltList<MultipartFile>(photos);
 
       // Step 3: Tags
       final userTags = await UserManager.getHashtags();
@@ -163,7 +160,7 @@ class _BreedingSiteReportControllerState
         createdAt: _reportData.createdAt.toUtc(),
         sentAt: DateTime.now().toUtc(),
         location: locationRequest,
-        photos: photos,
+        photos: photosRequest,
         note: _reportData.notes,
         tags: tags,
         siteType: _reportData.siteType,

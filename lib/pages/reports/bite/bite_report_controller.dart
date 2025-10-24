@@ -134,15 +134,11 @@ class _BiteReportControllerState extends State<BiteReportController> {
     });
     _logAnalyticsEvent('submit_report');
     try {
-      // Create location point
-      final locationPoint = LocationPoint((b) => b
-        ..latitude = _reportData.latitude!
-        ..longitude = _reportData.longitude!);
-
       // Create location request
       final location = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
-        ..point.replace(locationPoint));
+        ..point.latitude = _reportData.latitude!
+        ..point.longitude = _reportData.longitude!);
 
       // Create bite counts request
       final counts = BiteCountsRequest((b) => b
@@ -201,37 +197,36 @@ class _BiteReportControllerState extends State<BiteReportController> {
 
   /// Show exit confirmation if data exists
   void _showExitConfirmation() {
-    if (_reportData.totalBites > 0) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(MyLocalizations.of(context, 'app_name')),
-          content:
-              Text(MyLocalizations.of(context, 'close_report_no_save_txt')),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[600],
-              ),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Style.colorPrimary,
-              ),
-              child: Text('Exit'),
-            ),
-          ],
-        ),
-      );
-    } else {
+    if (_reportData.totalBites <= 0) {
       Navigator.of(context).pop();
     }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(MyLocalizations.of(context, 'app_name')),
+        content: Text(MyLocalizations.of(context, 'close_report_no_save_txt')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey[600],
+            ),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Style.colorPrimary,
+            ),
+            child: Text('Exit'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
