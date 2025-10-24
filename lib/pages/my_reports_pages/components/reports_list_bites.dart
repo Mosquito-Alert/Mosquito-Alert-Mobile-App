@@ -63,8 +63,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   Future<String> _getLocationDescription(Bite report) async {
-    final point = report.location.point;
-
     // First try: display name from backend
     final displayName = report.location.displayName;
     if (displayName != null && displayName.isNotEmpty) {
@@ -72,6 +70,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     }
 
     // Second try: geocoding service
+    final point = report.location.point;
     try {
       final cityName =
           await Utils.getCityNameFromCoords(point.latitude, point.longitude);
