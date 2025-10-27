@@ -9,7 +9,9 @@ Mosquito Alert is a mobile phone application that is part of a larger citizen sc
 
 ## How to compile the app
 
-Ask for the `.env` file to any of our mobile developers, paste in the root folder and run `dart run build_runner build -d`
+Ask for the `.env` file to any of our mobile developers, paste in the root folder and run:
+- `dart run build_runner clean`
+- `dart run build_runner build --delete-conflicting-outputs`
 
 ### Android
 #### Requirements
