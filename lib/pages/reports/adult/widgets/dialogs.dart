@@ -37,12 +37,7 @@ class Dialogs {
                 Navigator.pop(context);
                 onDismiss(context);
               },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(noShowInfoText),
-                ],
-              ),
+              child: Text(noShowInfoText),
             ),
             TextButton(
               onPressed: () {
