@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/utils/app_dialogs.dart';
 import 'package:mosquito_alert_app/utils/customModalBottomSheet.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
@@ -216,10 +217,10 @@ class _ReportsListBitesState extends State<ReportsListBites> {
   }
 
   Future<void> _showDeleteError() async {
-    await Utils.showAlert(
-      MyLocalizations.of(context, 'app_name'),
-      MyLocalizations.of(context, 'save_report_ko_txt'),
+    await AppDialogs.showAlert(
       context,
+      title: MyLocalizations.of(context, 'app_name'),
+      message: MyLocalizations.of(context, 'save_report_ko_txt'),
     );
   }
 }
@@ -392,11 +393,11 @@ class _ReportHeaderWidget extends StatelessWidget {
           icon: const Icon(Icons.more_vert),
           onSelected: (value) {
             if (value == 1) {
-              Utils.showAlertYesNo(
-                MyLocalizations.of(context, 'delete_report_title'),
-                MyLocalizations.of(context, 'delete_report_txt'),
-                onDelete,
+              AppDialogs.showConfirmation(
                 context,
+                title: MyLocalizations.of(context, 'delete_report_title'),
+                message: MyLocalizations.of(context, 'delete_report_txt'),
+                onYesPressed: onDelete,
               );
             }
           },

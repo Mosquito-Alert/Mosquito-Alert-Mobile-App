@@ -15,6 +15,9 @@ class Utils {
   static Locale language = Locale('en', 'US');
 
   //Alerts
+  /// @deprecated Use AppDialogs.showAlert instead for better maintainability and consistency.
+  /// This method will be removed in a future version.
+  @deprecated
   static Future showAlert(String? title, String? text, BuildContext? context,
       {onPressed, barrierDismissible}) {
     if (Platform.isAndroid) {
@@ -86,6 +89,9 @@ class Utils {
     }
   }
 
+  /// @deprecated Use AppDialogs.showConfirmation instead for better maintainability and consistency.
+  /// This method will be removed in a future version.
+  @deprecated
   static Future showAlertYesNo(
     String? title,
     String? text,
