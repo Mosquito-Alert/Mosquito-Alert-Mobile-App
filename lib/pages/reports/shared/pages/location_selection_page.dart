@@ -38,7 +38,7 @@ class LocationSelectionPage extends StatefulWidget {
     required this.canProceed,
     this.locationDescription,
   }) : assert(
-          (onLocationRequestSelected != null) != (onLocationSelected != null),
+          (onLocationRequestSelected == null) != (onLocationSelected == null),
           'Must provide either onLocationRequestSelected or onLocationSelected, but not both',
         ),
         super(key: key);
