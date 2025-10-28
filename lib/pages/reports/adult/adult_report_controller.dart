@@ -180,21 +180,25 @@ class _AdultReportControllerState extends State<AdultReportController> {
               return;
             }
 
-            final campaignsResponse = await _campaignsApi.list(
-              countryId: country.id,
-              isActive: true,
-              pageSize: 1,
-              orderBy: ['-start_date'].build(),
-            );
-            final Campaign? campaign =
-                campaignsResponse.data?.results?.firstOrNull;
-            if (campaign != null) {
-              Dialogs.showAlertCampaign(
-                context,
-                campaign,
-                (ctx) => Navigator.of(ctx).popUntil((route) => route.isFirst),
+            try {
+              final campaignsResponse = await _campaignsApi.list(
+                countryId: country.id,
+                isActive: true,
+                pageSize: 1,
+                orderBy: ['-start_date'].build(),
               );
-            } else {
+              final Campaign? campaign =
+                  campaignsResponse.data?.results?.firstOrNull;
+              if (campaign != null) {
+                Dialogs.showAlertCampaign(
+                  context,
+                  campaign,
+                  (ctx) => Navigator.of(ctx).popUntil((route) => route.isFirst),
+                );
+              } else {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
+            } catch (e) {
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
           },
