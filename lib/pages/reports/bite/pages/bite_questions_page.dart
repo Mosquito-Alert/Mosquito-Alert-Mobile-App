@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/models/bite_report_data.dart';
@@ -31,15 +30,6 @@ class BiteQuestionsPage extends StatefulWidget {
 }
 
 class _BiteQuestionsPageState extends State<BiteQuestionsPage> {
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAnalytics.instance.logEvent(
-      name: 'report_add_bites',
-      parameters: {'type': 'bite'},
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<BiteReportData>(

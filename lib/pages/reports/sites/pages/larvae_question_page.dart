@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -43,10 +42,6 @@ class _LarvaeQuestionPageState extends State<LarvaeQuestionPage> {
     setState(() {
       widget.reportData.hasLarvae = hasLarvae;
     });
-    FirebaseAnalytics.instance.logEvent(
-      name: 'report_add_has_larvae',
-      parameters: {'type': 'breeding_site'},
-    );
   }
 
   @override
