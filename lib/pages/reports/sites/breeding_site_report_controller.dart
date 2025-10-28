@@ -252,7 +252,7 @@ class _BreedingSiteReportControllerState
   Widget _getLocationPage() {
     return LocationSelectionPage(
       initialLocationRequest: _reportData.locationRequest,
-      onLocationSelected: _onLocationSelected,
+      onLocationRequestSelected: _onLocationSelected,
       onNext: _nextStep,
       onPrevious: _previousStep,
       canProceed: _reportData.locationRequest != null,

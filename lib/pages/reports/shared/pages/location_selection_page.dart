@@ -7,8 +7,19 @@ import 'package:mosquito_alert_app/utils/style.dart';
 /// Shared location selection page that can be used by any report workflow
 /// Configurable location handling through callbacks
 class LocationSelectionPage extends StatefulWidget {
+  // New interface - preferred
   final LocationRequest? initialLocationRequest;
-  final Function(LocationRequest locationRequest) onLocationSelected;
+  final Function(LocationRequest locationRequest)? onLocationRequestSelected;
+  
+  // Legacy interface - for backward compatibility
+  final double? initialLatitude;
+  final double? initialLongitude;
+  final Function(
+          double latitude, double longitude, LocationRequestSource_Enum source)?
+      onLocationSelected;
+  final LocationRequestSource_Enum? locationSource;
+  
+  // Common interface
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final bool canProceed;
@@ -17,12 +28,20 @@ class LocationSelectionPage extends StatefulWidget {
   const LocationSelectionPage({
     Key? key,
     this.initialLocationRequest,
-    required this.onLocationSelected,
+    this.onLocationRequestSelected,
+    this.initialLatitude,
+    this.initialLongitude,
+    this.onLocationSelected,
+    this.locationSource,
     required this.onNext,
     required this.onPrevious,
     required this.canProceed,
     this.locationDescription,
-  }) : super(key: key);
+  }) : assert(
+          (onLocationRequestSelected != null) != (onLocationSelected != null),
+          'Must provide either onLocationRequestSelected or onLocationSelected, but not both',
+        ),
+        super(key: key);
 
   @override
   _LocationSelectionPageState createState() => _LocationSelectionPageState();
@@ -31,21 +50,26 @@ class LocationSelectionPage extends StatefulWidget {
 class _LocationSelectionPageState extends State<LocationSelectionPage> {
   void _handleLocationSelected(
       double latitude, double longitude, LocationRequestSource_Enum source) {
-    // Create LocationRequest object here instead of in the controller
-    final locationRequest = LocationRequest((b) => b
-      ..source_ = source
-      ..point.latitude = latitude
-      ..point.longitude = longitude);
-
-    // Pass the LocationRequest object to the callback
-    widget.onLocationSelected(locationRequest);
+    // If using new interface, create LocationRequest object
+    if (widget.onLocationRequestSelected != null) {
+      final locationRequest = LocationRequest((b) => b
+        ..source_ = source
+        ..point.latitude = latitude
+        ..point.longitude = longitude);
+      widget.onLocationRequestSelected!(locationRequest);
+    } else {
+      // Legacy interface - pass individual parameters
+      widget.onLocationSelected!(latitude, longitude, source);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Extract initial values from LocationRequest if available
-    final initialLatitude = widget.initialLocationRequest?.point.latitude;
-    final initialLongitude = widget.initialLocationRequest?.point.longitude;
+    // Extract initial values - support both new and legacy interfaces
+    final initialLatitude = widget.initialLocationRequest?.point.latitude ??
+        widget.initialLatitude;
+    final initialLongitude = widget.initialLocationRequest?.point.longitude ??
+        widget.initialLongitude;
 
     return Scaffold(
       body: Stack(
