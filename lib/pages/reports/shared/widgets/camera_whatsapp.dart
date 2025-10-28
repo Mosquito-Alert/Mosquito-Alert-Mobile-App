@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +25,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
   ///
   ///
   final bool multiple;
-  final selectedImages = <File>[];
+  final selectedImages = <Uint8List>[];
   var images = <AssetEntity>[];
 
   Future<void> loadRecentGalleryImages(BuildContext context) async {
@@ -65,6 +66,20 @@ class _WhatsAppCameraController extends ChangeNotifier {
     return true;
   }
 
+  Future<void> addToSelectedImages(File file) async {
+    // Compressing image to jpeg 4k max = 3840x2180
+    Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        minWidth: 3840,
+        minHeight: 2180,
+        quality: 98,
+        autoCorrectionAngle: true,
+        format: CompressFormat.jpeg,
+        keepExif: true);
+
+    selectedImages.add(compressedImage!);
+  }
+
   Future<void> openGallery() async {
     final picker = ImagePicker();
     List<XFile> pickedImages = [];
@@ -75,12 +90,12 @@ class _WhatsAppCameraController extends ChangeNotifier {
       if (singleImage != null) pickedImages.add(singleImage);
     }
     for (var xfile in pickedImages) {
-      selectedImages.add(File(xfile.path));
+      await addToSelectedImages(File(xfile.path));
     }
   }
 
-  void captureImage(File file) {
-    selectedImages.add(file);
+  Future<void> captureImage(File file) async {
+    await addToSelectedImages(file);
   }
 }
 
@@ -352,7 +367,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
       final image = await _cameraController!.takePicture();
 
       final file = File(image.path);
-      controller.captureImage(file);
+      await controller.captureImage(file);
       Navigator.pop(context, controller.selectedImages);
     } catch (e) {
       print('Error capturing image: $e');
@@ -519,7 +534,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
         onTap: () async {
           final file = await asset.file;
           if (file != null) {
-            controller.captureImage(file);
+            await controller.captureImage(file);
             Navigator.pop(context, controller.selectedImages);
           }
         },

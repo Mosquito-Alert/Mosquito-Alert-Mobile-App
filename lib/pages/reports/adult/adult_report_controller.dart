@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dar
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models/adult_report_data.dart';
 import 'pages/environment_question_page.dart';
@@ -143,9 +144,10 @@ class _AdultReportControllerState extends State<AdultReportController> {
       // Step 3: Process photos
       final List<MultipartFile> photos = [];
       for (final photo in _reportData.photos) {
-        if (await photo.exists()) {
-          photos.add(await MultipartFile.fromFile(photo.path));
-        }
+        photos.add(await MultipartFile.fromBytes(photo,
+            filename:
+                '${Uuid().v4()}.jpg', // NOTE: Filename is required by the API
+            contentType: DioMediaType('image', 'jpeg')));
       }
       final photosRequest = BuiltList<MultipartFile>(photos);
 
