@@ -130,7 +130,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     });
 
     try {
-      _logAnalyticsEvent('submit_report');
+      await _logAnalyticsEvent('submit_report');
 
       // Step 1: Create location request
       final locationRequest = LocationRequest((b) => b

@@ -130,7 +130,7 @@ class _BreedingSiteReportControllerState
     setState(() {
       _isSubmitting = true;
     });
-    _logAnalyticsEvent('submit_report');
+    await _logAnalyticsEvent('submit_report');
 
     try {
       // Step 1: Create location request

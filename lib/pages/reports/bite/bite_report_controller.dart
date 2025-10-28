@@ -146,7 +146,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     });
 
     try {
-      _logAnalyticsEvent('submit_report');
+      await _logAnalyticsEvent('submit_report');
 
       // Create location request
       final location = LocationRequest((b) => b
