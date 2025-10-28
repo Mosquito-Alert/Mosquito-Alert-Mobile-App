@@ -27,6 +27,22 @@ class _BiteReportControllerState extends State<BiteReportController> {
   int _currentStep = 0;
   bool _isSubmitting = false;
 
+  // Define the events to log
+  final List<Map<String, dynamic>> _pageEvents = [
+    {
+      'name': 'report_add_bites',
+      'parameters': {'type': 'bite'}
+    },
+    {
+      'name': 'report_add_location',
+      'parameters': {'type': 'bite'}
+    },
+    {
+      'name': 'report_add_note',
+      'parameters': {'type': 'bite'}
+    }
+  ];
+
   List<String> get _stepTitles =>
       ['(HC) Bite Information', '(HC) Select Location', '(HC) Notes & Submit'];
 
@@ -75,12 +91,22 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
+  void _onPageChanged(int index) async {
+    // Check if the index is valid and log the event
+    if (index >= 0 && index < _pageEvents.length) {
+      final event = _pageEvents[index];
+      await FirebaseAnalytics.instance.logEvent(
+        name: event['name'],
+        parameters: event['parameters'],
+      );
+    }
+  }
+
   /// Handle environment selection
   void _updateEnvironment(BiteRequestEventEnvironmentEnum environment) {
     setState(() {
       _reportData.eventEnvironment = environment;
     });
-    _logAnalyticsEvent('report_add_environment');
   }
 
   /// Handle timing selection
@@ -98,7 +124,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
-    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle notes update
@@ -107,7 +132,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _reportData.notes =
           (notes?.trim().isEmpty ?? true) ? null : notes!.trim();
     });
-    _logAnalyticsEvent('report_add_note');
   }
 
   /// Check if current step is complete
@@ -133,8 +157,10 @@ class _BiteReportControllerState extends State<BiteReportController> {
     setState(() {
       _isSubmitting = true;
     });
-    _logAnalyticsEvent('submit_report');
+
     try {
+      _logAnalyticsEvent('submit_report');
+
       // Create location request
       final location = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
@@ -178,8 +204,8 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
-  void _logAnalyticsEvent(String eventName) {
-    FirebaseAnalytics.instance.logEvent(
+  void _logAnalyticsEvent(String eventName) async {
+    await FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: {'type': 'bite'},
     );
@@ -270,6 +296,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
+                  onPageChanged: _onPageChanged,
                   physics: NeverScrollableScrollPhysics(), // Disable swipe
                   children: [
                     // Step 1: Bite questions

@@ -30,6 +30,30 @@ class _AdultReportControllerState extends State<AdultReportController> {
   int _currentStep = 0;
   bool _isSubmitting = false;
 
+  // Define the events to log
+  final List<Map<String, dynamic>> _pageEvents = [
+    {
+      'name': 'report_add_photo',
+      'parameters': {'type': 'adult'}
+    },
+    {
+      'name': 'report_add_location',
+      'parameters': {'type': 'adult'}
+    },
+    {
+      'name': 'report_add_environment',
+      'parameters': {'type': 'adult'}
+    },
+    {
+      'name': 'report_add_bitten',
+      'parameters': {'type': 'adult'}
+    },
+    {
+      'name': 'report_add_note',
+      'parameters': {'type': 'adult'}
+    }
+  ];
+
   List<String> get _stepTitles => [
         '(HC) Take Photos',
         '(HC) Select Location',
@@ -57,7 +81,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
   }
 
   /// Navigate to next step
-  void _nextStep() {
+  Future<void> _nextStep() async {
     if (_currentStep < _stepTitles.length - 1) {
       setState(() {
         _currentStep++;
@@ -82,6 +106,17 @@ class _AdultReportControllerState extends State<AdultReportController> {
     }
   }
 
+  void _onPageChanged(int index) async {
+    // Check if the index is valid and log the event
+    if (index >= 0 && index < _pageEvents.length) {
+      final event = _pageEvents[index];
+      await FirebaseAnalytics.instance.logEvent(
+        name: event['name'],
+        parameters: event['parameters'],
+      );
+    }
+  }
+
   /// Handle location selection callback
   void _onLocationSelected(
       double latitude, double longitude, LocationRequestSource_Enum source) {
@@ -90,7 +125,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
-    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle photo selection callback
@@ -98,7 +132,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
     });
-    _logAnalyticsEvent('report_add_photo');
   }
 
   /// Handle notes changes callback
@@ -106,7 +139,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       _reportData.notes = notes;
     });
-    _logAnalyticsEvent('report_add_note');
   }
 
   /// Submit the adult report via API
@@ -116,10 +148,9 @@ class _AdultReportControllerState extends State<AdultReportController> {
     setState(() {
       _isSubmitting = true;
     });
-    _logAnalyticsEvent('submit_report');
 
     try {
-      await _logAnalyticsEvent('adult_report_submit_attempt');
+      _logAnalyticsEvent('submit_report');
 
       // Step 1: Create location request
       final locationRequest = LocationRequest((b) => b
@@ -206,6 +237,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
           Expanded(
             child: PageView(
               controller: _pageController,
+              onPageChanged: _onPageChanged,
               physics:
                   NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: [
