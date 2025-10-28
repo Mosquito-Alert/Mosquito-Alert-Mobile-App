@@ -81,7 +81,6 @@ class _WhatsAppCameraController extends ChangeNotifier {
       selectedImages.add(compressedImage);
     } else {
       print('Error: Image compression failed for file ${file.path}');
-      // Optionally, show a user-facing message if context is available
     }
   }
 
