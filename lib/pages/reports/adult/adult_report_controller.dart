@@ -45,10 +45,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
       'parameters': {'type': 'adult'}
     },
     {
-      'name': 'report_add_bitten',
-      'parameters': {'type': 'adult'}
-    },
-    {
       'name': 'report_add_note',
       'parameters': {'type': 'adult'}
     }
