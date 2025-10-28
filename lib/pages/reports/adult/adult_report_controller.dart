@@ -9,6 +9,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_pa
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
+import 'package:mosquito_alert_app/utils/dialogs.dart';
 import 'package:provider/provider.dart';
 
 import 'models/adult_report_data.dart';
@@ -25,6 +26,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
   late PageController _pageController;
   late AdultReportData _reportData;
   late ObservationsApi _observationsApi;
+  late CampaignsApi _campaignsApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -53,6 +55,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     // Initialize API
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _observationsApi = apiClient.getObservationsApi();
+    _campaignsApi = apiClient.getCampaignsApi();
 
     _logAnalyticsEvent('start_report');
   }
@@ -167,7 +170,35 @@ class _AdultReportControllerState extends State<AdultReportController> {
       );
 
       if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(context);
+        ReportDialogs.showSuccessDialog(
+          context,
+          onOkPressed: () async {
+            Navigator.pop(context); // close the success dialog
+            Country? country = response.data?.location.country;
+            if (country == null) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              return;
+            }
+
+            final campaignsResponse = await _campaignsApi.list(
+              countryId: country.id,
+              isActive: true,
+              pageSize: 1,
+              orderBy: ['-start_date'].build(),
+            );
+            final Campaign? campaign =
+                campaignsResponse.data?.results?.firstOrNull;
+            if (campaign != null) {
+              Dialogs.showAlertCampaign(
+                context,
+                campaign,
+                (ctx) => Navigator.of(ctx).popUntil((route) => route.isFirst),
+              );
+            } else {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
+          },
+        );
       } else {
         ReportDialogs.showErrorDialog(
             context, 'Server error: ${response.statusCode}');
