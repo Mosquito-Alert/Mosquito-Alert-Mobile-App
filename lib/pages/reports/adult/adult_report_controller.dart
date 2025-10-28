@@ -31,23 +31,11 @@ class _AdultReportControllerState extends State<AdultReportController> {
   bool _isSubmitting = false;
 
   // Define the events to log
-  final List<Map<String, dynamic>> _pageEvents = [
-    {
-      'name': 'report_add_photo',
-      'parameters': {'type': 'adult'}
-    },
-    {
-      'name': 'report_add_location',
-      'parameters': {'type': 'adult'}
-    },
-    {
-      'name': 'report_add_environment',
-      'parameters': {'type': 'adult'}
-    },
-    {
-      'name': 'report_add_note',
-      'parameters': {'type': 'adult'}
-    }
+  final List<String> _pageEvents = [
+    'report_add_photo',
+    'report_add_location',
+    'report_add_environment',
+    'report_add_note',
   ];
 
   List<String> get _stepTitles => [
@@ -105,11 +93,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
   void _onPageChanged(int index) async {
     // Check if the index is valid and log the event
     if (index >= 0 && index < _pageEvents.length) {
-      final event = _pageEvents[index];
-      await FirebaseAnalytics.instance.logEvent(
-        name: event['name'],
-        parameters: event['parameters'],
-      );
+      await _logAnalyticsEvent(_pageEvents[index]);
     }
   }
 

@@ -28,19 +28,10 @@ class _BiteReportControllerState extends State<BiteReportController> {
   bool _isSubmitting = false;
 
   // Define the events to log
-  final List<Map<String, dynamic>> _pageEvents = [
-    {
-      'name': 'report_add_bites',
-      'parameters': {'type': 'bite'}
-    },
-    {
-      'name': 'report_add_location',
-      'parameters': {'type': 'bite'}
-    },
-    {
-      'name': 'report_add_note',
-      'parameters': {'type': 'bite'}
-    }
+  final List<String> _pageEvents = [
+    'report_add_bites',
+    'report_add_location',
+    'report_add_note',
   ];
 
   List<String> get _stepTitles =>
@@ -94,11 +85,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
   void _onPageChanged(int index) async {
     // Check if the index is valid and log the event
     if (index >= 0 && index < _pageEvents.length) {
-      final event = _pageEvents[index];
-      await FirebaseAnalytics.instance.logEvent(
-        name: event['name'],
-        parameters: event['parameters'],
-      );
+      await _logAnalyticsEvent(_pageEvents[index]);
     }
   }
 
@@ -204,7 +191,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     }
   }
 
-  void _logAnalyticsEvent(String eventName) async {
+  Future<void> _logAnalyticsEvent(String eventName) async {
     await FirebaseAnalytics.instance.logEvent(
       name: eventName,
       parameters: {'type': 'bite'},
