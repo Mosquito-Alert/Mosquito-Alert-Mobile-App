@@ -143,10 +143,11 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
       // Step 3: Process photos
       final List<MultipartFile> photos = [];
+      final uuid = Uuid();
       for (final photo in _reportData.photos) {
         photos.add(await MultipartFile.fromBytes(photo,
             filename:
-                '${Uuid().v4()}.jpg', // NOTE: Filename is required by the API
+                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
             contentType: DioMediaType('image', 'jpeg')));
       }
       final photosRequest = BuiltList<MultipartFile>(photos);
