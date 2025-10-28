@@ -67,11 +67,11 @@ class _WhatsAppCameraController extends ChangeNotifier {
   }
 
   Future<void> addToSelectedImages(File file) async {
-    // Compressing image to jpeg 4k max = 3840x2180
+    // Compressing image to jpeg 4k max = 3840x2160
     Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
         minWidth: 3840,
-        minHeight: 2180,
+        minHeight: 2160,
         quality: 98,
         autoCorrectionAngle: true,
         format: CompressFormat.jpeg,
