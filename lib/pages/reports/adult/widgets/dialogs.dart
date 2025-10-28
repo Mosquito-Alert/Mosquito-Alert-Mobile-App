@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'style.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 
 class Dialogs {
   static Future showAlertCampaign(
