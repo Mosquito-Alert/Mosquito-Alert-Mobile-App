@@ -16,9 +16,7 @@ class BreedingSiteReportData {
   bool? hasLarvae; // true = yes, false = no
 
   // Step 4: Location
-  double? latitude;
-  double? longitude;
-  LocationRequestSource_Enum locationSource = LocationRequestSource_Enum.auto;
+  LocationRequest? locationRequest;
 
   // Step 5: Notes
   String? notes;
@@ -33,14 +31,13 @@ class BreedingSiteReportData {
         hasWater != null &&
         // If water is present, larvae question must be answered
         (hasWater == false || hasLarvae != null) &&
-        latitude != null &&
-        longitude != null;
+        locationRequest != null;
   }
 
   /// Gets a user-friendly location description
   String get locationDescription {
-    if (latitude != null && longitude != null) {
-      return '${latitude!.toStringAsFixed(4)}, ${longitude!.toStringAsFixed(4)}';
+    if (locationRequest != null) {
+      return '${locationRequest!.point.latitude.toStringAsFixed(4)}, ${locationRequest!.point.longitude.toStringAsFixed(4)}';
     }
     return 'No location selected';
   }
@@ -75,9 +72,7 @@ class BreedingSiteReportData {
     photos.clear();
     hasWater = null;
     hasLarvae = null;
-    latitude = null;
-    longitude = null;
-    locationSource = LocationRequestSource_Enum.auto;
+    locationRequest = null;
     notes = null;
     createdAt = DateTime.now();
   }
@@ -89,9 +84,7 @@ class BreedingSiteReportData {
     copy.photos = List.from(photos);
     copy.hasWater = hasWater;
     copy.hasLarvae = hasLarvae;
-    copy.latitude = latitude;
-    copy.longitude = longitude;
-    copy.locationSource = locationSource;
+    copy.locationRequest = locationRequest;
     copy.notes = notes;
     copy.createdAt = createdAt;
     return copy;

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/sites/models/breeding_site_report_data.dart';
 import 'dart:io';
 
@@ -20,8 +21,10 @@ void main() {
       reportData.siteType = 'storm_drain';
       reportData.photos = [File('/tmp/test.jpg')];
       reportData.hasWater = false;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      reportData.locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.auto
+        ..point.latitude = 40.7128
+        ..point.longitude = -74.0060);
 
       expect(reportData.isValid, true);
     });
@@ -31,8 +34,10 @@ void main() {
       reportData.siteType = 'storm_drain';
       reportData.photos = [File('/tmp/test.jpg')];
       reportData.hasWater = true;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      reportData.locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.auto
+        ..point.latitude = 40.7128
+        ..point.longitude = -74.0060);
       // hasLarvae is null
 
       expect(reportData.isValid, false);
@@ -43,8 +48,10 @@ void main() {
       reportData.photos = [File('/tmp/test.jpg')];
       reportData.hasWater = true;
       reportData.hasLarvae = true;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      reportData.locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.auto
+        ..point.latitude = 40.7128
+        ..point.longitude = -74.0060);
 
       expect(reportData.isValid, true);
     });
@@ -83,8 +90,10 @@ void main() {
       reportData.siteType = 'other';
       reportData.hasWater = true;
       reportData.hasLarvae = false;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      reportData.locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.manual
+        ..point.latitude = 40.7128
+        ..point.longitude = -74.0060);
       reportData.notes = 'Test notes';
 
       final copy = reportData.copy();
@@ -92,8 +101,7 @@ void main() {
       expect(copy.siteType, reportData.siteType);
       expect(copy.hasWater, reportData.hasWater);
       expect(copy.hasLarvae, reportData.hasLarvae);
-      expect(copy.latitude, reportData.latitude);
-      expect(copy.longitude, reportData.longitude);
+      expect(copy.locationRequest, reportData.locationRequest);
       expect(copy.notes, reportData.notes);
     });
 
@@ -101,8 +109,10 @@ void main() {
       reportData.siteType = 'other';
       reportData.hasWater = true;
       reportData.hasLarvae = false;
-      reportData.latitude = 40.7128;
-      reportData.longitude = -74.0060;
+      reportData.locationRequest = LocationRequest((b) => b
+        ..source_ = LocationRequestSource_Enum.auto
+        ..point.latitude = 40.7128
+        ..point.longitude = -74.0060);
       reportData.notes = 'Test notes';
 
       reportData.reset();
@@ -110,8 +120,7 @@ void main() {
       expect(reportData.siteType, null);
       expect(reportData.hasWater, null);
       expect(reportData.hasLarvae, null);
-      expect(reportData.latitude, null);
-      expect(reportData.longitude, null);
+      expect(reportData.locationRequest, null);
       expect(reportData.notes, null);
       expect(reportData.photos, isEmpty);
     });

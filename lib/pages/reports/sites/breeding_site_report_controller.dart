@@ -99,12 +99,9 @@ class _BreedingSiteReportControllerState
   }
 
   /// Handle location selection callback
-  void _onLocationSelected(
-      double latitude, double longitude, LocationRequestSource_Enum source) {
+  void _onLocationSelected(LocationRequest locationRequest) {
     setState(() {
-      _reportData.latitude = latitude;
-      _reportData.longitude = longitude;
-      _reportData.locationSource = source;
+      _reportData.locationRequest = locationRequest;
     });
   }
 
@@ -133,13 +130,7 @@ class _BreedingSiteReportControllerState
     try {
       await _logAnalyticsEvent('breeding_site_report_submit_attempt');
 
-      // Step 1: Create location request
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
-
-      // Step 2: Process photos
+      // Step 1: Process photos
       final List<MultipartFile> photos = [];
       for (final photo in _reportData.photos) {
         if (await photo.exists()) {
@@ -148,15 +139,15 @@ class _BreedingSiteReportControllerState
       }
       final photosRequest = BuiltList<MultipartFile>(photos);
 
-      // Step 3: Tags
+      // Step 2: Tags
       final userTags = await UserManager.getHashtags();
       final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
-      // Step 4: Make API call using BreedingSitesApi
+      // Step 3: Make API call using BreedingSitesApi
       final response = await _breedingSitesApi.create(
         createdAt: _reportData.createdAt.toUtc(),
         sentAt: DateTime.now().toUtc(),
-        location: locationRequest,
+        location: _reportData.locationRequest!,
         photos: photosRequest,
         note: _reportData.notes,
         tags: tags,
@@ -260,14 +251,12 @@ class _BreedingSiteReportControllerState
 
   Widget _getLocationPage() {
     return LocationSelectionPage(
-      initialLatitude: _reportData.latitude,
-      initialLongitude: _reportData.longitude,
+      initialLocationRequest: _reportData.locationRequest,
       onLocationSelected: _onLocationSelected,
       onNext: _nextStep,
       onPrevious: _previousStep,
-      canProceed: _reportData.latitude != null && _reportData.longitude != null,
+      canProceed: _reportData.locationRequest != null,
       locationDescription: _reportData.locationDescription,
-      locationSource: _reportData.locationSource,
     );
   }
 

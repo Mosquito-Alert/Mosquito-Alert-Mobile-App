@@ -7,27 +7,21 @@ import 'package:mosquito_alert_app/utils/style.dart';
 /// Shared location selection page that can be used by any report workflow
 /// Configurable location handling through callbacks
 class LocationSelectionPage extends StatefulWidget {
-  final double? initialLatitude;
-  final double? initialLongitude;
-  final Function(
-          double latitude, double longitude, LocationRequestSource_Enum source)
-      onLocationSelected;
+  final LocationRequest? initialLocationRequest;
+  final Function(LocationRequest locationRequest) onLocationSelected;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final bool canProceed;
   final String? locationDescription;
-  final LocationRequestSource_Enum? locationSource;
 
   const LocationSelectionPage({
     Key? key,
-    this.initialLatitude,
-    this.initialLongitude,
+    this.initialLocationRequest,
     required this.onLocationSelected,
     required this.onNext,
     required this.onPrevious,
     required this.canProceed,
     this.locationDescription,
-    this.locationSource,
   }) : super(key: key);
 
   @override
@@ -35,16 +29,32 @@ class LocationSelectionPage extends StatefulWidget {
 }
 
 class _LocationSelectionPageState extends State<LocationSelectionPage> {
+  void _handleLocationSelected(
+      double latitude, double longitude, LocationRequestSource_Enum source) {
+    // Create LocationRequest object here instead of in the controller
+    final locationRequest = LocationRequest((b) => b
+      ..source_ = source
+      ..point.latitude = latitude
+      ..point.longitude = longitude);
+
+    // Pass the LocationRequest object to the callback
+    widget.onLocationSelected(locationRequest);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Extract initial values from LocationRequest if available
+    final initialLatitude = widget.initialLocationRequest?.point.latitude;
+    final initialLongitude = widget.initialLocationRequest?.point.longitude;
+
     return Scaffold(
       body: Stack(
         children: [
           // Full-screen map background (WhatsApp style)
           LocationSelector(
-            initialLatitude: widget.initialLatitude,
-            initialLongitude: widget.initialLongitude,
-            onLocationSelected: widget.onLocationSelected,
+            initialLatitude: initialLatitude,
+            initialLongitude: initialLongitude,
+            onLocationSelected: _handleLocationSelected,
             autoGetLocation: true, // Enable auto-location by default
           ),
 
