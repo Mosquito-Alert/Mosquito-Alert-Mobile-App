@@ -84,7 +84,6 @@ class _BreedingSiteReportControllerState
       // Clear any larvae response if water is not present
       _reportData.hasLarvae = null;
     }
-    _logAnalyticsEvent('report_add_has_water');
 
     setState(() {
       _currentStep++;
@@ -108,7 +107,6 @@ class _BreedingSiteReportControllerState
       _reportData.longitude = longitude;
       _reportData.locationSource = source;
     });
-    _logAnalyticsEvent('report_add_location');
   }
 
   /// Handle photo selection callback
@@ -116,7 +114,6 @@ class _BreedingSiteReportControllerState
     setState(() {
       // Trigger rebuild to update any photo-dependent UI
     });
-    _logAnalyticsEvent('report_add_photo');
   }
 
   /// Handle notes changes callback
@@ -124,7 +121,6 @@ class _BreedingSiteReportControllerState
     setState(() {
       _reportData.notes = notes;
     });
-    _logAnalyticsEvent('report_add_note');
   }
 
   /// Submit the breeding site report via API
@@ -210,6 +206,7 @@ class _BreedingSiteReportControllerState
           onNext: _nextStep,
         );
       case 1:
+        _logAnalyticsEvent('report_add_photo');
         return PhotoSelectionPage(
           photos: _reportData.photos,
           onPhotosChanged: _onPhotosChanged,
@@ -222,6 +219,7 @@ class _BreedingSiteReportControllerState
           infoBadgeTextKey: 'camera_info_breeding_txt_02',
         );
       case 2:
+        _logAnalyticsEvent('report_add_has_water');
         return WaterQuestionPage(
           reportData: _reportData,
           onNext: _nextStepAfterWater,
@@ -231,6 +229,7 @@ class _BreedingSiteReportControllerState
         // This step depends on water status
         if (_reportData.hasWater == true) {
           // Show larvae question
+          _logAnalyticsEvent('report_add_has_larvae');
           return LarvaeQuestionPage(
             reportData: _reportData,
             onNext: _nextStep,
@@ -257,6 +256,7 @@ class _BreedingSiteReportControllerState
   }
 
   Widget _getLocationPage() {
+    _logAnalyticsEvent('report_add_location');
     return LocationSelectionPage(
       title: MyLocalizations.of(context, 'question_16'),
       subtitle: '(HC) Please indicate where the breeding site is located:',
@@ -272,6 +272,7 @@ class _BreedingSiteReportControllerState
   }
 
   Widget _getNotesPage() {
+    _logAnalyticsEvent('report_add_note');
     return NotesAndSubmitPage(
       initialNotes: _reportData.notes,
       onNotesChanged: _onNotesChanged,
