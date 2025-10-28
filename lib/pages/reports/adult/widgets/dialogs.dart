@@ -5,8 +5,8 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class Dialogs {
-  static Future showAlertCampaign(
-      BuildContext ctx, Campaign activeCampaign, Function onDismiss) {
+  static Future showAlertCampaign(BuildContext ctx, Campaign activeCampaign,
+      void Function(BuildContext) onDismiss) {
     final appName = MyLocalizations.of(ctx, 'app_name');
     final campaignBody =
         MyLocalizations.of(ctx, 'alert_campaign_found_create_body');
