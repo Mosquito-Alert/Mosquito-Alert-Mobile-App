@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 /// Shared widgets for report detail pages
@@ -203,5 +205,50 @@ class ReportDetailWidgets {
         ],
       ),
     );
+  }
+}
+
+/// Shared utility methods for report formatting
+class ReportUtils {
+  static String formatLocationCoordinates(dynamic report) {
+    final point = report.location.point;
+    return '${point.latitude.toStringAsFixed(5)}, ${point.longitude.toStringAsFixed(5)}';
+  }
+
+  /// Format location with city name or fallback to coordinates
+  static Future<String> formatLocationWithCity(dynamic report) async {
+    // First try to get the display name from the location object
+    final displayName = report.location.displayName;
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+
+    // Fall back to reverse geocoding using coordinates
+    final point = report.location.point;
+    try {
+      final cityName =
+          await Utils.getCityNameFromCoords(point.latitude, point.longitude);
+      if (cityName != null && cityName.isNotEmpty) {
+        return cityName;
+      }
+    } catch (e) {
+      print('Error getting city name: $e');
+    }
+
+    // Final fallback to coordinates
+    return formatLocationCoordinates(report);
+  }
+
+  static String formatDate(dynamic report) {
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
+  }
+
+  static String? getHashtag(dynamic report) {
+    final tags = report.tags;
+    if (tags == null || tags.isEmpty) {
+      return null;
+    }
+    // Join multiple tags with spaces, adding # prefix to each
+    return tags.map((tag) => '#$tag').join(' ');
   }
 }

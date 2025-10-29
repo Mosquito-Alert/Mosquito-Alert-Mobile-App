@@ -1,8 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/adult_report_detail_page.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
   }
 
   String _formatCreationTime(Observation report) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
+    return ReportUtils.formatDate(report);
   }
 
   @override

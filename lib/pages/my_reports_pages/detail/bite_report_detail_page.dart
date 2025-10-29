@@ -1,6 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -40,7 +39,7 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
 
   Future<void> _loadLocationText() async {
     try {
-      final location = await _formatLocationWithCity(widget.report);
+      final location = await ReportUtils.formatLocationWithCity(widget.report);
       if (mounted) {
         setState(() {
           locationText = location;
@@ -50,7 +49,7 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          locationText = _formatLocationCoordinates(widget.report);
+          locationText = ReportUtils.formatLocationCoordinates(widget.report);
           isLoadingLocation = false;
         });
       }
@@ -67,47 +66,6 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
     } else {
       return '$totalBites ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
     }
-  }
-
-  String _formatLocationCoordinates(Bite report) {
-    final point = report.location.point;
-    return '${point.latitude.toStringAsFixed(5)}, ${point.longitude.toStringAsFixed(5)}';
-  }
-
-  Future<String> _formatLocationWithCity(Bite report) async {
-    // First try to get the display name from the location object
-    final displayName = report.location.displayName;
-    if (displayName != null && displayName.isNotEmpty) {
-      return displayName;
-    }
-
-    // Fall back to reverse geocoding using coordinates
-    final point = report.location.point;
-    try {
-      final cityName =
-          await Utils.getCityNameFromCoords(point.latitude, point.longitude);
-      if (cityName != null && cityName.isNotEmpty) {
-        return cityName;
-      }
-    } catch (e) {
-      print('Error getting city name: $e');
-    }
-
-    // Final fallback to coordinates
-    return _formatLocationCoordinates(report);
-  }
-
-  String _formatDate(Bite report) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
-  }
-
-  String? _getHashtag() {
-    final tags = widget.report.tags;
-    if (tags == null || tags.isEmpty) {
-      return null;
-    }
-    // Join multiple tags with spaces, adding # prefix to each
-    return tags.map((tag) => '#$tag').join(' ');
   }
 
   String _getLocationEnvironment() {
@@ -204,18 +162,19 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
               longitude: widget.report.location.point.longitude,
               locationText: isLoadingLocation
                   ? '...'
-                  : (locationText ?? _formatLocationCoordinates(widget.report)),
+                  : (locationText ??
+                      ReportUtils.formatLocationCoordinates(widget.report)),
               isLoadingLocation: isLoadingLocation,
               markerId: 'bite_report_location',
             ),
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.calendar_today,
-              content: _formatDate(widget.report),
+              content: ReportUtils.formatDate(widget.report),
             ),
-            if (_getHashtag() != null)
+            if (ReportUtils.getHashtag(widget.report) != null)
               ReportDetailWidgets.buildInfoItem(
                 icon: Icons.tag,
-                content: _getHashtag()!,
+                content: ReportUtils.getHashtag(widget.report)!,
               ),
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.home,
