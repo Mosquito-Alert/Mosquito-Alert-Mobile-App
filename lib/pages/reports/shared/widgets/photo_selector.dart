@@ -28,7 +28,7 @@ class PhotoSelector extends StatefulWidget {
 
 class _PhotoSelectorState extends State<PhotoSelector> {
   bool _hasRequestedInitialPhoto = false;
-  int _selectedPreviewIndex =
+  int _previewedPhotoIndex =
       0; // Index of the photo being displayed in preview
 
   @override
@@ -79,7 +79,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
       widget.selectedPhotos.addAll(photosToAdd);
       // Update preview to show the last added photo
       if (photosToAdd.isNotEmpty) {
-        _selectedPreviewIndex = widget.selectedPhotos.length - 1;
+        _previewedPhotoIndex = widget.selectedPhotos.length - 1;
       }
     });
 
@@ -94,11 +94,11 @@ class _PhotoSelectorState extends State<PhotoSelector> {
     setState(() {
       widget.selectedPhotos.removeAt(index);
       // Adjust preview index if needed
-      if (_selectedPreviewIndex >= widget.selectedPhotos.length) {
-        _selectedPreviewIndex = widget.selectedPhotos.length - 1;
+      if (_previewedPhotoIndex >= widget.selectedPhotos.length) {
+        _previewedPhotoIndex = widget.selectedPhotos.length - 1;
       }
-      if (_selectedPreviewIndex < 0) {
-        _selectedPreviewIndex = 0;
+      if (_previewedPhotoIndex < 0) {
+        _previewedPhotoIndex = 0;
       }
     });
 
@@ -107,7 +107,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
 
   void _selectPreviewPhoto(int index) {
     setState(() {
-      _selectedPreviewIndex = index;
+      _previewedPhotoIndex = index;
     });
   }
 
@@ -140,7 +140,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: Image.file(
-                        widget.selectedPhotos[_selectedPreviewIndex],
+                        widget.selectedPhotos[_previewedPhotoIndex],
                         fit: BoxFit.contain,
                       ),
                     )
@@ -175,7 +175,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
               ...widget.selectedPhotos.map((photo) {
                 int index = widget.selectedPhotos.indexOf(photo);
                 bool isSelected =
-                    index == _selectedPreviewIndex; // selected index
+                    index == _previewedPhotoIndex; // selected index
 
                 return GestureDetector(
                   onTap: () => _selectPreviewPhoto(index),
