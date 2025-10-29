@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/camera_whatsapp.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class PhotoSelector extends StatefulWidget {
@@ -10,8 +9,7 @@ class PhotoSelector extends StatefulWidget {
   final VoidCallback onPhotosChanged;
   final int maxPhotos;
   final int minPhotos;
-  final String? titleKey;
-  final String? subtitleKey;
+  final String? thumbnailText;
   final String? infoBadgeTextKey;
 
   const PhotoSelector({
@@ -20,9 +18,8 @@ class PhotoSelector extends StatefulWidget {
     required this.onPhotosChanged,
     this.maxPhotos = 3,
     this.minPhotos = 1,
-    this.titleKey = 'bs_info_adult_title',
-    this.subtitleKey,
-    this.infoBadgeTextKey = 'one_mosquito_reminder_badge',
+    this.thumbnailText,
+    this.infoBadgeTextKey,
   }) : super(key: key);
 
   @override
@@ -31,6 +28,8 @@ class PhotoSelector extends StatefulWidget {
 
 class _PhotoSelectorState extends State<PhotoSelector> {
   bool _hasRequestedInitialPhoto = false;
+  int _selectedPreviewIndex =
+      0; // Index of the photo being displayed in preview
 
   @override
   void initState() {
@@ -78,6 +77,10 @@ class _PhotoSelectorState extends State<PhotoSelector> {
 
     setState(() {
       widget.selectedPhotos.addAll(photosToAdd);
+      // Update preview to show the last added photo
+      if (photosToAdd.isNotEmpty) {
+        _selectedPreviewIndex = widget.selectedPhotos.length - 1;
+      }
     });
 
     widget.onPhotosChanged();
@@ -88,16 +91,24 @@ class _PhotoSelectorState extends State<PhotoSelector> {
   }
 
   void _removePhoto(int index) {
-    if (widget.selectedPhotos.length == widget.minPhotos) {
-      _showMinPhotosAlert();
-      return;
-    }
-
     setState(() {
       widget.selectedPhotos.removeAt(index);
+      // Adjust preview index if needed
+      if (_selectedPreviewIndex >= widget.selectedPhotos.length) {
+        _selectedPreviewIndex = widget.selectedPhotos.length - 1;
+      }
+      if (_selectedPreviewIndex < 0) {
+        _selectedPreviewIndex = 0;
+      }
     });
 
     widget.onPhotosChanged();
+  }
+
+  void _selectPreviewPhoto(int index) {
+    setState(() {
+      _selectedPreviewIndex = index;
+    });
   }
 
   void _showMaxPhotosAlert() {
@@ -109,218 +120,137 @@ class _PhotoSelectorState extends State<PhotoSelector> {
     );
   }
 
-  void _showMinPhotosAlert() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('(HC) At least ${widget.minPhotos} photo required'),
-        backgroundColor: Style.colorPrimary,
-      ),
-    );
-  }
-
   bool get _canAddMore => widget.selectedPhotos.length < widget.maxPhotos;
-  bool get _hasMinimumPhotos =>
-      widget.selectedPhotos.length >= widget.minPhotos;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
-          if (widget.titleKey != null)
-            Text(
-              MyLocalizations.of(context, widget.titleKey!),
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-
-          // Subtitle
-          if (widget.subtitleKey != null)
-            Text(
-              MyLocalizations.of(context, widget.subtitleKey!),
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-
-          SizedBox(height: 15),
-
-          // Photo count indicator
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '(HC) Photos: ${widget.selectedPhotos.length}/${widget.maxPhotos}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color:
-                      _hasMinimumPhotos ? Style.colorPrimary : Colors.red[700],
-                ),
+          // Image preview
+          Expanded(
+            flex: 1,
+            child: Container(
+              margin: EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey[200],
               ),
-              if (!_hasMinimumPhotos)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.red[100],
-                    borderRadius: BorderRadius.circular(12),
+              child: widget.selectedPhotos.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.file(
+                        widget.selectedPhotos[_selectedPreviewIndex],
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        '(HC) No photo selected',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ),
+            ),
+          ),
+          if (widget.thumbnailText != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0),
+              child: Text(
+                widget.thumbnailText!, // safe because we checked != null
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
+                ),
+                textAlign: TextAlign.start,
+              ),
+            ),
+
+          // Image thumbnails
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: [
+              ...widget.selectedPhotos.map((photo) {
+                int index = widget.selectedPhotos.indexOf(photo);
+                bool isSelected =
+                    index == _selectedPreviewIndex; // selected index
+
+                return GestureDetector(
+                  onTap: () => _selectPreviewPhoto(index),
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      // Thumbnail image
+                      Container(
+                        width: 80, // set item width
+                        height: 80,
+                        decoration: BoxDecoration(
+                          border: isSelected
+                              ? Border.all(color: Style.colorPrimary, width: 3)
+                              : null,
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: FileImage(photo),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      // Remove button
+                      Container(
+                        margin: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () => _removePhoto(index),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: 18,
+                            height: 18,
+                            child: Icon(Icons.close,
+                                color: Colors.white, size: 12),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    '(HC) Required: ${widget.minPhotos} min',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red[700],
-                      fontWeight: FontWeight.w500,
+                );
+              }).toList(),
+              if (_canAddMore)
+                // Add photo button
+                GestureDetector(
+                  onTap: _pickPhoto,
+                  child: SizedBox(
+                    width: 80,
+                    height: 80, // ensures square
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[400]!, width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey[50],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Icon(Icons.add_a_photo,
+                              size: 30, color: Colors.grey[600]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
             ],
           ),
-
-          SizedBox(height: 12),
-
-          // Photo grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemCount: widget.selectedPhotos.length + (_canAddMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              // Add photo button
-              if (index == widget.selectedPhotos.length) {
-                return GestureDetector(
-                  onTap: _pickPhoto,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[400]!, width: 2),
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey[50],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_a_photo,
-                          size: 30,
-                          color: Colors.grey[600],
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '(HC) Add Photo',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              // Photo thumbnail
-              final photo = widget.selectedPhotos[index];
-              return Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  // Photo
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.memory(
-                        photo,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  // Remove button
-                  Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.9),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => _removePhoto(index),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          width: 24,
-                          height: 24,
-                          padding: EdgeInsets.all(2),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-
-          // Status message
-          SizedBox(height: 16),
-          if (widget.selectedPhotos.isEmpty)
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                border: Border.all(color: Colors.blue[200]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.camera_alt, color: Style.colorPrimary),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '(HC) Take clear photos of the mosquito (min ${widget.minPhotos}, max ${widget.maxPhotos})',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else if (_hasMinimumPhotos)
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                border: Border.all(color: Colors.green[200]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Style.colorPrimary),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '(HC) Great! You can continue or add more photos (${_canAddMore ? "${widget.maxPhotos - widget.selectedPhotos.length} more allowed" : "max reached"})',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
     );
