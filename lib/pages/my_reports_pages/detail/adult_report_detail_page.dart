@@ -116,7 +116,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
   }
 
   String _formatDate(Observation report) {
-    return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
   }
 
   String? _getHashtag() {
@@ -348,7 +348,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                   children: [
                     ReportDetailWidgets.buildInfoItem(
                       icon: Icons.fingerprint,
-                      content: widget.report.uuid,
+                      content: widget.report.shortId,
                     ),
                     ReportDetailWidgets.buildLocationWidget(
                       context: context,
@@ -371,7 +371,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                         content: _getHashtag()!,
                       ),
                     ReportDetailWidgets.buildInfoItem(
-                      icon: Icons.home,
+                      icon: Icons.location_city,
                       content: _getLocationEnvironment(),
                     ),
                     if (_getNotes().isNotEmpty)

@@ -98,7 +98,7 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
   }
 
   String _formatDate(Bite report) {
-    return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
   }
 
   String? _getHashtag() {
@@ -111,8 +111,7 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
   }
 
   String _getLocationEnvironment() {
-    // TODO: Get location environment (indoors/outdoors) from report data when available
-    return MyLocalizations.of(context, 'outdoors');
+    return widget.report.eventEnvironment!.name;
   }
 
   Future<void> _deleteReport() async {
@@ -197,7 +196,7 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
           children: [
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.fingerprint,
-              content: widget.report.uuid,
+              content: widget.report.shortId,
             ),
             ReportDetailWidgets.buildLocationWidget(
               context: context,

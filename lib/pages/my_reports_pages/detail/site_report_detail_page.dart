@@ -90,7 +90,7 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
   }
 
   String _formatDate(BreedingSite report) {
-    return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
+    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
   }
 
   String? _getHashtag() {
@@ -103,13 +103,30 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
   }
 
   String _getHasWater() {
-    // TODO: Get hasWater from report data when available
-    return MyLocalizations.of(context, 'yes');
+    bool hasWater = widget.report.hasWater ?? false;
+    if (hasWater) {
+      return MyLocalizations.of(context, 'yes');
+    } else {
+      return MyLocalizations.of(context, 'no');
+    }
   }
 
   String _getHasLarvae() {
-    // TODO: Get hasLarvae from report data when available
-    return MyLocalizations.of(context, 'no');
+    bool hasLarvae = widget.report.hasLarvae ?? false;
+    if (hasLarvae) {
+      return MyLocalizations.of(context, 'yes');
+    } else {
+      return MyLocalizations.of(context, 'no');
+    }
+  }
+
+  String _getHasNearMosquitoes() {
+    bool hasNearMosquitoes = widget.report.hasNearMosquitoes ?? false;
+    if (hasNearMosquitoes) {
+      return MyLocalizations.of(context, 'yes');
+    } else {
+      return MyLocalizations.of(context, 'no');
+    }
   }
 
   Future<void> _deleteReport() async {
@@ -247,7 +264,7 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                   children: [
                     ReportDetailWidgets.buildInfoItem(
                       icon: Icons.fingerprint,
-                      content: widget.report.uuid,
+                      content: widget.report.shortId,
                     ),
                     ReportDetailWidgets.buildLocationWidget(
                       context: context,
@@ -274,8 +291,13 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                       content: _getHasWater(),
                     ),
                     ReportDetailWidgets.buildInfoItem(
-                      icon: Icons.bug_report,
+                      icon: Icons.bug_report, // TODO: Get larvae icon
                       content: _getHasLarvae(),
+                    ),
+                    ReportDetailWidgets.buildInfoItem(
+                      icon:
+                          Icons.bug_report_outlined, // TODO: get mosquito icon
+                      content: _getHasNearMosquitoes(),
                     ),
                   ],
                 ),
