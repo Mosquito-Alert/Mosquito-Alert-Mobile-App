@@ -119,19 +119,21 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
     return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
   }
 
-  String _getHashtag() {
-    // TODO: Get hashtag from report data when available
-    return '#mosquitoalert';
+  String? _getHashtag() {
+    final tags = widget.report.tags;
+    if (tags == null || tags.isEmpty) {
+      return null;
+    }
+    // Join multiple tags with spaces, adding # prefix to each
+    return tags.map((tag) => '#$tag').join(' ');
   }
 
   String _getLocationEnvironment() {
-    // TODO: Get location environment (indoors/outdoors) from report data when available
-    return MyLocalizations.of(context, 'outdoors');
+    return widget.report.eventEnvironment!.name;
   }
 
   String _getNotes() {
-    // TODO: Get notes from report data when available
-    return '';
+    return widget.report.note ?? '';
   }
 
   Widget _buildPhotoCarousel() {
@@ -346,7 +348,6 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                   children: [
                     ReportDetailWidgets.buildInfoItem(
                       icon: Icons.fingerprint,
-                      title: 'UUID',
                       content: widget.report.uuid,
                     ),
                     ReportDetailWidgets.buildLocationWidget(
@@ -362,24 +363,20 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                     ),
                     ReportDetailWidgets.buildInfoItem(
                       icon: Icons.calendar_today,
-                      title: MyLocalizations.of(
-                          context, 'exact_time_register_txt'),
                       content: _formatDate(widget.report),
                     ),
-                    ReportDetailWidgets.buildInfoItem(
-                      icon: Icons.tag,
-                      title: 'Hashtag',
-                      content: _getHashtag(),
-                    ),
+                    if (_getHashtag() != null)
+                      ReportDetailWidgets.buildInfoItem(
+                        icon: Icons.tag,
+                        content: _getHashtag()!,
+                      ),
                     ReportDetailWidgets.buildInfoItem(
                       icon: Icons.home,
-                      title: MyLocalizations.of(context, 'outdoors'),
                       content: _getLocationEnvironment(),
                     ),
                     if (_getNotes().isNotEmpty)
                       ReportDetailWidgets.buildInfoItem(
                         icon: Icons.note,
-                        title: MyLocalizations.of(context, 'comments_txt'),
                         content: _getNotes(),
                       ),
                   ],

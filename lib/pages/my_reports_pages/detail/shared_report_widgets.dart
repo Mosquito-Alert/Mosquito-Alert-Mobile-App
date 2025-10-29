@@ -5,10 +5,10 @@ import 'package:mosquito_alert_app/utils/style.dart';
 
 /// Shared widgets for report detail pages
 class ReportDetailWidgets {
-  /// Builds an info item card with icon, title, and content
+  /// Builds an info item card with icon, optional title, and content
   static Widget buildInfoItem({
     required IconData icon,
-    required String title,
+    String? title,
     required String content,
   }) {
     return Container(
@@ -43,27 +43,35 @@ class ReportDetailWidgets {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+            child: title != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        content,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    content,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  content,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

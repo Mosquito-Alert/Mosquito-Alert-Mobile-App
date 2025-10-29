@@ -1,8 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -93,9 +93,13 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
     return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
   }
 
-  String _getHashtag() {
-    // TODO: Get hashtag from report data when available
-    return '#mosquitoalert';
+  String? _getHashtag() {
+    final tags = widget.report.tags;
+    if (tags == null || tags.isEmpty) {
+      return null;
+    }
+    // Join multiple tags with spaces, adding # prefix to each
+    return tags.map((tag) => '#$tag').join(' ');
   }
 
   String _getHasWater() {
@@ -241,158 +245,42 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    _buildInfoItem(
+                    ReportDetailWidgets.buildInfoItem(
                       icon: Icons.fingerprint,
-                      title: 'UUID',
                       content: widget.report.uuid,
                     ),
-                    _buildInfoItem(
-                      icon: Icons.location_on,
-                      title: MyLocalizations.of(context, 'location_txt'),
-                      content: isLoadingLocation
+                    ReportDetailWidgets.buildLocationWidget(
+                      context: context,
+                      latitude: widget.report.location.point.latitude,
+                      longitude: widget.report.location.point.longitude,
+                      locationText: isLoadingLocation
                           ? '...'
                           : (locationText ??
                               _formatLocationCoordinates(widget.report)),
+                      isLoadingLocation: isLoadingLocation,
+                      markerId: 'site_report_location',
                     ),
-                    _buildInfoItem(
+                    ReportDetailWidgets.buildInfoItem(
                       icon: Icons.calendar_today,
-                      title: MyLocalizations.of(
-                          context, 'exact_time_register_txt'),
                       content: _formatDate(widget.report),
                     ),
-                    _buildInfoItem(
-                      icon: Icons.tag,
-                      title: 'Hashtag',
-                      content: _getHashtag(),
-                    ),
-                    _buildInfoItem(
+                    if (_getHashtag() != null)
+                      ReportDetailWidgets.buildInfoItem(
+                        icon: Icons.tag,
+                        content: _getHashtag()!,
+                      ),
+                    ReportDetailWidgets.buildInfoItem(
                       icon: Icons.water,
-                      title: 'Has Water',
                       content: _getHasWater(),
                     ),
-                    _buildInfoItem(
+                    ReportDetailWidgets.buildInfoItem(
                       icon: Icons.bug_report,
-                      title: 'Has Larvae',
                       content: _getHasLarvae(),
                     ),
-                    const SizedBox(height: 20),
-                    _buildMapWidget(),
                   ],
                 ),
               ),
             ]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMapWidget() {
-    final point = widget.report.location.point;
-    final location = LatLng(point.latitude, point.longitude);
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: location,
-            zoom: 15.0,
-          ),
-          markers: {
-            Marker(
-              markerId: const MarkerId('site_location'),
-              position: location,
-              infoWindow: InfoWindow(
-                title: MyLocalizations.of(context, 'location_txt'),
-              ),
-            ),
-          },
-          // Disable all interactions to make it a static view
-          zoomControlsEnabled: false,
-          mapToolbarEnabled: false,
-          zoomGesturesEnabled: false,
-          scrollGesturesEnabled: false,
-          rotateGesturesEnabled: false,
-          tiltGesturesEnabled: false,
-          myLocationButtonEnabled: false,
-          myLocationEnabled: false,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoItem({
-    required IconData icon,
-    required String title,
-    required String content,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Style.colorPrimary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: Style.colorPrimary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  content,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

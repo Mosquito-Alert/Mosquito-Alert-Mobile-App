@@ -101,9 +101,13 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
     return DateFormat('yyyy-MM-dd').format(report.createdAtLocal);
   }
 
-  String _getHashtag() {
-    // TODO: Get hashtag from report data when available
-    return '#mosquitoalert';
+  String? _getHashtag() {
+    final tags = widget.report.tags;
+    if (tags == null || tags.isEmpty) {
+      return null;
+    }
+    // Join multiple tags with spaces, adding # prefix to each
+    return tags.map((tag) => '#$tag').join(' ');
   }
 
   String _getLocationEnvironment() {
@@ -193,7 +197,6 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
           children: [
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.fingerprint,
-              title: 'UUID',
               content: widget.report.uuid,
             ),
             ReportDetailWidgets.buildLocationWidget(
@@ -208,17 +211,15 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
             ),
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.calendar_today,
-              title: MyLocalizations.of(context, 'exact_time_register_txt'),
               content: _formatDate(widget.report),
             ),
-            ReportDetailWidgets.buildInfoItem(
-              icon: Icons.tag,
-              title: 'Hashtag',
-              content: _getHashtag(),
-            ),
+            if (_getHashtag() != null)
+              ReportDetailWidgets.buildInfoItem(
+                icon: Icons.tag,
+                content: _getHashtag()!,
+              ),
             ReportDetailWidgets.buildInfoItem(
               icon: Icons.home,
-              title: MyLocalizations.of(context, 'outdoors'),
               content: _getLocationEnvironment(),
             ),
           ],
