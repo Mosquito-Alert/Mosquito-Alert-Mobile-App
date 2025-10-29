@@ -198,7 +198,7 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Style.colorPrimary,
-                      Style.colorPrimary.withOpacity(0.8),
+                      Style.colorPrimary.withValues(alpha: 0.8),
                     ],
                   ),
                 ),
@@ -210,7 +210,7 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(60),
                           border: Border.all(color: Colors.white, width: 2),
                         ),
@@ -229,7 +229,7 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withOpacity(0.3),
+                            Colors.black.withValues(alpha: 0.3),
                           ],
                         ),
                       ),

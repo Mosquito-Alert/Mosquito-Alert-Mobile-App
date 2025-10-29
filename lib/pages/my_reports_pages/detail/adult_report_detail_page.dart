@@ -314,7 +314,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Style.colorPrimary,
-                      Style.colorPrimary.withOpacity(0.8),
+                      Style.colorPrimary.withValues(alpha: 0.8),
                     ],
                   ),
                 ),
@@ -330,7 +330,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withOpacity(0.3),
+                            Colors.black.withValues(alpha: 0.3),
                           ],
                         ),
                       ),
