@@ -66,7 +66,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
     return true;
   }
 
-  Future<void> addToSelectedImages(File file) async {
+  Future<void> compressAndAddToSelectedImages(File file) async {
     // Compressing image to jpeg 4k max = 3840x2160
     Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
@@ -94,12 +94,12 @@ class _WhatsAppCameraController extends ChangeNotifier {
       if (singleImage != null) pickedImages.add(singleImage);
     }
     for (var xfile in pickedImages) {
-      await addToSelectedImages(File(xfile.path));
+      await compressAndAddToSelectedImages(File(xfile.path));
     }
   }
 
   Future<void> captureImage(File file) async {
-    await addToSelectedImages(file);
+    await compressAndAddToSelectedImages(file);
   }
 }
 
