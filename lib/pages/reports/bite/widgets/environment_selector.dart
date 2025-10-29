@@ -21,7 +21,6 @@ class EnvironmentSelector extends StatelessWidget {
           context,
           BiteRequestEventEnvironmentEnum.indoors,
           '(HC) Indoors',
-          '(HC) Inside a building, house, office, etc.',
           Icons.home,
         ),
         SizedBox(height: 12),
@@ -29,7 +28,6 @@ class EnvironmentSelector extends StatelessWidget {
           context,
           BiteRequestEventEnvironmentEnum.outdoors,
           '(HC) Outdoors',
-          '(HC) Outside in open air, garden, park, etc.',
           Icons.park,
         ),
         SizedBox(height: 12),
@@ -37,7 +35,6 @@ class EnvironmentSelector extends StatelessWidget {
           context,
           BiteRequestEventEnvironmentEnum.vehicle,
           '(HC) In a Vehicle',
-          '(HC) Inside a car, bus, train, etc.',
           Icons.directions_car,
         ),
       ],
@@ -48,7 +45,6 @@ class EnvironmentSelector extends StatelessWidget {
     BuildContext context,
     BiteRequestEventEnvironmentEnum environment,
     String title,
-    String subtitle,
     IconData icon,
   ) {
     final bool isSelected = selectedEnvironment == environment;
@@ -87,26 +83,13 @@ class EnvironmentSelector extends StatelessWidget {
 
             // Text content
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: isSelected ? Style.colorPrimary : Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: isSelected ? Style.colorPrimary : Colors.black,
+                ),
               ),
             ),
 
