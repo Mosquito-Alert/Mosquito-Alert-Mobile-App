@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -65,49 +64,6 @@ class _ReportsListSitesState extends State<ReportsListSites> {
     return MyLocalizations.of(context, 'single_breeding_site');
   }
 
-  Widget _buildLeadingImage(BreedingSite report) {
-    final photos = report.photos;
-
-    if (photos.isEmpty) {
-      // Fallback to default breeding site icon
-      return Image.asset(
-        'assets/img/ic_breeding_report.webp',
-        width: 40,
-        height: 40,
-        fit: BoxFit.contain,
-        filterQuality: FilterQuality.high,
-      );
-    }
-
-    // Use the first photo from the report
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: CachedNetworkImage(
-        imageUrl: photos.first.url,
-        width: 40,
-        height: 40,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          width: 40,
-          height: 40,
-          color: Colors.grey.withValues(alpha: 0.3),
-          child: const Icon(
-            Icons.water_drop,
-            size: 20,
-            color: Colors.grey,
-          ),
-        ),
-        errorWidget: (context, url, error) => Image.asset(
-          'assets/img/ic_breeding_report.webp',
-          width: 40,
-          height: 40,
-          fit: BoxFit.contain,
-          filterQuality: FilterQuality.high,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -137,7 +93,11 @@ class _ReportsListSitesState extends State<ReportsListSites> {
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
-            leading: _buildLeadingImage(report),
+            leading: ReportDetailWidgets.buildLeadingImage(
+              report: report,
+              defaultAssetPath: 'assets/img/ic_breeding_report.webp',
+              placeholderIcon: Icons.water_drop,
+            ),
             title: Text(
               _formatTitle(),
               style: const TextStyle(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -203,6 +204,55 @@ class ReportDetailWidgets {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Builds a leading image widget for report lists
+  /// Shows the first photo from the report or falls back to a default asset
+  static Widget buildLeadingImage({
+    required dynamic report,
+    required String defaultAssetPath,
+    IconData placeholderIcon = Icons.photo_camera,
+  }) {
+    final photos = report.photos;
+
+    if (photos.isEmpty) {
+      // Fallback to default icon
+      return Image.asset(
+        defaultAssetPath,
+        width: 40,
+        height: 40,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+      );
+    }
+
+    // Use the first photo from the report
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: photos.first.url,
+        width: 40,
+        height: 40,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          width: 40,
+          height: 40,
+          color: Colors.grey.withValues(alpha: 0.3),
+          child: Icon(
+            placeholderIcon,
+            size: 20,
+            color: Colors.grey,
+          ),
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          defaultAssetPath,
+          width: 40,
+          height: 40,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+        ),
       ),
     );
   }
