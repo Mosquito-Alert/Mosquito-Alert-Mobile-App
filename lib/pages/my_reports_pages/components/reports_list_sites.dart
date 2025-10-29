@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/site_report_detail_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -57,11 +58,54 @@ class _ReportsListSitesState extends State<ReportsListSites> {
   }
 
   String _formatCreationTime(BreedingSite report) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(report.createdAtLocal);
+    return ReportUtils.formatDate(report);
   }
 
   String _formatTitle() {
     return MyLocalizations.of(context, 'single_breeding_site');
+  }
+
+  Widget _buildLeadingImage(BreedingSite report) {
+    final photos = report.photos;
+
+    if (photos.isEmpty) {
+      // Fallback to default breeding site icon
+      return Image.asset(
+        'assets/img/ic_breeding_report.webp',
+        width: 40,
+        height: 40,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+      );
+    }
+
+    // Use the first photo from the report
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: photos.first.url,
+        width: 40,
+        height: 40,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          width: 40,
+          height: 40,
+          color: Colors.grey.withValues(alpha: 0.3),
+          child: const Icon(
+            Icons.water_drop,
+            size: 20,
+            color: Colors.grey,
+          ),
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/img/ic_breeding_report.webp',
+          width: 40,
+          height: 40,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+        ),
+      ),
+    );
   }
 
   @override
@@ -93,13 +137,7 @@ class _ReportsListSitesState extends State<ReportsListSites> {
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
-            leading: Image.asset(
-              'assets/img/ic_breeding_report.webp',
-              width: 40,
-              height: 40,
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.high,
-            ),
+            leading: _buildLeadingImage(report),
             title: Text(
               _formatTitle(),
               style: const TextStyle(

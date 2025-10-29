@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -60,6 +61,49 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
     return ReportUtils.formatDate(report);
   }
 
+  Widget _buildLeadingImage(Observation report) {
+    final photos = report.photos;
+
+    if (photos.isEmpty) {
+      // Fallback to default mosquito icon
+      return Image.asset(
+        'assets/img/ic_mosquito_report_black.webp',
+        width: 40,
+        height: 40,
+        fit: BoxFit.contain,
+        filterQuality: FilterQuality.high,
+      );
+    }
+
+    // Use the first photo from the report
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: photos.first.url,
+        width: 40,
+        height: 40,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          width: 40,
+          height: 40,
+          color: Colors.grey.withValues(alpha: 0.3),
+          child: const Icon(
+            Icons.photo_camera,
+            size: 20,
+            color: Colors.grey,
+          ),
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/img/ic_mosquito_report_black.webp',
+          width: 40,
+          height: 40,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -92,13 +136,7 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
-            leading: Image.asset(
-              'assets/img/ic_mosquito_report_black.webp',
-              width: 40,
-              height: 40,
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.high,
-            ),
+            leading: _buildLeadingImage(report),
             title: Text(
               title,
               style: TextStyle(
