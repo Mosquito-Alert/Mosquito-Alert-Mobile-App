@@ -56,6 +56,13 @@ class TimingSelector extends StatelessWidget {
           '(HC) Between 9:00 PM yesterday - 6:00 AM today',
           Icons.nightlight_round,
         ),
+        SizedBox(height: 12),
+        _buildOptionTile(
+          context,
+          BiteRequestEventMomentEnum.unknownDefaultOpenApi,
+          '(HC) I don\'t know',
+          Icons.help_outline,
+        ),
       ],
     );
   }
