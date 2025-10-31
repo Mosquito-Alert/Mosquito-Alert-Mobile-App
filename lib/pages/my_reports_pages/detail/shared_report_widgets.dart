@@ -263,7 +263,7 @@ class ReportDetailWidgets {
 
 /// Shared utility methods for report formatting
 class ReportUtils {
-  // Groups reports into a map keyed by "Day Month Year"
+  // Groups reports into a map keyed by date in "dd MMMM yyyy" format (e.g., "31 October 2024")
   static Map<String, List<dynamic>> groupByMonth(List<dynamic> reports) {
     final sorted = reports.toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
