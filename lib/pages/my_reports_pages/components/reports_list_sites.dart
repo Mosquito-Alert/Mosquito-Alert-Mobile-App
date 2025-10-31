@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/site_report_detail_page.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/grouped_report_list_view.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
@@ -56,10 +57,6 @@ class _ReportsListSitesState extends State<ReportsListSites> {
     }
   }
 
-  String _formatCreationTime(BreedingSite report) {
-    return ReportUtils.formatDate(report);
-  }
-
   String _formatTitle() {
     return MyLocalizations.of(context, 'single_breeding_site');
   }
@@ -80,36 +77,17 @@ class _ReportsListSitesState extends State<ReportsListSites> {
       );
     }
 
-    return ListView.builder(
-      itemCount: siteReports.length,
-      itemBuilder: (context, index) {
-        final report = siteReports[index];
-
-        return Card(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 4.0,
-          margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          child: ListTile(
-            leading: ReportDetailWidgets.buildLeadingImage(
-              report: report,
-              defaultAssetPath: 'assets/img/ic_breeding_report.webp',
-              placeholderIcon: Icons.water_drop,
-            ),
-            title: Text(
-              _formatTitle(),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Text(_formatCreationTime(report)),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => _navigateToReportDetail(report, context),
-          ),
+    return GroupedReportListView(
+      reports: siteReports,
+      titleBuilder: (report) {
+        return Text(_formatTitle());
+      },
+      leadingBuilder: (report) {
+        return ReportDetailWidgets.buildLeadingImage(
+          report: report,
         );
       },
+      onTap: (report, context) => _navigateToReportDetail(report, context),
     );
   }
 
