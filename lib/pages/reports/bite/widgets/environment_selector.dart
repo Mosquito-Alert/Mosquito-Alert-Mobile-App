@@ -37,6 +37,13 @@ class EnvironmentSelector extends StatelessWidget {
           '(HC) In a Vehicle',
           Icons.directions_car,
         ),
+        SizedBox(height: 12),
+        _buildOptionTile(
+          context,
+          BiteRequestEventEnvironmentEnum.unknownDefaultOpenApi,
+          '(HC) I don\'t know',
+          Icons.help_outline,
+        ),
       ],
     );
   }

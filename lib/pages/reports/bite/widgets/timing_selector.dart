@@ -51,13 +51,6 @@ class TimingSelector extends StatelessWidget {
           '(HC) Last night',
           Icons.nightlight_round,
         ),
-        SizedBox(height: 12),
-        _buildOptionTile(
-          context,
-          BiteRequestEventMomentEnum.unknownDefaultOpenApi,
-          '(HC) I don\'t know',
-          Icons.help_outline,
-        ),
       ],
     );
   }
