@@ -175,81 +175,95 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                 bool isSelected =
                     index == _previewedPhotoIndex; // selected index
 
-                return GestureDetector(
-                  onTap: () => _selectPreviewPhoto(index),
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      // Thumbnail image
-                      Container(
-                        width: 80, // set item width
-                        height: 80,
-                        decoration: BoxDecoration(
-                          border: isSelected
-                              ? Border.all(color: Style.colorPrimary, width: 3)
-                              : null,
-                          borderRadius: BorderRadius.circular(15),
-                          image: DecorationImage(
-                            image: FileImage(photo),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      // Remove button
-                      Container(
-                        margin: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.9),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 3,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () => _removePhoto(index),
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            width: 18,
-                            height: 18,
-                            child: Icon(Icons.close,
-                                color: Colors.white, size: 12),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return _buildThumbnailWidget(
+                    photo: photo,
+                    isSelected: isSelected,
+                    onTap: () => _selectPreviewPhoto(index),
+                    onRemoveTap: () => _removePhoto(index));
               }).toList(),
               if (_canAddMore)
                 // Add photo button
-                GestureDetector(
-                  onTap: _pickPhoto,
-                  child: SizedBox(
-                    width: 80,
-                    height: 80, // ensures square
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey[400]!, width: 2),
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey[50],
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(Icons.add_a_photo,
-                              size: 30, color: Colors.grey[600]),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                _buildAddPhotoWidget(),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildThumbnailWidget({
+    required File photo,
+    required bool isSelected,
+    required void Function() onTap,
+    required void Function() onRemoveTap,
+  }) {
+    return GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            // Thumbnail image
+            Container(
+              width: 80, // set item width
+              height: 80,
+              decoration: BoxDecoration(
+                border: isSelected
+                    ? Border.all(color: Style.colorPrimary, width: 3)
+                    : null,
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: FileImage(photo),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            // Remove button
+            Container(
+              margin: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.9),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 3,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: InkWell(
+                onTap: onRemoveTap,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 18,
+                  height: 18,
+                  child: Icon(Icons.close, color: Colors.white, size: 12),
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildAddPhotoWidget() {
+    return GestureDetector(
+      onTap: _pickPhoto,
+      child: SizedBox(
+        width: 80,
+        height: 80, // ensures square
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[400]!, width: 2),
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.grey[50],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Icon(Icons.add_a_photo, size: 30, color: Colors.grey[600]),
+            ],
+          ),
+        ),
       ),
     );
   }
