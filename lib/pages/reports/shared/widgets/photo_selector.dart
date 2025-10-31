@@ -28,8 +28,7 @@ class PhotoSelector extends StatefulWidget {
 
 class _PhotoSelectorState extends State<PhotoSelector> {
   bool _hasRequestedInitialPhoto = false;
-  int _previewedPhotoIndex =
-      0; // Index of the photo being displayed in preview
+  int? _previewedPhotoIndex; // Index of the photo being displayed in preview
 
   @override
   void initState() {
@@ -94,11 +93,10 @@ class _PhotoSelectorState extends State<PhotoSelector> {
     setState(() {
       widget.selectedPhotos.removeAt(index);
       // Adjust preview index if needed
-      if (_previewedPhotoIndex >= widget.selectedPhotos.length) {
+      if (widget.selectedPhotos.isEmpty) {
+        _previewedPhotoIndex = null;
+      } else {
         _previewedPhotoIndex = widget.selectedPhotos.length - 1;
-      }
-      if (_previewedPhotoIndex < 0) {
-        _previewedPhotoIndex = 0;
       }
     });
 
@@ -136,11 +134,11 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.grey[200],
               ),
-              child: widget.selectedPhotos.isNotEmpty
+              child: _previewedPhotoIndex != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: Image.file(
-                        widget.selectedPhotos[_previewedPhotoIndex],
+                        widget.selectedPhotos[_previewedPhotoIndex!],
                         fit: BoxFit.contain,
                       ),
                     )
