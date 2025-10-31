@@ -740,6 +740,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.12+2"
+  group_list_view:
+    dependency: "direct main"
+    description:
+      name: group_list_view
+      sha256: "58bfc7f4b818abff531c2b202fb18b08abfb503f1621b0e86137a4fa4b6d91dd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   html:
     dependency: transitive
     description:

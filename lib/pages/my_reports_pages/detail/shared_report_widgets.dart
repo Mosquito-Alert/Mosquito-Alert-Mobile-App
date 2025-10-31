@@ -212,19 +212,23 @@ class ReportDetailWidgets {
   /// Shows the first photo from the report or falls back to a default asset
   static Widget buildLeadingImage({
     required dynamic report,
-    required String defaultAssetPath,
-    IconData placeholderIcon = Icons.photo_camera,
   }) {
     final photos = report.photos;
 
     if (photos.isEmpty) {
       // Fallback to default icon
-      return Image.asset(
-        defaultAssetPath,
-        width: 40,
-        height: 40,
-        fit: BoxFit.contain,
-        filterQuality: FilterQuality.high,
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[400]!, width: 2),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.grey[50],
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.hide_image, size: 30, color: Colors.grey[600]),
+          ],
+        ),
       );
     }
 
@@ -237,21 +241,20 @@ class ReportDetailWidgets {
         height: 40,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
-          width: 40,
-          height: 40,
           color: Colors.grey.withValues(alpha: 0.3),
           child: Icon(
-            placeholderIcon,
+            Icons.photo_camera,
             size: 20,
             color: Colors.grey,
           ),
         ),
-        errorWidget: (context, url, error) => Image.asset(
-          defaultAssetPath,
-          width: 40,
-          height: 40,
-          fit: BoxFit.contain,
-          filterQuality: FilterQuality.high,
+        errorWidget: (context, url, error) => Container(
+          color: Colors.grey.withValues(alpha: 0.3),
+          child: Icon(
+            Icons.hide_image,
+            size: 20,
+            color: Colors.grey,
+          ),
         ),
       ),
     );
@@ -260,6 +263,20 @@ class ReportDetailWidgets {
 
 /// Shared utility methods for report formatting
 class ReportUtils {
+  // Groups reports into a map keyed by "Day Month Year"
+  static Map<String, List<dynamic>> groupByMonth(List<dynamic> reports) {
+    final sorted = reports.toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    final formatter = DateFormat('dd MMMM yyyy');
+    final Map<String, List<dynamic>> grouped = {};
+    for (final report in sorted) {
+      final key = formatter.format(report.createdAt);
+      grouped.putIfAbsent(key, () => []).add(report);
+    }
+    return grouped;
+  }
+
   static String formatLocationCoordinates(dynamic report) {
     final point = report.location.point;
     return '${point.latitude.toStringAsFixed(5)}, ${point.longitude.toStringAsFixed(5)}';
@@ -270,7 +287,11 @@ class ReportUtils {
     // First try to get the display name from the location object
     final displayName = report.location.displayName;
     if (displayName != null && displayName.isNotEmpty) {
-      return displayName;
+      final parts = displayName.split(',').map((p) => p.trim()).toList();
+      final first = parts.isNotEmpty ? parts.first : '';
+      final last = parts.length > 1 ? parts.last : '';
+
+      return last.isNotEmpty ? '$first, $last' : first;
     }
 
     // Fall back to reverse geocoding using coordinates

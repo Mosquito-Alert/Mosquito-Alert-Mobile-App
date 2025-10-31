@@ -207,7 +207,17 @@ class Utils {
     if (placemarks.isEmpty) {
       return null;
     }
-    return placemarks.first.locality;
+    final placemark = placemarks.first;
+    final parts = <String>[];
+
+    if (placemark.locality != null && placemark.locality!.isNotEmpty) {
+      parts.add(placemark.locality!);
+    }
+    if (placemark.country != null && placemark.country!.isNotEmpty) {
+      parts.add(placemark.country!);
+    }
+
+    return parts.join(', ');
   }
 
   static String getRandomPassword(int length) {

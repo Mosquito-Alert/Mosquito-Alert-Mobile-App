@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/adult_report_detail_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/grouped_report_list_view.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
@@ -56,10 +57,6 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
     }
   }
 
-  String _formatCreationTime(Observation report) {
-    return ReportUtils.formatDate(report);
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -76,40 +73,27 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       );
     }
 
-    return ListView.builder(
-      itemCount: adultReports.length,
-      itemBuilder: (context, index) {
-        final report = adultReports[index];
-        final formatters = _ReportFormatters(context);
+    final formatters = _ReportFormatters(context);
+    return GroupedReportListView(
+      reports: adultReports,
+      titleBuilder: (report) {
         final title = formatters.formatTitle(report);
         final shouldItalicize = formatters.shouldItalicizeTitle(report);
 
-        return Card(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 4.0,
-          margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          child: ListTile(
-            leading: ReportDetailWidgets.buildLeadingImage(
-              report: report,
-              defaultAssetPath: 'assets/img/ic_mosquito_report_black.webp',
-              placeholderIcon: Icons.photo_camera,
-            ),
-            title: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontStyle:
-                    shouldItalicize ? FontStyle.italic : FontStyle.normal,
-              ),
-            ),
-            subtitle: Text(_formatCreationTime(report)),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => _navigateToReportDetail(report, context),
+        return Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
           ),
         );
+      },
+      leadingBuilder: (report) => ReportDetailWidgets.buildLeadingImage(
+        report: report,
+      ),
+      onTap: (report, context) {
+        // Handle tap on each report
+        _navigateToReportDetail(report, context);
       },
     );
   }
