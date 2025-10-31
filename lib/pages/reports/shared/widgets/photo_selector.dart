@@ -137,7 +137,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
               child: _previewedPhotoIndex != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: Image.file(
+                      child: Image.memory(
                         widget.selectedPhotos[_previewedPhotoIndex!],
                         fit: BoxFit.contain,
                       ),
@@ -192,7 +192,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
   }
 
   Widget _buildThumbnailWidget({
-    required File photo,
+    required Uint8List photo,
     required bool isSelected,
     required void Function() onTap,
     required void Function() onRemoveTap,
@@ -212,7 +212,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                     : null,
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
-                  image: FileImage(photo),
+                  image: MemoryImage(photo),
                   fit: BoxFit.cover,
                 ),
               ),
