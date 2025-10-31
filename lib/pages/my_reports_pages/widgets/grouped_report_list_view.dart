@@ -62,7 +62,7 @@ class GroupedReportListView<T> extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               child: Text(
                 groupedReports.keys.toList()[section],
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ));
       },
