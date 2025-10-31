@@ -67,20 +67,30 @@ class _WhatsAppCameraController extends ChangeNotifier {
   }
 
   Future<void> compressAndAddToSelectedImages(File file) async {
-    // Compressing image to jpeg 4k max = 3840x2160
-    Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+    try {
+      // Try compressing image to JPEG 4K max = 3840x2160
+      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
         minWidth: 3840,
         minHeight: 2160,
         quality: 98,
         autoCorrectionAngle: true,
         format: CompressFormat.jpeg,
-        keepExif: true);
+        keepExif: true,
+      );
 
-    if (compressedImage != null) {
-      selectedImages.add(compressedImage);
-    } else {
-      print('Error: Image compression failed for file ${file.path}');
+      if (compressedImage != null) {
+        selectedImages.add(compressedImage);
+      } else {
+        // Compression returned null, add original file bytes
+        print(
+            'Warning: Compression returned null for file ${file.path}. Adding original image.');
+        selectedImages.add(await file.readAsBytes());
+      }
+    } catch (e) {
+      // On any error, add the original file to selectedImages
+      print('Error compressing file ${file.path}: $e');
+      selectedImages.add(await file.readAsBytes());
     }
   }
 
