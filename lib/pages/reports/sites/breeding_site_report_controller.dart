@@ -10,6 +10,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dar
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models/breeding_site_report_data.dart';
 import 'pages/larvae_question_page.dart';
@@ -140,10 +141,12 @@ class _BreedingSiteReportControllerState
 
       // Step 2: Process photos
       final List<MultipartFile> photos = [];
+      final uuid = Uuid();
       for (final photo in _reportData.photos) {
-        if (await photo.exists()) {
-          photos.add(await MultipartFile.fromFile(photo.path));
-        }
+        photos.add(await MultipartFile.fromBytes(photo,
+            filename:
+                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
+            contentType: DioMediaType('image', 'jpeg')));
       }
       final photosRequest = BuiltList<MultipartFile>(photos);
 
@@ -165,7 +168,12 @@ class _BreedingSiteReportControllerState
       );
 
       if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(context);
+        ReportDialogs.showSuccessDialog(
+          context,
+          onOkPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        );
       } else {
         ReportDialogs.showErrorDialog(
             context, 'Server error: ${response.statusCode}');
@@ -213,9 +221,9 @@ class _BreedingSiteReportControllerState
           onPrevious: _previousStep,
           maxPhotos: 3,
           minPhotos: 1,
-          titleKey: 'bs_info_adult_title',
-          subtitleKey: 'camera_info_breeding_txt_01',
           infoBadgeTextKey: 'camera_info_breeding_txt_02',
+          thumbnailText:
+              '(HC) Photos of the same breeding site from different angles.',
         );
       case 2:
         _logAnalyticsEvent('report_add_has_water');
