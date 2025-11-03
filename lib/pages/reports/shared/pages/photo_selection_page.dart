@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/photo_selector.dart';
@@ -8,16 +8,15 @@ import 'package:mosquito_alert_app/utils/style.dart';
 /// Shared photo selection page that can be used by any report workflow
 /// Configurable PhotoSelector properties and navigation through callbacks
 class PhotoSelectionPage extends StatefulWidget {
-  final List<File> photos;
+  final List<Uint8List> photos;
   final VoidCallback onPhotosChanged;
   final VoidCallback onNext;
   final VoidCallback?
       onPrevious; // Optional for workflows that don't need back button
   final int maxPhotos;
   final int minPhotos;
-  final String? titleKey;
-  final String? subtitleKey;
   final String? infoBadgeTextKey;
+  final String? thumbnailText;
 
   const PhotoSelectionPage({
     Key? key,
@@ -27,9 +26,8 @@ class PhotoSelectionPage extends StatefulWidget {
     this.onPrevious,
     this.maxPhotos = 3,
     this.minPhotos = 1,
-    this.titleKey,
-    this.subtitleKey,
     this.infoBadgeTextKey,
+    this.thumbnailText,
   }) : super(key: key);
 
   @override
@@ -41,33 +39,35 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Photo selector component
-        Expanded(
-          child: PhotoSelector(
-            selectedPhotos: widget.photos,
-            onPhotosChanged: widget.onPhotosChanged,
-            maxPhotos: widget.maxPhotos,
-            minPhotos: widget.minPhotos,
-            titleKey: widget.titleKey,
-            subtitleKey: widget.subtitleKey,
-            infoBadgeTextKey: widget.infoBadgeTextKey,
-          ),
-        ),
-
-        // Navigation buttons
-        Container(
-          padding: EdgeInsets.all(16),
-          child: SizedBox(
-            width: double.infinity,
-            child: Style.button(
-              MyLocalizations.of(context, 'continue_txt'),
-              _canProceed ? widget.onNext : null,
+    return SafeArea(
+        child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          // Photo selector component
+          Expanded(
+            child: PhotoSelector(
+              selectedPhotos: widget.photos,
+              onPhotosChanged: widget.onPhotosChanged,
+              maxPhotos: widget.maxPhotos,
+              minPhotos: widget.minPhotos,
+              infoBadgeTextKey: widget.infoBadgeTextKey,
+              thumbnailText: widget.thumbnailText,
             ),
           ),
-        ),
-      ],
-    );
+          // Navigation buttons
+          Container(
+            margin: EdgeInsets.only(top: 16),
+            child: SizedBox(
+              width: double.infinity,
+              child: Style.button(
+                MyLocalizations.of(context, 'continue_txt'),
+                _canProceed ? widget.onNext : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 }

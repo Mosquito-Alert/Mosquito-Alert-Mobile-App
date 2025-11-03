@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/pages/reports/adult/widgets/dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
@@ -10,6 +11,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dar
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models/adult_report_data.dart';
 import 'pages/environment_question_page.dart';
@@ -25,6 +27,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
   late PageController _pageController;
   late AdultReportData _reportData;
   late ObservationsApi _observationsApi;
+  late CampaignsApi _campaignsApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -53,6 +56,7 @@ class _AdultReportControllerState extends State<AdultReportController> {
     // Initialize API
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
     _observationsApi = apiClient.getObservationsApi();
+    _campaignsApi = apiClient.getCampaignsApi();
 
     _logAnalyticsEvent('start_report');
   }
@@ -139,10 +143,12 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
       // Step 3: Process photos
       final List<MultipartFile> photos = [];
+      final uuid = Uuid();
       for (final photo in _reportData.photos) {
-        if (await photo.exists()) {
-          photos.add(await MultipartFile.fromFile(photo.path));
-        }
+        photos.add(await MultipartFile.fromBytes(photo,
+            filename:
+                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
+            contentType: DioMediaType('image', 'jpeg')));
       }
       final photosRequest = BuiltList<MultipartFile>(photos);
 
@@ -167,7 +173,39 @@ class _AdultReportControllerState extends State<AdultReportController> {
       );
 
       if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(context);
+        ReportDialogs.showSuccessDialog(
+          context,
+          onOkPressed: () async {
+            Navigator.pop(context); // close the success dialog
+            Country? country = response.data?.location.country;
+            if (country == null) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              return;
+            }
+
+            try {
+              final campaignsResponse = await _campaignsApi.list(
+                countryId: country.id,
+                isActive: true,
+                pageSize: 1,
+                orderBy: ['-start_date'].build(),
+              );
+              final Campaign? campaign =
+                  campaignsResponse.data?.results?.firstOrNull;
+              if (campaign != null) {
+                Dialogs.showAlertCampaign(
+                  context,
+                  campaign,
+                  (context) => Navigator.of(context).popUntil((route) => route.isFirst),
+                );
+              } else {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
+            } catch (e) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
+          },
+        );
       } else {
         ReportDialogs.showErrorDialog(
             context, 'Server error: ${response.statusCode}');
@@ -221,16 +259,15 @@ class _AdultReportControllerState extends State<AdultReportController> {
                   NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: [
                 PhotoSelectionPage(
-                  photos: _reportData.photos,
-                  onPhotosChanged: _onPhotosChanged,
-                  onNext: _nextStep,
-                  // No onPrevious for adult reports (first step)
-                  maxPhotos: 3,
-                  minPhotos: 1,
-                  titleKey: 'bs_info_adult_title',
-                  subtitleKey: 'ensure_single_mosquito_photos',
-                  infoBadgeTextKey: 'one_mosquito_reminder_badge',
-                ),
+                    photos: _reportData.photos,
+                    onPhotosChanged: _onPhotosChanged,
+                    onNext: _nextStep,
+                    // No onPrevious for adult reports (first step)
+                    maxPhotos: 3,
+                    minPhotos: 1,
+                    infoBadgeTextKey: 'one_mosquito_reminder_badge',
+                    thumbnailText:
+                        '(HC) Photos of the same mosquito from different angles.'),
                 LocationSelectionPage(
                   initialLatitude: _reportData.latitude,
                   initialLongitude: _reportData.longitude,
