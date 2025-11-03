@@ -57,7 +57,7 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
           ),
           // Navigation buttons
           Container(
-            margin: EdgeInsets.only(top: 16),
+            margin: EdgeInsets.only(top: 16, bottom: 24),
             child: SizedBox(
               width: double.infinity,
               child: Style.button(
