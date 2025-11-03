@@ -38,8 +38,8 @@ class GroupedReportListView<T> extends StatelessWidget {
           future: ReportUtils.formatLocationWithCity(report),
           builder: (context, snapshot) {
             final subtitle = snapshot.connectionState == ConnectionState.waiting
-                ? 'Loading...'
-                : (snapshot.data ?? 'Unknown location');
+                ? '(HC) Loading...'
+                : (snapshot.data ?? '(HC) Unknown location');
 
             return ListTile(
               title: titleBuilder(report),
