@@ -5,6 +5,7 @@ import 'package:mosquito_alert_app/pages/my_reports_pages/detail/adult_report_de
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/grouped_report_list_view.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -73,20 +74,10 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       );
     }
 
-    final formatters = _ReportFormatters(context);
     return GroupedReportListView(
       reports: adultReports,
       titleBuilder: (report) {
-        final title = formatters.formatTitle(report);
-        final shouldItalicize = formatters.shouldItalicizeTitle(report);
-
-        return Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontStyle: shouldItalicize ? FontStyle.italic : FontStyle.normal,
-          ),
-        );
+        return ObservationWidgets(context, report).buildTitleText();
       },
       leadingBuilder: (report) => ReportDetailWidgets.buildLeadingImage(
         report: report,
@@ -107,7 +98,7 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AdultReportDetailPage(report: report),
+        builder: (context) => AdultReportDetailPage(observation: report),
       ),
     );
 
@@ -117,33 +108,5 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
         adultReports.removeWhere((r) => r.uuid == report.uuid);
       });
     }
-  }
-}
-
-class _ReportFormatters {
-  final BuildContext context;
-
-  _ReportFormatters(this.context);
-
-  String formatTitle(Observation report) {
-    if (report.identification == null) {
-      return MyLocalizations.of(context, 'non_identified_specie');
-    }
-
-    // Navigate through nested nullable fields
-    final identification = report.identification;
-    final result = identification?.result;
-    final taxon = result?.taxon;
-    final nameValue = taxon?.nameValue;
-
-    if (nameValue == null || nameValue.isEmpty) {
-      return MyLocalizations.of(context, 'non_identified_specie');
-    }
-
-    return nameValue;
-  }
-
-  bool shouldItalicizeTitle(Observation report) {
-    return report.identification?.result?.taxon?.italicize ?? false;
   }
 }
