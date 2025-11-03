@@ -5,7 +5,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 /// Widget for selecting the environment where biting occurred
 class EnvironmentSelector extends StatelessWidget {
   final BiteRequestEventEnvironmentEnum? selectedEnvironment;
-  final Function(BiteRequestEventEnvironmentEnum) onEnvironmentChanged;
+  final Function(BiteRequestEventEnvironmentEnum?) onEnvironmentChanged;
 
   const EnvironmentSelector({
     Key? key,
@@ -40,7 +40,7 @@ class EnvironmentSelector extends StatelessWidget {
         SizedBox(height: 12),
         _buildOptionTile(
           context,
-          BiteRequestEventEnvironmentEnum.unknownDefaultOpenApi,
+          null, // null represents "I don't know"
           '(HC) I don\'t know',
           Icons.help_outline,
         ),
@@ -50,7 +50,7 @@ class EnvironmentSelector extends StatelessWidget {
 
   Widget _buildOptionTile(
     BuildContext context,
-    BiteRequestEventEnvironmentEnum environment,
+    BiteRequestEventEnvironmentEnum? environment,
     String title,
     IconData icon,
   ) {
