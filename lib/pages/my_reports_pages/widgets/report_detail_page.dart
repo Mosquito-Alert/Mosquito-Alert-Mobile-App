@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -104,45 +103,53 @@ class ReportDetailPage extends StatelessWidget {
                     ],
                   ),
                 ],
-                flexibleSpace: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  var top = constraints.biggest.height;
-                  return FlexibleSpaceBar(
-                      title: AnimatedOpacity(
-                          opacity: math.max(0, math.min(1, (top - 71) / 20)),
-                          duration: Duration(milliseconds: 300),
-                          child: Text(
-                            title.data ?? '',
-                            style: (title.style ?? const TextStyle()).copyWith(
-                              color: (top > 71 && top < 91)
-                                  ? Colors.white
-                                  : Style.colorPrimary,
-                            ),
-                          )),
-                      background: topBarBackgroundBuilder == null
-                          ? null
-                          : Stack(fit: StackFit.expand, children: [
-                              topBarBackgroundBuilder!.call(),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                height: 100,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.black.withValues(alpha: 0.5),
-                                        Colors.transparent,
-                                      ],
-                                    ),
+                flexibleSpace: FlexibleSpaceBar(
+                    title: Text(title.data!,
+                        style: title.style?.copyWith(
+                              color: Colors.white,
+                            ) ??
+                            const TextStyle(color: Colors.white)),
+                    background: topBarBackgroundBuilder == null
+                        ? null
+                        : Stack(fit: StackFit.expand, children: [
+                            topBarBackgroundBuilder!.call(),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              height: 80,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withValues(alpha: 0.5),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ]));
-                }),
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: 100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.black.withValues(alpha: 0.5),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ])),
               ),
               SliverList(
                   delegate: SliverChildListDelegate(<Widget>[
