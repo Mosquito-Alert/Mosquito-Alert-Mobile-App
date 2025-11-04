@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 
 /// Shared widgets for report detail pages
@@ -60,20 +59,6 @@ class ReportDetailWidgets {
 
 /// Shared utility methods for report formatting
 class ReportUtils {
-  // Groups reports into a map keyed by date in "dd MMMM yyyy" format (e.g., "31 October 2024")
-  static Map<String, List<dynamic>> groupByMonth(List<dynamic> reports) {
-    final sorted = reports.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-    final formatter = DateFormat('dd MMMM yyyy');
-    final Map<String, List<dynamic>> grouped = {};
-    for (final report in sorted) {
-      final key = formatter.format(report.createdAt);
-      grouped.putIfAbsent(key, () => []).add(report);
-    }
-    return grouped;
-  }
-
   static String formatLocationCoordinates(dynamic report) {
     final point = report.location.point;
     return '${point.latitude.toStringAsFixed(5)}, ${point.longitude.toStringAsFixed(5)}';
