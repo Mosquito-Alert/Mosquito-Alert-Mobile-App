@@ -4,6 +4,7 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/bite_report_detail_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/grouped_report_list_view.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -72,12 +73,10 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       );
     }
 
-    final formatters = _ReportFormatters(context);
-
     return GroupedReportListView(
       reports: biteReports,
       titleBuilder: (report) {
-        return Text(formatters.formatTitle(report));
+        return BiteWidgets(context, report).buildTitleText();
       },
       onTap: (report, context) {
         _navigateToReportDetail(report, context);
@@ -94,7 +93,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BiteReportDetailPage(report: report),
+        builder: (context) => BiteReportDetailPage(bite: report),
       ),
     );
 
@@ -103,24 +102,6 @@ class _ReportsListBitesState extends State<ReportsListBites> {
       setState(() {
         biteReports.removeWhere((b) => b.uuid == report.uuid);
       });
-    }
-  }
-}
-
-class _ReportFormatters {
-  final BuildContext context;
-
-  _ReportFormatters(this.context);
-
-  String formatTitle(Bite report) {
-    final totalBites = report.counts.total;
-
-    if (totalBites == 0) {
-      return MyLocalizations.of(context, 'no_bites');
-    } else if (totalBites == 1) {
-      return '1 ${MyLocalizations.of(context, 'single_bite').toLowerCase()}';
-    } else {
-      return '$totalBites ${MyLocalizations.of(context, 'plural_bite').toLowerCase()}';
     }
   }
 }

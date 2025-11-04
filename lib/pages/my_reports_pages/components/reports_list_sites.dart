@@ -5,6 +5,7 @@ import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_w
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/site_report_detail_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/grouped_report_list_view.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
 
@@ -57,10 +58,6 @@ class _ReportsListSitesState extends State<ReportsListSites> {
     }
   }
 
-  String _formatTitle() {
-    return MyLocalizations.of(context, 'single_breeding_site');
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -80,7 +77,7 @@ class _ReportsListSitesState extends State<ReportsListSites> {
     return GroupedReportListView(
       reports: siteReports,
       titleBuilder: (report) {
-        return Text(_formatTitle());
+        return BreedingSiteWidgets(context, report).buildTitleText();
       },
       leadingBuilder: (report) {
         return ReportDetailWidgets.buildLeadingImage(
@@ -101,7 +98,7 @@ class _ReportsListSitesState extends State<ReportsListSites> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SiteReportDetailPage(report: report),
+        builder: (context) => SiteReportDetailPage(breedingSite: report),
       ),
     );
 
