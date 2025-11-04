@@ -57,19 +57,26 @@ class PushNotificationsManager {
       return MessageNotification(
         title: title,
         message: msg,
-        onTap: () {
+        onTap: () async {
           OverlaySupportEntry.of(context)!.dismiss();
           if (notifId == null) {
             print('Notification ID is null, not navigating.');
             return;
           }
+
+          final BuildContext? ctx = navigatorKey.currentContext;
+          if (ctx == null) {
+            print('Navigator context not ready.');
+            return;
+          }
+          final notificationDetailPage = await NotificationDetailPage.fromId(
+            context: ctx,
+            notificationId: notifId,
+          );
           Navigator.push(
-            context,
+            ctx,
             MaterialPageRoute(
-                builder: (context) => NotificationDetailPage(
-                      notificationId: notifId,
-                    ),
-                fullscreenDialog: true),
+                builder: (_) => notificationDetailPage, fullscreenDialog: true),
           );
         },
       );
@@ -90,16 +97,21 @@ class PushNotificationsManager {
       return;
     }
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Navigator.push(
-        navigatorKey.currentContext!,
-        MaterialPageRoute(
-            builder: (context) => NotificationDetailPage(
-                  notificationId: notifId,
-                ),
-            fullscreenDialog: true),
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      final ctx = navigatorKey.currentContext;
+      if (ctx == null) {
+        print('Navigator context not available yet.');
+        return;
+      }
+      final notificationDetailPage = await NotificationDetailPage.fromId(
+        context: ctx,
+        notificationId: notifId,
       );
-      ;
+      Navigator.push(
+        ctx,
+        MaterialPageRoute(
+            builder: (_) => notificationDetailPage, fullscreenDialog: true),
+      );
     });
   }
 }

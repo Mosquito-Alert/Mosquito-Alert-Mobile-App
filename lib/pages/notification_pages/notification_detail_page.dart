@@ -6,85 +6,64 @@ import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class NotificationDetailPage extends StatefulWidget {
-  final sdk.Notification? notification;
-  final int? notificationId;
+  final sdk.Notification notification;
   final void Function(sdk.Notification)? onNotificationUpdated;
 
   const NotificationDetailPage({
     super.key,
-    this.notification,
-    this.notificationId,
+    required this.notification,
     this.onNotificationUpdated,
-  }) : assert(
-          notification != null || notificationId != null,
-          'Either notification or notificationId must be provided.',
-        );
+  });
+
+  static Future<NotificationDetailPage> fromId({
+    required BuildContext context,
+    required int notificationId,
+    void Function(sdk.Notification)? onNotificationUpdated,
+  }) async {
+    final sdk.MosquitoAlert apiClient =
+        Provider.of<sdk.MosquitoAlert>(context, listen: false);
+    final sdk.NotificationsApi notificationsApi =
+        apiClient.getNotificationsApi();
+    final response = await notificationsApi.retrieve(id: notificationId);
+
+    return NotificationDetailPage(
+      notification: response.data!,
+      onNotificationUpdated: onNotificationUpdated,
+    );
+  }
 
   @override
   State<NotificationDetailPage> createState() => _NotificationDetailPageState();
 }
 
 class _NotificationDetailPageState extends State<NotificationDetailPage> {
-  sdk.Notification? _notification; // local mutable copy
+  late sdk.Notification _notification; // local mutable copy
   late sdk.NotificationsApi notificationsApi;
-  bool _loading = true;
-  bool _error = false;
 
   @override
   void initState() {
     super.initState();
+    _notification = widget.notification;
 
     sdk.MosquitoAlert apiClient =
         Provider.of<sdk.MosquitoAlert>(context, listen: false);
     notificationsApi = apiClient.getNotificationsApi();
 
-    if (widget.notification != null) {
-      _notification = widget.notification!;
-      _loading = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) => _markAsRead());
-    } else {
-      _fetchNotification();
-    }
-  }
-
-  Future<void> _fetchNotification() async {
-    setState(() {
-      _loading = true;
-      _error = false;
-    });
-
-    try {
-      final response =
-          await notificationsApi.retrieve(id: widget.notificationId!);
-      final fetched = response.data!;
-      setState(() {
-        _notification = fetched;
-        _loading = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) => _markAsRead());
-    } catch (e) {
-      debugPrint("Failed to fetch notification: $e");
-      setState(() {
-        _error = true;
-        _loading = false;
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _markAsRead());
   }
 
   Future<void> _markAsRead() async {
-    final notif = _notification;
-    if (notif == null || notif.isRead) return;
+    if (_notification.isRead) return;
 
     try {
       final request = sdk.PatchedNotificationRequest((b) => b..isRead = true);
-
       final response = await notificationsApi.partialUpdate(
-          id: notif.id, patchedNotificationRequest: request);
+          id: _notification.id, patchedNotificationRequest: request);
 
       final updatedNotification = response.data!;
-      setState(() {
-        _notification = updatedNotification; // update local state
-      });
+      if (!mounted) return;
+
+      setState(() => _notification = updatedNotification);
 
       // notify parent
       widget.onNotificationUpdated?.call(updatedNotification);
@@ -93,15 +72,16 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
     }
   }
 
+  String get formattedDate {
+    final date = _notification.createdAt.toLocal();
+    return DateFormat('MMM d, yyyy • h:mm a').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_error || _notification == null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Notification")),
-        body: const Center(child: Text("Failed to load notification.")),
-      );
-    }
-    final notification = _notification!;
+    final title = _notification.message.title;
+    final body = _notification.message.body;
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.white,
@@ -115,7 +95,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      notification.message.title,
+                      title,
                       style: TextStyle(
                         color: Style.colorPrimary,
                         fontSize: 20.0,
@@ -123,8 +103,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                       ),
                     ),
                     Text(
-                      DateFormat('MMM d, yyyy • h:mm a')
-                          .format(notification.createdAt.toLocal()),
+                      formattedDate,
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12.0,
@@ -133,20 +112,18 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                   ]),
             ),
           )),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: html.Html(
-                data: notification.message.body,
-                style: {
-                  '*': html.Style(
-                    padding: html.HtmlPaddings.zero,
-                    margin: html.Margins.zero,
-                  ),
-                },
-              ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: html.Html(
+          data: body,
+          style: {
+            '*': html.Style(
+              padding: html.HtmlPaddings.zero,
+              margin: html.Margins.zero,
             ),
+          },
+        ),
+      ),
     );
   }
 }
