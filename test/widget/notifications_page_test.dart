@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
+import 'package:mosquito_alert_app/pages/notification_pages/notification_detail_page.dart';
 import 'package:mosquito_alert_app/services/analytics_service.dart';
 import 'package:provider/provider.dart';
 
@@ -11,17 +12,17 @@ import '../mocks/mocks.dart';
 Widget createTestWidget({
   MockMosquitoAlert? mockClient,
 }) {
-  return MaterialApp(
-    home: Provider<sdk.MosquitoAlert>(
-      create: (_) => mockClient ?? MockMosquitoAlert(),
-      child: NotificationsPage(
+  return Provider<sdk.MosquitoAlert>(
+    create: (_) => mockClient ?? MockMosquitoAlert(),
+    child: MaterialApp(
+      home: NotificationsPage(
         analyticsService: MockAnalyticsService(),
       ),
+      localizationsDelegates: const [
+        MockMyLocalizationsDelegate(),
+      ],
+      supportedLocales: const [Locale('en')],
     ),
-    localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
-    ],
-    supportedLocales: const [Locale('en')],
   );
 }
 
@@ -213,7 +214,10 @@ void main() {
       await tester.tap(find.byType(ListTile));
       await tester.pumpAndSettle();
 
-      // Simulate going back (if not automatic)
+      // Verify that we navigated to the detail page
+      expect(find.byType(NotificationDetailPage), findsOneWidget);
+
+      // Navigate back using the back button or system back
       await tester.pageBack();
       await tester.pumpAndSettle();
 
