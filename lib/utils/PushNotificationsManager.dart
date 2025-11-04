@@ -4,11 +4,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+import 'package:mosquito_alert_app/pages/notification_pages/notification_detail_page.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../main.dart';
-import '../pages/notification_pages/notifications_page.dart';
 
 class PushNotificationsManager {
   PushNotificationsManager._();
@@ -66,7 +66,7 @@ class PushNotificationsManager {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => NotificationsPage(
+                builder: (context) => NotificationDetailPage(
                       notificationId: notifId,
                     ),
                 fullscreenDialog: true),
@@ -94,7 +94,7 @@ class PushNotificationsManager {
       Navigator.push(
         navigatorKey.currentContext!,
         MaterialPageRoute(
-            builder: (context) => NotificationsPage(
+            builder: (context) => NotificationDetailPage(
                   notificationId: notifId,
                 ),
             fullscreenDialog: true),
