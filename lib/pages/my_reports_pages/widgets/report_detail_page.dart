@@ -200,11 +200,10 @@ class ReportDetailPage extends StatelessWidget {
                       spacing: 8.0, // space between chips
                       runSpacing: 4.0, // space between lines
                       children: report.tags.map((tag) {
-                            return Chip(
-                              label: Text(tag),
-                            );
-                          }).toList() ??
-                          [],
+                        return Chip(
+                          label: Text(tag),
+                        );
+                      }).toList(),
                     ),
                   ),
                 if (report.note != null && report.note!.isNotEmpty)
