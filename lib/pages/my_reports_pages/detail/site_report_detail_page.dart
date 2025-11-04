@@ -41,9 +41,6 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
       itemSnapping: true,
       padding: EdgeInsets.zero,
       shape: const BeveledRectangleBorder(),
-      // shape: new RoundedRectangleBorder(
-      //   borderRadius: new BorderRadius.circular(0.0),
-      // ),
       children:
           List<Widget>.generate(widget.breedingSite.photos.length, (int index) {
         final photo = widget.breedingSite.photos[index];
