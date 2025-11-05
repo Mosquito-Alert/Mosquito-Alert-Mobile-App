@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:mosquito_alert_app/utils/UserManager.dart';
 
 /// Shared widgets for report detail pages
 class ReportDetailWidgets {
@@ -66,29 +67,65 @@ class ReportUtils {
 
   /// Format location with city name or fallback to coordinates
   static Future<String> formatLocationWithCity(dynamic report) async {
-    // First try to get the display name from the location object
+    String? cityName;
+    String? countryName;
+
+    // 1. Try using administrative boundaries first
+    final admBoundaries = report.location.admBoundaries;
+    if (admBoundaries.isNotEmpty) {
+      try {
+        // Use the most specific administrative boundary available
+        final cityBoundary = admBoundaries.firstWhere(
+          (adm) => adm.level == 4 && adm.code == 'NUTS',
+        );
+        cityName = cityBoundary.nameValue;
+      } catch (_) {
+        // No city-level boundary found
+      }
+      countryName = report.location.country?.nameEn;
+      if (cityName != null && countryName != null) {
+        return '$cityName, $countryName';
+      }
+    }
+
+    // 2. Use displayName if available (preferred human-readable name)
     final displayName = report.location.displayName;
     if (displayName != null && displayName.isNotEmpty) {
       final parts = displayName.split(',').map((p) => p.trim()).toList();
-      final first = parts.isNotEmpty ? parts.first : '';
-      final last = parts.length > 1 ? parts.last : '';
-
-      return last.isNotEmpty ? '$first, $last' : first;
+      if (parts.isNotEmpty) cityName = parts.first;
+      if (parts.length > 1) countryName = parts.last;
+      if (cityName != null && countryName != null) {
+        return '$cityName, $countryName';
+      }
     }
 
-    // Fall back to reverse geocoding using coordinates
+    // 3. Fallback: Reverse geocoding from coordinates
     final point = report.location.point;
     try {
-      final cityName =
-          await Utils.getCityNameFromCoords(point.latitude, point.longitude);
-      if (cityName != null && cityName.isNotEmpty) {
-        return cityName;
+      var locale = await UserManager.getUserLocale();
+      if (locale != null) {
+        await setLocaleIdentifier(locale);
+      }
+      final placemarks =
+          await placemarkFromCoordinates(point.latitude, point.longitude);
+      if (placemarks.isNotEmpty) {
+        final placemark = placemarks.first;
+        cityName ??= placemark.locality?.trim();
+        countryName ??= placemark.country?.trim();
+        if (cityName != null && countryName != null) {
+          return '$cityName, $countryName';
+        }
       }
     } catch (e) {
       print('Error getting city name: $e');
     }
 
-    // Final fallback to coordinates
+    // 4. Final fallback: just coordinates if no name found
+    if (cityName != null && countryName != null)
+      return '$cityName, $countryName';
+    if (cityName != null) return cityName;
+    if (countryName != null) return countryName;
+
     return formatLocationCoordinates(report);
   }
 

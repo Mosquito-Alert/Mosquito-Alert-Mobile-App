@@ -5,8 +5,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 import 'MyLocalizations.dart';
@@ -123,26 +121,6 @@ class Utils {
     }
 
     return language;
-  }
-
-  static Future<String?> getCityNameFromCoords(double lat, double lon) async {
-    var locale = await UserManager.getUserLocale();
-    await setLocaleIdentifier(locale!);
-    var placemarks = await placemarkFromCoordinates(lat, lon);
-    if (placemarks.isEmpty) {
-      return null;
-    }
-    final placemark = placemarks.first;
-    final parts = <String>[];
-
-    if (placemark.locality != null && placemark.locality!.isNotEmpty) {
-      parts.add(placemark.locality!);
-    }
-    if (placemark.country != null && placemark.country!.isNotEmpty) {
-      parts.add(placemark.country!);
-    }
-
-    return parts.join(', ');
   }
 
   static String getRandomPassword(int length) {
