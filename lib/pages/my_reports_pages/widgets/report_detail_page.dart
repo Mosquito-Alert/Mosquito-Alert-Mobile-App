@@ -10,7 +10,7 @@ import 'package:mosquito_alert_app/utils/style.dart';
 class ReportDetailPage extends StatelessWidget {
   final dynamic report;
   final Text title;
-  final void Function(dynamic report) onTapDelete;
+  final Future<void> Function(dynamic report) onTapDelete;
   final Map<IconData, String>? extraListTileMap;
   final Widget Function()? topBarBackgroundBuilder;
 
@@ -26,30 +26,54 @@ class ReportDetailPage extends StatelessWidget {
   Future<bool?> showDeleteDialog(BuildContext context) {
     return showDialog<bool>(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(MyLocalizations.of(context, 'delete_report_title')),
-              content: Text(MyLocalizations.of(context, 'delete_report_txt')),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    MyLocalizations.of(context, 'cancel'),
-                    style: const TextStyle(color: Colors.black54),
+        barrierDismissible: false, // prevent dismissing by tapping outside
+        builder: (BuildContext context) {
+          bool isDeleting = false;
+          return StatefulBuilder(builder: (context, setState) {
+            return Stack(children: [
+              AlertDialog(
+                title: Text(MyLocalizations.of(context, 'delete_report_title')),
+                content: Text(MyLocalizations.of(context, 'delete_report_txt')),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text(
+                      MyLocalizations.of(context, 'cancel'),
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                ),
-                TextButton(
-                  child: Text(
-                    MyLocalizations.of(context, 'delete'),
-                    style: const TextStyle(color: Colors.red),
+                  TextButton(
+                    child: Text(
+                      MyLocalizations.of(context, 'delete'),
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    onPressed: () async {
+                      setState(() => isDeleting = true);
+                      try {
+                        await onTapDelete(report);
+                        Navigator.of(context).pop(true);
+                      } catch (e) {
+                        Navigator.of(context).pop(false);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
+                ],
+              ),
+              if (isDeleting)
+                // Spinner overlay when deleting
+                Container(
+                  color: Colors.black45,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ],
-            ));
+            ]);
+          });
+        });
   }
 
   @override
@@ -77,13 +101,9 @@ class ReportDetailPage extends StatelessWidget {
                 actions: [
                   PopupMenuButton<int>(
                     icon: const Icon(Icons.more_vert),
-                    onSelected: (value) {
+                    onSelected: (value) async {
                       if (value == 1) {
-                        showDeleteDialog(context).then((delete) {
-                          if (delete == true) {
-                            onTapDelete(report);
-                          }
-                        });
+                        await showDeleteDialog(context);
                       }
                     },
                     itemBuilder: (context) => [
