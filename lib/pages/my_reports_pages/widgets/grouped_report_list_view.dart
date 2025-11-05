@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:infinite_scroll_pagination/src/defaults/first_page_exception_indicator.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
@@ -108,9 +109,9 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
           state: _state,
           fetchNextPage: _fetchNextPage,
           builderDelegate: PagedChildBuilderDelegate<dynamic>(
-              noItemsFoundIndicatorBuilder: (context) => Center(
-                    child:
-                        Text(MyLocalizations.of(context, 'no_reports_yet_txt')),
+              noItemsFoundIndicatorBuilder: (context) =>
+                  FirstPageExceptionIndicator(
+                    title: MyLocalizations.of(context, 'no_reports_yet_txt'),
                   ),
               itemBuilder: (context, item, index) {
                 if (item is SectionHeader) {
