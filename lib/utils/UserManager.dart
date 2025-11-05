@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/consent_form.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/background_tracking_explanation.dart';
@@ -48,6 +49,9 @@ class UserManager {
   //set
   static Future<void> setLanguage(language) async {
     var prefs = await SharedPreferences.getInstance();
+    // NOTE: this is important for DateFormat to work correctly
+    Intl.defaultLocale = Intl.verifiedLocale(language, DateFormat.localeExists,
+        onFailure: (newLocale) => 'en');
     await prefs.setString('language', language);
   }
 
