@@ -23,7 +23,15 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
   @override
   void initState() {
     super.initState();
+    _logScreenView();
     _initializeApi();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logSelectContent(
+      contentType: 'bite_report',
+      itemId: widget.bite.uuid,
+    );
   }
 
   void _initializeApi() {

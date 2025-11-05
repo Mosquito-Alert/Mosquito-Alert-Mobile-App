@@ -24,7 +24,15 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
   @override
   void initState() {
     super.initState();
+    _logScreenView();
     _initializeApi();
+  }
+
+  Future<void> _logScreenView() async {
+    await FirebaseAnalytics.instance.logSelectContent(
+      contentType: 'adult_report',
+      itemId: widget.observation.uuid,
+    );
   }
 
   void _initializeApi() {

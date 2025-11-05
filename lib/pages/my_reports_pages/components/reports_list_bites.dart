@@ -1,5 +1,4 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/bite_report_detail_page.dart';
@@ -42,25 +41,13 @@ class _ReportsListBitesState extends State<ReportsListBites> {
         return BiteWidgets(context, report).buildTitleText();
       },
       onTap: (report, context) async {
-        return _navigateToReportDetail(report, context);
+        return await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BiteReportDetailPage(bite: report),
+          ),
+        );
       },
     );
-  }
-
-  Future<bool?> _navigateToReportDetail(
-      Bite report, BuildContext context) async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'bite_report',
-      itemId: report.uuid,
-    );
-
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BiteReportDetailPage(bite: report),
-      ),
-    );
-
-    return result;
   }
 }

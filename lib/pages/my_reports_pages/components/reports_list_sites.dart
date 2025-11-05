@@ -1,5 +1,4 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
@@ -48,24 +47,13 @@ class _ReportsListSitesState extends State<ReportsListSites> {
         );
       },
       onTap: (report, context) async {
-        return _navigateToReportDetail(report, context);
+        return await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SiteReportDetailPage(breedingSite: report),
+          ),
+        );
       },
     );
-  }
-
-  Future<bool?> _navigateToReportDetail(
-      BreedingSite report, BuildContext context) async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'breeding_site_report',
-      itemId: report.uuid,
-    );
-
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SiteReportDetailPage(breedingSite: report),
-      ),
-    );
-    return result;
   }
 }

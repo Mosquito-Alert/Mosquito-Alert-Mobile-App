@@ -25,7 +25,15 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
   @override
   void initState() {
     super.initState();
+    _logViewScreen();
     _initializeApi();
+  }
+
+  Future<void> _logViewScreen() async {
+    await FirebaseAnalytics.instance.logSelectContent(
+      contentType: 'breeding_site_report',
+      itemId: widget.breedingSite.uuid,
+    );
   }
 
   void _initializeApi() {
