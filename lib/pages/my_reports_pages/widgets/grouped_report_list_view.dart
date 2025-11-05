@@ -34,7 +34,14 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
 
   PagingState<int, dynamic> _state = PagingState();
 
-  void _fetchNextPage() async {
+  Future<void> refresh() async {
+    setState(() {
+      _state = PagingState();
+    });
+    await _fetchNextPage();
+  }
+
+  Future<void> _fetchNextPage() async {
     if (_state.isLoading || !_state.hasNextPage) return;
 
     setState(() {
@@ -96,10 +103,7 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
         onRefresh: () async {
-          setState(() {
-            _state = PagingState();
-          });
-          _fetchNextPage();
+          await refresh();
         },
         child: PagedListView.separated(
           state: _state,
@@ -148,10 +152,7 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
                         onTap: () async {
                           bool? deleted = await widget.onTap(item, context);
                           if (deleted == true) {
-                            setState(() {
-                              _state = PagingState();
-                            });
-                            _fetchNextPage();
+                            await refresh();
                           }
                         },
                       );
