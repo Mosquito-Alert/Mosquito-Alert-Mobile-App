@@ -7,6 +7,7 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class GroupedReportListView extends StatefulWidget {
   final Text Function(dynamic report) titleBuilder;
+  // NOTE: fetchObjects must be sorted by createdAt descending
   final Future<Response<dynamic>> Function(int page, int pageSize) fetchObjects;
   final Widget? Function(dynamic report)? leadingBuilder;
   final Future<bool?> Function(dynamic report, BuildContext context) onTap;
@@ -24,18 +25,22 @@ class GroupedReportListView extends StatefulWidget {
 }
 
 class SectionHeader {
-  final String date;
+  final DateTime date;
 
   SectionHeader(this.date);
+
+  String get formattedDate => DateFormat('dd MMMM yyyy').format(date);
 }
 
 class _GroupedReportListViewState extends State<GroupedReportListView> {
   static const _pageSize = 20;
+  DateTime? _lastHeaderDate;
 
   PagingState<int, dynamic> _state = PagingState();
 
   Future<void> refresh() async {
     setState(() {
+      _lastHeaderDate = null;
       _state = PagingState();
     });
     await _fetchNextPage();
@@ -60,29 +65,23 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
         });
         return;
       }
-
+      final isLastPage = data.next == null;
       final newItems = data.results?.toList() ?? [];
 
       // Group items by date
       final List<dynamic> itemsWithHeaders = [];
-      String? lastDate = _state.pages
-          ?.expand((page) => page) // flatten the list of lists
-          .whereType<SectionHeader>() // only SectionHeader items
-          .lastOrNull // last one or null
-          ?.date;
+      var lastDate = _lastHeaderDate;
       for (var item in newItems) {
-        // Format createdAt to 'dd MMMM yyyy'
-        final formattedDate = DateFormat('dd MMMM yyyy').format(item.createdAt);
-
-        if (formattedDate != lastDate) {
-          // Insert SectionHeader before the first item of this date
-          itemsWithHeaders.add(SectionHeader(formattedDate));
-          lastDate = formattedDate;
+        final currentDate = DateTime(item.createdAtLocal.year,
+            item.createdAtLocal.month, item.createdAtLocal.day);
+        // NOTE: assuming items are sorted by createdAt descending
+        if (lastDate == null || currentDate.isBefore(lastDate)) {
+          itemsWithHeaders.add(SectionHeader(currentDate));
+          lastDate = currentDate;
         }
         itemsWithHeaders.add(item);
       }
-
-      final isLastPage = data.next == null;
+      _lastHeaderDate = lastDate;
 
       setState(() {
         _state = _state.copyWith(
@@ -122,7 +121,7 @@ class _GroupedReportListViewState extends State<GroupedReportListView> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 8),
                       child: Text(
-                        item.date, // SectionHeader already stores formatted date
+                        item.formattedDate,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
