@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/pages/notification_pages/notification_detail_page.dart';
+import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 
 import '../main.dart';
 
@@ -20,7 +22,7 @@ class PushNotificationsManager {
   /*
   * Push Notification Manager Init
   */
-  static Future<void> init() async {
+  static Future<void> init(BuildContext context) async {
     final appConfig = await AppConfig.loadConfig();
     if (appConfig.useAuth) {
       await FirebaseMessaging.instance.requestPermission();
@@ -34,6 +36,12 @@ class PushNotificationsManager {
       FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage remoteMessage) {
         _handleBackgroundMessage(remoteMessage);
+      });
+
+      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+        final deviceProvider =
+            Provider.of<DeviceProvider>(context, listen: false);
+        await deviceProvider.updateFcmToken(fcmToken);
       });
     }
   }

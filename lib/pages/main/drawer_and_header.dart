@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -98,7 +97,8 @@ class _MainVCState extends State<MainVC>
     if (initAuthSuccess) {
       await _fetchNotificationCount();
     }
-    await PushNotificationsManager.init();
+    await initBackgroundTracking();
+    await PushNotificationsManager.init(context);
     await getPackageInfo();
   }
 
@@ -212,13 +212,6 @@ class _MainVCState extends State<MainVC>
     } catch (e) {
       print('Error registering device: $e');
     }
-
-    await initBackgroundTracking();
-    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-      final deviceProvider =
-          Provider.of<DeviceProvider>(context, listen: false);
-      await deviceProvider.updateFcmToken(fcmToken);
-    });
 
     return true;
   }
