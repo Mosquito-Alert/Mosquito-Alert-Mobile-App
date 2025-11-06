@@ -1,5 +1,4 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/adult_report_detail_page.dart';
@@ -47,24 +46,13 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       ),
       onTap: (report, context) async {
         // Handle tap on each report
-        return _navigateToReportDetail(report, context);
+        return await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdultReportDetailPage(observation: report),
+          ),
+        );
       },
     );
-  }
-
-  Future<bool?> _navigateToReportDetail(
-      Observation report, BuildContext context) async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'adult_report',
-      itemId: report.uuid,
-    );
-
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AdultReportDetailPage(observation: report),
-      ),
-    );
-    return result;
   }
 }
