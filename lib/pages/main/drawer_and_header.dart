@@ -163,7 +163,7 @@ class _MainVCState extends State<MainVC>
         await authProvider.changePassword(
             password: Utils.getRandomPassword(10));
       } on DioException catch (e) {
-        if (e.response != null && e.response!.statusCode! >= 500) {
+        if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
           // Server error during migration, skip migration to avoid creating duplicate guest user
           _showErrorSnackBar('Login failed: $e');
           return false;
