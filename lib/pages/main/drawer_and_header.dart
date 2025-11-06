@@ -42,7 +42,6 @@ class _MainVCState extends State<MainVC>
   int _selectedIndex = 0;
   int unreadNotifications = 0;
   var packageInfo;
-  String? userUuid;
   bool isLoading = true;
 
   @override
@@ -303,41 +302,49 @@ class _MainVCState extends State<MainVC>
                         child: Row(
                       children: <Widget>[
                         // User score
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  settings: RouteSettings(name: '/user_score'),
-                                  builder: (context) => InfoPageInWebview(
-                                      "${MyLocalizations.of(context, 'url_point_1')}$userUuid")),
-                            );
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/img/points_box.webp'),
-                              ),
-                            ),
-                            child: Consumer<UserProvider>(
-                              builder: (context, userProvider, _) {
-                                return Center(
+                        Consumer<UserProvider>(
+                          builder: (context, userProvider, _) {
+                            return InkWell(
+                              onTap: () {
+                                final userUuid =
+                                    userProvider.user?.uuid ?? 'not_found';
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    settings:
+                                        RouteSettings(name: '/user_score'),
+                                    builder: (context) => InfoPageInWebview(
+                                      "${MyLocalizations.of(context, 'url_point_1')}/$userUuid",
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/img/points_box.webp'),
+                                  ),
+                                ),
+                                child: Center(
                                   child: AutoSizeText(
-                                    userProvider.userScore.toString(),
+                                    (userProvider.user?.score.value ?? 0)
+                                        .toString(),
                                     maxLines: 1,
                                     maxFontSize: 26,
                                     minFontSize: 16,
                                     style: TextStyle(
-                                        color: Color(0xFF4B3D04),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 24),
+                                      color: Color(0xFF4B3D04),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24,
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                          ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
 
                         SizedBox(width: 12),
