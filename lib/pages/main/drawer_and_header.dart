@@ -41,7 +41,7 @@ class _MainVCState extends State<MainVC>
     with RouteAware, WidgetsBindingObserver {
   int _selectedIndex = 0;
   int unreadNotifications = 0;
-  late PackageInfo packageInfo;
+  PackageInfo? packageInfo;
   String? userUuid;
   bool isLoading = true;
 
@@ -371,7 +371,9 @@ class _MainVCState extends State<MainVC>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    'version ${packageInfo.version} (build ${packageInfo.buildNumber})',
+                    packageInfo != null
+                        ? 'version ${packageInfo!.version} (build ${packageInfo!.buildNumber})'
+                        : '',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 8.0,
