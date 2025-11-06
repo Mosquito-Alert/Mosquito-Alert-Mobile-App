@@ -164,7 +164,7 @@ class _MainVCState extends State<MainVC>
             password: Utils.getRandomPassword(10));
       } on DioException catch (e) {
         if (e.response != null && e.response!.statusCode! >= 500) {
-          // Invalid old credentials, proceed without migration
+          // Server error during migration, skip migration to avoid creating duplicate guest user
           _showErrorSnackBar('Login failed: $e');
           return false;
         }
