@@ -101,7 +101,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
       cardBuilder: () => activeCampaign != null
           ? Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
