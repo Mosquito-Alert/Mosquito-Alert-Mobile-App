@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/report_detail_page.dart';
 import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:provider/provider.dart';
@@ -41,44 +41,6 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
     observationsApi = apiClient.getObservationsApi();
   }
 
-  Widget _buildPhotoCarousel() {
-    return CarouselView(
-      scrollDirection: Axis.horizontal,
-      itemExtent: double.infinity,
-      itemSnapping: true,
-      padding: EdgeInsets.zero,
-      shape: const BeveledRectangleBorder(),
-      children:
-          List<Widget>.generate(widget.observation.photos.length, (int index) {
-        final photo = widget.observation.photos[index];
-        return CachedNetworkImage(
-          imageUrl: photo.url,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-          placeholder: (context, url) => Container(
-            color: Colors.white.withValues(alpha: 0.2),
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ),
-          ),
-          errorWidget: (context, url, error) => Container(
-            color: Colors.white.withValues(alpha: 0.2),
-            child: const Center(
-              child: Icon(
-                Icons.error,
-                size: 60,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
   Future<void> _deleteReport({required Observation observation}) async {
     await FirebaseAnalytics.instance.logEvent(
       name: 'delete_report',
@@ -112,7 +74,8 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
       title: observationWidgets.buildTitleText(),
       onTapDelete: (observation) => _deleteReport(observation: observation),
       extraListTileMap: extraListTileMap,
-      topBarBackgroundBuilder: _buildPhotoCarousel,
+      topBarBackgroundBuilder: (observation) =>
+          ReportDetailWidgets.buildPhotoCarousel(report: observation),
     );
   }
 }

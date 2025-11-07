@@ -56,6 +56,45 @@ class ReportDetailWidgets {
       ),
     );
   }
+
+  static Widget buildPhotoCarousel({
+    required dynamic report,
+  }) {
+    return CarouselView(
+      scrollDirection: Axis.horizontal,
+      itemExtent: double.infinity,
+      itemSnapping: true,
+      padding: EdgeInsets.zero,
+      shape: const BeveledRectangleBorder(),
+      children: List<Widget>.generate(report.photos.length, (int index) {
+        final photo = report.photos[index];
+        return CachedNetworkImage(
+          imageUrl: photo.url,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          placeholder: (context, url) => Container(
+            color: Colors.white.withValues(alpha: 0.2),
+            child: const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.white.withValues(alpha: 0.2),
+            child: const Center(
+              child: Icon(
+                Icons.error,
+                size: 60,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
 }
 
 /// Shared utility methods for report formatting

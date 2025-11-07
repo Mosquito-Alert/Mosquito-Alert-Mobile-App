@@ -12,7 +12,7 @@ class ReportDetailPage extends StatelessWidget {
   final Text title;
   final Future<void> Function(dynamic report) onTapDelete;
   final Map<IconData, String>? extraListTileMap;
-  final Widget Function()? topBarBackgroundBuilder;
+  final Widget Function(dynamic report)? topBarBackgroundBuilder;
 
   const ReportDetailPage({
     super.key,
@@ -132,7 +132,7 @@ class ReportDetailPage extends StatelessWidget {
                     background: topBarBackgroundBuilder == null
                         ? null
                         : Stack(fit: StackFit.expand, children: [
-                            topBarBackgroundBuilder!.call(),
+                            topBarBackgroundBuilder!.call(report),
                             Positioned(
                               bottom: 0,
                               left: 0,
