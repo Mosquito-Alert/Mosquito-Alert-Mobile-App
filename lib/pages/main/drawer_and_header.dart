@@ -100,7 +100,6 @@ class _MainVCState extends State<MainVC>
     await initBackgroundTracking();
     final deviceProvider = context.read<DeviceProvider>();
     await PushNotificationsManager.init(provider: deviceProvider);
-    await getPackageInfo();
   }
 
   Future<void> _fetchNotificationCount() async {
