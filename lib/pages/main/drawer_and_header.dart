@@ -391,6 +391,7 @@ class _MainVCState extends State<MainVC>
 
   Widget _retryPage() {
     return Center(
+      key: Key("retryPage"),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

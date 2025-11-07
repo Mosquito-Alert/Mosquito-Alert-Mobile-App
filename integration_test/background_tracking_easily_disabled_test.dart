@@ -51,6 +51,11 @@ void main() {
       expect(rejectBtn, findsOne);
       await tester.ensureVisible(rejectBtn);
       await tester.tap(rejectBtn);
+
+      // Retry page
+      final retryPage = find.byKey(Key("retryPage"));
+      await waitForWidget(tester, retryPage);
+      expect(retryPage, findsOneWidget);
     });
   });
 }
