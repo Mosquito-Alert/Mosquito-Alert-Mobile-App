@@ -13,8 +13,10 @@ class EventMomentPage extends StatefulWidget {
   State<EventMomentPage> createState() => _EventMomentPageState();
 }
 
+enum MainSelectionType { justNow, last24h }
+
 class _EventMomentPageState extends State<EventMomentPage> {
-  String? _mainSelection; // "just_now" or "last_24h"
+  MainSelectionType? _mainSelection;
   BiteRequestEventMomentEnum?
       _timeOfDay; // "morning", "midday", "afternoon", "night"
 
@@ -42,12 +44,12 @@ class _EventMomentPageState extends State<EventMomentPage> {
                 children: [
                   _buildOptionButton(
                       MyLocalizations.of(context, 'question_5_answer_51'),
-                      "just_now",
+                      MainSelectionType.justNow,
                       BiteRequestEventMomentEnum.now),
                   const SizedBox(width: 12),
                   _buildOptionButton(
                       MyLocalizations.of(context, 'question_5_answer_52'),
-                      "last_24h",
+                      MainSelectionType.last24h,
                       null),
                 ],
               ),
@@ -55,7 +57,7 @@ class _EventMomentPageState extends State<EventMomentPage> {
               const SizedBox(height: 24),
 
               // Conditional time of day
-              if (_mainSelection == "last_24h") ...[
+              if (_mainSelection == MainSelectionType.last24h) ...[
                 Text(
                   MyLocalizations.of(context, 'question_3'),
                   style: TextStyle(
@@ -97,8 +99,8 @@ class _EventMomentPageState extends State<EventMomentPage> {
     );
   }
 
-  Widget _buildOptionButton(
-      String label, String value, BiteRequestEventMomentEnum? timeOfDayValue) {
+  Widget _buildOptionButton(String label, MainSelectionType value,
+      BiteRequestEventMomentEnum? timeOfDayValue) {
     final bool selected = _mainSelection == value;
     return Expanded(
       child: ElevatedButton(
