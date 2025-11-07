@@ -98,7 +98,8 @@ class _MainVCState extends State<MainVC>
       await _fetchNotificationCount();
     }
     await initBackgroundTracking();
-    await PushNotificationsManager.init(context);
+    final deviceProvider = context.read<DeviceProvider>();
+    await PushNotificationsManager.init(provider: deviceProvider);
     await getPackageInfo();
   }
 

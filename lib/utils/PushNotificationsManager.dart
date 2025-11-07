@@ -8,7 +8,6 @@ import 'package:mosquito_alert_app/pages/notification_pages/notification_detail_
 import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/utils/MessageNotification.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider/provider.dart';
 
 import '../main.dart';
 
@@ -22,28 +21,25 @@ class PushNotificationsManager {
   /*
   * Push Notification Manager Init
   */
-  static Future<void> init(BuildContext context) async {
+  static Future<void> init({required DeviceProvider provider}) async {
     final appConfig = await AppConfig.loadConfig();
-    if (appConfig.useAuth) {
-      await FirebaseMessaging.instance.requestPermission();
+    if (!appConfig.useAuth) return;
 
-      // Foreground message handler
-      FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-        _handleForegroundMessage(remoteMessage);
-      });
+    await FirebaseMessaging.instance.requestPermission();
 
-      // When the app is opened from a background state
-      FirebaseMessaging.onMessageOpenedApp
-          .listen((RemoteMessage remoteMessage) {
-        _handleBackgroundMessage(remoteMessage);
-      });
+    // Foreground message handler
+    FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
+      _handleForegroundMessage(remoteMessage);
+    });
 
-      FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-        final deviceProvider =
-            Provider.of<DeviceProvider>(context, listen: false);
-        await deviceProvider.updateFcmToken(fcmToken);
-      });
-    }
+    // When the app is opened from a background state
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
+      _handleBackgroundMessage(remoteMessage);
+    });
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      await provider.updateFcmToken(fcmToken);
+    });
   }
 
   static void _handleForegroundMessage(RemoteMessage message) {
