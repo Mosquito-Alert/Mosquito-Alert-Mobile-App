@@ -157,7 +157,7 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
                         ),
                         child: Text(
                           MyLocalizations.of(context, "show_info"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
