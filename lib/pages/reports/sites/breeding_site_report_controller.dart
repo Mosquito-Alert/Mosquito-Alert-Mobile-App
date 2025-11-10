@@ -262,6 +262,24 @@ class _BreedingSiteReportControllerState
 
   bool get _shouldSkipLarvaeStep => _reportData.hasWater != true;
 
+  List<String> _getEffectiveStepTitles() {
+    final effectiveStepTitles = <String>[
+      '(HC) Site Type',
+      '(HC) Take Photos',
+      '(HC) Water Status',
+    ];
+
+    // Add larvae step only if water is present
+    if (_reportData.hasWater == true) {
+      effectiveStepTitles.add('(HC) Larvae Check');
+    }
+
+    // Always add final steps
+    effectiveStepTitles.addAll(['(HC) Select Location', '(HC) Notes & Submit']);
+
+    return effectiveStepTitles;
+  }
+
   int _calculateDisplayStep() {
     if (_currentStep <= _stepWater) {
       return _currentStep;
@@ -337,19 +355,7 @@ class _BreedingSiteReportControllerState
 
     // Calculate effective progress for display
     // We show progress based on actual steps the user will see
-    final effectiveStepTitles = <String>[
-      '(HC) Site Type',
-      '(HC) Take Photos',
-      '(HC) Water Status',
-    ];
-
-    // Add larvae step only if water is present
-    if (_reportData.hasWater == true) {
-      effectiveStepTitles.add('(HC) Larvae Check');
-    }
-
-    // Always add final steps
-    effectiveStepTitles.addAll(['(HC) Select Location', '(HC) Notes & Submit']);
+    final effectiveStepTitles = _getEffectiveStepTitles();
 
     // Calculate current step for progress indicator
     final displayStep = _calculateDisplayStep();
