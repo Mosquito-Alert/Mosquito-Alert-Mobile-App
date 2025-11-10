@@ -116,6 +116,7 @@ class _MainVCState extends State<MainVC>
       print('Failed to fetch notification count: $e');
       debugPrintStack(stackTrace: stackTrace);
     }
+    if (!mounted) return;
     setState(() {
       unreadNotifications = count;
     });
