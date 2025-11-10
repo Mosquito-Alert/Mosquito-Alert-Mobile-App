@@ -267,7 +267,7 @@ class _BreedingSiteReportControllerState
       return _currentStep;
     } else if (_currentStep == _stepLarvae) {
       // Larvae question step - should only be reached when water is present
-      return _shouldSkipLarvaeStep ? _stepWater + 1 : _stepWater + 1;
+      return _stepWater + 1;
     } else if (_currentStep == _stepLocation) {
       // Location step
       return _shouldSkipLarvaeStep ? _stepWater + 1 : _stepLarvae + 1;
