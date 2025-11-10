@@ -17,6 +17,15 @@ import 'pages/larvae_question_page.dart';
 import 'pages/site_type_selection_page.dart';
 import 'pages/water_question_page.dart';
 
+enum ReportStep {
+  siteType,
+  photos,
+  water,
+  larvae,
+  location,
+  notesSubmit;
+}
+
 /// Main controller for the breeding site report workflow
 /// Uses PageView slider architecture for step-by-step progression
 class BreedingSiteReportController extends StatefulWidget {
@@ -33,10 +42,6 @@ class _BreedingSiteReportControllerState
 
   int _currentStep = 0;
   bool _isSubmitting = false;
-
-  static const int _stepWater = 2;
-  static const int _stepLarvae = 3;
-  static const int _stepLocation = 4;
 
   // Define the events to log
   final List<String> _pageEvents = [
@@ -97,10 +102,10 @@ class _BreedingSiteReportControllerState
       _reportData.hasLarvae = null;
       // Skip larvae question and go directly to location
       setState(() {
-        _currentStep = _stepLocation;
+        _currentStep = ReportStep.location.index;
       });
       _pageController.animateToPage(
-        _stepLocation,
+        ReportStep.location.index,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -120,13 +125,13 @@ class _BreedingSiteReportControllerState
   void _previousStep() {
     if (_currentStep > 0) {
       // Special handling for going back from location page
-      if (_currentStep == _stepLocation && _shouldSkipLarvaeStep) {
+      if (_currentStep == ReportStep.location.index && _shouldSkipLarvaeStep) {
         // Skip larvae question and go back to water question
         setState(() {
-          _currentStep = _stepWater;
+          _currentStep = ReportStep.water.index;
         });
         _pageController.animateToPage(
-          _stepWater,
+          ReportStep.water.index,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
@@ -186,9 +191,10 @@ class _BreedingSiteReportControllerState
     setState(() {
       _isSubmitting = true;
     });
-    await _logAnalyticsEvent('submit_report');
 
     try {
+      await _logAnalyticsEvent('submit_report');
+
       // Step 1: Create location request
       final locationRequest = LocationRequest((b) => b
         ..source_ = _reportData.locationSource
@@ -281,17 +287,21 @@ class _BreedingSiteReportControllerState
   }
 
   int _calculateDisplayStep() {
-    if (_currentStep <= _stepWater) {
+    if (_currentStep <= ReportStep.water.index) {
       return _currentStep;
-    } else if (_currentStep == _stepLarvae) {
+    } else if (_currentStep == ReportStep.larvae.index) {
       // Larvae question step - should only be reached when water is present
-      return _stepWater + 1;
-    } else if (_currentStep == _stepLocation) {
+      return ReportStep.water.index + 1;
+    } else if (_currentStep == ReportStep.location.index) {
       // Location step
-      return _shouldSkipLarvaeStep ? _stepWater + 1 : _stepLarvae + 1;
+      return _shouldSkipLarvaeStep
+          ? ReportStep.water.index + 1
+          : ReportStep.larvae.index + 1;
     } else {
       // Notes step
-      return _shouldSkipLarvaeStep ? _stepWater + 2 : _stepLarvae + 2;
+      return _shouldSkipLarvaeStep
+          ? ReportStep.water.index + 2
+          : ReportStep.larvae.index + 2;
     }
   }
 
