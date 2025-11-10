@@ -96,7 +96,7 @@ class _BreedingSiteReportControllerState
   }
 
   /// Navigate to next step after water question, handling conditional larvae question
-  Future<void> _nextStepAfterWater() async {
+  void _nextStepAfterWater() {
     if (_shouldSkipLarvaeStep) {
       // Clear any larvae response if water is not present
       _reportData.hasLarvae = null;
