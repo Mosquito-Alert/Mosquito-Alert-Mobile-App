@@ -32,9 +32,14 @@ class LocationSelectionPage extends StatefulWidget {
   _LocationSelectionPageState createState() => _LocationSelectionPageState();
 }
 
-class _LocationSelectionPageState extends State<LocationSelectionPage> {
+class _LocationSelectionPageState extends State<LocationSelectionPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     return Scaffold(
       body: Stack(
         children: [

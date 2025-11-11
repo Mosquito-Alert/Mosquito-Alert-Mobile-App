@@ -50,6 +50,9 @@ class _LocationSelectorState extends State<LocationSelector> {
     if (widget.initialLatitude != null && widget.initialLongitude != null) {
       _currentMapCenter =
           LatLng(widget.initialLatitude!, widget.initialLongitude!);
+    } else {
+      // Default to a reasonable location if no initial coordinates
+      _currentMapCenter = const LatLng(0, 0); // Middle of the ocean.
     }
   }
 
@@ -116,6 +119,16 @@ class _LocationSelectorState extends State<LocationSelector> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
+
+    // If we have initial coordinates, move the camera to that location
+    if (widget.initialLatitude != null && widget.initialLongitude != null) {
+      // Small delay to ensure the map is fully initialized
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted && _mapController != null) {
+          _moveMapToLocation(widget.initialLatitude!, widget.initialLongitude!);
+        }
+      });
+    }
   }
 
   Future<void> _fetchLocation({
@@ -223,8 +236,11 @@ class _LocationSelectorState extends State<LocationSelector> {
       onMapCreated: _onMapCreated,
       onTap: _onMapTap,
       initialCameraPosition: CameraPosition(
-        target: _currentMapCenter ?? LatLng(0, 0),
-        zoom: 15,
+        target: _currentMapCenter!,
+        zoom:
+            (widget.initialLatitude != null && widget.initialLongitude != null)
+                ? 16.0
+                : 15.0,
       ),
       markers: _markers,
       myLocationEnabled: true,
@@ -338,6 +354,7 @@ class _LocationSelectorState extends State<LocationSelector> {
 
   @override
   void dispose() {
+    _mapController?.dispose();
     _latController.dispose();
     _lonController.dispose();
     super.dispose();
