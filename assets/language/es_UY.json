@@ -349,7 +349,7 @@
     "camera_permission_required": "Se requiere permiso de la cámara",
     "open_settings": "Abrir el menú de configuración",
     "loading_failed_try_again": "La carga falló. Por favor inténtalo de nuevo.",
-    "retry": "Rever",
+    "retry": "Volver a intentar",
     "loading": "Cargando",
     "unknown_location": "Ubicación desconocida",
     "indicate_number_mosquito_bites": "Indique el número de picaduras de mosquitos en esta parte del cuerpo.",
@@ -358,10 +358,10 @@
     "no-photo-selected": "Ninguna foto seleccionada.",
     "photos": "Fotos",
     "select-location": "Seleccionar ubicación",
-    "select_environment": "Ambiente",
+    "select_environment": "Entorno",
     "notes": "Notas",
     "optional": "Opcional",
     "photos-of-same-breeding-site": "Fotos del mismo criadero desde diferentes ángulos.",
-    "water-check": "control de agua",
+    "water-check": "Control de agua",
     "larvae-check": "Control de larvas"
 }
