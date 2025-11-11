@@ -280,15 +280,11 @@ class _BiteReportControllerState extends State<BiteReportController> {
               preferredSize: Size.fromHeight(0),
             ),
           ),
-          body: SafeArea(
-            child: Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                physics: NeverScrollableScrollPhysics(), // Disable swipe
-                children: _pages,
-              ),
-            ),
+          body: PageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            physics: NeverScrollableScrollPhysics(), // Disable swipe
+            children: _pages,
           ),
         ),
       ),

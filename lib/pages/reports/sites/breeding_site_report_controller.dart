@@ -328,18 +328,11 @@ class _BreedingSiteReportControllerState
             preferredSize: Size.fromHeight(0),
           ),
         ),
-        body: SafeArea(
-          child:
-              // Main content
-              Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: _onPageChanged,
-              physics:
-                  NeverScrollableScrollPhysics(), // Disable swipe navigation
-              children: widgets,
-            ),
-          ),
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          physics: NeverScrollableScrollPhysics(), // Disable swipe navigation
+          children: widgets,
         ),
       ),
     );

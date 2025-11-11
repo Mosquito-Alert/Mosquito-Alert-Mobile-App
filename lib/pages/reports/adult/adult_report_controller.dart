@@ -251,56 +251,52 @@ class _AdultReportControllerState extends State<AdultReportController> {
           preferredSize: Size.fromHeight(0),
         ),
       ),
-      body: SafeArea(
-        child: Expanded(
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            physics: NeverScrollableScrollPhysics(), // Disable swipe navigation
-            children: [
-              PhotoSelectionPage(
-                  photos: _reportData.photos,
-                  onPhotosChanged: _onPhotosChanged,
-                  onNext: _nextStep,
-                  // No onPrevious for adult reports (first step)
-                  maxPhotos: 3,
-                  minPhotos: 1,
-                  infoBadgeTextKey: 'one_mosquito_reminder_badge',
-                  thumbnailText:
-                      '(HC) Photos of the same mosquito from different angles.'),
-              LocationSelectionPage(
-                initialLatitude: _reportData.latitude,
-                initialLongitude: _reportData.longitude,
-                onLocationSelected: _onLocationSelected,
-                onNext: _nextStep,
-                onPrevious: _previousStep,
-                canProceed: _reportData.latitude != null &&
-                    _reportData.longitude != null,
-                locationSource: _reportData.locationSource,
-              ),
-              EnvironmentQuestionPage(
-                title: MyLocalizations.of(context, "question_13"),
-                allowNullOption: false,
-                onNext: (value) {
-                  setState(() {
-                    _reportData.environmentAnswer = value != null
-                        ? ObservationEventEnvironmentEnum.valueOf(value)
-                        : null;
-                  });
-                  _nextStep();
-                },
-                onPrevious: _previousStep,
-              ),
-              NotesAndSubmitPage(
-                initialNotes: _reportData.notes,
-                onNotesChanged: _onNotesChanged,
-                onSubmit: _submitReport,
-                onPrevious: _previousStep,
-                isSubmitting: _isSubmitting,
-              ),
-            ],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        physics: NeverScrollableScrollPhysics(), // Disable swipe navigation
+        children: [
+          PhotoSelectionPage(
+              photos: _reportData.photos,
+              onPhotosChanged: _onPhotosChanged,
+              onNext: _nextStep,
+              // No onPrevious for adult reports (first step)
+              maxPhotos: 3,
+              minPhotos: 1,
+              infoBadgeTextKey: 'one_mosquito_reminder_badge',
+              thumbnailText:
+                  '(HC) Photos of the same mosquito from different angles.'),
+          LocationSelectionPage(
+            initialLatitude: _reportData.latitude,
+            initialLongitude: _reportData.longitude,
+            onLocationSelected: _onLocationSelected,
+            onNext: _nextStep,
+            onPrevious: _previousStep,
+            canProceed:
+                _reportData.latitude != null && _reportData.longitude != null,
+            locationSource: _reportData.locationSource,
           ),
-        ),
+          EnvironmentQuestionPage(
+            title: MyLocalizations.of(context, "question_13"),
+            allowNullOption: false,
+            onNext: (value) {
+              setState(() {
+                _reportData.environmentAnswer = value != null
+                    ? ObservationEventEnvironmentEnum.valueOf(value)
+                    : null;
+              });
+              _nextStep();
+            },
+            onPrevious: _previousStep,
+          ),
+          NotesAndSubmitPage(
+            initialNotes: _reportData.notes,
+            onNotesChanged: _onNotesChanged,
+            onSubmit: _submitReport,
+            onPrevious: _previousStep,
+            isSubmitting: _isSubmitting,
+          ),
+        ],
       ),
     );
   }
