@@ -76,7 +76,8 @@ class _BreedingSiteReportControllerState
           maxPhotos: 3,
           minPhotos: 1,
           infoBadgeTextKey: 'camera_info_breeding_txt_02',
-          thumbnailText: 'photos-of-same-breeding-site',
+          thumbnailText:
+              MyLocalizations.of(context, 'photos-of-same-breeding-site'),
         ),
       ),
       PageParameter(
