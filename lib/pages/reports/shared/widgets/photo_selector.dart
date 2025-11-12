@@ -40,6 +40,11 @@ class _PhotoSelectorState extends State<PhotoSelector> {
         _pickPhoto();
       }
     });
+    if (widget.selectedPhotos.isNotEmpty) {
+      setState(() {
+        _previewedPhotoIndex = 0;
+      });
+    }
   }
 
   Future<void> _pickPhoto() async {
