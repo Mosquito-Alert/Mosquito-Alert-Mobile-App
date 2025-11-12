@@ -41,9 +41,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
       }
     });
     if (widget.selectedPhotos.isNotEmpty) {
-      setState(() {
-        _previewedPhotoIndex = 0;
-      });
+      _previewedPhotoIndex = 0;
     }
   }
 
