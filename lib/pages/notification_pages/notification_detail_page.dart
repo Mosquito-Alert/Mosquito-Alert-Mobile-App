@@ -20,8 +20,9 @@ class NotificationDetailPage extends StatefulWidget {
     required int notificationId,
   }) async {
     final notificationProvider = context.read<NotificationProvider>();
-    // Important: do not await on refresh to avoid blocking the UI
-    notificationProvider.refresh();
+    Future.microtask(() {
+      notificationProvider.refresh();
+    });
 
     final notification = await notificationProvider.getById(id: notificationId);
 
