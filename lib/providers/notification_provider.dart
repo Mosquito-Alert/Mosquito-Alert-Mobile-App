@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
@@ -14,13 +15,21 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   List<sdk.Notification> _notifications = [];
-  bool hasMoreNotifications = true;
-  bool isLoading = false;
-  int _lastFetchedPage = 0;
-  String? errorMessage;
   List<sdk.Notification> get notifications => _notifications;
 
+  int _lastFetchedPage = 0;
+
+  bool _hasMoreNotifications = true;
+  bool get hasMoreNotifications => _hasMoreNotifications;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   bool _isFetchingUnread = false;
+
   int _unreadNotificationsCount = 0;
   int get unreadNotificationsCount => _unreadNotificationsCount;
 
@@ -60,11 +69,11 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> fetchNextPage({bool clear = false}) async {
-    if (isLoading || !hasMoreNotifications) return;
+    if (_isLoading || !_hasMoreNotifications) return;
 
     try {
-      isLoading = true;
-      errorMessage = null;
+      _isLoading = true;
+      _errorMessage = null;
       notifyListeners();
 
       int nextPage = _lastFetchedPage + 1;
@@ -77,7 +86,7 @@ class NotificationProvider extends ChangeNotifier {
       );
 
       final newNotifications = response.data?.results?.toList() ?? [];
-      hasMoreNotifications = response.data?.next != null;
+      _hasMoreNotifications = response.data?.next != null;
       _lastFetchedPage = nextPage;
 
       if (clear) {
@@ -86,9 +95,9 @@ class NotificationProvider extends ChangeNotifier {
         _notifications.addAll(newNotifications);
       }
     } catch (e) {
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -115,7 +124,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<void> refresh() async {
     _lastFetchedPage = 0;
-    hasMoreNotifications = true;
+    _hasMoreNotifications = true;
     await fetchNextPage(clear: true);
     await fetchUnreadNotificationsCount();
   }
