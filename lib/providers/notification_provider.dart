@@ -26,9 +26,8 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<sdk.Notification?> getById({required int id}) async {
     // Check in the cached list first
-    final sdk.Notification? cached = _notifications.firstWhere(
-      (n) => n.id == id,
-    );
+    final sdk.Notification? cached =
+        _notifications.where((n) => n.id == id).firstOrNull;
     if (cached != null) return cached;
 
     // Otherwise, fetch from API
