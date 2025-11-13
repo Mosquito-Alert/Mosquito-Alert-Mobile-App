@@ -48,12 +48,10 @@ class _MainVCState extends State<MainVC>
   @override
   void initState() {
     super.initState();
+    notificationProvider = context.read<NotificationProvider>();
     WidgetsBinding.instance.addObserver(this);
     getPackageInfo();
     _startAsyncTasks();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notificationProvider = context.read<NotificationProvider>();
-    });
   }
 
   @override
