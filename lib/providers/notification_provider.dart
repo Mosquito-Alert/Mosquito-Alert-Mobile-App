@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 
 import 'package:flutter/material.dart';
@@ -50,8 +52,7 @@ class NotificationProvider extends ChangeNotifier {
         final updatedNotification =
             _notifications[index].rebuild((b) => b..isRead = true);
         _notifications[index] = updatedNotification;
-        _unreadNotificationsCount =
-            (_unreadNotificationsCount - 1).clamp(0, double.infinity).toInt();
+        _unreadNotificationsCount = max(0, (_unreadNotificationsCount - 1));
         notifyListeners();
       }
     } catch (e) {
