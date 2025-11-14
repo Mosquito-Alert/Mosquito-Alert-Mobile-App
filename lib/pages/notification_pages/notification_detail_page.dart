@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
@@ -15,14 +17,17 @@ class NotificationDetailPage extends StatefulWidget {
     required this.notification,
   });
 
-  static Future<NotificationDetailPage> fromId({
-    required BuildContext context,
-    required int notificationId,
-  }) async {
+  static Future<NotificationDetailPage> fromId(
+      {required BuildContext context,
+      required int notificationId,
+      bool refresh = false}) async {
     final notificationProvider = context.read<NotificationProvider>();
-    Future.microtask(() {
-      notificationProvider.refresh();
-    });
+    if (refresh) {
+      // Run refresh in the background without blocking
+      unawaited(
+        Future(() async => notificationProvider.refresh()),
+      );
+    }
 
     final notification = await notificationProvider.getById(id: notificationId);
 

@@ -67,12 +67,6 @@ class _MainVCState extends State<MainVC>
     ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
-  @override
-  void didPopNext() {
-    // Called when returning from another page
-    notificationProvider.fetchUnreadNotificationsCount();
-  }
-
   // Called when app lifecycle state changes
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -97,9 +91,9 @@ class _MainVCState extends State<MainVC>
       isLoading = false;
     });
     if (initAuthSuccess) {
-      Future.microtask(() {
-        notificationProvider.refresh();
-      });
+      unawaited(
+        Future(() async => notificationProvider.refresh()),
+      );
     }
     await initBackgroundTracking();
     final deviceProvider = context.read<DeviceProvider>();
