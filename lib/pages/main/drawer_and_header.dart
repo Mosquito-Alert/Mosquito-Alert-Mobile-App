@@ -91,7 +91,11 @@ class _MainVCState extends State<MainVC>
       isLoading = false;
     });
     if (initAuthSuccess) {
-      unawaited(Future.microtask(notificationProvider.refresh));
+      unawaited(
+        Future(() async {
+          await notificationProvider.refresh();
+        }),
+      );
     }
     await initBackgroundTracking();
     final deviceProvider = context.read<DeviceProvider>();

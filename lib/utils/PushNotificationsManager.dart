@@ -63,7 +63,11 @@ class PushNotificationsManager {
       final ctx = navigatorKey.currentContext;
       if (ctx != null) {
         final notificationProvider = ctx.read<NotificationProvider>();
-        unawaited(Future.microtask(notificationProvider.refresh));
+        unawaited(
+          Future(() async {
+            await notificationProvider.refresh();
+          }),
+        );
       }
     }
 
