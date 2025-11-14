@@ -116,8 +116,8 @@ class NotificationProvider extends ChangeNotifier {
     } catch (_) {
       // Optionally handle/log
     } finally {
-      notifyListeners();
       _isFetchingUnread = false;
+      notifyListeners();
     }
   }
 
