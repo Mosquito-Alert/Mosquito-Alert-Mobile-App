@@ -49,6 +49,8 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> markAsRead({required sdk.Notification notification}) async {
+    if (notification.isRead) return;
+
     try {
       final request = sdk.PatchedNotificationRequest((b) => b..isRead = true);
       await notificationsApi.partialUpdate(
