@@ -44,11 +44,6 @@ jobs:
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
 
-    - name: Clean up emulator/app state
-      run: |
-        adb uninstall com.example.mosquito_alert_app || true
-        adb emu kill || true
-
       # The timeout for a single step in Github Actions is 12 minutes
     - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
@@ -60,6 +55,7 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: Nexus 6
+        emulator-options: -no-snapshot-save -gpu swiftshader_indirect
         script: |
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
