@@ -56,8 +56,9 @@ jobs:
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 36
+        api-level: 33
         target: default
+        disk-size: 10G
         arch: x86_64
         script: |
           adb wait-for-device
