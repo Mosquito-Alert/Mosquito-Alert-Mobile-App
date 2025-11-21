@@ -78,6 +78,17 @@ jobs:
         echo "=== Disk space after cleanup ==="
         df -h
 
+    - name: Move Android AVD to larger partition
+      run: |
+        echo "=== Setting up Android AVD on /mnt partition with more space ==="
+        # Create Android directory on the larger /mnt partition
+        sudo mkdir -p /mnt/android-avd
+        sudo chown runner:runner /mnt/android-avd
+        # Set ANDROID_AVD_HOME to use the larger partition
+        echo "ANDROID_AVD_HOME=/mnt/android-avd" >> $GITHUB_ENV
+        echo "=== Available space on /mnt ===" 
+        df -h /mnt
+
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
