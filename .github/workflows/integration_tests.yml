@@ -4,7 +4,7 @@ on:
   pull_request:
   merge_group:
   push:
-    branches: ["main"]
+  #  branches: ["main"]
 
 jobs:
   android_integration_tests:
