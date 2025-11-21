@@ -95,6 +95,7 @@ jobs:
         api-level: 35
         target: default
         arch: x86_64
+        disk-size: 10G
         script: |
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
