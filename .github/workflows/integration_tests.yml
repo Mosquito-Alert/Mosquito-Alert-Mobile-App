@@ -69,6 +69,12 @@ jobs:
         # Clean APT cache
         sudo apt-get clean
         sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+        sudo docker system prune -af 2>/dev/null || true
+        sudo journalctl --vacuum-size=50M 2>/dev/null || true
+        sudo rm -rf /var/lib/snapd/cache/* 2>/dev/null || true
+        rm -rf ~/.cache/google-chrome/ 2>/dev/null || true
+        rm -rf ~/.cache/chromium/ 2>/dev/null || true
+        rm -rf ~/.cache/mozilla/ 2>/dev/null || true
         echo "=== Disk space after cleanup ==="
         df -h
 
