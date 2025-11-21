@@ -53,21 +53,22 @@ jobs:
     - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
 
-    - name: Clean up build artifacts to free disk space
+    - name: Clean up unnecessary files to free disk space
       run: |
         echo "=== Disk space before cleanup ==="
         df -h
-        echo "=== Cleaning Flutter build cache ==="
-        flutter clean
-        echo "=== Cleaning Dart pub cache ==="
-        dart pub cache clean --force
-        echo "=== Removing build directory ==="
-        rm -rf build/
-        echo "=== Removing gradle cache ==="
-        rm -rf ~/.gradle/caches/
-        echo "=== Removing Android build cache ==="
-        rm -rf android/app/build/
-        rm -rf android/build/
+        echo "=== Cleaning temporary files and caches (keeping build artifacts) ==="
+        # Clean Flutter's temporary cache but keep build outputs
+        rm -rf ~/.flutter/.pub-cache/global_packages/
+        rm -rf ~/.flutter/.pub-cache/hosted/pub.dev/.cache/
+        # Clean Dart pub cache of unused packages but keep current ones
+        find ~/.pub-cache -name "*.tar.gz" -delete 2>/dev/null || true
+        # Clean system temp files
+        sudo rm -rf /tmp/* 2>/dev/null || true
+        sudo rm -rf /var/tmp/* 2>/dev/null || true
+        # Clean APT cache
+        sudo apt-get clean
+        sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
         echo "=== Disk space after cleanup ==="
         df -h
 
