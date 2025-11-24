@@ -33,38 +33,38 @@ class UserProvider extends ChangeNotifier {
 
     if (storedLocale == null || storedLocale.trim().isEmpty) {
       // Use system locale as default
-      this.locale = WidgetsBinding.instance.platformDispatcher.locale;
+      await setLocale(WidgetsBinding.instance.platformDispatcher.locale);
       return;
     }
 
     final parts = storedLocale.split(RegExp('[-_]'));
 
-    this.locale = Locale.fromSubtags(
+    await setLocale(Locale.fromSubtags(
       languageCode: parts.isNotEmpty ? parts[0] : 'en',
       scriptCode: parts.length == 3 ? parts[1] : null,
       countryCode: parts.length >= 2 ? parts[parts.length - 1] : null,
-    );
+    ));
   }
 
   User? _user;
   User? get user => _user;
 
-  set user(User? newUser) {
+  Future<void> setUser(User? newUser) async {
     _user = newUser;
-    _setFirebaseUserId(newUser);
+    await _setFirebaseUserId(newUser);
     notifyListeners();
   }
 
   Locale? _locale;
   Locale get locale => _locale ?? MyLocalizations.defaultFallbackLocale;
 
-  set locale(Locale locale) {
+  Future<void> setLocale(Locale locale) async {
     Locale resolvedLocale = MyLocalizations.resolveLocale(locale);
 
     if (_locale == resolvedLocale) return; // Prevent unnecessary work
     _locale = resolvedLocale;
     notifyListeners();
-    _persistAndSyncLocale(resolvedLocale);
+    await _persistAndSyncLocale(resolvedLocale);
   }
 
   Future<void> _persistAndSyncLocale(Locale locale) async {
@@ -94,7 +94,7 @@ class UserProvider extends ChangeNotifier {
         uuid: user!.uuid,
         patchedUserRequest: req,
       );
-      this.user = response.data!;
+      await setUser(response.data!);
     } catch (e) {
       debugPrint('Error updating user locale: $e');
     }
@@ -103,10 +103,10 @@ class UserProvider extends ChangeNotifier {
   Future<void> fetchUser() async {
     try {
       final response = await usersApi.retrieveMine();
-      this.user = response.data!;
+      await setUser(response.data!);
     } catch (e) {
       print('Error getting user: $e');
-      this.user = null;
+      await setUser(null);
       rethrow;
     }
 
