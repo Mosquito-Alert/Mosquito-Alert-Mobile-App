@@ -49,45 +49,41 @@ jobs:
         adb uninstall com.example.mosquito_alert_app || true
         adb emu kill || true
 
-      # The timeout for a single step in Github Actions is 12 minutes
-    - name: Build debug appbundle (avoids test loader timeouts)
+      # Build is needed to avoid test loader timeouts
+    - name: Build debug appbundle
       run: flutter build appbundle --debug
 
-    - name: Clean up unnecessary files to free disk space
+    - name: Clean up disk space
       run: |
-        echo "=== Disk space before cleanup ==="
         df -h
-        echo "=== Cleaning temporary files and caches (keeping build artifacts) ==="
-        # Clean Flutter's temporary cache but keep build outputs
-        rm -rf ~/.flutter/.pub-cache/global_packages/
-        rm -rf ~/.flutter/.pub-cache/hosted/pub.dev/.cache/
-        # Clean Dart pub cache of unused packages but keep current ones
-        find ~/.pub-cache -name "*.tar.gz" -delete 2>/dev/null || true
-        # Clean system temp files
-        sudo rm -rf /tmp/* 2>/dev/null || true
-        sudo rm -rf /var/tmp/* 2>/dev/null || true
-        # Clean APT cache
+        # Remove unused packages to free up space
+        sudo apt-get remove -y --purge \
+          azure-cli \
+          google-chrome-stable \
+          firefox \
+          mongodb-* \
+          mysql-* \
+          postgresql-* \
+          dotnet-* \
+          '^llvm-.*' 2>/dev/null || true
+          
+        sudo apt-get autoremove -y
         sudo apt-get clean
-        sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+        
+        # Remove Docker and large development tools
         sudo docker system prune -af 2>/dev/null || true
-        sudo journalctl --vacuum-size=50M 2>/dev/null || true
-        sudo rm -rf /var/lib/snapd/cache/* 2>/dev/null || true
-        rm -rf ~/.cache/google-chrome/ 2>/dev/null || true
-        rm -rf ~/.cache/chromium/ 2>/dev/null || true
-        rm -rf ~/.cache/mozilla/ 2>/dev/null || true
-        echo "=== Disk space after cleanup ==="
+        sudo apt-get remove -y --purge docker-* containerd.io 2>/dev/null || true
+        sudo rm -rf /usr/local/lib/node_modules 2>/dev/null || true
+        sudo rm -rf /usr/share/dotnet 2>/dev/null || true
+        sudo rm -rf /usr/local/share/powershell 2>/dev/null || true
+        
+        # Clean logs and temp files
+        sudo journalctl --vacuum-size=10M 2>/dev/null || true
+        sudo rm -rf /var/log/* /tmp/* /var/tmp/* 2>/dev/null || true
+        rm -rf ~/.cache/* 2>/dev/null || true
+        sudo rm -rf /var/cache/* 2>/dev/null || true
+        
         df -h
-
-    - name: Move Android AVD to larger partition
-      run: |
-        echo "=== Setting up Android AVD on /mnt partition with more space ==="
-        # Create Android directory on the larger /mnt partition
-        sudo mkdir -p /mnt/android-avd
-        sudo chown runner:runner /mnt/android-avd
-        # Set ANDROID_AVD_HOME to use the larger partition
-        echo "ANDROID_AVD_HOME=/mnt/android-avd" >> $GITHUB_ENV
-        echo "=== Available space on /mnt ===" 
-        df -h /mnt
 
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
