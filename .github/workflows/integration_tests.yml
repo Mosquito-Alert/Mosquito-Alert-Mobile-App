@@ -59,12 +59,12 @@ jobs:
         sudo apt-get remove -y --purge azure-cli google-chrome-stable firefox \
           mongodb-* mysql-* postgresql-* dotnet-* '^llvm-.*' 2>/dev/null || true
         sudo apt-get autoremove -y && sudo apt-get clean
-        
+
         # Remove Docker and development tools
         sudo docker system prune -af 2>/dev/null || true
         sudo apt-get remove -y --purge docker-* containerd.io 2>/dev/null || true
         sudo rm -rf /usr/share/dotnet /usr/local/share/powershell 2>/dev/null || true
-        
+
         # Clean temporary files and logs
         sudo journalctl --vacuum-size=10M 2>/dev/null || true
         sudo rm -rf /var/log/* /tmp/* /var/tmp/* ~/.cache/* /var/cache/* 2>/dev/null || true
