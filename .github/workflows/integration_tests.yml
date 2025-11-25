@@ -53,7 +53,7 @@ jobs:
     - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
 
-    - name: Free up disk space that come by default with the emulator
+    - name: Free up disk space that comes by default with the emulator
       run: |
         # Remove large unused packages
         sudo apt-get remove -y --purge azure-cli google-chrome-stable firefox \
