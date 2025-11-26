@@ -53,13 +53,28 @@ jobs:
     - name: Build debug appbundle (avoids test loader timeouts)
       run: flutter build appbundle --debug
 
+    - name: Free up disk space that comes by default with the emulator
+      run: |
+        # Remove large unused packages
+        sudo apt-get remove -y --purge azure-cli google-chrome-stable firefox \
+          mongodb-* mysql-* postgresql-* dotnet-* '^llvm-.*' 2>/dev/null || true
+        sudo apt-get autoremove -y && sudo apt-get clean
+
+        # Remove Docker and development tools
+        sudo docker system prune -af 2>/dev/null || true
+        sudo apt-get remove -y --purge docker-* containerd.io 2>/dev/null || true
+        sudo rm -rf /usr/share/dotnet /usr/local/share/powershell 2>/dev/null || true
+
+        # Clean temporary files and logs
+        sudo journalctl --vacuum-size=10M 2>/dev/null || true
+        sudo rm -rf /var/log/* /tmp/* /var/tmp/* ~/.cache/* /var/cache/* 2>/dev/null || true
+
     - name: Run integration tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 35
         target: google_apis
         arch: x86_64
-        profile: Nexus 6
         script: |
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
