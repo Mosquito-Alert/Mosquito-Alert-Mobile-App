@@ -103,10 +103,10 @@ class AuthProvider with ChangeNotifier {
     final response =
         await authApi.obtainToken(appUserTokenObtainPairRequest: request);
 
-    _setUsername(username: username);
-    _setPassword(password: password);
-    _setDeviceId(deviceId: device?.deviceId);
-    setAccessToken(accessToken: response.data!.access);
-    setRefreshToken(refreshToken: response.data!.refresh);
+    await _setUsername(username: username);
+    await _setPassword(password: password);
+    await _setDeviceId(deviceId: device?.deviceId);
+    await setAccessToken(accessToken: response.data!.access);
+    await setRefreshToken(refreshToken: response.data!.refresh);
   }
 }

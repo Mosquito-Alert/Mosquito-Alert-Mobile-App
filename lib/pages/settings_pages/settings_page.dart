@@ -287,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      userProvider.locale = locale;
+      await userProvider.setLocale(locale);
     } catch (e) {
       print('Error setting locale: $e');
       ScaffoldMessenger.of(context).showSnackBar(
