@@ -50,12 +50,10 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
     super.initState();
     _notification = widget.notification;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.microtask(() async {
-        await context
-            .read<NotificationProvider>()
-            .markAsRead(notification: _notification);
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await context
+          .read<NotificationProvider>()
+          .markAsRead(notification: _notification);
     });
   }
 
