@@ -17,6 +17,8 @@ class BackgroundTracking {
   static String _isEnabledPrefsKey = 'trackingEnabled';
   static int tasksPerDay = 5;
 
+  static const double _gridSize = 0.025; // in degrees
+
   static void configure({required MosquitoAlert apiClient}) {
     _fixesApi = apiClient.getFixesApi();
   }
@@ -213,6 +215,12 @@ class BackgroundTracking {
     }
   }
 
+  static double _maskCoordinateToGrid(double coordinate) {
+    final masked = (coordinate / BackgroundTracking._gridSize).roundToDouble() *
+        BackgroundTracking._gridSize;
+    return double.parse(masked.toStringAsFixed(6));
+  }
+
   static Future<bool> sendLocationUpdate() async {
     try {
       // Check location permission
@@ -236,8 +244,8 @@ class BackgroundTracking {
         ..createdAt = DateTime.now().toUtc()
         ..sentAt = DateTime.now().toUtc()
         ..point.replace(FixLocationRequest((p) => p
-          ..latitude = position.latitude
-          ..longitude = position.longitude))
+          ..latitude = _maskCoordinateToGrid(position.latitude)
+          ..longitude = _maskCoordinateToGrid(position.longitude)))
         ..power = batteryLevel / 100.0);
       final response = await _fixesApi.create(fixRequest: fixRequest);
       return response.statusCode == 201;
