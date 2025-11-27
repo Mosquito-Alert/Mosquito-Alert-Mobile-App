@@ -8,6 +8,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_p
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,6 @@ class _BreedingSiteReportControllerState
     extends State<BreedingSiteReportController> {
   late PageController _pageController;
   late BreedingSiteReportData _reportData;
-  late BreedingSitesApi _breedingSitesApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -143,10 +143,6 @@ class _BreedingSiteReportControllerState
     _pageController = PageController();
     _reportData = BreedingSiteReportData();
 
-    // Initialize API
-    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
-    _breedingSitesApi = apiClient.getBreedingSitesApi();
-
     _logAnalyticsEvent('start_report');
   }
 
@@ -218,34 +214,32 @@ class _BreedingSiteReportControllerState
       _isSubmitting = true;
     });
 
+    await _logAnalyticsEvent('submit_report');
+
+    // Step 1: Create location request
+    final locationRequest = LocationRequest((b) => b
+      ..source_ = _reportData.locationSource
+      ..point.latitude = _reportData.latitude!
+      ..point.longitude = _reportData.longitude!);
+
+    // Step 2: Process photos
+    final List<MultipartFile> photos = [];
+    final uuid = Uuid();
+    for (final photo in _reportData.photos) {
+      photos.add(await MultipartFile.fromBytes(photo,
+          filename: '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
+          contentType: DioMediaType('image', 'jpeg')));
+    }
+    final photosRequest = BuiltList<MultipartFile>(photos);
+
+    // Step 3: Tags
+    final userTags = await UserManager.getHashtags();
+    final tags = userTags != null ? BuiltList<String>(userTags) : null;
+
+    final provider = context.watch<BreedingSiteProvider>();
     try {
-      await _logAnalyticsEvent('submit_report');
-
-      // Step 1: Create location request
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
-
-      // Step 2: Process photos
-      final List<MultipartFile> photos = [];
-      final uuid = Uuid();
-      for (final photo in _reportData.photos) {
-        photos.add(await MultipartFile.fromBytes(photo,
-            filename:
-                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
-            contentType: DioMediaType('image', 'jpeg')));
-      }
-      final photosRequest = BuiltList<MultipartFile>(photos);
-
-      // Step 3: Tags
-      final userTags = await UserManager.getHashtags();
-      final tags = userTags != null ? BuiltList<String>(userTags) : null;
-
-      // Step 4: Make API call using BreedingSitesApi
-      final response = await _breedingSitesApi.create(
+      await provider.createBreedingSite(
         createdAt: _reportData.createdAt.toUtc(),
-        sentAt: DateTime.now().toUtc(),
         location: locationRequest,
         photos: photosRequest,
         note: _reportData.notes,
@@ -254,25 +248,21 @@ class _BreedingSiteReportControllerState
         hasWater: _reportData.hasWater,
         hasLarvae: _reportData.hasLarvae,
       );
-
-      if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(
-          context,
-          onOkPressed: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          },
-        );
-      } else {
-        ReportDialogs.showErrorDialog(
-            context, 'Server error: ${response.statusCode}');
-      }
     } catch (e) {
       ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
+      return;
     } finally {
       setState(() {
         _isSubmitting = false;
       });
     }
+
+    ReportDialogs.showSuccessDialog(
+      context,
+      onOkPressed: () {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+    );
   }
 
   Future<void> _logAnalyticsEvent(

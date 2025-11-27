@@ -10,6 +10,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_p
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,6 @@ class AdultReportController extends StatefulWidget {
 class _AdultReportControllerState extends State<AdultReportController> {
   late PageController _pageController;
   late AdultReportData _reportData;
-  late ObservationsApi _observationsApi;
   late CampaignsApi _campaignsApi;
 
   int _currentStep = 0;
@@ -52,7 +52,6 @@ class _AdultReportControllerState extends State<AdultReportController> {
 
     // Initialize API
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
-    _observationsApi = apiClient.getObservationsApi();
     _campaignsApi = apiClient.getCampaignsApi();
 
     _logAnalyticsEvent('start_report');
@@ -119,92 +118,87 @@ class _AdultReportControllerState extends State<AdultReportController> {
       _isSubmitting = true;
     });
 
+    await _logAnalyticsEvent('submit_report');
+
+    // Step 1: Create location request
+    final locationRequest = LocationRequest((b) => b
+      ..source_ = _reportData.locationSource
+      ..point.latitude = _reportData.latitude!
+      ..point.longitude = _reportData.longitude!);
+
+    // Step 3: Process photos
+    final List<MultipartFile> photos = [];
+    final uuid = Uuid();
+    for (final photo in _reportData.photos) {
+      photos.add(await MultipartFile.fromBytes(photo,
+          filename: '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
+          contentType: DioMediaType('image', 'jpeg')));
+    }
+    final photosRequest = BuiltList<MultipartFile>(photos);
+
+    // Step 4: Prepare notes
+    final notes =
+        _reportData.notes?.isNotEmpty == true ? _reportData.notes! : '';
+
+    // Steo 5: Tags
+    final userTags = await UserManager.getHashtags();
+    final tags = userTags != null ? BuiltList<String>(userTags) : null;
+
+    // Step 6: Make API call
+    final provider = context.watch<ObservationProvider>();
+    Observation? newObservation;
     try {
-      await _logAnalyticsEvent('submit_report');
-
-      // Step 1: Create location request
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
-
-      // Step 3: Process photos
-      final List<MultipartFile> photos = [];
-      final uuid = Uuid();
-      for (final photo in _reportData.photos) {
-        photos.add(await MultipartFile.fromBytes(photo,
-            filename:
-                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
-            contentType: DioMediaType('image', 'jpeg')));
-      }
-      final photosRequest = BuiltList<MultipartFile>(photos);
-
-      // Step 4: Prepare notes
-      final notes =
-          _reportData.notes?.isNotEmpty == true ? _reportData.notes! : '';
-
-      // Steo 5: Tags
-      final userTags = await UserManager.getHashtags();
-      final tags = userTags != null ? BuiltList<String>(userTags) : null;
-
-      // Step 6: Make API call
-      final response = await _observationsApi.create(
-        createdAt: _reportData.createdAt.toUtc(),
-        sentAt: DateTime.now().toUtc(),
-        location: locationRequest,
-        photos: photosRequest,
-        note: notes,
-        eventEnvironment: _reportData.environmentAnswer?.name ?? '',
-        eventMoment: _reportData.eventMoment?.name ?? null,
-        tags: tags,
-      );
-
-      if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(
-          context,
-          onOkPressed: () async {
-            Navigator.pop(context); // close the success dialog
-            Country? country = response.data?.location.country;
-            if (country == null) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              return;
-            }
-
-            try {
-              final campaignsResponse = await _campaignsApi.list(
-                countryId: country.id,
-                isActive: true,
-                pageSize: 1,
-                orderBy: ['-start_date'].build(),
-              );
-              final Campaign? campaign =
-                  campaignsResponse.data?.results?.firstOrNull;
-              if (campaign != null) {
-                Dialogs.showAlertCampaign(
-                  context,
-                  campaign,
-                  (context) =>
-                      Navigator.of(context).popUntil((route) => route.isFirst),
-                );
-              } else {
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              }
-            } catch (e) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            }
-          },
-        );
-      } else {
-        ReportDialogs.showErrorDialog(
-            context, 'Server error: ${response.statusCode}');
-      }
+      newObservation = await provider.createObservation(
+          createdAt: _reportData.createdAt.toUtc(),
+          location: locationRequest,
+          photos: photosRequest,
+          note: notes,
+          eventEnvironment: _reportData.environmentAnswer?.name ?? '',
+          eventMoment: _reportData.eventMoment?.name ?? null,
+          tags: tags);
     } catch (e) {
       ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
+      return;
     } finally {
       setState(() {
         _isSubmitting = false;
       });
     }
+
+    ReportDialogs.showSuccessDialog(
+      context,
+      onOkPressed: () async {
+        Navigator.pop(context); // close the success dialog
+        Country? country = newObservation!.location.country;
+        if (country == null) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          return;
+        }
+
+        try {
+          final campaignsResponse = await _campaignsApi.list(
+            countryId: country.id,
+            isActive: true,
+            pageSize: 1,
+            orderBy: ['-start_date'].build(),
+          );
+          final Campaign? campaign =
+              campaignsResponse.data?.results?.firstOrNull;
+          if (campaign != null) {
+            Dialogs.showAlertCampaign(
+              context,
+              campaign,
+              (context) =>
+                  Navigator.of(context).popUntil((route) => route.isFirst),
+            );
+          } else {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          }
+        } catch (e) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+      },
+    );
   }
 
   Future<void> _logAnalyticsEvent(String eventName) async {

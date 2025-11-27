@@ -60,7 +60,7 @@ class ReportDetailPage<ReportType> extends StatelessWidget {
                           name: 'delete_report',
                           parameters: {'report_uuid': (report as dynamic).uuid},
                         );
-                        await provider.delete(report);
+                        await provider.delete(object: report);
                         Navigator.of(context).pop(true);
                       } catch (e) {
                         Navigator.of(context).pop(false);
