@@ -40,12 +40,7 @@ class _BiteQuestionsPageState extends State<BiteQuestionsPage> {
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            BodyPartSelector(),
-                          ],
-                        ),
+                        child: const BodyPartSelector(),
                       ),
                     ),
                     const SizedBox(height: 16),
