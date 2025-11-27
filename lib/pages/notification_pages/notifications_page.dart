@@ -69,7 +69,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 state: PagingState(
                   pages: [provider.notifications],
                   keys: [1],
-                  hasNextPage: provider.hasMoreNotifications,
+                  hasNextPage: provider.hasMore,
                   isLoading: provider.isLoading,
                   error: provider.errorMessage,
                 ),
