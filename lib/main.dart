@@ -12,6 +12,7 @@ import 'package:mosquito_alert_app/providers/auth_provider.dart';
 import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/providers/notification_provider.dart';
 import 'package:mosquito_alert_app/services/api_service.dart';
+import 'package:mosquito_alert_app/services/report_sync_service.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
@@ -54,11 +55,16 @@ Future<void> main({String env = 'prod'}) async {
   authProvider.setApiClient(apiClient);
   final userProvider = await UserProvider.create(apiClient: apiClient);
   final deviceProvider = await DeviceProvider.create(apiClient: apiClient);
+  final reportSyncService =
+      await ReportSyncService.create(apiClient: apiClient);
 
   final appConfig = await AppConfig.loadConfig();
   if (appConfig.useAuth) {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   }
+
+  BackgroundTracking.configure(apiClient: apiClient);
+  await BackgroundTracking.syncPendingFixes();
 
   runApp(
     MultiProvider(
@@ -67,6 +73,8 @@ Future<void> main({String env = 'prod'}) async {
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<UserProvider>.value(value: userProvider),
         ChangeNotifierProvider<DeviceProvider>.value(value: deviceProvider),
+        ChangeNotifierProvider<ReportSyncService>.value(
+            value: reportSyncService),
         ChangeNotifierProvider<NotificationProvider>(
           create: (_) => NotificationProvider(apiClient: apiClient),
         ),
@@ -119,6 +127,7 @@ void callbackDispatcher() {
     }
 
     BackgroundTracking.configure(apiClient: apiClient);
+    await BackgroundTracking.syncPendingFixes();
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
     // - Future.value(false): task failed and needs to be retried
@@ -133,7 +142,11 @@ void callbackDispatcher() {
             inputData?['numTaskAlreadyScheduled'] ?? 0;
         // NOTE: do not use await, it should return a Future value
         return BackgroundTracking.scheduleDailyTrackingTask(
-            numScheduledTasks: numTaskAlreadyScheduled);
+            numScheduledTasks: numTaskAlreadyScheduled,
+            earliestTime: TimeOfDay.now());
+      case 'syncPendingFixes':
+        await BackgroundTracking.syncPendingFixes();
+        return Future.value(true);
       default:
         // If the task doesn't match, return true as a fallback
         return Future.value(true);

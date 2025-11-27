@@ -201,6 +201,7 @@ class _MainVCState extends State<MainVC>
     BackgroundTracking.configure(
       apiClient: Provider.of<MosquitoAlert>(context, listen: false),
     );
+    await BackgroundTracking.syncPendingFixes();
     bool trackingEnabled = await BackgroundTracking.isEnabled();
     if (trackingEnabled) {
       await BackgroundTracking.start(requestPermissions: false);

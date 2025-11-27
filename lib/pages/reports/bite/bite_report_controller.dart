@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
@@ -8,8 +7,8 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/services/report_sync_service.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
 import 'models/bite_report_data.dart';
@@ -25,7 +24,7 @@ class BiteReportController extends StatefulWidget {
 class _BiteReportControllerState extends State<BiteReportController> {
   late PageController _pageController;
   late BiteReportData _reportData;
-  late BitesApi _bitesApi;
+  late ReportSyncService _reportSyncService;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -44,10 +43,8 @@ class _BiteReportControllerState extends State<BiteReportController> {
     super.initState();
     _pageController = PageController();
     _reportData = BiteReportData();
-
-    // Initialize API
-    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
-    _bitesApi = apiClient.getBitesApi();
+    _reportSyncService =
+        Provider.of<ReportSyncService>(context, listen: false);
 
     _logAnalyticsEvent('start_report');
   }
@@ -111,7 +108,7 @@ class _BiteReportControllerState extends State<BiteReportController> {
     });
   }
 
-  /// Submit the bite report
+  /// Submit the bite report (queues if offline)
   Future<void> _submitReport() async {
     if (!_reportData.isValid || _isSubmitting) return;
 
@@ -122,55 +119,37 @@ class _BiteReportControllerState extends State<BiteReportController> {
     try {
       await _logAnalyticsEvent('submit_report');
 
-      // Create location request
-      final location = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
+      final result =
+          await _reportSyncService.submitBiteReport(_reportData.copy());
 
-      // Create bite counts request
-      final counts = BiteCountsRequest((b) => b
-        ..head = _reportData.headBites
-        ..leftArm = _reportData.leftHandBites
-        ..rightArm = _reportData.rightHandBites
-        ..chest = _reportData.chestBites
-        ..leftLeg = _reportData.leftLegBites
-        ..rightLeg = _reportData.rightLegBites);
+      if (!mounted) return;
 
-      final userTags = await UserManager.getHashtags();
-
-      // Create the bite request
-      final biteRequest = BiteRequest((b) => b
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..location.replace(location)
-        ..note = _reportData.notes
-        ..eventEnvironment = _reportData.eventEnvironment
-        ..eventMoment = _reportData.eventMoment!
-        ..tags = userTags != null ? ListBuilder<String>(userTags) : null
-        ..counts.replace(counts));
-
-      // Submit the request
-      final response = await _bitesApi.create(biteRequest: biteRequest);
-
-      if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(
+      if (result.status == ReportSubmissionStatus.sent) {
+        await ReportDialogs.showSuccessDialog(
           context,
           onOkPressed: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
         );
       } else {
-        ReportDialogs.showErrorDialog(context);
+        await _handleQueuedSubmission();
       }
     } catch (e) {
       print('Error creating bite report: $e');
-      ReportDialogs.showErrorDialog(context);
+      await _handleQueuedSubmission();
     } finally {
-      setState(() {
-        _isSubmitting = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
+  }
+
+  Future<void> _handleQueuedSubmission() async {
+    await ReportDialogs.showErrorDialog(context);
+    if (!mounted) return;
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   Future<void> _logAnalyticsEvent(String eventName) async {

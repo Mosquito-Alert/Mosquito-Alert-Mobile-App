@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -16,6 +17,15 @@ class BackgroundTracking {
   static String _scheduledTasksPrefsKey = 'scheduledTrackingEpochs';
   static String _isEnabledPrefsKey = 'trackingEnabled';
   static int tasksPerDay = 5;
+  static const String _pendingFixesPrefsKey = 'pending_fixes_v1';
+  static const double _gridSize = 0.025;
+  static const String _syncTaskUniqueName = 'sync_pending_fixes_task';
+  static const String _syncTaskTag = 'syncPendingFixes';
+
+  static final List<_PendingFix> _pendingFixes = [];
+  static SharedPreferences? _prefs;
+  static bool _pendingFixesLoaded = false;
+  static bool _isSyncingFixes = false;
 
   static void configure({required MosquitoAlert apiClient}) {
     _fixesApi = apiClient.getFixesApi();
@@ -47,7 +57,7 @@ class BackgroundTracking {
     // Schedule tasks now.
     try {
       await BackgroundTracking.scheduleDailyTrackingTask(
-          numScheduledTasks: alreadyRunTasks);
+          numScheduledTasks: alreadyRunTasks, earliestTime: TimeOfDay.now());
     } catch (e) {
       print(e);
     }
@@ -67,6 +77,8 @@ class BackgroundTracking {
       frequency: Duration(days: 1),
       initialDelay: timeUntilMidnight + Duration(minutes: 5),
     );
+
+    await BackgroundTracking.syncPendingFixes();
   }
 
   static Future<void> stop() async {
@@ -152,7 +164,7 @@ class BackgroundTracking {
   }
 
   static Future<bool> scheduleDailyTrackingTask(
-      {int numScheduledTasks = 0}) async {
+      {int numScheduledTasks = 0, TimeOfDay? earliestTime}) async {
     try {
       // Ensure background tracking is enabled
       if (!await BackgroundTracking.isEnabled()) {
@@ -174,20 +186,25 @@ class BackgroundTracking {
         throw Exception('All tasks for today have already been scheduled.');
       }
 
-      // Calculate the fraction of the day remaining
       DateTime startOfDay = DateTime(now.year, now.month, now.day);
       double fractionOfDayElapsed =
           now.difference(startOfDay).inSeconds / Duration.secondsPerDay;
       double remainingFractionOfDay = 1 - fractionOfDayElapsed;
 
-      // Only schedule the fraction of tasks for the remaining day length.
       int numTasks =
           max(1, (numTaskToSchedule * remainingFractionOfDay).ceil());
-      List<TimeOfDay> randomTimes =
-          _getRandomTimes(numTasks, minTime: TimeOfDay.now());
+
+      final TimeOfDay minTime = earliestTime ?? TimeOfDay.now();
+      List<TimeOfDay> randomTimes = _getRandomTimes(numTasks, minTime: minTime)
+        ..sort((a, b) {
+          final int aMinutes = a.hour * 60 + a.minute;
+          final int bMinutes = b.hour * 60 + b.minute;
+          return aMinutes.compareTo(bMinutes);
+        });
 
       // Schedule tasks asynchronously
-      randomTimes.forEach((time) async {
+      for (var i = 0; i < randomTimes.length; i++) {
+        final time = randomTimes[i];
         DateTime scheduledTime = DateTime(
           now.year,
           now.month,
@@ -199,13 +216,13 @@ class BackgroundTracking {
         print('Scheduled new tracking task to be run at ${scheduledTime}');
 
         await Workmanager().registerOneOffTask(
-          'tracking_task_${scheduledTime.millisecondsSinceEpoch}',
+          'tracking_task_${scheduledTime.millisecondsSinceEpoch}_$i',
           'trackingTask',
           initialDelay: scheduledTime.difference(now),
           tag: 'trackingTask',
-          constraints: Constraints(networkType: NetworkType.connected),
+          constraints: Constraints(networkType: NetworkType.not_required),
         );
-      });
+      }
 
       return true;
     } catch (e) {
@@ -228,19 +245,16 @@ class BackgroundTracking {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       int batteryLevel = await Battery().batteryLevel;
-      String trackingUuid = await BackgroundTracking._getTrackingUUID();
+      final maskedFix = _PendingFix(
+        latitude: _maskCoordinate(position.latitude),
+        longitude: _maskCoordinate(position.longitude),
+        power: batteryLevel / 100.0,
+        createdAt: DateTime.now().toUtc(),
+      );
 
-      // Send data to API
-      FixRequest fixRequest = FixRequest((b) => b
-        ..coverageUuid = trackingUuid
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..point.replace(FixLocationRequest((p) => p
-          ..latitude = position.latitude
-          ..longitude = position.longitude))
-        ..power = batteryLevel / 100.0);
-      final response = await _fixesApi.create(fixRequest: fixRequest);
-      return response.statusCode == 201;
+      await _enqueueMaskedFix(maskedFix);
+      await BackgroundTracking.syncPendingFixes();
+      return true;
     } catch (e) {
       return Future.error(e);
     }
@@ -287,5 +301,154 @@ class BackgroundTracking {
   static Future<String> _getSchedulerId(DateTime datetime) async {
     DateTime date = DateTime(datetime.year, datetime.month, datetime.day);
     return date.millisecondsSinceEpoch.toString();
+  }
+
+  static double _maskCoordinate(double value) {
+    final masked = ((value / _gridSize).roundToDouble()) * _gridSize;
+    return double.parse(masked.toStringAsFixed(6));
+  }
+
+  static Future<SharedPreferences> _getPrefs() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    return _prefs!;
+  }
+
+  static Future<void> _ensurePendingFixesLoaded() async {
+    if (_pendingFixesLoaded) {
+      return;
+    }
+    final prefs = await _getPrefs();
+    final stored = prefs.getStringList(_pendingFixesPrefsKey) ?? [];
+    _pendingFixes
+      ..clear()
+      ..addAll(stored.map((raw) {
+        try {
+          return _PendingFix.fromJson(jsonDecode(raw));
+        } catch (e) {
+          return null;
+        }
+      }).whereType<_PendingFix>());
+    _pendingFixesLoaded = true;
+  }
+
+  static Future<void> _persistPendingFixes() async {
+    final prefs = await _getPrefs();
+    final encoded = _pendingFixes.map((e) => jsonEncode(e.toJson())).toList();
+    await prefs.setStringList(_pendingFixesPrefsKey, encoded);
+  }
+
+  static Future<void> _enqueueMaskedFix(_PendingFix fix) async {
+    await _ensurePendingFixesLoaded();
+    _pendingFixes.add(fix);
+    await _persistPendingFixes();
+  }
+
+  static Future<void> syncPendingFixes() async {
+    await _ensurePendingFixesLoaded();
+
+    if (_pendingFixes.isEmpty) {
+      await _cancelConnectivitySyncTask();
+      return;
+    }
+
+    if (_isSyncingFixes) {
+      return;
+    }
+
+    _isSyncingFixes = true;
+    var allFixesSynced = true;
+    try {
+      while (_pendingFixes.isNotEmpty) {
+        final nextFix = _pendingFixes.first;
+        final success = await _sendPendingFix(nextFix);
+        if (!success) {
+          allFixesSynced = false;
+          break;
+        }
+        _pendingFixes.removeAt(0);
+        await _persistPendingFixes();
+      }
+    } finally {
+      _isSyncingFixes = false;
+    }
+
+    if (_pendingFixes.isEmpty && allFixesSynced) {
+      await _cancelConnectivitySyncTask();
+    } else {
+      await _scheduleConnectivitySyncTask();
+    }
+  }
+
+  static Future<void> _scheduleConnectivitySyncTask() async {
+    await Workmanager().registerOneOffTask(
+      _syncTaskUniqueName,
+      'syncPendingFixes',
+      tag: _syncTaskTag,
+      constraints: Constraints(networkType: NetworkType.connected),
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+    );
+  }
+
+  static Future<void> _cancelConnectivitySyncTask() async {
+    try {
+      await Workmanager().cancelByUniqueName(_syncTaskUniqueName);
+    } catch (_) {}
+
+    if (Platform.isAndroid) {
+      try {
+        await Workmanager().cancelByTag(_syncTaskTag);
+      } catch (_) {}
+    }
+  }
+
+  static Future<bool> _sendPendingFix(_PendingFix fix) async {
+    try {
+      final trackingUuid = await BackgroundTracking._getTrackingUUID();
+      final response = await _fixesApi.create(
+        fixRequest: FixRequest((b) => b
+          ..coverageUuid = trackingUuid
+          ..createdAt = fix.createdAt
+          ..sentAt = DateTime.now().toUtc()
+          ..point.replace(FixLocationRequest((p) => p
+            ..latitude = fix.latitude
+            ..longitude = fix.longitude))
+          ..power = fix.power),
+      );
+      return response.statusCode == 201;
+    } catch (e) {
+      print('Failed to sync background fix: $e');
+      return false;
+    }
+  }
+}
+
+class _PendingFix {
+  final double latitude;
+  final double longitude;
+  final double power;
+  final DateTime createdAt;
+
+  _PendingFix({
+    required this.latitude,
+    required this.longitude,
+    required this.power,
+    required this.createdAt,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'power': power,
+        'createdAt': createdAt.toIso8601String(),
+      };
+
+  factory _PendingFix.fromJson(Map<String, dynamic> json) {
+    return _PendingFix(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      power: (json['power'] as num).toDouble(),
+      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+          DateTime.now().toUtc(),
+    );
   }
 }

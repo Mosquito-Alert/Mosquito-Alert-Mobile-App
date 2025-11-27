@@ -1,17 +1,13 @@
-import 'package:built_collection/built_collection.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/pages/photo_selection_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/services/report_sync_service.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 import 'models/breeding_site_report_data.dart';
 import 'pages/larvae_question_page.dart';
@@ -46,7 +42,7 @@ class _BreedingSiteReportControllerState
     extends State<BreedingSiteReportController> {
   late PageController _pageController;
   late BreedingSiteReportData _reportData;
-  late BreedingSitesApi _breedingSitesApi;
+  late ReportSyncService _reportSyncService;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -127,7 +123,7 @@ class _BreedingSiteReportControllerState
         onPrevious: () => null,
         isShown: () => true,
         widget: NotesAndSubmitPage(
-          initialNotes: _reportData.notes,
+          initialNotes: _reportData.notes ?? '',
           onNotesChanged: _onNotesChanged,
           onSubmit: _submitReport,
           onPrevious: _previousStep,
@@ -143,9 +139,8 @@ class _BreedingSiteReportControllerState
     _pageController = PageController();
     _reportData = BreedingSiteReportData();
 
-    // Initialize API
-    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
-    _breedingSitesApi = apiClient.getBreedingSitesApi();
+    _reportSyncService =
+        Provider.of<ReportSyncService>(context, listen: false);
 
     _logAnalyticsEvent('start_report');
   }
@@ -210,7 +205,7 @@ class _BreedingSiteReportControllerState
     });
   }
 
-  /// Submit the breeding site report via API
+  /// Submit the breeding site report via API or queue if offline
   Future<void> _submitReport() async {
     if (!_reportData.isValid || _isSubmitting) return;
 
@@ -220,59 +215,38 @@ class _BreedingSiteReportControllerState
 
     try {
       await _logAnalyticsEvent('submit_report');
-
-      // Step 1: Create location request
-      final locationRequest = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
-
-      // Step 2: Process photos
-      final List<MultipartFile> photos = [];
-      final uuid = Uuid();
-      for (final photo in _reportData.photos) {
-        photos.add(await MultipartFile.fromBytes(photo,
-            filename:
-                '${uuid.v4()}.jpg', // NOTE: Filename is required by the API
-            contentType: DioMediaType('image', 'jpeg')));
-      }
-      final photosRequest = BuiltList<MultipartFile>(photos);
-
-      // Step 3: Tags
-      final userTags = await UserManager.getHashtags();
-      final tags = userTags != null ? BuiltList<String>(userTags) : null;
-
-      // Step 4: Make API call using BreedingSitesApi
-      final response = await _breedingSitesApi.create(
-        createdAt: _reportData.createdAt.toUtc(),
-        sentAt: DateTime.now().toUtc(),
-        location: locationRequest,
-        photos: photosRequest,
-        note: _reportData.notes,
-        tags: tags,
-        siteType: _reportData.siteType,
-        hasWater: _reportData.hasWater,
-        hasLarvae: _reportData.hasLarvae,
+      final result = await _reportSyncService.submitBreedingSiteReport(
+        _reportData.copy(),
       );
 
-      if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(
+      if (!mounted) return;
+
+      if (result.status == ReportSubmissionStatus.sent) {
+        await ReportDialogs.showSuccessDialog(
           context,
           onOkPressed: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
         );
       } else {
-        ReportDialogs.showErrorDialog(
-            context, 'Server error: ${response.statusCode}');
+        await _handleQueuedSubmission();
       }
     } catch (e) {
-      ReportDialogs.showErrorDialog(context, 'Failed to submit report: $e');
+      print('Error creating breeding site report: $e');
+      await _handleQueuedSubmission();
     } finally {
-      setState(() {
-        _isSubmitting = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
+  }
+
+  Future<void> _handleQueuedSubmission() async {
+    await ReportDialogs.showErrorDialog(context);
+    if (!mounted) return;
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   Future<void> _logAnalyticsEvent(

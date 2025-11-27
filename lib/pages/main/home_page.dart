@@ -8,9 +8,11 @@ import 'package:mosquito_alert_app/pages/map/public_map.dart';
 import 'package:mosquito_alert_app/pages/reports/adult/adult_report_controller.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/bite_report_controller.dart';
 import 'package:mosquito_alert_app/pages/reports/sites/breeding_site_report_controller.dart';
+import 'package:mosquito_alert_app/services/report_sync_service.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,6 +28,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _suggestedActionTextId = getRandomWhatToDoText();
     _logScreenView();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final syncService =
+          Provider.of<ReportSyncService>(context, listen: false);
+      syncService.syncPendingReports();
+    });
   }
 
   @override
