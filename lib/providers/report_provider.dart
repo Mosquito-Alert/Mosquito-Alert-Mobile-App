@@ -73,8 +73,8 @@ class ObservationProvider extends ReportProvider<sdk.Observation> {
 
   @override
   Future<void> delete({required sdk.Observation object}) async {
-    super.delete(object: object);
     await observationsApi.destroy(uuid: object.uuid);
+    super.delete(object: object);
   }
 }
 
@@ -128,8 +128,8 @@ class BiteProvider extends ReportProvider<sdk.Bite> {
 
   @override
   Future<void> delete({required sdk.Bite object}) async {
-    super.delete(object: object);
     await bitesApi.destroy(uuid: object.uuid);
+    super.delete(object: object);
   }
 }
 
@@ -188,7 +188,7 @@ class BreedingSiteProvider extends ReportProvider<sdk.BreedingSite> {
 
   @override
   Future<void> delete({required sdk.BreedingSite object}) async {
-    super.delete(object: object);
     await breedingSitesApi.destroy(uuid: object.uuid);
+    super.delete(object: object);
   }
 }
