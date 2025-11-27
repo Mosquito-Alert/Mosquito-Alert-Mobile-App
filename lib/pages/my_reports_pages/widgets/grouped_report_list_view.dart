@@ -10,7 +10,7 @@ class GroupedReportListView<ReportType> extends StatefulWidget {
   final ReportProvider<ReportType> provider;
   final Text Function(dynamic report) titleBuilder;
   final Widget? Function(dynamic report)? leadingBuilder;
-  final Future<bool?> Function(dynamic report, BuildContext context) onTap;
+  final Future<void> Function(dynamic report, BuildContext context) onTap;
 
   const GroupedReportListView({
     super.key,
@@ -127,10 +127,7 @@ class _GroupedReportListViewState<ReportType>
                       leading: widget.leadingBuilder?.call(item),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () async {
-                        bool? deleted = await widget.onTap(report, context);
-                        if (deleted == true) {
-                          await widget.provider.refresh();
-                        }
+                        await widget.onTap(report, context);
                       },
                     );
                   },

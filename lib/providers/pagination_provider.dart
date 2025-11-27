@@ -9,8 +9,7 @@ abstract class PaginationProvider<T> extends ChangeNotifier {
 
   PaginationProvider({required this.apiClient});
 
-  List<T> _objects = [];
-  List<T> get objects => _objects;
+  List<T> objects = [];
 
   // Pagination state
   int _lastFetchedPage = 0;
@@ -45,9 +44,9 @@ abstract class PaginationProvider<T> extends ChangeNotifier {
       _lastFetchedPage = nextPage;
 
       if (clear) {
-        _objects = newObjects;
+        objects = newObjects;
       } else {
-        _objects.addAll(newObjects);
+        objects.addAll(newObjects);
       }
     } catch (e) {
       _errorMessage = e.toString();

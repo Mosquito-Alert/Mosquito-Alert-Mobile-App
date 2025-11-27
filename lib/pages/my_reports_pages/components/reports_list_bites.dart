@@ -23,7 +23,7 @@ class _ReportsListBitesState extends State<ReportsListBites> {
         return BiteWidgets(context, report).buildTitleText();
       },
       onTap: (report, context) async {
-        return await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => BiteReportDetailPage(bite: report),

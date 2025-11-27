@@ -4,6 +4,7 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/report_detail_page.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/models/bite_report_data.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/widgets/body_part_selector.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,6 @@ class BiteReportDetailPage extends StatefulWidget {
 }
 
 class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
-  late BitesApi bitesApi;
   BiteReportData biteReportData = BiteReportData();
 
   @override
@@ -33,7 +33,6 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
     biteReportData.leftLegBites = widget.bite.counts.leftLeg ?? 0;
     biteReportData.rightLegBites = widget.bite.counts.rightLeg ?? 0;
     _logScreenView();
-    _initializeApi();
   }
 
   Future<void> _logScreenView() async {
@@ -41,28 +40,6 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
       contentType: 'bite_report',
       itemId: widget.bite.uuid,
     );
-  }
-
-  void _initializeApi() {
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
-    bitesApi = apiClient.getBitesApi();
-  }
-
-  Future<void> _deleteReport({required Bite bite}) async {
-    await FirebaseAnalytics.instance.logEvent(
-      name: 'delete_report',
-      parameters: {'report_uuid': bite.uuid},
-    );
-
-    try {
-      await bitesApi.destroy(uuid: bite.uuid);
-      if (mounted) {
-        Navigator.of(context).pop(true); // Return true to indicate deletion
-      }
-    } catch (e) {
-      print('Error deleting bite: $e');
-    }
   }
 
   @override
@@ -81,8 +58,8 @@ class _BiteReportDetailPageState extends State<BiteReportDetailPage> {
 
     return ReportDetailPage(
         report: widget.bite,
+        provider: context.watch<BiteProvider>(),
         title: biteWidgets.buildTitleText(),
-        onTapDelete: (bite) => _deleteReport(bite: bite),
         extraListTileMap: extraListTileMap,
         topBarBackgroundBuilder: (report) => LayoutBuilder(
               builder: (context, constraints) {

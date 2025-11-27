@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/report_detail_page.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:provider/provider.dart';
@@ -20,13 +21,10 @@ class SiteReportDetailPage extends StatefulWidget {
 }
 
 class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
-  late BreedingSitesApi breedingSitesApi;
-
   @override
   void initState() {
     super.initState();
     _logViewScreen();
-    _initializeApi();
   }
 
   Future<void> _logViewScreen() async {
@@ -34,28 +32,6 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
       contentType: 'breeding_site_report',
       itemId: widget.breedingSite.uuid,
     );
-  }
-
-  void _initializeApi() {
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
-    breedingSitesApi = apiClient.getBreedingSitesApi();
-  }
-
-  Future<void> _deleteReport({required BreedingSite breedingSite}) async {
-    await FirebaseAnalytics.instance.logEvent(
-      name: 'delete_report',
-      parameters: {'report_uuid': breedingSite.uuid},
-    );
-
-    try {
-      await breedingSitesApi.destroy(uuid: breedingSite.uuid);
-      if (mounted) {
-        Navigator.of(context).pop(true); // Return true to indicate deletion
-      }
-    } catch (e) {
-      print('Error deleting breeding site: $e');
-    }
   }
 
   @override
@@ -84,8 +60,8 @@ class _SiteReportDetailPageState extends State<SiteReportDetailPage> {
 
     return ReportDetailPage(
       report: widget.breedingSite,
+      provider: context.watch<BreedingSiteProvider>(),
       title: breedingSiteWidgets.buildTitleText(),
-      onTapDelete: (breedingSite) => _deleteReport(breedingSite: breedingSite),
       extraListTileMap: extraListTileMap,
       topBarBackgroundBuilder: (breedingSite) =>
           ReportDetailWidgets.buildPhotoCarousel(report: breedingSite),

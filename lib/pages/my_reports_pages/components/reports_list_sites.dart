@@ -29,7 +29,7 @@ class _ReportsListSitesState extends State<ReportsListSites> {
         );
       },
       onTap: (report, context) async {
-        return await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => SiteReportDetailPage(breedingSite: report),

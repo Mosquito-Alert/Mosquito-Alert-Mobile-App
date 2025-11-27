@@ -28,7 +28,7 @@ class _ReportsListAdultsState extends State<ReportsListAdults> {
       ),
       onTap: (report, context) async {
         // Handle tap on each report
-        return await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => AdultReportDetailPage(observation: report),
