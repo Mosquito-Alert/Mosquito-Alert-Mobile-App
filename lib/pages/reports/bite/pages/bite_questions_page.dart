@@ -38,8 +38,12 @@ class _BiteQuestionsPageState extends State<BiteQuestionsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const BodyPartSelector(),
-                    const Spacer(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: const BodyPartSelector(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
                       child: Style.button(
