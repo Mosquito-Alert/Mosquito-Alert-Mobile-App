@@ -5,6 +5,7 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/widgets/report_detail_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/report_formatter.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -23,7 +24,6 @@ class AdultReportDetailPage extends StatefulWidget {
 }
 
 class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
-  late ObservationsApi observationsApi;
   Campaign? activeCampaign;
 
   @override
@@ -43,7 +43,6 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
   void _initializeApi() async {
     MosquitoAlert apiClient =
         Provider.of<MosquitoAlert>(context, listen: false);
-    observationsApi = apiClient.getObservationsApi();
 
     final observationCountry = widget.observation.location.country;
     final observationDateAllowsCampaign =
@@ -63,22 +62,6 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
     }
   }
 
-  Future<void> _deleteReport({required Observation observation}) async {
-    await FirebaseAnalytics.instance.logEvent(
-      name: 'delete_report',
-      parameters: {'report_uuid': observation.uuid},
-    );
-
-    try {
-      await observationsApi.destroy(uuid: observation.uuid);
-      if (mounted) {
-        Navigator.of(context).pop(true); // Return true to indicate deletion
-      }
-    } catch (e) {
-      print('Error deleting observation: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final observationWidgets = ObservationWidgets(context, widget.observation);
@@ -93,8 +76,8 @@ class _AdultReportDetailPageState extends State<AdultReportDetailPage> {
 
     return ReportDetailPage(
       report: widget.observation,
+      provider: context.watch<ObservationProvider>(),
       title: observationWidgets.buildTitleText(),
-      onTapDelete: (observation) => _deleteReport(observation: observation),
       extraListTileMap: extraListTileMap,
       topBarBackgroundBuilder: (observation) =>
           ReportDetailWidgets.buildPhotoCarousel(report: observation),

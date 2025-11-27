@@ -8,6 +8,7 @@ import 'package:mosquito_alert_app/pages/reports/shared/pages/location_selection
 import 'package:mosquito_alert_app/pages/reports/shared/pages/notes_and_submit_page.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/utils/report_dialogs.dart';
 import 'package:mosquito_alert_app/pages/reports/shared/widgets/progress_indicator.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,6 @@ class BiteReportController extends StatefulWidget {
 class _BiteReportControllerState extends State<BiteReportController> {
   late PageController _pageController;
   late BiteReportData _reportData;
-  late BitesApi _bitesApi;
 
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -44,10 +44,6 @@ class _BiteReportControllerState extends State<BiteReportController> {
     super.initState();
     _pageController = PageController();
     _reportData = BiteReportData();
-
-    // Initialize API
-    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
-    _bitesApi = apiClient.getBitesApi();
 
     _logAnalyticsEvent('start_report');
   }
@@ -119,58 +115,51 @@ class _BiteReportControllerState extends State<BiteReportController> {
       _isSubmitting = true;
     });
 
+    await _logAnalyticsEvent('submit_report');
+
+    // Create location request
+    final location = LocationRequest((b) => b
+      ..source_ = _reportData.locationSource
+      ..point.latitude = _reportData.latitude!
+      ..point.longitude = _reportData.longitude!);
+
+    // Create bite counts request
+    final counts = BiteCountsRequest((b) => b
+      ..head = _reportData.headBites
+      ..leftArm = _reportData.leftHandBites
+      ..rightArm = _reportData.rightHandBites
+      ..chest = _reportData.chestBites
+      ..leftLeg = _reportData.leftLegBites
+      ..rightLeg = _reportData.rightLegBites);
+
+    final userTags = await UserManager.getHashtags();
+
+    // Submit the request
+    final provider = context.watch<BiteProvider>();
     try {
-      await _logAnalyticsEvent('submit_report');
-
-      // Create location request
-      final location = LocationRequest((b) => b
-        ..source_ = _reportData.locationSource
-        ..point.latitude = _reportData.latitude!
-        ..point.longitude = _reportData.longitude!);
-
-      // Create bite counts request
-      final counts = BiteCountsRequest((b) => b
-        ..head = _reportData.headBites
-        ..leftArm = _reportData.leftHandBites
-        ..rightArm = _reportData.rightHandBites
-        ..chest = _reportData.chestBites
-        ..leftLeg = _reportData.leftLegBites
-        ..rightLeg = _reportData.rightLegBites);
-
-      final userTags = await UserManager.getHashtags();
-
-      // Create the bite request
-      final biteRequest = BiteRequest((b) => b
-        ..createdAt = DateTime.now().toUtc()
-        ..sentAt = DateTime.now().toUtc()
-        ..location.replace(location)
-        ..note = _reportData.notes
-        ..eventEnvironment = _reportData.eventEnvironment
-        ..eventMoment = _reportData.eventMoment!
-        ..tags = userTags != null ? ListBuilder<String>(userTags) : null
-        ..counts.replace(counts));
-
-      // Submit the request
-      final response = await _bitesApi.create(biteRequest: biteRequest);
-
-      if (response.statusCode == 201) {
-        ReportDialogs.showSuccessDialog(
-          context,
-          onOkPressed: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          },
-        );
-      } else {
-        ReportDialogs.showErrorDialog(context);
-      }
+      provider.createBite(
+          createdAt: _reportData.createdAt.toUtc(),
+          location: location,
+          counts: counts,
+          note: _reportData.notes,
+          tags: userTags != null ? BuiltList<String>(userTags) : null,
+          eventEnvironment: _reportData.eventEnvironment,
+          eventMoment: _reportData.eventMoment);
     } catch (e) {
-      print('Error creating bite report: $e');
       ReportDialogs.showErrorDialog(context);
+      return;
     } finally {
       setState(() {
         _isSubmitting = false;
       });
     }
+
+    ReportDialogs.showSuccessDialog(
+      context,
+      onOkPressed: () {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+    );
   }
 
   Future<void> _logAnalyticsEvent(String eventName) async {

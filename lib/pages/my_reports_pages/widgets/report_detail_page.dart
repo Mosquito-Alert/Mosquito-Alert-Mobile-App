@@ -1,16 +1,18 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class ReportDetailPage extends StatelessWidget {
-  final dynamic report;
+class ReportDetailPage<ReportType> extends StatelessWidget {
+  final ReportType report;
+  final ReportProvider<ReportType> provider;
   final Text title;
-  final Future<void> Function(dynamic report) onTapDelete;
   final Map<IconData, String>? extraListTileMap;
   final Widget? Function(dynamic report)? topBarBackgroundBuilder;
   final Widget Function()? cardBuilder;
@@ -18,8 +20,8 @@ class ReportDetailPage extends StatelessWidget {
   const ReportDetailPage({
     super.key,
     required this.report,
+    required this.provider,
     required this.title,
-    required this.onTapDelete,
     this.extraListTileMap,
     this.topBarBackgroundBuilder,
     this.cardBuilder,
@@ -54,10 +56,16 @@ class ReportDetailPage extends StatelessWidget {
                     onPressed: () async {
                       setState(() => isDeleting = true);
                       try {
-                        await onTapDelete(report);
+                        await FirebaseAnalytics.instance.logEvent(
+                          name: 'delete_report',
+                          parameters: {'report_uuid': (report as dynamic).uuid},
+                        );
+                        await provider.delete(object: report);
                         Navigator.of(context).pop(true);
                       } catch (e) {
                         Navigator.of(context).pop(false);
+                      } finally {
+                        setState(() => isDeleting = false);
                       }
                     },
                   ),
@@ -81,8 +89,8 @@ class ReportDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LatLng location = LatLng(
-      report.location.point.latitude,
-      report.location.point.longitude,
+      (report as dynamic).location.point.latitude,
+      (report as dynamic).location.point.longitude,
     );
     final topBarBackground = topBarBackgroundBuilder?.call(report);
     return Scaffold(
@@ -106,7 +114,10 @@ class ReportDetailPage extends StatelessWidget {
                     icon: const Icon(Icons.more_vert),
                     onSelected: (value) async {
                       if (value == 1) {
-                        await showDeleteDialog(context);
+                        bool? hasDeleted = await showDeleteDialog(context);
+                        if (hasDeleted == true) {
+                          Navigator.of(context).pop(true);
+                        }
                       }
                     },
                     itemBuilder: (context) => [
@@ -194,7 +205,7 @@ class ReportDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    title: Text(report.shortId)),
+                    title: Text((report as dynamic).shortId)),
                 ListTile(
                   leading: Icon(Icons.pin_drop, color: Style.colorPrimary),
                   title: FutureBuilder<String>(
@@ -216,7 +227,7 @@ class ReportDetailPage extends StatelessWidget {
                         Icon(Icons.calendar_month, color: Style.colorPrimary),
                     title: Text(DateFormat.yMMMEd()
                         .add_Hm()
-                        .format(report.createdAtLocal))),
+                        .format((report as dynamic).createdAtLocal))),
                 // Add extra tiles
                 if (extraListTileMap != null)
                   ...extraListTileMap!.entries.map((entry) {
@@ -225,24 +236,26 @@ class ReportDetailPage extends StatelessWidget {
                       title: Text(entry.value),
                     );
                   }).toList(),
-                if (report.tags != null && report.tags!.isNotEmpty)
+                if ((report as dynamic).tags != null &&
+                    (report as dynamic).tags!.isNotEmpty)
                   ListTile(
                     leading: Icon(Icons.sell, color: Style.colorPrimary),
                     title: Wrap(
                       spacing: 8.0, // space between chips
                       runSpacing: 4.0, // space between lines
-                      children: report.tags.map((tag) {
+                      children: (report as dynamic).tags.map((tag) {
                         return Chip(
                           label: Text(tag),
                         );
                       }).toList(),
                     ),
                   ),
-                if (report.note != null && report.note!.isNotEmpty)
+                if ((report as dynamic).note != null &&
+                    (report as dynamic).note!.isNotEmpty)
                   ListTile(
                       leading:
                           Icon(Icons.text_snippet, color: Style.colorPrimary),
-                      title: Text(report.note)),
+                      title: Text((report as dynamic).note)),
                 const Divider(thickness: 0.1),
                 Container(
                     height: 300,
