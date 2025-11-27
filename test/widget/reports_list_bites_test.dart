@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_bites.dart';
+import 'package:mosquito_alert_app/providers/report_provider.dart';
 import 'package:provider/provider.dart';
 
 // Import shared mocks and helpers
@@ -10,17 +11,20 @@ import '../mocks/mocks.dart';
 Widget createReportsListBitesTestWidget({
   MockMosquitoAlert? mockClient,
 }) {
-  return MaterialApp(
-    home: Scaffold(
-      body: Provider<sdk.MosquitoAlert>(
-        create: (_) => mockClient ?? MockMosquitoAlert(),
-        child: ReportsListBites(),
+  return ChangeNotifierProvider<BiteProvider>(
+    create: (_) => BiteProvider(apiClient: mockClient ?? MockMosquitoAlert()),
+    child: MaterialApp(
+      home: Scaffold(
+        body: Provider<sdk.MosquitoAlert>(
+          create: (_) => mockClient ?? MockMosquitoAlert(),
+          child: ReportsListBites(),
+        ),
       ),
+      localizationsDelegates: const [
+        MockMyLocalizationsDelegate(),
+      ],
+      supportedLocales: const [Locale('en')],
     ),
-    localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
-    ],
-    supportedLocales: const [Locale('en')],
   );
 }
 

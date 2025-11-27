@@ -34,15 +34,14 @@ class SectionHeader {
 
 class _GroupedReportListViewState<ReportType>
     extends State<GroupedReportListView<ReportType>> {
-  bool _didInitialLoad = false;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_didInitialLoad) {
-      _didInitialLoad = true;
-      widget.provider.fetchNextPage();
-    }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.provider.objects.isEmpty) {
+        widget.provider.fetchNextPage();
+      }
+    });
   }
 
   List<Object> _addHeaders(List<ReportType> objects) {
