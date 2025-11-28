@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:infinite_scroll_pagination/src/defaults/first_page_exception_indicator.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/detail/shared_report_widgets.dart';
-import 'package:mosquito_alert_app/providers/report_provider.dart';
+import 'package:mosquito_alert_app/core/models/base_report.dart';
+import 'package:mosquito_alert_app/core/widgets/report_list/report_list_tile.dart';
+import 'package:mosquito_alert_app/core/providers/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class GroupedReportListView<ReportType> extends StatefulWidget {
+class ReportList<ReportType extends BaseReport> extends StatefulWidget {
   final ReportProvider<ReportType> provider;
-  final Text Function(dynamic report) titleBuilder;
-  final Widget? Function(dynamic report)? leadingBuilder;
-  final Future<void> Function(dynamic report, BuildContext context) onTap;
+  final ReportListTile<ReportType> Function({required dynamic report})
+      tileBuilder;
 
-  const GroupedReportListView({
+  const ReportList({
     super.key,
     required this.provider,
-    required this.titleBuilder,
-    required this.onTap,
-    this.leadingBuilder,
+    required this.tileBuilder,
   });
 
   @override
-  _GroupedReportListViewState createState() => _GroupedReportListViewState();
+  _ReportList createState() => _ReportList();
 }
 
 class SectionHeader {
@@ -32,14 +30,14 @@ class SectionHeader {
   String get formattedDate => DateFormat.yMMMMd().format(date);
 }
 
-class _GroupedReportListViewState<ReportType>
-    extends State<GroupedReportListView<ReportType>> {
+class _ReportList<ReportType extends BaseReport>
+    extends State<ReportList<ReportType>> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.provider.objects.isEmpty) {
-        widget.provider.fetchNextPage();
+      if (widget.provider.items.isEmpty) {
+        widget.provider.loadInitial();
       }
     });
   }
@@ -51,7 +49,7 @@ class _GroupedReportListViewState<ReportType>
     final List<Object> itemsWithHeaders = [];
     DateTime? lastDate;
     for (var item in objects) {
-      final createdAt = (item as dynamic).createdAtLocal as DateTime?;
+      final createdAt = (item as BaseReport).createdAtLocal as DateTime?;
       if (createdAt == null) {
         itemsWithHeaders.add(item as Object); // Just add item without header
         continue;
@@ -74,13 +72,13 @@ class _GroupedReportListViewState<ReportType>
         onRefresh: () => widget.provider.refresh(),
         child: PagedListView<int, Object>.separated(
           state: PagingState(
-            pages: [_addHeaders(widget.provider.objects)],
+            pages: [_addHeaders(widget.provider.items)],
             keys: [1],
             hasNextPage: widget.provider.hasMore,
             isLoading: widget.provider.isLoading,
-            error: widget.provider.errorMessage,
+            error: widget.provider.error,
           ),
-          fetchNextPage: widget.provider.fetchNextPage,
+          fetchNextPage: widget.provider.loadMore,
           builderDelegate: PagedChildBuilderDelegate<Object>(
               noItemsFoundIndicatorBuilder: (context) =>
                   FirstPageExceptionIndicator(
@@ -88,7 +86,6 @@ class _GroupedReportListViewState<ReportType>
                   ),
               itemBuilder: (context, item, index) {
                 if (item is SectionHeader) {
-                  // Render section header
                   return Container(
                     color: Colors.grey[200],
                     child: Padding(
@@ -103,34 +100,11 @@ class _GroupedReportListViewState<ReportType>
                       ),
                     ),
                   );
+                } else if (item is ReportType) {
+                  return widget.tileBuilder(report: item);
+                } else {
+                  return const SizedBox.shrink(); // Fallback for unknown types
                 }
-                // We now know it's ReportType, so cast:
-                final report = item as ReportType;
-                // Render normal item
-                return FutureBuilder<String>(
-                  future: ReportUtils.formatLocationWithCity(report),
-                  builder: (context, snapshot) {
-                    final subtitle = snapshot.connectionState ==
-                            ConnectionState.waiting
-                        ? MyLocalizations.of(context, 'loading') + '...'
-                        : (snapshot.data ??
-                            MyLocalizations.of(context, 'unknown_location'));
-
-                    return ListTile(
-                      title: widget.titleBuilder(report),
-                      subtitle: Text(subtitle,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.black54,
-                          )),
-                      leading: widget.leadingBuilder?.call(item),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () async {
-                        await widget.onTap(report, context);
-                      },
-                    );
-                  },
-                );
               }),
           separatorBuilder: (context, index) => const Divider(
             thickness: 0.2,

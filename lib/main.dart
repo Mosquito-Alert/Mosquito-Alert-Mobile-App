@@ -7,11 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
 import 'package:mosquito_alert_app/providers/device_provider.dart';
 import 'package:mosquito_alert_app/providers/notification_provider.dart';
-import 'package:mosquito_alert_app/providers/report_provider.dart';
+import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
+import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
 import 'package:mosquito_alert_app/services/api_service.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
@@ -72,13 +77,16 @@ Future<void> main({String env = 'prod'}) async {
           create: (_) => NotificationProvider(apiClient: apiClient),
         ),
         ChangeNotifierProvider<ObservationProvider>(
-          create: (_) => ObservationProvider(apiClient: apiClient),
+          create: (_) => ObservationProvider(
+              repository: ObservationRepository(apiClient: apiClient)),
         ),
         ChangeNotifierProvider<BiteProvider>(
-          create: (_) => BiteProvider(apiClient: apiClient),
+          create: (_) =>
+              BiteProvider(repository: BiteRepository(apiClient: apiClient)),
         ),
         ChangeNotifierProvider<BreedingSiteProvider>(
-          create: (_) => BreedingSiteProvider(apiClient: apiClient),
+          create: (_) => BreedingSiteProvider(
+              repository: BreedingSiteRepository(apiClient: apiClient)),
         )
       ],
       child: MyApp(),

@@ -1,10 +1,21 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_adults.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_bites.dart';
-import 'package:mosquito_alert_app/pages/my_reports_pages/components/reports_list_sites.dart';
+import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
+import 'package:mosquito_alert_app/core/adapters/breeding_site_report.dart';
+import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
+import 'package:mosquito_alert_app/core/widgets/report_list.dart';
+import 'package:mosquito_alert_app/core/widgets/report_list/report_list_tile.dart';
+import 'package:mosquito_alert_app/core/widgets/report_list/report_list_tile_with_thumbnail.dart';
+import 'package:mosquito_alert_app/features/bites/presentation/pages/bite_detail_page.dart';
+import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/presentation/pages/breeding_site_detail_page.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
+import 'package:mosquito_alert_app/features/observations/presentation/pages/observation_detail_page.dart';
+import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
+
+import 'package:provider/provider.dart';
 
 class MyReportsPage extends StatefulWidget {
   const MyReportsPage({Key? key}) : super(key: key);
@@ -72,11 +83,34 @@ class _MyReportsPageState extends State<MyReportsPage> {
               }),
           title: Text(MyLocalizations.of(context, 'your_reports_txt')),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            ReportsListAdults(),
-            ReportsListBites(),
-            ReportsListSites(),
+            ReportList(
+                provider: context.watch<ObservationProvider>(),
+                tileBuilder: ({required report}) {
+                  return ReportListTileWithThumbnail<ObservationReport>(
+                    report: report,
+                    reportDetailPage:
+                        ObservationDetailPage(observation: report),
+                  );
+                }),
+            ReportList(
+                provider: context.watch<BiteProvider>(),
+                tileBuilder: ({required report}) {
+                  return ReportListTile<BiteReport>(
+                    report: report,
+                    reportDetailPage: BiteDetailPage(bite: report),
+                  );
+                }),
+            ReportList(
+                provider: context.watch<BreedingSiteProvider>(),
+                tileBuilder: ({required report}) {
+                  return ReportListTileWithThumbnail<BreedingSiteReport>(
+                    report: report,
+                    reportDetailPage:
+                        BreedingSiteDetailPage(breedingSite: report),
+                  );
+                }),
           ],
         ),
       ),
