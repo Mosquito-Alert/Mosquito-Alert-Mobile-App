@@ -73,8 +73,10 @@ class PendingReport {
     final payload = Map<String, dynamic>.from(json['payload'] as Map);
     final attachments =
         (json['attachments'] as List).map((e) => e as String).toList();
-    final createdAt = DateTime.tryParse(json['createdAt'] as String? ?? '') ??
-        DateTime.now();
+    final parsedCreatedAt =
+        DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now();
+    final createdAt =
+        parsedCreatedAt.isUtc ? parsedCreatedAt : parsedCreatedAt.toUtc();
 
     return PendingReport(
       id: json['id'] as String,
@@ -133,7 +135,14 @@ class ReportSyncService extends ChangeNotifier {
     try {
       while (_queue.isNotEmpty) {
         final report = _queue.first;
-        final success = await _sendPendingReport(report);
+        bool success = false;
+        try {
+          success = await _sendPendingReport(report);
+        } catch (e, stack) {
+          debugPrint('Failed to sync pending report ${report.id}: $e');
+          debugPrintStack(stackTrace: stack);
+          success = false;
+        }
         if (success) {
           _queue.removeAt(0);
           await _persistQueue();
@@ -201,10 +210,14 @@ class ReportSyncService extends ChangeNotifier {
 
   Future<void> _loadQueue() async {
     final stored = _prefs.getStringList(_pendingReportsKey) ?? [];
+    var queueMutated = false;
     for (final entry in stored) {
       try {
         final map = jsonDecode(entry) as Map<String, dynamic>;
         final pending = PendingReport.fromJson(map);
+        if (_normalizeQueuedReport(pending)) {
+          queueMutated = true;
+        }
         _queue.add(pending);
       } catch (e) {
         debugPrint('Failed to decode pending report: $e');
@@ -213,6 +226,10 @@ class ReportSyncService extends ChangeNotifier {
 
     if (_queue.isNotEmpty) {
       _ensureRetryTimer();
+    }
+
+    if (queueMutated) {
+      await _persistQueue();
     }
   }
 
@@ -231,7 +248,7 @@ class ReportSyncService extends ChangeNotifier {
       'environment': reportData.environmentAnswer?.name,
       'moment': reportData.eventMoment?.name,
       'notes': reportData.notes,
-      'createdAt': reportData.createdAt.toIso8601String(),
+      'createdAt': reportData.createdAt.toUtc().toIso8601String(),
     };
 
     await _enqueue(PendingReport(
@@ -239,7 +256,7 @@ class ReportSyncService extends ChangeNotifier {
       type: PendingReportType.adult,
       payload: payload,
       attachments: attachments,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
     ));
   }
 
@@ -252,7 +269,7 @@ class ReportSyncService extends ChangeNotifier {
       'environment': reportData.eventEnvironment?.name,
       'moment': reportData.eventMoment?.name,
       'notes': reportData.notes,
-      'createdAt': reportData.createdAt.toIso8601String(),
+      'createdAt': reportData.createdAt.toUtc().toIso8601String(),
       'headBites': reportData.headBites,
       'leftHandBites': reportData.leftHandBites,
       'rightHandBites': reportData.rightHandBites,
@@ -266,12 +283,11 @@ class ReportSyncService extends ChangeNotifier {
       type: PendingReportType.bite,
       payload: payload,
       attachments: const [],
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
     ));
   }
 
-  Future<void> _queueBreedingReport(
-      BreedingSiteReportData reportData) async {
+  Future<void> _queueBreedingReport(BreedingSiteReportData reportData) async {
     final id = const Uuid().v4();
     final attachments = await _storePhotoAttachments(reportData.photos, id);
     final payload = {
@@ -282,7 +298,7 @@ class ReportSyncService extends ChangeNotifier {
       'longitude': reportData.longitude,
       'locationSource': reportData.locationSource.name,
       'notes': reportData.notes,
-      'createdAt': reportData.createdAt.toIso8601String(),
+      'createdAt': reportData.createdAt.toUtc().toIso8601String(),
     };
 
     await _enqueue(PendingReport(
@@ -290,16 +306,39 @@ class ReportSyncService extends ChangeNotifier {
       type: PendingReportType.breeding,
       payload: payload,
       attachments: attachments,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
     ));
   }
 
   Future<void> _enqueue(PendingReport report) async {
+    _normalizeQueuedReport(report);
     _queue.add(report);
     await _persistQueue();
     _ensureRetryTimer();
     notifyListeners();
     unawaited(syncPendingReports());
+  }
+
+  bool _normalizeQueuedReport(PendingReport report) {
+    bool mutated = false;
+
+    final createdAtRaw = report.payload['createdAt'];
+    if (createdAtRaw is String) {
+      final parsed = DateTime.tryParse(createdAtRaw);
+      if (parsed != null) {
+        final normalized = parsed.isUtc ? parsed : parsed.toUtc();
+        final normalizedString = normalized.toIso8601String();
+        if (normalizedString != createdAtRaw) {
+          report.payload['createdAt'] = normalizedString;
+          mutated = true;
+        }
+      }
+    } else if (createdAtRaw == null) {
+      report.payload['createdAt'] = report.createdAt.toIso8601String();
+      mutated = true;
+    }
+
+    return mutated;
   }
 
   void _ensureRetryTimer() {
@@ -418,10 +457,14 @@ class ReportSyncService extends ChangeNotifier {
     final latitude = (payload['latitude'] as num).toDouble();
     final longitude = (payload['longitude'] as num).toDouble();
     final source = payload['locationSource'] as String?;
+    final parsedCreatedAt = DateTime.parse(payload['createdAt'] as String);
+    final createdAt =
+        parsedCreatedAt.isUtc ? parsedCreatedAt : parsedCreatedAt.toUtc();
 
     final photos = await _buildPhotosFromFiles(report.attachments);
     if (photos.isEmpty) {
-      debugPrint('Missing queued adult attachments, dropping report ${report.id}');
+      debugPrint(
+          'Missing queued adult attachments, dropping report ${report.id}');
       return true;
     }
 
@@ -435,7 +478,7 @@ class ReportSyncService extends ChangeNotifier {
     final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
     final response = await _observationsApi.create(
-      createdAt: DateTime.parse(payload['createdAt'] as String),
+      createdAt: createdAt,
       sentAt: DateTime.now().toUtc(),
       location: location,
       photos: photos,
@@ -476,8 +519,7 @@ class ReportSyncService extends ChangeNotifier {
 
     if (environment != null) {
       try {
-        eventEnvironment =
-            BiteRequestEventEnvironmentEnum.valueOf(environment);
+        eventEnvironment = BiteRequestEventEnvironmentEnum.valueOf(environment);
       } catch (_) {
         eventEnvironment = null;
       }
@@ -493,8 +535,9 @@ class ReportSyncService extends ChangeNotifier {
 
     final userTags = await UserManager.getHashtags();
 
+    final biteCreatedAt = DateTime.parse(payload['createdAt'] as String);
     final biteRequest = BiteRequest((b) => b
-      ..createdAt = DateTime.parse(payload['createdAt'] as String).toUtc()
+      ..createdAt = biteCreatedAt.isUtc ? biteCreatedAt : biteCreatedAt.toUtc()
       ..sentAt = DateTime.now().toUtc()
       ..location.replace(location)
       ..note = payload['notes'] as String?
@@ -515,7 +558,8 @@ class ReportSyncService extends ChangeNotifier {
 
     final photos = await _buildPhotosFromFiles(report.attachments);
     if (photos.isEmpty) {
-      debugPrint('Missing queued breeding attachments, dropping report ${report.id}');
+      debugPrint(
+          'Missing queued breeding attachments, dropping report ${report.id}');
       return true;
     }
 
@@ -528,8 +572,11 @@ class ReportSyncService extends ChangeNotifier {
     final userTags = await UserManager.getHashtags();
     final tags = userTags != null ? BuiltList<String>(userTags) : null;
 
+    final breedingCreatedAt = DateTime.parse(payload['createdAt'] as String);
     final response = await _breedingSitesApi.create(
-      createdAt: DateTime.parse(payload['createdAt'] as String).toUtc(),
+      createdAt: breedingCreatedAt.isUtc
+          ? breedingCreatedAt
+          : breedingCreatedAt.toUtc(),
       sentAt: DateTime.now().toUtc(),
       location: location,
       photos: photos,
