@@ -2,11 +2,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
 import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
-import 'package:mosquito_alert_app/core/widgets/report_detail_page.dart';
+import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/models/bite_report_data.dart';
 import 'package:mosquito_alert_app/pages/reports/bite/widgets/body_part_selector.dart';
-import 'package:mosquito_alert_app/core/widgets/report_detail/report_detail_scaffold.dart';
+import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_detail_scaffold.dart';
 import 'package:provider/provider.dart';
 
 class BiteDetailPage extends ReportDetailPage<BiteReport> {

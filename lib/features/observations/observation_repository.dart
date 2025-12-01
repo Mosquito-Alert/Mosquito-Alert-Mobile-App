@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/models/photo.dart';
-import 'package:mosquito_alert_app/core/repositories/report_repository.dart';
+import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 
 class ObservationRepository extends ReportRepository<ObservationsApi> {
   ObservationRepository({required MosquitoAlert apiClient})

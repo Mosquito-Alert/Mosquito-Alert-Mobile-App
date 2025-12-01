@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:infinite_scroll_pagination/src/defaults/first_page_exception_indicator.dart';
 import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/core/widgets/report_list/report_list_tile.dart';
-import 'package:mosquito_alert_app/core/providers/report_provider.dart';
+import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_list_tile.dart';
+import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class ReportList<ReportType extends BaseReport> extends StatefulWidget {
