@@ -13,7 +13,8 @@ import 'package:mosquito_alert_app/features/observations/observation_repository.
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
 import 'package:mosquito_alert_app/providers/device_provider.dart';
-import 'package:mosquito_alert_app/providers/notification_provider.dart';
+import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
+import 'package:mosquito_alert_app/features/notifications/notification_repository.dart';
 import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
@@ -74,7 +75,8 @@ Future<void> main({String env = 'prod'}) async {
         ChangeNotifierProvider<UserProvider>.value(value: userProvider),
         ChangeNotifierProvider<DeviceProvider>.value(value: deviceProvider),
         ChangeNotifierProvider<NotificationProvider>(
-          create: (_) => NotificationProvider(apiClient: apiClient),
+          create: (_) => NotificationProvider(
+              repository: NotificationRepository(apiClient: apiClient)),
         ),
         ChangeNotifierProvider<ObservationProvider>(
           create: (_) => ObservationProvider(

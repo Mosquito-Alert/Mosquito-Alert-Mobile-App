@@ -9,21 +9,22 @@ import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/env/env.dart';
+import 'package:mosquito_alert_app/main.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
 import 'package:mosquito_alert_app/pages/my_reports_pages/my_reports_page.dart';
-import 'package:mosquito_alert_app/pages/notification_pages/notifications_page.dart';
+import 'package:mosquito_alert_app/features/notifications/presentation/pages/notification_list_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/settings_page.dart';
 import 'package:mosquito_alert_app/providers/auth_provider.dart';
 import 'package:mosquito_alert_app/providers/device_provider.dart';
-import 'package:mosquito_alert_app/providers/notification_provider.dart';
+import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/providers/user_provider.dart';
 import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
-import 'package:mosquito_alert_app/utils/PushNotificationsManager.dart';
+import 'package:mosquito_alert_app/features/notifications/data/firebase_messaging_service.dart';
 import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -99,7 +100,8 @@ class _MainVCState extends State<MainVC>
     }
     await initBackgroundTracking();
     final deviceProvider = context.read<DeviceProvider>();
-    await PushNotificationsManager.init(provider: deviceProvider);
+    await FirebaseMessagingService(navigatorKey: navigatorKey)
+        .init(deviceProvider: deviceProvider);
   }
 
   Future<void> getPackageInfo() async {

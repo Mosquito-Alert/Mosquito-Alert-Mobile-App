@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
-import 'package:mosquito_alert_app/providers/notification_provider.dart';
+import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:mosquito_alert_app/utils/html_parser.dart';
+import 'package:mosquito_alert_app/core/utils/html_parser.dart';
 
 class NotificationDetailPage extends StatefulWidget {
   final sdk.Notification notification;
@@ -43,29 +43,26 @@ class NotificationDetailPage extends StatefulWidget {
 }
 
 class _NotificationDetailPageState extends State<NotificationDetailPage> {
-  late sdk.Notification _notification; // local mutable copy
-
   @override
   void initState() {
     super.initState();
-    _notification = widget.notification;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await context
           .read<NotificationProvider>()
-          .markAsRead(notification: _notification);
+          .markAsRead(notification: widget.notification);
     });
   }
 
   String get formattedDate {
-    final date = _notification.createdAt.toLocal();
+    final date = widget.notification.createdAt.toLocal();
     return DateFormat.yMMMd().addPattern('•').add_jm().format(date);
   }
 
   @override
   Widget build(BuildContext context) {
-    final title = _notification.message.title;
-    final body = _notification.message.body;
+    final title = widget.notification.message.title;
+    final body = widget.notification.message.body;
 
     return Scaffold(
       appBar: AppBar(

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/utils/style.dart';
 
-import 'style.dart';
-
-class MessageNotification extends StatelessWidget {
+class NotificationBanner extends StatelessWidget {
   final String? title;
   final String? message;
   final GestureTapCallback? onTap;
 
-  const MessageNotification(
+  const NotificationBanner(
       {Key? key, required this.title, required this.message, this.onTap})
       : super(key: key);
 

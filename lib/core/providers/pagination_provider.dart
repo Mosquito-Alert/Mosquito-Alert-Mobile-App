@@ -30,7 +30,9 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
   Future<Response> fetchPage({
     required int page,
     required int pageSize,
-  });
+  }) {
+    return repository.fetchPage(page: page, pageSize: pageSize);
+  }
 
   // Load first page
   Future<void> loadInitial() async {
