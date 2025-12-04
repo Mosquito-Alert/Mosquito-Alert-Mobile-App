@@ -28,7 +28,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     _logScreenView();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<NotificationProvider>();
-      if (provider.items.isEmpty) {
+      if (provider.loadedInitial == false) {
         provider.loadInitial();
       }
     });

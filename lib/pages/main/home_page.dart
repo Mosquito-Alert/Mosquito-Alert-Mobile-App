@@ -3,11 +3,11 @@ import 'dart:math';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:mosquito_alert_app/features/bites/presentation/pages/bite_create_page.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/presentation/pages/breeding_site_create_page.dart';
+import 'package:mosquito_alert_app/features/observations/presentation/pages/observation_create_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
 import 'package:mosquito_alert_app/pages/map/public_map.dart';
-import 'package:mosquito_alert_app/pages/reports/adult/adult_report_controller.dart';
-import 'package:mosquito_alert_app/pages/reports/bite/bite_report_controller.dart';
-import 'package:mosquito_alert_app/pages/reports/sites/breeding_site_report_controller.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AdultReportController(),
+        builder: (context) => ObservationCreatePage(),
       ),
     );
   }
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BiteReportController(),
+        builder: (context) => BiteCreatePage(),
       ),
     );
   }
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BreedingSiteReportController(),
+        builder: (context) => BreedingSiteCreatePage(),
       ),
     );
   }

@@ -1,43 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/models/base_report.dart';
+import 'package:mosquito_alert_app/core/models/base_report_request.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class ObservationReport extends BaseReportWithPhotos<Observation> {
   ObservationReport(Observation raw) : super(raw);
-
-  @override
-  String get uuid => raw.uuid;
-
-  @override
-  String get shortId => raw.shortId;
-
-  @override
-  String get userUuid => raw.userUuid;
-
-  @override
-  DateTime get createdAt => raw.createdAt;
-
-  @override
-  DateTime get createdAtLocal => raw.createdAtLocal;
-
-  @override
-  DateTime get sentAt => raw.sentAt;
-
-  @override
-  DateTime get receivedAt => raw.receivedAt;
-
-  @override
-  DateTime get updatedAt => raw.updatedAt;
-
-  @override
-  Location get location => raw.location;
-
-  @override
-  String? get note => raw.note;
-
-  @override
-  List<String>? get tags => raw.tags?.toList();
 
   @override
   String getTitle(BuildContext context) {
@@ -75,4 +43,20 @@ class ObservationReport extends BaseReportWithPhotos<Observation> {
         return null;
     }
   }
+}
+
+class ObservationReportRequest
+    extends BaseReportWithPhotosRequest<Observation> {
+  final ObservationEventEnvironmentEnum? eventEnvironment;
+  final ObservationEventMomentEnum? eventMoment;
+
+  ObservationReportRequest({
+    required super.createdAt,
+    required super.location,
+    required super.photos,
+    required this.eventEnvironment,
+    required this.eventMoment,
+    String? note,
+    List<String>? tags,
+  });
 }

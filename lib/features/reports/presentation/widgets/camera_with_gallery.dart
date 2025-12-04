@@ -11,12 +11,12 @@ import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-class _WhatsAppCameraController extends ChangeNotifier {
+class _CameraController extends ChangeNotifier {
   ///
   /// don't necessary to use this class
   /// this is the class to controller the actions
   ///
-  _WhatsAppCameraController({this.multiple = true});
+  _CameraController({this.multiple = true});
 
   /// permission to select multiple images
   ///
@@ -113,7 +113,7 @@ class _WhatsAppCameraController extends ChangeNotifier {
   }
 }
 
-class WhatsappCamera extends StatefulWidget {
+class CameraWithGallery extends StatefulWidget {
   /// permission to select multiple images
   ///
   /// multiple => default is true
@@ -124,7 +124,7 @@ class WhatsappCamera extends StatefulWidget {
   ///List<File>? res = await Navigator.push(
   /// context,
   /// MaterialPageRoute(
-  ///   builder: (context) => const WhatsappCamera()),
+  ///   builder: (context) => const CameraWithGallery()),
   ///);
   ///
   ///```
@@ -137,20 +137,21 @@ class WhatsappCamera extends StatefulWidget {
   ///List<File>? res = await Navigator.push(
   /// context,
   /// MaterialPageRoute(
-  ///   builder: (context) => const WhatsappCamera()),
+  ///   builder: (context) => const CameraWithGallery()),
   ///);
   ///
   ///```
   ///
-  const WhatsappCamera({key, this.multiple = true, this.infoBadgeTextKey = ''});
+  const CameraWithGallery(
+      {key, this.multiple = true, this.infoBadgeTextKey = ''});
 
   @override
-  State<WhatsappCamera> createState() => _WhatsappCameraState();
+  State<CameraWithGallery> createState() => _WhatsappCameraState();
 }
 
-class _WhatsappCameraState extends State<WhatsappCamera>
+class _WhatsappCameraState extends State<CameraWithGallery>
     with WidgetsBindingObserver {
-  late _WhatsAppCameraController controller;
+  late _CameraController controller;
   final panel = SlidingUpPanelController();
   bool _isCameraPermissionGranted = false;
   List<CameraDescription> _cameras = [];
@@ -195,7 +196,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    controller = _WhatsAppCameraController(multiple: widget.multiple);
+    controller = _CameraController(multiple: widget.multiple);
     _requestCameraPermission();
 
     // Delay the photo loading slightly to ensure proper initialization
@@ -341,7 +342,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
   }
 
   Widget cameraAndGalleryButtons(
-      BuildContext context, _WhatsAppCameraController controller) {
+      BuildContext context, _CameraController controller) {
     return Positioned(
         bottom: 32 + MediaQuery.of(context).padding.bottom,
         left: 0,
@@ -461,8 +462,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     );
   }
 
-  Widget galleryButton(
-      BuildContext context, _WhatsAppCameraController controller) {
+  Widget galleryButton(BuildContext context, _CameraController controller) {
     return GestureDetector(
       onTap: () async {
         final result = await PhotoManager.requestPermissionExtend();
@@ -494,8 +494,7 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     );
   }
 
-  Widget recentPhotosStrip(
-      BuildContext context, _WhatsAppCameraController controller) {
+  Widget recentPhotosStrip(BuildContext context, _CameraController controller) {
     return Positioned(
       bottom: 120 + MediaQuery.of(context).padding.bottom,
       left: 0,
@@ -531,8 +530,8 @@ class _WhatsappCameraState extends State<WhatsappCamera>
     );
   }
 
-  Future<Widget> _buildImage(BuildContext context,
-      _WhatsAppCameraController controller, AssetEntity asset) async {
+  Future<Widget> _buildImage(BuildContext context, _CameraController controller,
+      AssetEntity asset) async {
     final Uint8List? thumbnailData = await asset.thumbnailDataWithSize(
       ThumbnailSize(200, 200),
       quality: 80,

@@ -86,31 +86,33 @@ class _MyReportsPageState extends State<MyReportsPage> {
         body: TabBarView(
           children: [
             ReportList(
-                provider: context.watch<ObservationProvider>(),
-                tileBuilder: ({required report}) {
-                  return ReportListTileWithThumbnail<ObservationReport>(
-                    report: report,
-                    reportDetailPage:
-                        ObservationDetailPage(observation: report),
-                  );
-                }),
+              provider: context.watch<ObservationProvider>(),
+              tileBuilder: ({required report}) {
+                return ReportListTileWithThumbnail<ObservationReport>(
+                  report: report,
+                  reportDetailPage: ObservationDetailPage(observation: report),
+                );
+              },
+            ),
             ReportList(
-                provider: context.watch<BiteProvider>(),
-                tileBuilder: ({required report}) {
-                  return ReportListTile<BiteReport>(
-                    report: report,
-                    reportDetailPage: BiteDetailPage(bite: report),
-                  );
-                }),
+              provider: context.watch<BiteProvider>(),
+              tileBuilder: ({required report}) {
+                return ReportListTile<BiteReport>(
+                  report: report,
+                  reportDetailPage: BiteDetailPage(bite: report),
+                );
+              },
+            ),
             ReportList(
-                provider: context.watch<BreedingSiteProvider>(),
-                tileBuilder: ({required report}) {
-                  return ReportListTileWithThumbnail<BreedingSiteReport>(
-                    report: report,
-                    reportDetailPage:
-                        BreedingSiteDetailPage(breedingSite: report),
-                  );
-                }),
+              provider: context.watch<BreedingSiteProvider>(),
+              tileBuilder: ({required report}) {
+                return ReportListTileWithThumbnail<BreedingSiteReport>(
+                  report: report,
+                  reportDetailPage:
+                      BreedingSiteDetailPage(breedingSite: report),
+                );
+              },
+            ),
           ],
         ),
       ),

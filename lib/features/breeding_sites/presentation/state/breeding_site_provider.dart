@@ -8,4 +8,13 @@ class BreedingSiteProvider extends ReportProvider<BreedingSiteReport> {
       : super(
             repository: repository,
             itemFactory: (item) => BreedingSiteReport(item as BreedingSite));
+
+  Future<BreedingSiteReport> createBreedingSite(
+      {required BreedingSiteReportRequest request}) async {
+    final rawBreedingSite =
+        await (repository as BreedingSiteRepository).create(request: request);
+    final breedingSiteReport = itemFactory!(rawBreedingSite);
+    addItem(breedingSiteReport);
+    return breedingSiteReport;
+  }
 }

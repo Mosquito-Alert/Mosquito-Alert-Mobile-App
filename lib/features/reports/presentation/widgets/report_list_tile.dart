@@ -3,7 +3,8 @@ import 'package:mosquito_alert_app/core/models/base_report.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class ReportListTile<ReportType extends BaseReport> extends StatelessWidget {
+class ReportListTile<ReportType extends BaseReportModel>
+    extends StatelessWidget {
   final ReportType report;
   final Widget? Function(ReportType report)? leadingBuilder;
   final ReportDetailPage<ReportType> reportDetailPage;

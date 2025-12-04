@@ -8,4 +8,13 @@ class BiteProvider extends ReportProvider<BiteReport> {
       : super(
             repository: repository,
             itemFactory: (item) => BiteReport(item as Bite));
+
+  Future<BiteReport> createBite({required BiteReportRequest request}) async {
+    final rawBite =
+        await (repository as BiteRepository).create(request: request);
+
+    final biteReport = itemFactory!(rawBite);
+    addItem(biteReport);
+    return biteReport;
+  }
 }

@@ -3,7 +3,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:provider/provider.dart';
 
-import '../../../../utils/UserManager.dart';
+import '../../utils/UserManager.dart';
 
 class InAppReviewManager {
   static void requestInAppReview(BuildContext context) async {

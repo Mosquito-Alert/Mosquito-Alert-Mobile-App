@@ -1,15 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/reports/shared/widgets/camera_whatsapp.dart';
+import 'package:mosquito_alert_app/features/reports/presentation/widgets/camera_with_gallery.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class PhotoSelector extends StatefulWidget {
   final List<Uint8List> selectedPhotos;
-  final VoidCallback onPhotosChanged;
+  final Function(List<Uint8List>) onPhotosChanged;
   final int maxPhotos;
-  final int minPhotos;
   final String? thumbnailText;
   final String? infoBadgeTextKey;
 
@@ -18,7 +17,6 @@ class PhotoSelector extends StatefulWidget {
     required this.selectedPhotos,
     required this.onPhotosChanged,
     this.maxPhotos = 3,
-    this.minPhotos = 1,
     this.thumbnailText,
     this.infoBadgeTextKey,
   }) : super(key: key);
@@ -56,7 +54,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
     final List<Uint8List>? newFiles = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WhatsappCamera(
+        builder: (context) => CameraWithGallery(
           multiple: false,
           infoBadgeTextKey: widget.infoBadgeTextKey,
         ),
@@ -80,7 +78,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
       }
     });
 
-    widget.onPhotosChanged();
+    widget.onPhotosChanged(widget.selectedPhotos);
   }
 
   void _removePhoto(int index) {
@@ -94,7 +92,7 @@ class _PhotoSelectorState extends State<PhotoSelector> {
       }
     });
 
-    widget.onPhotosChanged();
+    widget.onPhotosChanged(widget.selectedPhotos);
   }
 
   void _selectPreviewPhoto(int index) {

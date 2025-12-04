@@ -4,7 +4,7 @@ import 'package:mosquito_alert_app/core/widgets/common_widgets.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_list_tile.dart';
 
-class ReportListTileWithThumbnail<ReportType extends BaseReport>
+class ReportListTileWithThumbnail<ReportType extends BaseReportModel>
     extends ReportListTile<ReportType> {
   ReportListTileWithThumbnail({
     Key? key,

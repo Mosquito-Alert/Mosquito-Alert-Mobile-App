@@ -1,43 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/models/base_report.dart';
+import 'package:mosquito_alert_app/core/models/base_report_request.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class BiteReport extends BaseReport<Bite> {
+class BiteReport extends BaseReportModel<Bite> {
   BiteReport(Bite raw) : super(raw);
-
-  @override
-  String get uuid => raw.uuid;
-
-  @override
-  String get shortId => raw.shortId;
-
-  @override
-  String get userUuid => raw.userUuid;
-
-  @override
-  DateTime get createdAt => raw.createdAt;
-
-  @override
-  DateTime get createdAtLocal => raw.createdAtLocal;
-
-  @override
-  DateTime get sentAt => raw.sentAt;
-
-  @override
-  DateTime get receivedAt => raw.receivedAt;
-
-  @override
-  DateTime get updatedAt => raw.updatedAt;
-
-  @override
-  Location get location => raw.location;
-
-  @override
-  String? get note => raw.note;
-
-  @override
-  List<String>? get tags => raw.tags?.toList();
 
   @override
   String getTitle(BuildContext context) {
@@ -84,4 +52,20 @@ class BiteReport extends BaseReport<Bite> {
         return null;
     }
   }
+}
+
+class BiteReportRequest extends BaseReportRequest<Bite> {
+  final BiteRequestEventEnvironmentEnum? eventEnvironment;
+  final BiteRequestEventMomentEnum? eventMoment;
+  final BiteCountsRequest counts;
+
+  BiteReportRequest({
+    required super.location,
+    required super.createdAt,
+    required this.eventEnvironment,
+    required this.eventMoment,
+    required this.counts,
+    String? note,
+    List<String>? tags,
+  });
 }

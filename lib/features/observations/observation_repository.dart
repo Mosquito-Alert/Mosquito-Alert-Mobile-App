@@ -1,44 +1,48 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/models/photo.dart';
+import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
 import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 
 class ObservationRepository extends ReportRepository<ObservationsApi> {
   ObservationRepository({required MosquitoAlert apiClient})
-      : super(itemApi: apiClient.getObservationsApi());
+      : super(apiClient: apiClient, itemApi: apiClient.getObservationsApi());
 
-  Future<Observation> create({
-    required DateTime createdAt,
-    required LocationSource_Enum locationSource,
-    required double locationLatitude,
-    required double locationLongitude,
-    required List<BaseUploadPhoto> photos,
-    String? note,
-    List<String>? tags,
-    String? eventEnvironment,
-    String? eventMoment,
-  }) async {
-    final locationRequest = LocationRequest((b) => b
-      ..source_ = LocationRequestSource_Enum.valueOf(locationSource.name)
-      ..point.latitude = locationLatitude
-      ..point.longitude = locationLongitude);
-
+  Future<Observation> create(
+      {required ObservationReportRequest request}) async {
     final List<MultipartFile> photosMultipart = [];
-    for (final photo in photos) {
+    for (final photo in request.photos) {
       photosMultipart.add(await photo.toMultipartFile());
     }
     final photosRequest = BuiltList<MultipartFile>(photosMultipart);
 
+    final event_environment_serializer = ObservationEventEnvironmentEnum
+        .serializer as PrimitiveSerializer<ObservationEventEnvironmentEnum>;
+    final event_moment_serializer = ObservationEventMomentEnum.serializer
+        as PrimitiveSerializer<ObservationEventMomentEnum>;
+
     final response = await itemApi.create(
-      createdAt: createdAt,
+      createdAt: request.createdAt,
       sentAt: DateTime.now().toUtc(),
-      location: locationRequest,
+      location: request.location,
       photos: photosRequest,
-      note: note,
-      tags: tags != null ? BuiltList<String>(tags) : null,
-      eventEnvironment: eventEnvironment,
-      eventMoment: eventMoment,
+      note: request.note,
+      tags: request.tags != null ? BuiltList<String>(request.tags!) : null,
+      eventEnvironment: request.eventEnvironment != null
+          ? (event_environment_serializer.serialize(
+              serializers,
+              request.eventEnvironment!,
+              specifiedType: const FullType(ObservationEventEnvironmentEnum),
+            ) as String)
+          : null,
+      eventMoment: request.eventMoment != null
+          ? (event_moment_serializer.serialize(
+              serializers,
+              request.eventMoment!,
+              specifiedType: const FullType(ObservationEventMomentEnum),
+            ) as String)
+          : null,
     );
     return response.data!;
   }

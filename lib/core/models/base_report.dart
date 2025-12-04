@@ -5,22 +5,39 @@ import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/core/models/photo.dart';
 
 abstract class BaseReport<T> {
+  final DateTime createdAt;
+  // final DateTime sentAt;
+  final String? note;
+  final List<String>? tags;
+
+  BaseReport({
+    required this.createdAt,
+    this.note,
+    this.tags,
+  });
+}
+
+abstract class BaseReportModel<T> extends BaseReport<T> {
   final T raw;
-  BaseReport(this.raw);
+  BaseReportModel(this.raw)
+      : super(
+          createdAt: (raw as dynamic).createdAt,
+          note: (raw as dynamic).note,
+          tags: ((raw as dynamic).tags)?.toList(),
+        );
 
-  String get uuid;
-  String get shortId;
-  String get userUuid;
-  DateTime get createdAt;
-  DateTime get createdAtLocal;
-  DateTime get sentAt;
-  DateTime get receivedAt;
-  DateTime get updatedAt;
-  sdk.Location get location;
-  String? get note;
-  List<String>? get tags;
+  String get pk => uuid;
 
-  // bool get isSync => uuid != null;
+  String get uuid => (raw as dynamic).uuid;
+  String get shortId => (raw as dynamic).shortId;
+  String get userUuid => (raw as dynamic).userUuid;
+  DateTime get createdAtLocal => (raw as dynamic).createdAtLocal;
+  DateTime get sentAt => (raw as dynamic).sentAt;
+  DateTime get receivedAt => (raw as dynamic).receivedAt;
+  DateTime get updatedAt => (raw as dynamic).updatedAt;
+  sdk.Location get location => (raw as dynamic).location;
+  String? get note => (raw as dynamic).note;
+  List<String>? get tags => (raw as dynamic).tags?.toList();
 
   String getTitle(BuildContext context);
   bool get titleItalicized => false;
@@ -85,7 +102,7 @@ abstract class BaseReport<T> {
   }
 }
 
-abstract class BaseReportWithPhotos<T> extends BaseReport<T> {
+abstract class BaseReportWithPhotos<T> extends BaseReportModel<T> {
   BaseReportWithPhotos(T raw) : super(raw);
 
   List<BasePhoto>? get photos =>

@@ -7,7 +7,7 @@ import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_
 import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
-class ReportList<ReportType extends BaseReport> extends StatefulWidget {
+class ReportList<ReportType extends BaseReportModel> extends StatefulWidget {
   final ReportProvider<ReportType> provider;
   final ReportListTile<ReportType> Function({required dynamic report})
       tileBuilder;
@@ -30,13 +30,13 @@ class SectionHeader {
   String get formattedDate => DateFormat.yMMMMd().format(date);
 }
 
-class _ReportList<ReportType extends BaseReport>
+class _ReportList<ReportType extends BaseReportModel>
     extends State<ReportList<ReportType>> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.provider.items.isEmpty) {
+      if (widget.provider.loadedInitial == false) {
         widget.provider.loadInitial();
       }
     });
@@ -49,7 +49,7 @@ class _ReportList<ReportType extends BaseReport>
     final List<Object> itemsWithHeaders = [];
     DateTime? lastDate;
     for (var item in objects) {
-      final createdAt = (item as BaseReport).createdAtLocal as DateTime?;
+      final createdAt = (item as BaseReportModel).createdAtLocal as DateTime?;
       if (createdAt == null) {
         itemsWithHeaders.add(item as Object); // Just add item without header
         continue;

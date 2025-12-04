@@ -8,7 +8,7 @@ import 'package:mosquito_alert_app/features/reports/presentation/state/report_pr
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class ReportDetailScaffold<ReportType extends BaseReport>
+class ReportDetailScaffold<ReportType extends BaseReportModel>
     extends StatelessWidget {
   final ReportType report;
   final ReportProvider<ReportType> provider;
