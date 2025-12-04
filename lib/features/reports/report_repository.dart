@@ -42,6 +42,14 @@ abstract class ReportRepository<ReportType extends BaseReportModel,
     }
   }
 
+  Future<int> getCount() async {
+    final response = await (itemApi as dynamic).listMine(
+      page: 1,
+      pageSize: 1,
+    );
+    return response.data?.count ?? 0;
+  }
+
   Future<void> delete({required String uuid}) async {
     await (itemApi as dynamic).destroy(uuid: uuid);
   }

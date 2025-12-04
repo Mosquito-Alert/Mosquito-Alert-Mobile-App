@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/UserManager.dart';
@@ -23,39 +26,15 @@ class InAppReviewManager {
       BuildContext context, int minimumRequired) async {
     final apiClient = Provider.of<sdk.MosquitoAlert>(context, listen: false);
 
-    final apiFetchers = [
-      (
-        'observations',
-        () => apiClient.getObservationsApi().listMine(pageSize: 1)
-      ),
-      ('bites', () => apiClient.getBitesApi().listMine(pageSize: 1)),
-      (
-        'breeding_sites',
-        () => apiClient.getBreedingSitesApi().listMine(pageSize: 1)
-      ),
-    ];
+    final observationRepository = ObservationRepository(apiClient: apiClient);
+    final biteRepository = BiteRepository(apiClient: apiClient);
+    final breedingSiteRepository = BreedingSiteRepository(apiClient: apiClient);
 
     int totalReports = 0;
 
-    for (final (apiName, fetcher) in apiFetchers) {
-      try {
-        final response = await fetcher();
-        final data = response.data;
-        if (data == null) continue;
-
-        final count = (data as dynamic).count as int;
-
-        if (count > 0) {
-          totalReports += count;
-
-          if (totalReports >= minimumRequired) {
-            break;
-          }
-        }
-      } catch (e) {
-        print('Error fetching $apiName: $e');
-      }
-    }
+    totalReports += await observationRepository.getCount();
+    totalReports += await biteRepository.getCount();
+    totalReports += await breedingSiteRepository.getCount();
 
     return totalReports;
   }
