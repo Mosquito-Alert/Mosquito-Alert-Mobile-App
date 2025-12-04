@@ -5,13 +5,15 @@ import 'package:mosquito_alert_app/features/reports/presentation/widgets/delete_
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_info_list.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_map.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
+import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class ReportDetailScaffold<ReportType extends BaseReportModel>
     extends StatelessWidget {
   final ReportType report;
-  final ReportProvider<ReportType> provider;
+  final ReportProvider<ReportType,
+      ReportRepository<ReportType, dynamic, dynamic>> provider;
   final List<ReportDetailField>? extraFields;
   final Widget? topBarBackground;
   final Widget Function()? cardBuilder;

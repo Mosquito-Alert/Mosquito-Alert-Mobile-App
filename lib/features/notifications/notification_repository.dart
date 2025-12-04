@@ -1,10 +1,9 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart';
 
 class NotificationRepository
-    extends PaginationRepository<sdk.NotificationsApi> {
+    extends PaginationRepository<sdk.Notification, sdk.NotificationsApi> {
   NotificationRepository({required sdk.MosquitoAlert apiClient})
       : super(itemApi: apiClient.getNotificationsApi());
 
@@ -32,16 +31,18 @@ class NotificationRepository
   }
 
   @override
-  Future<Response> fetchPage({
+  Future<(List<sdk.Notification>, bool hasMore)> fetchPage({
     required int page,
     required int pageSize,
-  }) {
-    return itemApi.listMine(
+  }) async {
+    final response = await itemApi.listMine(
       page: page,
       pageSize: pageSize,
       orderBy: BuiltList<String>([
         "-created_at",
       ]),
     );
+
+    return (response.data!.results!.toList(), response.data!.next != null);
   }
 }

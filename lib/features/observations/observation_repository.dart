@@ -5,11 +5,16 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
 import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 
-class ObservationRepository extends ReportRepository<ObservationsApi> {
+class ObservationRepository
+    extends ReportRepository<ObservationReport, Observation, ObservationsApi> {
   ObservationRepository({required MosquitoAlert apiClient})
-      : super(apiClient: apiClient, itemApi: apiClient.getObservationsApi());
+      : super(
+          apiClient: apiClient,
+          itemApi: apiClient.getObservationsApi(),
+          itemFactory: (item) => ObservationReport(item),
+        );
 
-  Future<Observation> create(
+  Future<ObservationReport> create(
       {required ObservationReportRequest request}) async {
     final List<MultipartFile> photosMultipart = [];
     for (final photo in request.photos) {
@@ -44,6 +49,6 @@ class ObservationRepository extends ReportRepository<ObservationsApi> {
             ) as String)
           : null,
     );
-    return response.data!;
+    return itemFactory(response.data!);
   }
 }

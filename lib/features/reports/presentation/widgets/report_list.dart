@@ -8,7 +8,7 @@ import 'package:mosquito_alert_app/features/reports/presentation/state/report_pr
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class ReportList<ReportType extends BaseReportModel> extends StatefulWidget {
-  final ReportProvider<ReportType> provider;
+  final ReportProvider<ReportType, dynamic> provider;
   final ReportListTile<ReportType> Function({required dynamic report})
       tileBuilder;
 

@@ -5,11 +5,16 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/adapters/breeding_site_report.dart';
 import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 
-class BreedingSiteRepository extends ReportRepository<BreedingSitesApi> {
+class BreedingSiteRepository extends ReportRepository<BreedingSiteReport,
+    BreedingSite, BreedingSitesApi> {
   BreedingSiteRepository({required MosquitoAlert apiClient})
-      : super(apiClient: apiClient, itemApi: apiClient.getBreedingSitesApi());
+      : super(
+          apiClient: apiClient,
+          itemApi: apiClient.getBreedingSitesApi(),
+          itemFactory: (item) => BreedingSiteReport(item),
+        );
 
-  Future<BreedingSite> create(
+  Future<BreedingSiteReport> create(
       {required BreedingSiteReportRequest request}) async {
     final List<MultipartFile> photosMultipart = [];
     for (final photo in request.photos) {
@@ -34,6 +39,6 @@ class BreedingSiteRepository extends ReportRepository<BreedingSitesApi> {
       hasNearMosquitoes: request.hasNearMosquitoes,
       hasLarvae: request.hasLarvae,
     );
-    return response.data!;
+    return itemFactory(response.data!);
   }
 }

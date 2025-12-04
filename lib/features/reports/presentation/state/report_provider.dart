@@ -3,20 +3,18 @@ import 'package:mosquito_alert_app/core/models/base_report.dart';
 import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 import 'package:mosquito_alert_app/core/providers/pagination_provider.dart';
 
-abstract class ReportProvider<T extends BaseReportModel>
-    extends PaginatedProvider<T> {
+abstract class ReportProvider<T extends BaseReportModel,
+        RepositoryType extends ReportRepository<T, dynamic, dynamic>>
+    extends PaginatedProvider<T, RepositoryType> {
   ReportProvider({
-    required ReportRepository repository,
-    required super.itemFactory,
-  }) : super(
-            repository: repository,
-            orderFunction: (items) {
-              items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-              return items;
-            });
+    required super.repository,
+  }) : super(orderFunction: (items) {
+          items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return items;
+        });
 
   Future<void> delete({required T item}) async {
-    await (repository as ReportRepository).delete(uuid: item.uuid);
+    await repository.delete(uuid: item.uuid);
 
     deleteItem(item);
 

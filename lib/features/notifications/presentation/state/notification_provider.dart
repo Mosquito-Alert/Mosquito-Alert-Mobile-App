@@ -5,9 +5,9 @@ import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/core/providers/pagination_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/notification_repository.dart';
 
-class NotificationProvider extends PaginatedProvider<sdk.Notification> {
-  NotificationProvider({required NotificationRepository repository})
-      : super(repository: repository);
+class NotificationProvider
+    extends PaginatedProvider<sdk.Notification, NotificationRepository> {
+  NotificationProvider({required super.repository});
 
   bool _isFetchingUnread = false;
 
@@ -22,8 +22,7 @@ class NotificationProvider extends PaginatedProvider<sdk.Notification> {
       // If not found, continue to fetch from API
     }
 
-    final fetched =
-        await (repository as NotificationRepository).fetchById(id: id);
+    final fetched = await repository.fetchById(id: id);
 
     return fetched;
   }
@@ -31,8 +30,8 @@ class NotificationProvider extends PaginatedProvider<sdk.Notification> {
   Future<void> markAsRead({required sdk.Notification notification}) async {
     if (notification.isRead) return;
 
-    final updatedNotification = await (repository as NotificationRepository)
-        .markAsRead(notification: notification);
+    final updatedNotification =
+        await repository.markAsRead(notification: notification);
 
     int index = items.indexWhere((n) => n.id == notification.id);
     if (index != -1) {
@@ -50,8 +49,7 @@ class NotificationProvider extends PaginatedProvider<sdk.Notification> {
     _isFetchingUnread = true;
     notifyListeners();
     try {
-      _unreadNotificationsCount =
-          await (repository as NotificationRepository).fetchUnreadCount();
+      _unreadNotificationsCount = await repository.fetchUnreadCount();
     } catch (_) {
       // Optionally handle/log
     } finally {

@@ -1,14 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart';
 
-abstract class PaginatedProvider<T> extends ChangeNotifier {
-  final PaginationRepository repository;
-  final T Function(dynamic raw)? itemFactory;
+abstract class PaginatedProvider<T,
+        RepositoryType extends PaginationRepository<T, dynamic>>
+    extends ChangeNotifier {
+  final RepositoryType repository;
   final List<T> Function(List<T>)? orderFunction;
 
-  PaginatedProvider(
-      {required this.repository, this.itemFactory, this.orderFunction});
+  PaginatedProvider({required this.repository, this.orderFunction});
 
   bool loadedInitial = false;
 
@@ -16,15 +15,15 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
 
   List<T> get items => _items;
 
-  set items(List<dynamic> rawItems) {
-    _items = itemFactory != null
-        ? rawItems.map((item) => itemFactory!(item)).toList()
-        : List<T>.from(rawItems);
-    if (orderFunction != null) {
-      _items = orderFunction!(_items);
-    }
-    notifyListeners();
-  }
+  // set items(List<dynamic> rawItems) {
+  //   _items = itemFactory != null
+  //       ? rawItems.map((item) => itemFactory!(item)).toList()
+  //       : List<T>.from(rawItems);
+  //   if (orderFunction != null) {
+  //     _items = orderFunction!(_items);
+  //   }
+  //   notifyListeners();
+  // }
 
   void addItem(T item) {
     _items.insert(0, item);
@@ -47,7 +46,7 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
   String? error;
 
   /// Implement this in your feature provider.
-  Future<Response> fetchPage({
+  Future<(List<T> items, bool hasMore)> fetchPage({
     required int page,
     required int pageSize,
   }) {
@@ -62,11 +61,11 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
     notifyListeners();
     try {
       page = 1;
-      final response = await fetchPage(page: page, pageSize: pageSize);
-
-      items = response.data?.results?.toList() ?? [];
-      hasMore = response.data?.next != null;
       loadedInitial = true;
+      final (newItems, newHasMore) =
+          await fetchPage(page: page, pageSize: pageSize);
+      this._items = newItems;
+      hasMore = newHasMore;
     } catch (e) {
       error = e.toString();
       page = 0;
@@ -85,12 +84,10 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
 
     int nextPage = page + 1;
     try {
-      final response = await fetchPage(page: nextPage, pageSize: pageSize);
-
-      List<T> newItems = response.data?.results?.toList() ?? [];
-
-      items.addAll(newItems);
-      hasMore = response.data?.next != null;
+      final (newItems, newHasMore) =
+          await fetchPage(page: nextPage, pageSize: pageSize);
+      this._items.addAll(newItems);
+      hasMore = newHasMore;
     } catch (e) {
       error = e.toString();
       hasMore = false;
@@ -110,10 +107,10 @@ abstract class PaginatedProvider<T> extends ChangeNotifier {
 
     try {
       page = 1;
-      final response = await fetchPage(page: page, pageSize: pageSize);
-
-      items = response.data?.results?.toList() ?? [];
-      hasMore = response.data?.next != null;
+      final (newItems, newHasMore) =
+          await fetchPage(page: page, pageSize: pageSize);
+      hasMore = newHasMore;
+      this._items = newItems;
     } catch (e) {
       error = e.toString();
     }

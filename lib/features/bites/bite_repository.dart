@@ -3,11 +3,15 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
 import 'package:mosquito_alert_app/features/reports/report_repository.dart';
 
-class BiteRepository extends ReportRepository<BitesApi> {
+class BiteRepository extends ReportRepository<BiteReport, Bite, BitesApi> {
   BiteRepository({required MosquitoAlert apiClient})
-      : super(apiClient: apiClient, itemApi: apiClient.getBitesApi());
+      : super(
+          apiClient: apiClient,
+          itemApi: apiClient.getBitesApi(),
+          itemFactory: (item) => BiteReport(item),
+        );
 
-  Future<Bite> create({required BiteReportRequest request}) async {
+  Future<BiteReport> create({required BiteReportRequest request}) async {
     final biteRequest = BiteRequest((b) => b
       ..createdAt = request.createdAt
       ..sentAt = DateTime.now().toUtc()
@@ -20,6 +24,6 @@ class BiteRepository extends ReportRepository<BitesApi> {
       ..eventMoment = request.eventMoment
       ..counts = request.counts.toBuilder());
     final response = await itemApi.create(biteRequest: biteRequest);
-    return response.data!;
+    return itemFactory(response.data!);
   }
 }

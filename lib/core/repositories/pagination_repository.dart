@@ -1,11 +1,9 @@
-import 'package:dio/dio.dart';
-
-abstract class PaginationRepository<ApiType> {
+abstract class PaginationRepository<T, ApiType> {
   final ApiType itemApi;
 
   PaginationRepository({required this.itemApi});
 
-  Future<Response> fetchPage({
+  Future<(List<T> items, bool hasMore)> fetchPage({
     required int page,
     required int pageSize,
   });
