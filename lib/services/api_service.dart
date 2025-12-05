@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert/src/auth/jwt_auth.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/providers/auth_provider.dart';
+import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
 
 class ApiService {
   final AuthProvider authProvider;

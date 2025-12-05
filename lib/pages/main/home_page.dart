@@ -7,7 +7,7 @@ import 'package:mosquito_alert_app/features/bites/presentation/pages/bite_create
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/pages/breeding_site_create_page.dart';
 import 'package:mosquito_alert_app/features/observations/presentation/pages/observation_create_page.dart';
 import 'package:mosquito_alert_app/pages/main/components/custom_card_widget.dart';
-import 'package:mosquito_alert_app/pages/map/public_map.dart';
+import 'package:mosquito_alert_app/pages/public_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/Utils.dart';
 import 'package:mosquito_alert_app/utils/style.dart';

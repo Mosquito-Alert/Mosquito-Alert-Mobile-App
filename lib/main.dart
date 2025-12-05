@@ -11,8 +11,8 @@ import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
 import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
-import 'package:mosquito_alert_app/providers/auth_provider.dart';
-import 'package:mosquito_alert_app/providers/device_provider.dart';
+import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
+import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/notification_repository.dart';
 import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
@@ -29,7 +29,7 @@ import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:country_codes/country_codes.dart';
 
-import 'providers/user_provider.dart';
+import 'features/user/presentation/state/user_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

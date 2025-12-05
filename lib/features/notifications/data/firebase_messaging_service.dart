@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/pages/notification_detail_page.dart';
-import 'package:mosquito_alert_app/providers/device_provider.dart';
+import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/widgets/notification_banner.dart';
 import 'package:overlay_support/overlay_support.dart';
