@@ -12,8 +12,8 @@ import 'package:mosquito_alert_app/features/reports/presentation/pages/report_cr
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_notes_step.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_photo_selection.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/location_selector.dart';
+import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 
 class BreedingSiteCreatePage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
 
   Future<BreedingSiteReport> _handleSubmit(BuildContext context) async {
     final provider = context.read<BreedingSiteProvider>();
-    final userTags = await UserManager.getHashtags();
+    final userTags = context.read<SettingsProvider>().hashtags;
 
     List<MemoryPhoto> memoryPhotos = [];
     for (final photo in photos) {

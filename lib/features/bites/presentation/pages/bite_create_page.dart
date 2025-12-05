@@ -9,8 +9,8 @@ import 'package:mosquito_alert_app/features/reports/presentation/pages/report_cr
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_environment_step.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_notes_step.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/location_selector.dart';
+import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/UserManager.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/widgets/bite_stickman.dart';
 import 'package:mosquito_alert_app/features/bites/data/body_part.dart';
@@ -44,7 +44,7 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
 
   Future<BiteReport> _handleSubmit(BuildContext context) async {
     final provider = context.read<BiteProvider>();
-    final userTags = await UserManager.getHashtags();
+    final userTags = context.read<SettingsProvider>().hashtags;
 
     final newBite = await provider.createBite(
         request: BiteReportRequest(

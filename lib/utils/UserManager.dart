@@ -19,14 +19,6 @@ class UserManager {
     }
   }
 
-  static Future<bool> setHashtags(List<String>? hashtags) async {
-    var prefs = await SharedPreferences.getInstance();
-    if (hashtags == null || hashtags.isEmpty) {
-      return prefs.remove('hashtags');
-    }
-    return prefs.setStringList('hashtags', hashtags);
-  }
-
   static Future<void> setLastReviewRequest(int lastReviewRequest) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lastReviewRequest', lastReviewRequest);
@@ -38,36 +30,6 @@ class UserManager {
   }
 
   //get
-  static Future<void> migrateHashtagToHashtags() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Check if the old variable exists
-    if (!prefs.containsKey('hashtag')) {
-      return;
-    }
-
-    var oldHashtag = prefs.getString('hashtag');
-
-    if (oldHashtag == null) {
-      return;
-    }
-
-    // Users were adding the hashtag manually to the strings
-    if (oldHashtag.startsWith('#')) {
-      oldHashtag = oldHashtag.substring(1);
-    }
-
-    await prefs.setStringList('hashtags', [oldHashtag]);
-    // Remove the old variable
-    await prefs.remove('hashtag');
-  }
-
-  static Future<List<String>?> getHashtags() async {
-    await UserManager.migrateHashtagToHashtags();
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('hashtags');
-  }
-
   static Future<int?> getLastReviewRequest() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getInt('lastReviewRequest');
