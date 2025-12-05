@@ -9,6 +9,7 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
 import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
@@ -20,7 +21,6 @@ import 'package:mosquito_alert_app/features/observations/presentation/state/obse
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
 import 'package:mosquito_alert_app/services/api_service.dart';
-import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizationsDelegate.dart';
 import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
@@ -141,7 +141,7 @@ void callbackDispatcher() {
       print('Error registering device: $e');
     }
 
-    BackgroundTracking.configure(apiClient: apiClient);
+    await TrackingService.configure(apiClient: apiClient);
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
     // - Future.value(false): task failed and needs to be retried
@@ -150,13 +150,19 @@ void callbackDispatcher() {
     switch (task) {
       case 'trackingTask':
         // NOTE: do not use await, it should return a Future value
-        return BackgroundTracking.sendLocationUpdate();
+        try {
+          await TrackingService.sendLocationNow();
+        } catch (e) {
+          return Future.error(e);
+        }
+        return Future.value(true);
       case 'scheduleDailyTasks':
-        int numTaskAlreadyScheduled =
-            inputData?['numTaskAlreadyScheduled'] ?? 0;
-        // NOTE: do not use await, it should return a Future value
-        return BackgroundTracking.scheduleDailyTrackingTask(
-            numScheduledTasks: numTaskAlreadyScheduled);
+        try {
+          await TrackingService.scheduleDailyTasks();
+        } catch (e) {
+          return Future.error(e);
+        }
+        return Future.value(true);
       default:
         // If the task doesn't match, return true as a fallback
         return Future.value(true);

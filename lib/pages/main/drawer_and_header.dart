@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/env/env.dart';
+import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
 import 'package:mosquito_alert_app/main.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
 import 'package:mosquito_alert_app/pages/main/home_page.dart';
@@ -21,7 +22,6 @@ import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provide
 import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/features/user/presentation/state/user_provider.dart';
-import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
 import 'package:mosquito_alert_app/features/notifications/data/firebase_messaging_service.dart';
@@ -200,14 +200,15 @@ class _MainVCState extends State<MainVC>
   }
 
   Future<void> initBackgroundTracking() async {
-    BackgroundTracking.configure(
+    await TrackingService.configure(
       apiClient: Provider.of<MosquitoAlert>(context, listen: false),
     );
-    bool trackingEnabled = await BackgroundTracking.isEnabled();
+
+    bool trackingEnabled = await TrackingService.isEnabled;
     if (trackingEnabled) {
-      await BackgroundTracking.start(requestPermissions: false);
+      await TrackingService.start();
     } else {
-      await BackgroundTracking.stop();
+      await TrackingService.stop();
     }
   }
 

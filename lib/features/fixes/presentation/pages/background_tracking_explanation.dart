@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/location_consent_screen/permissions_explanation.dart';
+import 'package:mosquito_alert_app/features/fixes/presentation/pages/permissions_explanation.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 

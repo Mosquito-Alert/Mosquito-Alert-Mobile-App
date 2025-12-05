@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/BackgroundTracking.dart';
+import 'package:mosquito_alert_app/features/fixes/services/permissions_manager.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
@@ -69,12 +69,8 @@ Future<void> _onEnableTracking(BuildContext context) async {
     builder: (context) => const Center(child: CircularProgressIndicator()),
   );
 
-  // Start background tracking
   try {
-    await BackgroundTracking.start(
-      shouldRun: true,
-      requestPermissions: true,
-    );
+    await PermissionsManager.requestPermissions();
   } finally {
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
