@@ -10,6 +10,7 @@ import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
 import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
+import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/pages/main/drawer_and_header.dart';
 import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
 import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
@@ -73,6 +74,8 @@ Future<void> main({String env = 'prod'}) async {
         Provider<MosquitoAlert>.value(value: apiClient),
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<UserProvider>.value(value: userProvider),
+        ChangeNotifierProvider<SettingsProvider>(
+            create: (_) => SettingsProvider()),
         ChangeNotifierProvider<DeviceProvider>.value(value: deviceProvider),
         ChangeNotifierProvider<NotificationProvider>(
           create: (_) => NotificationProvider(
