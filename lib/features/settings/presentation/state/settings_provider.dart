@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider with ChangeNotifier {
-  late List<String> _hashtags;
-
-  SettingsProvider() {
-    _init();
-  }
+  List<String> _hashtags = [];
 
   List<String> get hashtags => _hashtags;
   set hashtags(List<String> value) {
     _hashtags = value;
     notifyListeners();
+  }
+
+  SettingsProvider() {
+    _init();
   }
 
   Future<void> _init() async {
