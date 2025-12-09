@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/pages/bite_create_page.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/pages/breeding_site_create_page.dart';
 import 'package:mosquito_alert_app/features/observations/presentation/pages/observation_create_page.dart';
-import 'package:mosquito_alert_app/pages/public_map.dart';
+import 'package:mosquito_alert_app/screens/public_map.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 
 class HomePage extends StatefulWidget {
