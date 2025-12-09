@@ -50,7 +50,7 @@ class DeviceProvider with ChangeNotifier {
     return DeviceProvider._(devicesApi: devicesApi, deviceId: deviceId);
   }
 
-  void setDevice(Device? newDevice) {
+  void _setDevice(Device? newDevice) {
     device = newDevice;
     notifyListeners();
   }
@@ -90,7 +90,7 @@ class DeviceProvider with ChangeNotifier {
 
       final response = await devicesApi.create(deviceRequest: request);
       if (response.statusCode == 201) {
-        setDevice(response.data!);
+        _setDevice(response.data!);
       }
     } else {
       // Update existing device
@@ -112,11 +112,11 @@ class DeviceProvider with ChangeNotifier {
     try {
       final response = await devicesApi.retrieve(deviceId: _currentDeviceId);
       if (response.data != null) {
-        setDevice(response.data);
+        _setDevice(response.data);
       }
     } on DioException catch (e) {
       debugPrint(e.toString());
-      setDevice(null);
+      _setDevice(null);
     }
   }
 
