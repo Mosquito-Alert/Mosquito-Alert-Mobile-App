@@ -21,7 +21,7 @@ import 'package:mosquito_alert_app/features/settings/presentation/pages/settings
 import 'package:mosquito_alert_app/screens/home_page.dart';
 import 'package:mosquito_alert_app/screens/my_reports_page.dart';
 import 'package:mosquito_alert_app/screens/guide_page.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
+import 'package:mosquito_alert_app/screens/settings_pages/info_page.dart';
 
 class LayoutPage extends StatefulWidget {
   @override

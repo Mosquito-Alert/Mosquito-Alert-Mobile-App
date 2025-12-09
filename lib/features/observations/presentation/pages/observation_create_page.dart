@@ -14,7 +14,7 @@ import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_photo_selection.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/location_selector.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/campaign_tutorial_page.dart';
+import 'package:mosquito_alert_app/screens/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:provider/provider.dart';
