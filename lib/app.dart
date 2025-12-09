@@ -9,8 +9,8 @@ import 'package:mosquito_alert_app/features/onboarding/presentation/state/onboar
 import 'package:mosquito_alert_app/screens/layout_page.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/ObserverUtils.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 

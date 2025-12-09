@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/features/onboarding/presentation/pages/location_info_consent_page.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class LocationConsentPage extends StatelessWidget {
   final Future<void> Function()? onCompleted;

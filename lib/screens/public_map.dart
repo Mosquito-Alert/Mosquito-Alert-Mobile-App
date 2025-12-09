@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:mosquito_alert_app/utils/Utils.dart';
+import 'package:mosquito_alert_app/core/utils/Utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PublicMap extends StatefulWidget {

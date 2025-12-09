@@ -5,7 +5,7 @@ import 'package:mosquito_alert_app/core/widgets/step_page.dart';
 import 'package:mosquito_alert_app/core/widgets/step_page_container.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_step_indicator.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:mosquito_alert_app/core/utils/InAppReviewManager.dart';
 
 /// Uses PageView slider architecture for step-by-step progression

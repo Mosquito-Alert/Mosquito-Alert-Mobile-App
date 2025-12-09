@@ -8,7 +8,7 @@ import 'package:mosquito_alert_app/features/notifications/presentation/pages/not
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/html_parser.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

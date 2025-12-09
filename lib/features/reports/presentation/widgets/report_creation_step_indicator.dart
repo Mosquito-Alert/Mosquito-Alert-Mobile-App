@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class ReportCreationStepIndicator extends StatelessWidget {
   const ReportCreationStepIndicator({

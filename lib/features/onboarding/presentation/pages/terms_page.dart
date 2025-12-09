@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/widgets/info_page_webview.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class TermsPage extends StatefulWidget {
   final Future<void> Function()? onAccepted;

@@ -6,7 +6,7 @@ import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:mosquito_alert_app/core/utils/html_parser.dart';
 
 class NotificationDetailPage extends StatefulWidget {

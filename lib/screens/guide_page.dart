@@ -4,7 +4,7 @@ import 'package:intro_slider/intro_slider.dart';
 import 'package:markdown/markdown.dart';
 import 'package:mosquito_alert_app/services/analytics_service.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class GuidePage extends StatefulWidget {
   final Function goBackToHomepage;

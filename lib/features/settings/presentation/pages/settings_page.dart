@@ -9,7 +9,7 @@ import 'package:mosquito_alert_app/features/settings/presentation/state/settings
 import 'package:mosquito_alert_app/core/widgets/tags_text_field.dart';
 import 'package:mosquito_alert_app/features/user/presentation/state/user_provider.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:provider/provider.dart';
 import 'package:country_codes/country_codes.dart';
 

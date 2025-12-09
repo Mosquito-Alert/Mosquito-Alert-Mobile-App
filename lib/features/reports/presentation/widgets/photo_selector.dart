@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/camera_with_gallery.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/utils/style.dart';
+import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class PhotoSelector extends StatefulWidget {
   final List<Uint8List> selectedPhotos;
