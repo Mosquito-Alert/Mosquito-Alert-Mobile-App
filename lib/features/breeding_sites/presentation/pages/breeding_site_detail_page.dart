@@ -7,7 +7,7 @@ import 'package:mosquito_alert_app/core/widgets/common_widgets.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_detail_scaffold.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:provider/provider.dart';
 
 class BreedingSiteDetailPage extends ReportDetailPage<BreedingSiteReport> {

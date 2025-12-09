@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/models/base_report.dart';
 import 'package:mosquito_alert_app/core/models/base_report_request.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
 class ObservationReport extends BaseReportWithPhotos<Observation> {
   ObservationReport(Observation raw) : super(raw);

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mosquito_alert_app/core/models/base_report.dart';
 import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
 class ReportInfoList<ReportType extends BaseReportModel>
     extends StatelessWidget {

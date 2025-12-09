@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
 import 'package:mosquito_alert_app/screens/settings_pages/campaign_tutorial_page.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class CampaignCard extends StatelessWidget {

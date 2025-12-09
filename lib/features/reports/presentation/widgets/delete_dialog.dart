@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
 class DeleteDialog extends StatelessWidget {
   final Future<void> Function() onDelete;

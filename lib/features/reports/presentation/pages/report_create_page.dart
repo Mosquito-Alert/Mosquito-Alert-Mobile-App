@@ -4,7 +4,7 @@ import 'package:mosquito_alert_app/core/models/base_report.dart';
 import 'package:mosquito_alert_app/core/widgets/step_page.dart';
 import 'package:mosquito_alert_app/core/widgets/step_page_container.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_step_indicator.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 import 'package:mosquito_alert_app/core/utils/InAppReviewManager.dart';
 
@@ -202,6 +202,7 @@ class _ReportCreatePageState<ReportType extends BaseReport>
     required VoidCallback onOkPressed,
   }) {
     // Request in-app review after successful submission
+    // TODO: show after dialog.
     InAppReviewManager.requestInAppReview(context);
 
     return showDialog(

@@ -3,7 +3,7 @@ import 'package:flutter_html/flutter_html.dart' as html;
 import 'package:intro_slider/intro_slider.dart';
 import 'package:markdown/markdown.dart';
 import 'package:mosquito_alert_app/services/analytics_service.dart';
-import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
+import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
 class GuidePage extends StatefulWidget {
