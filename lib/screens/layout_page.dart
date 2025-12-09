@@ -19,7 +19,7 @@ import 'package:mosquito_alert_app/utils/ObserverUtils.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:mosquito_alert_app/screens/home_page.dart';
-import 'package:mosquito_alert_app/pages/my_reports_page.dart';
+import 'package:mosquito_alert_app/screens/my_reports_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 
