@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
-import 'package:mosquito_alert_app/core/models/photo.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
 abstract class BaseReport<T> {
   final DateTime createdAt;

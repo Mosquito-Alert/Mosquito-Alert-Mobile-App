@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
-import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
-import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
-import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
+import 'package:mosquito_alert_app/features/bites/data/bite_repository.dart';
+import 'package:mosquito_alert_app/features/breeding_sites/data/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/observations/data/observation_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -2,8 +2,9 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
-import 'package:mosquito_alert_app/features/reports/report_repository.dart';
+import 'package:mosquito_alert_app/features/observations/data/models/observation_report_request.dart';
+import 'package:mosquito_alert_app/features/observations/domain/models/observation_report.dart';
+import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 
 class ObservationRepository
     extends ReportRepository<ObservationReport, Observation, ObservationsApi> {

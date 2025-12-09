@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:battery_plus/battery_plus.dart';
-import 'package:mosquito_alert_app/core/models/fix_request.dart';
+import 'package:mosquito_alert_app/features/fixes/data/models/fix_request.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';

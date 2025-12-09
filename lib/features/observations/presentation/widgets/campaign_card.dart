@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
+import 'package:mosquito_alert_app/features/observations/domain/models/observation_report.dart';
 import 'package:mosquito_alert_app/screens/settings_pages/campaign_tutorial_page.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';

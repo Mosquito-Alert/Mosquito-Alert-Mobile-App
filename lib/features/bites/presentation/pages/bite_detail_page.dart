@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
-import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
+import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/report_detail_field.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/widgets/bite_stickman.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';

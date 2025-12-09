@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
-import 'package:mosquito_alert_app/features/bites/data/body_part.dart';
+import 'package:mosquito_alert_app/features/bites/domain/models/body_part.dart';
 
 class BiteStickMan extends StatefulWidget {
   static const int maxBiteCountPerPart = 20;

@@ -1,5 +1,5 @@
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
-import 'package:mosquito_alert_app/core/models/fix_request.dart';
+import 'package:mosquito_alert_app/features/fixes/data/models/fix_request.dart';
 
 class FixesRepository {
   final sdk.MosquitoAlert apiClient;

@@ -1,7 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/models/base_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
 import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart';
 
 abstract class ReportRepository<ReportType extends BaseReportModel,

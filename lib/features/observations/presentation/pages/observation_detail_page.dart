@@ -1,9 +1,9 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
-import 'package:mosquito_alert_app/core/models/photo.dart';
-import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
+import 'package:mosquito_alert_app/features/observations/domain/models/observation_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/report_detail_field.dart';
 import 'package:mosquito_alert_app/core/widgets/common_widgets.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_detail_scaffold.dart';

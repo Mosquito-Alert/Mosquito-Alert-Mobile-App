@@ -1,6 +1,7 @@
-import 'package:mosquito_alert_app/core/adapters/observation_report.dart';
+import 'package:mosquito_alert_app/features/observations/data/models/observation_report_request.dart';
+import 'package:mosquito_alert_app/features/observations/domain/models/observation_report.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
-import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
+import 'package:mosquito_alert_app/features/observations/data/observation_repository.dart';
 
 class ObservationProvider
     extends ReportProvider<ObservationReport, ObservationRepository> {

@@ -1,7 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
-import 'package:mosquito_alert_app/features/reports/report_repository.dart';
+import 'package:mosquito_alert_app/features/bites/data/models/bite_report_request.dart';
+import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
+import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 
 class BiteRepository extends ReportRepository<BiteReport, Bite, BitesApi> {
   BiteRepository({required MosquitoAlert apiClient})

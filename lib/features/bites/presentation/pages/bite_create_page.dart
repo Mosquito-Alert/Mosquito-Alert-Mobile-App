@@ -1,7 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/adapters/bite_report.dart';
+import 'package:mosquito_alert_app/features/bites/data/models/bite_report_request.dart';
+import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
 import 'package:mosquito_alert_app/core/widgets/step_page.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/widgets/bite_creation_eventmoment_step.dart';
@@ -13,7 +14,7 @@ import 'package:mosquito_alert_app/features/settings/presentation/state/settings
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/widgets/bite_stickman.dart';
-import 'package:mosquito_alert_app/features/bites/data/body_part.dart';
+import 'package:mosquito_alert_app/features/bites/domain/models/body_part.dart';
 
 class BiteCreatePage extends StatefulWidget {
   @override

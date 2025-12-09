@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/report_detail_field.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 

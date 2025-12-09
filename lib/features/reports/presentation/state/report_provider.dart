@@ -1,6 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/features/reports/report_repository.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
+import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 import 'package:mosquito_alert_app/core/providers/pagination_provider.dart';
 
 abstract class ReportProvider<T extends BaseReportModel,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/core/models/report_detail_field.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/report_detail_field.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/delete_dialog.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_info_list.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_map.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
-import 'package:mosquito_alert_app/features/reports/report_repository.dart';
+import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 

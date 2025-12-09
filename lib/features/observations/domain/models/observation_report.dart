@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/core/models/base_report_request.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
 class ObservationReport extends BaseReportWithPhotos<Observation> {
@@ -43,20 +42,4 @@ class ObservationReport extends BaseReportWithPhotos<Observation> {
         return null;
     }
   }
-}
-
-class ObservationReportRequest
-    extends BaseReportWithPhotosRequest<Observation> {
-  final ObservationEventEnvironmentEnum? eventEnvironment;
-  final ObservationEventMomentEnum? eventMoment;
-
-  ObservationReportRequest({
-    required super.createdAt,
-    required super.location,
-    required super.photos,
-    required this.eventEnvironment,
-    required this.eventMoment,
-    String? note,
-    List<String>? tags,
-  });
 }

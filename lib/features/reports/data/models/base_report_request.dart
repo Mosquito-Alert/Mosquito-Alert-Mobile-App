@@ -1,6 +1,6 @@
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
-import 'package:mosquito_alert_app/core/models/base_report.dart';
-import 'package:mosquito_alert_app/core/models/photo.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
 abstract class BaseReportRequest<T> extends BaseReport<T> {
   final sdk.LocationRequest location;

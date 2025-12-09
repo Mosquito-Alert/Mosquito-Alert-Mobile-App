@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/core/models/photo.dart';
+import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
 CarouselView buildPhotoCarousel({required List<BasePhoto> photos}) {
   return CarouselView(
