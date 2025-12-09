@@ -28,11 +28,12 @@ abstract class ReportRepository<ReportType extends BaseReportModel,
           "-created_at",
         ]),
       );
-      return (
-        (response.data?.results?.map(itemFactory).toList() ?? [])
-            as List<ReportType>,
-        response.data?.next != null
-      );
+
+      final List<ReportType> result = [];
+      for (final item in response.data?.results ?? []) {
+        result.add(itemFactory(item));
+      }
+      return (result, response.data?.next != null);
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         return (<ReportType>[], false);

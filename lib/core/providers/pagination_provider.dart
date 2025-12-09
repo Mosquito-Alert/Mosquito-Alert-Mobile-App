@@ -15,16 +15,6 @@ abstract class PaginatedProvider<T,
 
   List<T> get items => _items;
 
-  // set items(List<dynamic> rawItems) {
-  //   _items = itemFactory != null
-  //       ? rawItems.map((item) => itemFactory!(item)).toList()
-  //       : List<T>.from(rawItems);
-  //   if (orderFunction != null) {
-  //     _items = orderFunction!(_items);
-  //   }
-  //   notifyListeners();
-  // }
-
   void addItem(T item) {
     _items.insert(0, item);
     if (orderFunction != null) {
@@ -61,6 +51,7 @@ abstract class PaginatedProvider<T,
     notifyListeners();
     try {
       page = 1;
+      hasMore = true;
       loadedInitial = true;
       final (newItems, newHasMore) =
           await fetchPage(page: page, pageSize: pageSize);
@@ -69,10 +60,10 @@ abstract class PaginatedProvider<T,
     } catch (e) {
       error = e.toString();
       page = 0;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
   // Load more pages (infinite scroll)
@@ -92,30 +83,27 @@ abstract class PaginatedProvider<T,
       error = e.toString();
       hasMore = false;
       nextPage = page; // stay on the same page on error
+    } finally {
+      page = nextPage;
+      isLoading = false;
+      notifyListeners();
     }
-
-    page = nextPage;
-    isLoading = false;
-    notifyListeners();
   }
 
   Future<void> refresh() async {
     if (isRefreshing) return; // prevent double refresh
     isRefreshing = true;
     error = null;
+    hasMore = true;
     notifyListeners();
 
     try {
-      page = 1;
-      final (newItems, newHasMore) =
-          await fetchPage(page: page, pageSize: pageSize);
-      hasMore = newHasMore;
-      this._items = newItems;
+      await loadInitial();
     } catch (e) {
       error = e.toString();
+    } finally {
+      isRefreshing = false;
+      notifyListeners();
     }
-
-    isRefreshing = false;
-    notifyListeners();
   }
 }
