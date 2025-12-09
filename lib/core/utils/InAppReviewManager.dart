@@ -5,8 +5,7 @@ import 'package:mosquito_alert_app/features/bites/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/breeding_site_repository.dart';
 import 'package:mosquito_alert_app/features/observations/observation_repository.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils/UserManager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InAppReviewManager {
   static void requestInAppReview(BuildContext context) async {
@@ -45,14 +44,15 @@ class InAppReviewManager {
       return;
     }
 
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final lastReportCount = await UserManager.getLastReportCount() ?? 0;
-    final lastReviewRequest = await UserManager.getLastReviewRequest() ?? 0;
+    final now = DateTime.now();
+    final lastReportCount = await _getLastReportCount();
+    final lastReviewRequest = await _getLastReviewRequest();
 
-    var shouldRequestReview = (numReports == minimumReports ||
+    final shouldRequestReview = (numReports == minimumReports ||
         numReports == minimumReports + 1 ||
         numReports >= lastReportCount + minimumReports ||
-        now - lastReviewRequest >= 14 * 24 * 60 * 60 * 1000);
+        (lastReviewRequest == null ||
+            now.difference(lastReviewRequest).inDays >= 14));
 
     if (!shouldRequestReview) {
       return;
@@ -63,8 +63,32 @@ class InAppReviewManager {
     if (await inAppReview.isAvailable()) {
       await inAppReview.requestReview();
 
-      await UserManager.setLastReviewRequest(now);
-      await UserManager.setLastReportCount(numReports);
+      await _setLastReviewRequest(now);
+      await _setLastReportCount(numReports);
     }
+  }
+
+  static Future<DateTime?> _getLastReviewRequest() async {
+    var prefs = await SharedPreferences.getInstance();
+    final milliSeconds = prefs.getInt('lastReviewRequest');
+    if (milliSeconds != null) {
+      return DateTime.fromMillisecondsSinceEpoch(milliSeconds);
+    }
+    return null;
+  }
+
+  static Future<void> _setLastReviewRequest(DateTime datetime) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastReviewRequest', datetime.millisecondsSinceEpoch);
+  }
+
+  static Future<int> _getLastReportCount() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('lastReportCount') ?? 0;
+  }
+
+  static Future<void> _setLastReportCount(int lastReportCount) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastReportCount', lastReportCount);
   }
 }

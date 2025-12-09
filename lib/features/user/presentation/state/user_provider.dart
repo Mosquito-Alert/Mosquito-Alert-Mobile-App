@@ -12,6 +12,11 @@ class UserProvider extends ChangeNotifier {
 
   static Future<UserProvider> create({required MosquitoAlert apiClient}) async {
     final provider = UserProvider._(apiClient.getUsersApi());
+    try {
+      await provider.fetchUser();
+    } catch (_) {
+      // Ignore fetch errors on init
+    }
     await provider._initLanguage();
     return provider;
   }
@@ -48,6 +53,7 @@ class UserProvider extends ChangeNotifier {
 
   User? _user;
   User? get user => _user;
+  bool isLoading = false;
 
   Future<void> setUser(User? newUser) async {
     _user = newUser;
@@ -101,6 +107,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> fetchUser() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       final response = await usersApi.retrieveMine();
       await setUser(response.data!);
@@ -108,6 +117,9 @@ class UserProvider extends ChangeNotifier {
       print('Error getting user: $e');
       await setUser(null);
       rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
 
     // Ensure backend locale matches selected locale

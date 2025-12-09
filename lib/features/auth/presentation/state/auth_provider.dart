@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/env/env.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider with ChangeNotifier {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -12,11 +14,24 @@ class AuthProvider with ChangeNotifier {
   String? _password;
   String? _deviceId;
 
+  bool _needNewPassword = false;
+  bool get needNewPassword => _needNewPassword;
+
   Future<void> init() async {
     _accessToken = await _storage.read(key: 'access_token');
     _refreshToken = await _storage.read(key: 'refresh_token');
     _username = await _storage.read(key: 'username');
     _password = await _storage.read(key: 'password');
+    if (_username == null && _password == null) {
+      // Migrate old auth system if needed
+      final prefs = await SharedPreferences.getInstance();
+      String? username = prefs.getString('uuid');
+      if (username != null) {
+        _username = username;
+        _password = Env.oldPassword;
+        _needNewPassword = true;
+      }
+    }
     notifyListeners();
   }
 
@@ -88,7 +103,13 @@ class AuthProvider with ChangeNotifier {
 
     await authApi.changePassword(passwordChangeRequest: changePasswordRequest);
 
+    _needNewPassword = false;
+    notifyListeners();
     await _setPassword(password: password);
+
+    // This is for migration purposes only.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('uuid');
   }
 
   Future<void> login(

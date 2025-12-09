@@ -4,16 +4,19 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/pages/info_pages/info_page_webview.dart';
-import 'package:mosquito_alert_app/features/fixes/presentation/pages/background_tracking_explanation.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class ConsentForm extends StatefulWidget {
+class TermsPage extends StatefulWidget {
+  final Future<void> Function()? onAccepted;
+
+  TermsPage({this.onAccepted});
+
   @override
-  _ConsentFormState createState() => _ConsentFormState();
+  _TermsPageState createState() => _TermsPageState();
 }
 
-class _ConsentFormState extends State<ConsentForm> {
+class _TermsPageState extends State<TermsPage> {
   bool? acceptConditions = false;
   bool? acceptPrivacy = false;
   StreamController<bool> buttonStream = StreamController<bool>.broadcast();
@@ -267,13 +270,8 @@ class _ConsentFormState extends State<ConsentForm> {
                         key: ValueKey("style.button"),
                         MyLocalizations.of(context, 'continue_txt'),
                         snapshot.data as bool
-                            ? () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        LocationConsentScreen(),
-                                  ),
-                                );
+                            ? () async {
+                                await widget.onAccepted?.call();
                               }
                             : null),
                   );

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert_app/features/fixes/presentation/pages/permissions_explanation.dart';
+import 'package:mosquito_alert_app/features/onboarding/presentation/pages/location_info_consent_page.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class LocationConsentScreen extends StatelessWidget {
-  const LocationConsentScreen({super.key});
+class LocationConsentPage extends StatelessWidget {
+  final Future<void> Function()? onCompleted;
+
+  const LocationConsentPage({
+    super.key,
+    this.onCompleted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +67,10 @@ class LocationConsentScreen extends StatelessWidget {
                   Expanded(
                     child: Style.outlinedButton(
                       MyLocalizations.of(context, "no_show_info"),
-                      () {
+                      () async {
+                        await onCompleted?.call();
                         // Return to home view (first in stack)
-                        Navigator.popUntil(context, (route) => route.isFirst);
+                        // Navigator.popUntil(context, (route) => route.isFirst);
                       },
                       key: Key("rejectBackgroundTrackingBtn"),
                     ),
@@ -77,8 +83,9 @@ class LocationConsentScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const BackgroundTrackingInfoScreen(),
+                            builder: (context) => LocationInfoConsentPage(
+                              onCompleted: onCompleted,
+                            ),
                           ),
                         );
                       },
