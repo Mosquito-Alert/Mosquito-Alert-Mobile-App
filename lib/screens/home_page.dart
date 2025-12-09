@@ -88,25 +88,25 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _buildCards() {
     final cards = [
       {
-        'text': 'single_mosquito',
+        'text': MyLocalizations.of(context, 'single_mosquito'),
         'image': 'assets/img/ic_mosquito_report.webp',
         'color': '40DFD458',
         'page': ObservationCreatePage(),
       },
       {
-        'text': 'single_bite',
+        'text': MyLocalizations.of(context, 'single_bite'),
         'image': 'assets/img/ic_bite_report.webp',
         'color': '40D28A73',
         'page': BiteCreatePage(),
       },
       {
-        'text': 'single_breeding_site',
+        'text': MyLocalizations.of(context, 'single_breeding_site'),
         'image': 'assets/img/ic_breeding_report.webp',
         'color': '407D9393',
         'page': BreedingSiteCreatePage(),
       },
       {
-        'text': 'public_map_tab',
+        'text': MyLocalizations.of(context, 'public_map_tab'),
         'image': 'assets/img/ic_public_map.webp',
         'color': 'FFebf1cc',
         'page': PublicMap(),
@@ -117,34 +117,21 @@ class _HomePageState extends State<HomePage> {
         .map(
           (c) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: CustomCard(
-              text: c['text'] as String,
-              image_path: c['image'] as String,
-              color: c['color'] as String,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => c['page'] as Widget),
-                );
-              },
-            ),
+            child: _buildCard(
+                text: c['text'] as String,
+                imagePath: c['image'] as String,
+                color: c['color'] as String,
+                page: c['page'] as Widget),
           ),
         )
         .toList();
   }
-}
 
-class CustomCard extends StatelessWidget {
-  final String text, image_path, color;
-  final dynamic onTap;
-  CustomCard(
-      {required this.text,
-      required this.image_path,
-      required this.color,
-      required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildCard(
+      {required String text,
+      required String imagePath,
+      required String color,
+      required Widget page}) {
     return Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(100),
@@ -156,7 +143,10 @@ class CustomCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            onTap();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => page),
+            );
           },
           child: Row(
             children: <Widget>[
@@ -164,14 +154,14 @@ class CustomCard extends StatelessWidget {
                 radius: 35,
                 backgroundColor: Color(int.parse(color, radix: 16)),
                 child: ClipOval(
-                  child: Image.asset(image_path,
+                  child: Image.asset(imagePath,
                       fit: BoxFit.cover, width: 65, height: 65),
                 ),
               ),
               const SizedBox(width: 15),
               Expanded(
                 child: Text(
-                  MyLocalizations.of(context, text),
+                  text,
                   style: TextStyle(
                     fontSize: 18,
                   ),
