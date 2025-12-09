@@ -12,7 +12,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 class FirebaseMessagingService {
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final GlobalKey<NavigatorState> navigatorKey;
 
   FirebaseMessagingService({required this.navigatorKey});
@@ -21,7 +20,7 @@ class FirebaseMessagingService {
     final appConfig = await AppConfig.loadConfig();
     if (!appConfig.useAuth) return;
 
-    await _messaging.requestPermission();
+    await FirebaseMessaging.instance.requestPermission();
 
     // Foreground message handler
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
