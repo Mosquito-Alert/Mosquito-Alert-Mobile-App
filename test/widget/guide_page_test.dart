@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
+import 'package:mosquito_alert_app/screens/guide_page.dart';
 import 'package:mosquito_alert_app/services/analytics_service.dart';
 
 // Import shared mocks
@@ -18,12 +18,12 @@ Future<void> pumpAndSettleIgnoringFirebaseException(WidgetTester tester) async {
   }
 }
 
-/// Creates a test widget wrapping GalleryPage with required dependencies
+/// Creates a test widget wrapping GuidePage with required dependencies
 Widget createTestWidget({
   Function? goBackToHomepage,
 }) {
   return MaterialApp(
-    home: GalleryPage(
+    home: GuidePage(
       goBackToHomepage: goBackToHomepage ??
           (int index) {
             // Default callback does nothing - tests will provide their own
@@ -38,7 +38,7 @@ Widget createTestWidget({
 }
 
 void main() {
-  group('GalleryPage Tests', () {
+  group('GuidePage Tests', () {
     setUpAll(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
       MockFirebaseAnalytics.setMockMethodCallHandler();
@@ -47,14 +47,14 @@ void main() {
     setUp(() {
       // Add any setup needed for each test here if required
     });
-    testWidgets('should render GalleryPage with IntroSlider and 9 slides',
+    testWidgets('should render GuidePage with IntroSlider and 9 slides',
         (WidgetTester tester) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then
-      expect(find.byType(GalleryPage), findsOneWidget);
+      expect(find.byType(GuidePage), findsOneWidget);
       expect(find.byType(IntroSlider), findsOneWidget);
       expect(find.byType(Scaffold), findsAtLeastNWidgets(1));
 

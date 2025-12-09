@@ -6,20 +6,20 @@ import 'package:mosquito_alert_app/services/analytics_service.dart';
 import 'package:mosquito_alert_app/utils/MyLocalizations.dart';
 import 'package:mosquito_alert_app/utils/style.dart';
 
-class GalleryPage extends StatefulWidget {
+class GuidePage extends StatefulWidget {
   final Function goBackToHomepage;
   final AnalyticsService? analyticsService;
 
-  GalleryPage({
+  GuidePage({
     required this.goBackToHomepage,
     this.analyticsService,
   });
 
   @override
-  _GalleryPageState createState() => _GalleryPageState();
+  _GuidePageState createState() => _GuidePageState();
 }
 
-class _GalleryPageState extends State<GalleryPage> {
+class _GuidePageState extends State<GuidePage> {
   List<Slide> slides = [];
   late AnalyticsService _analyticsService;
 

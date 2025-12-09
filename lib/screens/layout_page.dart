@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:mosquito_alert_app/screens/home_page.dart';
 import 'package:mosquito_alert_app/screens/my_reports_page.dart';
-import 'package:mosquito_alert_app/pages/settings_pages/gallery_page.dart';
+import 'package:mosquito_alert_app/screens/guide_page.dart';
 import 'package:mosquito_alert_app/pages/settings_pages/info_page.dart';
 
 class LayoutPage extends StatefulWidget {
@@ -179,7 +179,7 @@ class _LayoutPageState extends State<LayoutPage>
       CustomDrawerItem(
         icon: Icons.biotech,
         title: MyLocalizations.of(context, 'guide_tab'),
-        destination: GalleryPage(
+        destination: GuidePage(
           goBackToHomepage: () {
             setState(() {
               _selectedDrawerIndex = 0;
