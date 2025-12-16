@@ -80,10 +80,15 @@ abstract class ReportRepository<
         switch (item.operation) {
           case OutBoxOperation.create:
             final request = createRequestFactory(item.payload);
+            TReport newReport;
             try {
-              await _create(request: request);
+              newReport = await _createApiOrLocal(request: request);
             } catch (_) {
               break;
+            }
+            if (newReport.localId != null) {
+              // Throw exception to re-schedule
+              throw Exception("Failed to create report");
             }
             break;
           case OutBoxOperation.delete:
@@ -99,14 +104,14 @@ abstract class ReportRepository<
             }
             break;
           default:
-            throw Exception("Unknown op: ${item.operation}");
+            break;
         }
       },
     );
   }
 
   Future<TReport> create({required TCreateReportRequest request}) async {
-    final newReport = await _create(request: request);
+    final newReport = await _createApiOrLocal(request: request);
     if (newReport.localId != null) {
       final createItem = OutboxItem(
         id: request.localId,
@@ -120,7 +125,9 @@ abstract class ReportRepository<
     return newReport;
   }
 
-  Future<TReport> _create({required TCreateReportRequest request}) async {
+  Future<TReport> _createApiOrLocal({
+    required TCreateReportRequest request,
+  }) async {
     TReport newReport;
     try {
       newReport = await sendCreateToApi(request: request);
