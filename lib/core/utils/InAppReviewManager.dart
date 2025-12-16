@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:mosquito_alert_app/features/bites/data/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/data/breeding_site_repository.dart';
 import 'package:mosquito_alert_app/features/observations/data/observation_repository.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InAppReviewManager {
+  static late ObservationRepository _observationRepository;
+  static late BiteRepository _biteRepository;
+  static late BreedingSiteRepository _breedingSiteRepository;
+
+  static void configure(
+    ObservationRepository observationRepository,
+    BiteRepository biteRepository,
+    BreedingSiteRepository breedingSiteRepository,
+  ) {
+    // Configuration logic if needed in the future
+    _observationRepository = observationRepository;
+    _biteRepository = biteRepository;
+    _breedingSiteRepository = breedingSiteRepository;
+  }
+
   static void requestInAppReview(BuildContext context) async {
     const int minimumReportsForReview = 3;
 
@@ -27,17 +40,11 @@ class InAppReviewManager {
     BuildContext context,
     int minimumRequired,
   ) async {
-    final apiClient = Provider.of<sdk.MosquitoAlert>(context, listen: false);
-
-    final observationRepository = ObservationRepository(apiClient: apiClient);
-    final biteRepository = BiteRepository(apiClient: apiClient);
-    final breedingSiteRepository = BreedingSiteRepository(apiClient: apiClient);
-
     int totalReports = 0;
 
-    totalReports += await observationRepository.getCount();
-    totalReports += await biteRepository.getCount();
-    totalReports += await breedingSiteRepository.getCount();
+    totalReports += await _observationRepository.getCount();
+    totalReports += await _biteRepository.getCount();
+    totalReports += await _breedingSiteRepository.getCount();
 
     return totalReports;
   }
