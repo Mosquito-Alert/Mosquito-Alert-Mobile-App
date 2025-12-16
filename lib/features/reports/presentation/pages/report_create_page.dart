@@ -5,31 +5,33 @@ import 'package:mosquito_alert_app/core/widgets/step_page.dart';
 import 'package:mosquito_alert_app/core/widgets/step_page_container.dart';
 import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_creation_step_indicator.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:mosquito_alert_app/core/utils/InAppReviewManager.dart';
 
 /// Uses PageView slider architecture for step-by-step progression
-class ReportCreatePage<ReportType extends BaseReport> extends StatefulWidget {
+class ReportCreatePage<ReportType extends BaseReportModel>
+    extends StatefulWidget {
   final String title;
   final List<StepPage> stepPages;
   final Map<String, Object>? analyticsParameters;
   final Future<ReportType> Function(BuildContext context) onSubmit;
   final Future<void> Function(BuildContext context, dynamic report)?
-      onSubmitSuccess;
+  onSubmitSuccess;
 
-  ReportCreatePage(
-      {required this.title,
-      required this.stepPages,
-      this.analyticsParameters,
-      required this.onSubmit,
-      this.onSubmitSuccess});
+  ReportCreatePage({
+    required this.title,
+    required this.stepPages,
+    this.analyticsParameters,
+    required this.onSubmit,
+    this.onSubmitSuccess,
+  });
 
   @override
   _ReportCreatePageState createState() => _ReportCreatePageState();
 }
 
-class _ReportCreatePageState<ReportType extends BaseReport>
-    extends State<ReportCreatePage<ReportType>> with TickerProviderStateMixin {
+class _ReportCreatePageState<ReportType extends BaseReportModel>
+    extends State<ReportCreatePage<ReportType>>
+    with TickerProviderStateMixin {
   late PageController _pageController;
   late TabController _tabController;
 
@@ -40,8 +42,10 @@ class _ReportCreatePageState<ReportType extends BaseReport>
   void initState() {
     super.initState();
     _pageController = PageController();
-    _tabController =
-        TabController(length: widget.stepPages.length, vsync: this);
+    _tabController = TabController(
+      length: widget.stepPages.length,
+      vsync: this,
+    );
     _logAnalyticsEvent('start_report');
   }
 
@@ -115,132 +119,87 @@ class _ReportCreatePageState<ReportType extends BaseReport>
           ),
           centerTitle: true,
           bottom: PreferredSize(
-            child: ReportCreationStepIndicator(
-              tabController: _tabController,
-            ),
+            child: ReportCreationStepIndicator(tabController: _tabController),
             preferredSize: Size.fromHeight(0),
           ),
         ),
-        body: Stack(children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: _handlePageViewChanged,
-            physics: NeverScrollableScrollPhysics(), // Disable swipe
-            children: widget.stepPages.asMap().entries.map((entry) {
-              int index = entry.key;
-              StepPage stepPage = entry.value;
+        body: Stack(
+          children: [
+            PageView(
+              controller: _pageController,
+              onPageChanged: _handlePageViewChanged,
+              physics: NeverScrollableScrollPhysics(), // Disable swipe
+              children: widget.stepPages.asMap().entries.map((entry) {
+                int index = entry.key;
+                StepPage stepPage = entry.value;
 
-              bool isLastPage = index == widget.stepPages.length - 1;
-              return StepPageContainer(
-                buttonText: isLastPage
-                    ? MyLocalizations.of(context, 'send_data')
-                    : MyLocalizations.of(context, 'continue_txt'),
-                onContinue: () async {
-                  if (!isLastPage) {
-                    _updateCurrentPageIndex(_currentPageIndex + 1);
-                  } else {
-                    setState(() {
-                      isSubmitting = true;
-                    });
-                    ReportType? result;
+                bool isLastPage = index == widget.stepPages.length - 1;
+                return StepPageContainer(
+                  buttonText: isLastPage
+                      ? MyLocalizations.of(context, 'send_data')
+                      : MyLocalizations.of(context, 'continue_txt'),
+                  onContinue: () async {
+                    if (!isLastPage) {
+                      _updateCurrentPageIndex(_currentPageIndex + 1);
+                      return;
+                    }
+                    if (mounted) {
+                      setState(() => isSubmitting = true);
+                    }
+                    ReportType? newReport;
                     try {
-                      result = await widget.onSubmit(context);
+                      newReport = await widget.onSubmit(context);
                     } catch (e) {
-                      await _showErrorDialog(context);
-                    }
-                    setState(() {
-                      isSubmitting = false;
-                    });
-                    if (result != null) {
-                      await _showSuccessDialog(
-                        context,
-                        onOkPressed: () {
-                          widget.onSubmitSuccess != null
-                              ? widget.onSubmitSuccess!(context, result)
-                              : Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                        },
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 4),
+                        ),
                       );
+                    } finally {
+                      if (mounted) {
+                        setState(() => isSubmitting = false);
+                      }
                     }
-                  }
-                },
-                child: stepPage,
-              );
-            }).toList(),
-          ),
-          if (isSubmitting) ...[
-            Container(
-              color: Colors.black.withValues(alpha: 0.3),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      MyLocalizations.of(context, 'loading'),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+
+                    if (newReport == null || !mounted) return;
+                    await widget.onSubmitSuccess?.call(context, newReport);
+
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    InAppReviewManager.requestInAppReview(context);
+                  },
+                  child: stepPage,
+                );
+              }).toList(),
+            ),
+            if (isSubmitting) ...[
+              Container(
+                color: Colors.black.withValues(alpha: 0.3),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 12),
+                      Text(
+                        MyLocalizations.of(context, 'loading'),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ]
-        ]),
-      ),
-    );
-  }
-
-  Future<void> _showSuccessDialog(
-    BuildContext context, {
-    required VoidCallback onOkPressed,
-  }) {
-    // Request in-app review after successful submission
-    // TODO: show after dialog.
-    InAppReviewManager.requestInAppReview(context);
-
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content: Text(MyLocalizations.of(context, 'save_report_ok_txt')),
-        actions: [
-          TextButton(
-            onPressed: onOkPressed,
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text(MyLocalizations.of(context, 'ok')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showErrorDialog(BuildContext context, [String? message]) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(MyLocalizations.of(context, 'app_name')),
-        content:
-            Text(message ?? MyLocalizations.of(context, 'save_report_ko_txt')),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            style: TextButton.styleFrom(
-              foregroundColor: Style.colorPrimary,
-            ),
-            child: Text(MyLocalizations.of(context, 'ok')),
-          ),
-        ],
+            ],
+          ],
+        ),
       ),
     );
   }

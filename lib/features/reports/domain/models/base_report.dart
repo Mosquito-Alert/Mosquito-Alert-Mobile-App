@@ -1,43 +1,36 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:geocoding/geocoding.dart' as geo;
+import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/core/outbox/outbox_offline_model.dart';
 import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
-abstract class BaseReport<T> {
+abstract class BaseReportModel extends OfflineModel {
+  final String? uuid;
+  final String? shortId;
+  final String? userUuid;
   final DateTime createdAt;
-  // final DateTime sentAt;
+  final DateTime createdAtLocal;
+  final DateTime? sentAt;
+  final DateTime? receivedAt;
+  final DateTime? updatedAt;
+  final Location location;
   final String? note;
   final List<String>? tags;
 
-  BaseReport({
+  BaseReportModel({
+    this.uuid,
+    this.shortId,
+    this.userUuid,
     required this.createdAt,
+    DateTime? createdAtLocal,
+    this.sentAt,
+    this.receivedAt,
+    this.updatedAt,
+    required this.location,
     this.note,
     this.tags,
-  });
-}
-
-abstract class BaseReportModel<T> extends BaseReport<T> {
-  final T raw;
-  BaseReportModel(this.raw)
-      : super(
-          createdAt: (raw as dynamic).createdAt,
-          note: (raw as dynamic).note,
-          tags: ((raw as dynamic).tags)?.toList(),
-        );
-
-  String get pk => uuid;
-
-  String get uuid => (raw as dynamic).uuid;
-  String get shortId => (raw as dynamic).shortId;
-  String get userUuid => (raw as dynamic).userUuid;
-  DateTime get createdAtLocal => (raw as dynamic).createdAtLocal;
-  DateTime get sentAt => (raw as dynamic).sentAt;
-  DateTime get receivedAt => (raw as dynamic).receivedAt;
-  DateTime get updatedAt => (raw as dynamic).updatedAt;
-  sdk.Location get location => (raw as dynamic).location;
-  String? get note => (raw as dynamic).note;
-  List<String>? get tags => (raw as dynamic).tags?.toList();
+    super.localId,
+  }) : createdAtLocal = createdAtLocal ?? createdAt.toLocal();
 
   String getTitle(BuildContext context);
   bool get titleItalicized => false;
@@ -60,7 +53,7 @@ abstract class BaseReportModel<T> extends BaseReport<T> {
       }
       countryName = location.country?.nameEn;
       if (cityName != null && countryName != null) {
-        return '$cityName, $countryName';
+        return [cityName, countryName].join(", ");
       }
     }
 
@@ -71,21 +64,23 @@ abstract class BaseReportModel<T> extends BaseReport<T> {
       if (parts.isNotEmpty) cityName = parts.first;
       if (parts.length > 1) countryName = parts.last;
       if (cityName != null && countryName != null) {
-        return '$cityName, $countryName';
+        return [cityName, countryName].join(", ");
       }
     }
 
     // 3. Fallback: Reverse geocoding from coordinates
     final point = location.point;
     try {
-      final placemarks =
-          await placemarkFromCoordinates(point.latitude, point.longitude);
+      final placemarks = await geo.placemarkFromCoordinates(
+        point.latitude,
+        point.longitude,
+      );
       if (placemarks.isNotEmpty) {
         final placemark = placemarks.first;
         cityName ??= placemark.locality?.trim();
         countryName ??= placemark.country?.trim();
         if (cityName != null && countryName != null) {
-          return '$cityName, $countryName';
+          return [cityName, countryName].join(", ");
         }
       }
     } catch (e) {
@@ -94,7 +89,7 @@ abstract class BaseReportModel<T> extends BaseReport<T> {
 
     // 4. Final fallback: just coordinates if no name found
     if (cityName != null && countryName != null)
-      return '$cityName, $countryName';
+      return [cityName, countryName].join(", ");
     if (cityName != null) return cityName;
     if (countryName != null) return countryName;
 
@@ -102,13 +97,25 @@ abstract class BaseReportModel<T> extends BaseReport<T> {
   }
 }
 
-abstract class BaseReportWithPhotos<T> extends BaseReportModel<T> {
-  BaseReportWithPhotos(T raw) : super(raw);
+abstract class BaseReportWithPhotos extends BaseReportModel {
+  // NOTE: make it nullable since there are reports without photos
+  List<BasePhoto>? photos = [];
 
-  List<BasePhoto>? get photos =>
-      ((raw as dynamic).photos as BuiltList<sdk.SimplePhoto>?)
-          ?.map((photo) => BasePhoto.fromSimplePhoto(photo))
-          .toList();
+  BaseReportWithPhotos({
+    super.uuid,
+    super.shortId,
+    super.userUuid,
+    required super.createdAt,
+    super.createdAtLocal,
+    super.sentAt,
+    super.receivedAt,
+    super.updatedAt,
+    required super.location,
+    super.note,
+    super.tags,
+    this.photos,
+    super.localId,
+  });
 
   BasePhoto? get thumbnail {
     if (photos != null && photos!.isNotEmpty) {

@@ -34,10 +34,12 @@ class _ObservationDetailPageState extends State<ObservationDetailPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'adult_report',
-      itemId: observation.uuid,
-    );
+    if (observation.uuid != null) {
+      await FirebaseAnalytics.instance.logSelectContent(
+        contentType: 'adult_report',
+        itemId: observation.uuid!,
+      );
+    }
   }
 
   void _initializeApi() async {

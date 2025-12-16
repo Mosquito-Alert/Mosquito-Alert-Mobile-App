@@ -8,7 +8,7 @@ class ObservationProvider
   ObservationProvider({required super.repository});
 
   Future<ObservationReport> createObservation(
-      {required ObservationReportRequest request}) async {
+      {required ObservationCreateRequest request}) async {
     final newObservation = await repository.create(request: request);
     addItem(newObservation);
     return newObservation;

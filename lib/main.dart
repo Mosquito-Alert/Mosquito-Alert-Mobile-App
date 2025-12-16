@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+import 'package:mosquito_alert_app/core/outbox/outbox_service.dart';
+import 'package:mosquito_alert_app/core/outbox/outbox_sync_manager.dart';
 import 'package:mosquito_alert_app/features/bites/data/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/data/breeding_site_repository.dart';
 import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
@@ -18,12 +21,15 @@ import 'package:mosquito_alert_app/features/notifications/notification_repositor
 import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
+import 'package:mosquito_alert_app/hive/hive_service.dart';
 import 'package:mosquito_alert_app/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:country_codes/country_codes.dart';
 
 import 'features/user/presentation/state/user_provider.dart';
+
+const String outboxSyncTaskName = "outboxSyncTask";
 
 Future<void> main({String env = 'prod'}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,13 +47,19 @@ Future<void> main({String env = 'prod'}) async {
     print('$err');
   }
 
+  // Initialize Hive
+  await initHive();
+  // Initialize Outbox
+  await OutboxService().init();
+
   await CountryCodes.init();
 
   final authProvider = AuthProvider();
   await authProvider.init();
 
-  final ApiService apiService =
-      await ApiService.init(authProvider: authProvider);
+  final ApiService apiService = await ApiService.init(
+    authProvider: authProvider,
+  );
   final MosquitoAlert apiClient = apiService.client;
 
   authProvider.setApiClient(apiClient);
@@ -57,7 +69,35 @@ Future<void> main({String env = 'prod'}) async {
   final appConfig = await AppConfig.loadConfig();
   if (appConfig.useAuth) {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    await Workmanager().registerPeriodicTask(
+      outboxSyncTaskName,
+      outboxSyncTaskName,
+      frequency: const Duration(minutes: 15), // minimum on Android/iOS
+    );
   }
+
+  // Initialize repositories
+  final observationRepository = ObservationRepository(apiClient: apiClient);
+  final biteRepository = BiteRepository(apiClient: apiClient);
+  final breedingSiteRepository = BreedingSiteRepository(apiClient: apiClient);
+
+  final syncManager = OutboxSyncManager([
+    observationRepository,
+    biteRepository,
+    breedingSiteRepository,
+  ]);
+
+  // Auto-sync when online
+  final apiConnection = InternetConnection.createInstance(
+    customCheckOptions: [
+      InternetCheckOption(uri: Uri.parse(apiClient.dio.options.baseUrl)),
+    ],
+  );
+  apiConnection.onStatusChange.listen((status) async {
+    if (status == InternetStatus.connected) {
+      await syncManager.syncAll();
+    }
+  });
 
   runApp(
     MultiProvider(
@@ -66,24 +106,24 @@ Future<void> main({String env = 'prod'}) async {
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider<UserProvider>.value(value: userProvider),
         ChangeNotifierProvider<SettingsProvider>(
-            create: (_) => SettingsProvider()),
+          create: (_) => SettingsProvider(),
+        ),
         ChangeNotifierProvider<DeviceProvider>.value(value: deviceProvider),
         ChangeNotifierProvider<NotificationProvider>(
           create: (_) => NotificationProvider(
-              repository: NotificationRepository(apiClient: apiClient)),
+            repository: NotificationRepository(apiClient: apiClient),
+          ),
         ),
         ChangeNotifierProvider<ObservationProvider>(
-          create: (_) => ObservationProvider(
-              repository: ObservationRepository(apiClient: apiClient)),
+          create: (_) => ObservationProvider(repository: observationRepository),
         ),
         ChangeNotifierProvider<BiteProvider>(
-          create: (_) =>
-              BiteProvider(repository: BiteRepository(apiClient: apiClient)),
+          create: (_) => BiteProvider(repository: biteRepository),
         ),
         ChangeNotifierProvider<BreedingSiteProvider>(
-          create: (_) => BreedingSiteProvider(
-              repository: BreedingSiteRepository(apiClient: apiClient)),
-        )
+          create: (_) =>
+              BreedingSiteProvider(repository: breedingSiteRepository),
+        ),
       ],
       child: MyApp(),
     ),
@@ -102,8 +142,9 @@ void callbackDispatcher() {
     final authProvider = AuthProvider();
     await authProvider.init();
 
-    final ApiService apiService =
-        await ApiService.init(authProvider: authProvider);
+    final ApiService apiService = await ApiService.init(
+      authProvider: authProvider,
+    );
     final MosquitoAlert apiClient = apiService.client;
 
     authProvider.setApiClient(apiClient);
@@ -113,8 +154,8 @@ void callbackDispatcher() {
     String? username = authProvider.username;
     String? password = authProvider.password;
     if (username == null && password == null) {
-      return Future.value(
-          false); // No user credentials available, cannot proceed
+      // No user credentials available, cannot proceed
+      return Future.value(false);
     }
     try {
       await authProvider.login(username: username!, password: password!);
@@ -132,6 +173,11 @@ void callbackDispatcher() {
       print('Error registering device: $e');
     }
 
+    // Initialize Hive
+    await initHive();
+    // Initialize Outbox
+    await OutboxService().init();
+
     await TrackingService.configure(apiClient: apiClient);
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
@@ -139,6 +185,27 @@ void callbackDispatcher() {
     // - Future.error(): task failed.
 
     switch (task) {
+      case outboxSyncTaskName:
+        final observationRepository = ObservationRepository(
+          apiClient: apiClient,
+        );
+        final biteRepository = BiteRepository(apiClient: apiClient);
+        final breedingSiteRepository = BreedingSiteRepository(
+          apiClient: apiClient,
+        );
+
+        final syncManager = OutboxSyncManager([
+          observationRepository,
+          biteRepository,
+          breedingSiteRepository,
+        ]);
+
+        try {
+          await syncManager.syncAll();
+        } catch (e) {
+          return Future.error(e);
+        }
+        return Future.value(true);
       case 'trackingTask':
         // NOTE: do not use await, it should return a Future value
         try {

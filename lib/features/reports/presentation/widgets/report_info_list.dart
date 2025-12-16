@@ -15,19 +15,20 @@ class ReportInfoList<ReportType extends BaseReportModel>
   @override
   Widget build(BuildContext context) {
     final tiles = <Widget>[
-      ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(6),
-          child: Text(
-            'ID',
-            style: TextStyle(
-              color: Style.colorPrimary,
-              fontWeight: FontWeight.bold,
+      if (report.shortId != null)
+        ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(6),
+            child: Text(
+              'ID',
+              style: TextStyle(
+                color: Style.colorPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+          title: Text(report.shortId!),
         ),
-        title: Text(report.shortId),
-      ),
       ListTile(
         leading: Icon(Icons.pin_drop, color: Style.colorPrimary),
         title: FutureBuilder<String>(

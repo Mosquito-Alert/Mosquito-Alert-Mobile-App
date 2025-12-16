@@ -1,14 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
+import 'package:mosquito_alert_app/features/bites/data/models/bite_report_request.dart';
 import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
-class BiteReport extends BaseReportModel<Bite> {
-  BiteReport(Bite raw) : super(raw);
+class BiteReport extends BaseReportModel {
+  final BiteCounts counts;
+  final BiteEventEnvironmentEnum? eventEnvironment;
+  final BiteEventMomentEnum? eventMoment;
+
+  BiteReport({
+    required this.counts,
+    this.eventEnvironment,
+    this.eventMoment,
+    super.uuid,
+    super.shortId,
+    super.userUuid,
+    required super.createdAt,
+    super.createdAtLocal,
+    super.sentAt,
+    super.receivedAt,
+    super.updatedAt,
+    required super.location,
+    super.note,
+    super.tags,
+    super.localId,
+  });
+
+  factory BiteReport.fromSdkBite(Bite bite) {
+    return BiteReport(
+      uuid: bite.uuid,
+      shortId: bite.shortId,
+      userUuid: bite.userUuid,
+      createdAt: bite.createdAt,
+      createdAtLocal: bite.createdAtLocal,
+      sentAt: bite.sentAt,
+      receivedAt: bite.receivedAt,
+      updatedAt: bite.updatedAt,
+      location: bite.location,
+      note: bite.note,
+      tags: bite.tags?.toList(),
+      counts: bite.counts,
+      eventEnvironment: bite.eventEnvironment,
+      eventMoment: bite.eventMoment,
+    );
+  }
+
+  factory BiteReport.fromCreateRequest(BiteCreateRequest request) {
+    return BiteReport(
+      localId: request.localId,
+      counts: BiteCounts(
+        (b) => b
+          ..head = request.counts.head
+          ..leftArm = request.counts.leftArm
+          ..chest = request.counts.chest
+          ..rightArm = request.counts.rightArm
+          ..leftLeg = request.counts.leftLeg
+          ..rightLeg = request.counts.rightLeg
+          ..total =
+              (request.counts.head ?? 0) +
+              (request.counts.leftArm ?? 0) +
+              (request.counts.chest ?? 0) +
+              (request.counts.rightArm ?? 0) +
+              (request.counts.leftLeg ?? 0) +
+              (request.counts.rightLeg ?? 0),
+      ),
+      createdAt: request.createdAt,
+      location: Location(
+        (b) => b
+          ..point.latitude = request.location.point.latitude
+          ..point.longitude = request.location.point.longitude
+          ..source_ = LocationSource_Enum.valueOf(
+            request.location.source_.name,
+          ),
+      ),
+      note: request.note,
+      tags: request.tags,
+      eventEnvironment: request.eventEnvironment != null
+          ? BiteEventEnvironmentEnum.valueOf(request.eventEnvironment!.name)
+          : null,
+      eventMoment: request.eventMoment != null
+          ? BiteEventMomentEnum.valueOf(request.eventMoment!.name)
+          : null,
+    );
+  }
 
   @override
   String getTitle(BuildContext context) {
-    final totalBites = raw.counts.total;
+    final totalBites = counts.total;
     String text;
 
     if (totalBites == 0) {
@@ -23,7 +102,7 @@ class BiteReport extends BaseReportModel<Bite> {
   }
 
   String? getLocalizedEnvironment(BuildContext context) {
-    switch (raw.eventEnvironment) {
+    switch (eventEnvironment) {
       case BiteEventEnvironmentEnum.vehicle:
         return MyLocalizations.of(context, 'question_13_answer_131');
       case BiteEventEnvironmentEnum.indoors:
@@ -36,7 +115,7 @@ class BiteReport extends BaseReportModel<Bite> {
   }
 
   String? getEventMoment(BuildContext context) {
-    switch (raw.eventMoment) {
+    switch (eventMoment) {
       case BiteEventMomentEnum.now:
         return MyLocalizations.of(context, 'question_5_answer_51');
       case BiteEventMomentEnum.lastMorning:

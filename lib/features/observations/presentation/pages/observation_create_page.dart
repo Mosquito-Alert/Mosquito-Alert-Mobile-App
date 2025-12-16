@@ -19,6 +19,7 @@ import 'package:mosquito_alert_app/screens/settings_pages/campaign_tutorial_page
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class ObservationCreatePage extends StatefulWidget {
   @override
@@ -30,6 +31,7 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
   String title = '';
 
   final createdAt = DateTime.now().toUtc();
+  final localId = Uuid().v4();
 
   static const Map<String, Object> analyticsParameters = {
     'report_type': 'adult',
@@ -61,7 +63,8 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
     }
 
     final observation = await provider.createObservation(
-      request: ObservationReportRequest(
+      request: ObservationCreateRequest(
+        localId: localId,
         createdAt: createdAt,
         location: location!,
         photos: memoryPhotos,
@@ -107,14 +110,17 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
             },
             maxPhotos: 3,
             infoBadgeTextKey: 'one_mosquito_reminder_badge',
-            thumbnailText:
-                MyLocalizations.of(context, 'ensure_single_mosquito_photos'),
+            thumbnailText: MyLocalizations.of(
+              context,
+              'ensure_single_mosquito_photos',
+            ),
           ),
         ),
         // Step 2: Location selection
         StepPage(
-          canContinue:
-              ValueNotifier<bool>(!_isLocationLoading && location != null),
+          canContinue: ValueNotifier<bool>(
+            !_isLocationLoading && location != null,
+          ),
           onDisplay: () {
             _logAnalyticsEvent('report_add_location');
             setState(() {
@@ -131,10 +137,12 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
                   location = null;
                   return;
                 }
-                location = LocationRequest((b) => b
-                  ..point.latitude = latitude
-                  ..point.longitude = longitude
-                  ..source_ = source);
+                location = LocationRequest(
+                  (b) => b
+                    ..point.latitude = latitude
+                    ..point.longitude = longitude
+                    ..source_ = source,
+                );
               });
             },
             onLoadingChanged: (isLoading) {
@@ -154,8 +162,9 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
             });
           },
           child: ReportCreationEnvironmentStep(
-            initialEnvironmentName:
-                eventEnvironment != null ? eventEnvironment!.name : null,
+            initialEnvironmentName: eventEnvironment != null
+                ? eventEnvironment!.name
+                : null,
             title: MyLocalizations.of(context, "question_13"),
             allowNullOption: false,
             onChanged: (value) {
@@ -187,14 +196,12 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
               });
             },
           ),
-        )
+        ),
       ],
       onSubmit: (context) => _handleSubmit(context),
       onSubmitSuccess: (context, report) async {
-        Navigator.pop(context); // close the success dialog
         Country? country = report!.location.country;
         if (country == null) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
           return;
         }
 
@@ -208,32 +215,35 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
           final Campaign? campaign =
               campaignsResponse.data?.results?.firstOrNull;
           if (campaign != null) {
-            _showAlertCampaign(
-              campaign,
-              (context) =>
-                  Navigator.of(context).popUntil((route) => route.isFirst),
-            );
-          } else {
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            final bool? showTutorial = await _showAlertCampaign(campaign);
+
+            if (showTutorial == true) {
+              await Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => CampaignTutorialPage()),
+              );
+            }
           }
         } catch (e) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Ignore errors fetching campaigns
         }
       },
     );
   }
 
-  Future _showAlertCampaign(
-      Campaign activeCampaign, void Function(BuildContext) onDismiss) {
+  Future<bool?> _showAlertCampaign(Campaign activeCampaign) {
     final appName = MyLocalizations.of(context, 'app_name');
-    final campaignBody =
-        MyLocalizations.of(context, 'alert_campaign_found_create_body');
+    final campaignBody = MyLocalizations.of(
+      context,
+      'alert_campaign_found_create_body',
+    );
     final showInfoText = MyLocalizations.of(context, 'show_info');
     final noShowInfoText = MyLocalizations.of(context, 'no_show_info');
-    return showDialog(
+
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(appName),
           content: SingleChildScrollView(
@@ -251,19 +261,13 @@ class _ObservationCreatePageState extends State<ObservationCreatePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                onDismiss(context);
+                Navigator.pop(dialogContext, false); // don't show tutorial
               },
               child: Text(noShowInfoText),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CampaignTutorialPage()),
-                );
+              onPressed: () async {
+                Navigator.pop(dialogContext, true);
               },
               child: Text(showInfoText),
             ),

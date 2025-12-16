@@ -27,14 +27,34 @@ class ReportListTile<ReportType extends BaseReportModel>
                 MyLocalizations.of(context, 'unknown_location'));
 
         return ListTile(
-          title: Text(
-            report.getTitle(context),
-            style: TextStyle(
-              fontStyle:
-                  report.titleItalicized ? FontStyle.italic : FontStyle.normal,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          title: Text.rich(
+            TextSpan(
+              children: [
+                if (report.isOffline) ...[
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Icon(
+                      Icons.cloud_off_outlined,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const WidgetSpan(child: SizedBox(width: 8)),
+                ],
+                TextSpan(
+                  text: report.getTitle(context),
+                  style: TextStyle(
+                    fontStyle: report.titleItalicized
+                        ? FontStyle.italic
+                        : FontStyle.normal,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(subtitle,
               style: const TextStyle(

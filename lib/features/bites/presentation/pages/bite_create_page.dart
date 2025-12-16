@@ -15,6 +15,7 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/widgets/bite_stickman.dart';
 import 'package:mosquito_alert_app/features/bites/domain/models/body_part.dart';
+import 'package:uuid/uuid.dart';
 
 class BiteCreatePage extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class BiteCreatePage extends StatefulWidget {
 
 class _BiteCreatePageState extends State<BiteCreatePage> {
   final createdAt = DateTime.now().toUtc();
+  final localId = Uuid().v4();
 
   static const Map<String, Object> analyticsParameters = {
     'report_type': 'bite',
@@ -48,20 +50,25 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
     final userTags = context.read<SettingsProvider>().hashtags;
 
     final newBite = await provider.createBite(
-        request: BiteReportRequest(
-            location: location!,
-            createdAt: createdAt,
-            eventEnvironment: eventEnvironment!,
-            eventMoment: eventMoment!,
-            counts: BiteCountsRequest((b) => b
-              ..head = bites[BodyPartEnum.head] ?? 0
-              ..chest = bites[BodyPartEnum.chest] ?? 0
-              ..leftArm = bites[BodyPartEnum.leftHand] ?? 0
-              ..rightArm = bites[BodyPartEnum.rightHand] ?? 0
-              ..leftLeg = bites[BodyPartEnum.leftLeg] ?? 0
-              ..rightLeg = bites[BodyPartEnum.rightLeg] ?? 0),
-            note: notes,
-            tags: userTags));
+      request: BiteCreateRequest(
+        localId: localId,
+        location: location!,
+        createdAt: createdAt,
+        eventEnvironment: eventEnvironment!,
+        eventMoment: eventMoment!,
+        counts: BiteCountsRequest(
+          (b) => b
+            ..head = bites[BodyPartEnum.head] ?? 0
+            ..chest = bites[BodyPartEnum.chest] ?? 0
+            ..leftArm = bites[BodyPartEnum.leftHand] ?? 0
+            ..rightArm = bites[BodyPartEnum.rightHand] ?? 0
+            ..leftLeg = bites[BodyPartEnum.leftLeg] ?? 0
+            ..rightLeg = bites[BodyPartEnum.rightLeg] ?? 0,
+        ),
+        note: notes,
+        tags: userTags,
+      ),
+    );
     return newBite;
   }
 
@@ -80,8 +87,9 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
       stepPages: [
         // Step 1: Bite questions
         StepPage(
-          canContinue:
-              ValueNotifier<bool>(bites.values.any((count) => count > 0)),
+          canContinue: ValueNotifier<bool>(
+            bites.values.any((count) => count > 0),
+          ),
           onDisplay: () => _logAnalyticsEvent('report_add_bites'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,8 +121,9 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
           canContinue: ValueNotifier<bool>(eventEnvironment != null),
           onDisplay: () => _logAnalyticsEvent('report_add_environment'),
           child: ReportCreationEnvironmentStep(
-            initialEnvironmentName:
-                eventEnvironment != null ? eventEnvironment!.name : null,
+            initialEnvironmentName: eventEnvironment != null
+                ? eventEnvironment!.name
+                : null,
             title: MyLocalizations.of(context, "question_4"),
             allowNullOption: true,
             onChanged: (value) {
@@ -128,19 +137,21 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
         ),
         // Step 3: Moment questions
         StepPage(
-            canContinue: ValueNotifier<bool>(eventMoment != null),
-            onDisplay: () => _logAnalyticsEvent('report_add_moment'),
-            child: BiteCreationEventmomentStep(
-              onChange: (value) {
-                setState(() {
-                  eventMoment = value;
-                });
-              },
-            )),
+          canContinue: ValueNotifier<bool>(eventMoment != null),
+          onDisplay: () => _logAnalyticsEvent('report_add_moment'),
+          child: BiteCreationEventmomentStep(
+            onChange: (value) {
+              setState(() {
+                eventMoment = value;
+              });
+            },
+          ),
+        ),
         // Step 4: Location selection
         StepPage(
-          canContinue:
-              ValueNotifier<bool>(!_isLocationLoading && location != null),
+          canContinue: ValueNotifier<bool>(
+            !_isLocationLoading && location != null,
+          ),
           onDisplay: () => _logAnalyticsEvent('report_add_location'),
           fullScreen: true,
           child: LocationSelector(
@@ -152,10 +163,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
                   location = null;
                   return;
                 }
-                location = LocationRequest((b) => b
-                  ..point.latitude = latitude
-                  ..point.longitude = longitude
-                  ..source_ = source);
+                location = LocationRequest(
+                  (b) => b
+                    ..point.latitude = latitude
+                    ..point.longitude = longitude
+                    ..source_ = source,
+                );
               });
             },
             onLoadingChanged: (isLoading) {
@@ -179,7 +192,7 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
               });
             },
           ),
-        )
+        ),
       ],
       onSubmit: (context) => _handleSubmit(context),
     );

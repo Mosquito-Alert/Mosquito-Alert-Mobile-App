@@ -16,6 +16,7 @@ import 'package:mosquito_alert_app/features/reports/presentation/widgets/locatio
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class BreedingSiteCreatePage extends StatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
   String title = '';
 
   final createdAt = DateTime.now().toUtc();
+  final localId = Uuid().v4();
 
   static const Map<String, Object> analyticsParameters = {
     'report_type': 'breeding_site',
@@ -50,7 +52,8 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
     }
 
     final breedingSite = await provider.createBreedingSite(
-      request: BreedingSiteReportRequest(
+      request: BreedingSiteCreateRequest(
+        localId: localId,
         createdAt: createdAt,
         location: location!,
         photos: memoryPhotos,
@@ -79,8 +82,10 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
       stepPages: [
         // Step 1: Breeding site question
         StepPage(
-          canContinue: ValueNotifier<bool>(siteType != null &&
-              (hasWater == false || (hasWater == true && hasLarvae != null))),
+          canContinue: ValueNotifier<bool>(
+            siteType != null &&
+                (hasWater == false || (hasWater == true && hasLarvae != null)),
+          ),
           onDisplay: () {
             _logAnalyticsEvent('report_add_site_type');
             setState(() {
@@ -93,18 +98,17 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
               // Site type question
               Text(
                 MyLocalizations.of(context, 'question_12'),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               SelectButton<BreedingSiteSiteTypeEnum>(
                 options: [
                   SelectButtonOptions(
                     value: BreedingSiteSiteTypeEnum.stormDrain,
-                    title:
-                        MyLocalizations.of(context, 'question_12_answer_121'),
+                    title: MyLocalizations.of(
+                      context,
+                      'question_12_answer_121',
+                    ),
                     icon: Image.asset(
                       'assets/img/ic_imbornal.webp',
                       fit: BoxFit.cover,
@@ -113,14 +117,16 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
                   ),
                   SelectButtonOptions(
                     value: BreedingSiteSiteTypeEnum.other,
-                    title:
-                        MyLocalizations.of(context, 'question_12_answer_122'),
+                    title: MyLocalizations.of(
+                      context,
+                      'question_12_answer_122',
+                    ),
                     icon: Image.asset(
                       'assets/img/ic_other_site.webp',
                       fit: BoxFit.cover,
                       height: 100,
                     ),
-                  )
+                  ),
                 ],
                 onChanged: (BreedingSiteSiteTypeEnum value) {
                   setState(() {
@@ -133,34 +139,31 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
               const SizedBox(height: 16),
               Text(
                 MyLocalizations.of(context, 'question_10'),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               SelectButton<bool>(
                 options: [
                   SelectButtonOptions(
                     value: true,
-                    title:
-                        MyLocalizations.of(context, 'question_10_answer_101'),
-                    icon: Icon(
-                      Icons.water_drop,
-                      size: 32,
-                      color: Colors.blue,
+                    title: MyLocalizations.of(
+                      context,
+                      'question_10_answer_101',
                     ),
+                    icon: Icon(Icons.water_drop, size: 32, color: Colors.blue),
                   ),
                   SelectButtonOptions(
                     value: false,
-                    title:
-                        MyLocalizations.of(context, 'question_10_answer_102'),
+                    title: MyLocalizations.of(
+                      context,
+                      'question_10_answer_102',
+                    ),
                     icon: Icon(
                       Icons.water_drop_outlined,
                       size: 32,
                       color: Colors.grey,
                     ),
-                  )
+                  ),
                 ],
                 onChanged: (bool value) {
                   setState(() {
@@ -177,34 +180,31 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
                 const SizedBox(height: 16),
                 Text(
                   MyLocalizations.of(context, 'question_17'),
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 SelectButton<bool>(
                   options: [
                     SelectButtonOptions(
                       value: true,
-                      title:
-                          MyLocalizations.of(context, 'question_10_answer_101'),
-                      icon: Icon(
-                        Icons.grain,
-                        size: 32,
-                        color: Colors.red,
+                      title: MyLocalizations.of(
+                        context,
+                        'question_10_answer_101',
                       ),
+                      icon: Icon(Icons.grain, size: 32, color: Colors.red),
                     ),
                     SelectButtonOptions(
                       value: false,
-                      title:
-                          MyLocalizations.of(context, 'question_10_answer_102'),
+                      title: MyLocalizations.of(
+                        context,
+                        'question_10_answer_102',
+                      ),
                       icon: Icon(
                         Icons.grain_outlined,
                         size: 32,
                         color: Colors.grey,
                       ),
-                    )
+                    ),
                   ],
                   onChanged: (bool value) {
                     setState(() {
@@ -237,14 +237,17 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
             },
             maxPhotos: 3,
             infoBadgeTextKey: 'camera_info_breeding_txt_02',
-            thumbnailText:
-                MyLocalizations.of(context, 'photos-of-same-breeding-site'),
+            thumbnailText: MyLocalizations.of(
+              context,
+              'photos-of-same-breeding-site',
+            ),
           ),
         ),
         // Step 3: Location selection
         StepPage(
-          canContinue:
-              ValueNotifier<bool>(!_isLocationLoading && location != null),
+          canContinue: ValueNotifier<bool>(
+            !_isLocationLoading && location != null,
+          ),
           onDisplay: () {
             _logAnalyticsEvent('report_add_location');
             setState(() {
@@ -261,10 +264,12 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
                   location = null;
                   return;
                 }
-                location = LocationRequest((b) => b
-                  ..point.latitude = latitude
-                  ..point.longitude = longitude
-                  ..source_ = source);
+                location = LocationRequest(
+                  (b) => b
+                    ..point.latitude = latitude
+                    ..point.longitude = longitude
+                    ..source_ = source,
+                );
               });
             },
             onLoadingChanged: (isLoading) {
@@ -293,7 +298,7 @@ class _BreedingSiteCreatePageState extends State<BreedingSiteCreatePage> {
               });
             },
           ),
-        )
+        ),
       ],
       onSubmit: (context) => _handleSubmit(context),
     );

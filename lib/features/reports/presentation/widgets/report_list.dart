@@ -49,11 +49,7 @@ class _ReportList<ReportType extends BaseReportModel>
     final List<Object> itemsWithHeaders = [];
     DateTime? lastDate;
     for (var item in objects) {
-      final createdAt = (item as BaseReportModel).createdAtLocal as DateTime?;
-      if (createdAt == null) {
-        itemsWithHeaders.add(item as Object); // Just add item without header
-        continue;
-      }
+      final createdAt = item.createdAtLocal;
       final currentDate =
           DateTime(createdAt.year, createdAt.month, createdAt.day);
       // NOTE: assuming items are sorted by createdAt descending

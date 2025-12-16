@@ -3,9 +3,10 @@ import 'package:mosquito_alert_app/features/reports/domain/models/base_report.da
 import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 import 'package:mosquito_alert_app/core/providers/pagination_provider.dart';
 
-abstract class ReportProvider<T extends BaseReportModel,
-        RepositoryType extends ReportRepository<T, dynamic, dynamic>>
-    extends PaginatedProvider<T, RepositoryType> {
+abstract class ReportProvider<
+    TReport extends BaseReportModel,
+    TRepository extends ReportRepository<TReport, dynamic, dynamic,
+        dynamic>> extends PaginatedProvider<TReport, TRepository> {
   ReportProvider({
     required super.repository,
   }) : super(orderFunction: (items) {
@@ -13,15 +14,18 @@ abstract class ReportProvider<T extends BaseReportModel,
           return items;
         });
 
-  Future<void> delete({required T item}) async {
-    await repository.delete(uuid: item.uuid);
+  Future<void> delete({required TReport item}) async {
+    if (item.uuid == null) {
+      throw Exception('Cannot delete report that is pending to sync');
+    }
+    await repository.delete(uuid: item.uuid!);
 
     deleteItem(item);
 
     // Analytics logging
     await FirebaseAnalytics.instance.logEvent(
       name: 'delete_report',
-      parameters: {'report_uuid': item.uuid},
+      parameters: {'report_uuid': item.uuid!},
     );
   }
 }

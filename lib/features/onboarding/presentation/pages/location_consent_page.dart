@@ -6,10 +6,7 @@ import 'package:mosquito_alert_app/core/utils/style.dart';
 class LocationConsentPage extends StatelessWidget {
   final Future<void> Function()? onCompleted;
 
-  const LocationConsentPage({
-    super.key,
-    this.onCompleted,
-  });
+  const LocationConsentPage({super.key, this.onCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +66,6 @@ class LocationConsentPage extends StatelessWidget {
                       MyLocalizations.of(context, "no_show_info"),
                       () async {
                         await onCompleted?.call();
-                        // Return to home view (first in stack)
-                        // Navigator.popUntil(context, (route) => route.isFirst);
                       },
                       key: Key("rejectBackgroundTrackingBtn"),
                     ),

@@ -1,29 +1,45 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/features/bites/data/models/bite_report_request.dart';
 import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
 import 'package:mosquito_alert_app/features/reports/data/report_repository.dart';
 
-class BiteRepository extends ReportRepository<BiteReport, Bite, BitesApi> {
+class BiteRepository
+    extends ReportRepository<BiteReport, Bite, BitesApi, BiteCreateRequest> {
   BiteRepository({required MosquitoAlert apiClient})
-      : super(
-          apiClient: apiClient,
-          itemApi: apiClient.getBitesApi(),
-          itemFactory: (item) => BiteReport(item),
-        );
+    : super(
+        apiClient: apiClient,
+        itemApi: apiClient.getBitesApi(),
+        itemFactory: (item) => BiteReport.fromSdkBite(item),
+        createReportFromRequest: (request) =>
+            BiteReport.fromCreateRequest(request),
+        createRequestFromReport: (bite) => BiteCreateRequest.fromModel(bite),
+        createRequestFactory: (json) => BiteCreateRequest.fromJson(json),
+        box: Hive.box<BiteReport>('offline_bites'),
+      );
 
-  Future<BiteReport> create({required BiteReportRequest request}) async {
-    final biteRequest = BiteRequest((b) => b
-      ..createdAt = request.createdAt
-      ..sentAt = DateTime.now().toUtc()
-      ..location = request.location.toBuilder()
-      ..note = request.note
-      ..tags = request.tags != null
-          ? BuiltList<String>(request.tags!).toBuilder()
-          : null
-      ..eventEnvironment = request.eventEnvironment
-      ..eventMoment = request.eventMoment
-      ..counts = request.counts.toBuilder());
+  @override
+  String get repoName => 'bites';
+
+  @override
+  Future<BiteReport> sendCreateToApi({
+    required BiteCreateRequest request,
+  }) async {
+    final biteRequest = BiteRequest(
+      (b) => b
+        ..createdAt = request.createdAt
+        ..sentAt = DateTime.now().toUtc()
+        ..location = request.location.toBuilder()
+        ..note = request.note
+        ..tags = request.tags != null
+            ? BuiltList<String>(request.tags!).toBuilder()
+            : null
+        ..eventEnvironment = request.eventEnvironment
+        ..eventMoment = request.eventMoment
+        ..counts = request.counts.toBuilder(),
+    );
+
     final response = await itemApi.create(biteRequest: biteRequest);
     return itemFactory(response.data!);
   }

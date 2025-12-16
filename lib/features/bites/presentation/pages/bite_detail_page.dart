@@ -24,10 +24,12 @@ class _BiteDetailPageState extends State<BiteDetailPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'bite_report',
-      itemId: widget.item.uuid,
-    );
+    if (widget.item.uuid != null) {
+      await FirebaseAnalytics.instance.logSelectContent(
+        contentType: 'bite_report',
+        itemId: widget.item.uuid!,
+      );
+    }
   }
 
   @override
@@ -59,12 +61,12 @@ class _BiteDetailPageState extends State<BiteDetailPage> {
               child: FittedBox(
                   fit: BoxFit.contain,
                   child: BiteStickMan(
-                    headBites: widget.item.raw.counts.head ?? 0,
-                    leftHandBites: widget.item.raw.counts.leftArm ?? 0,
-                    rightHandBites: widget.item.raw.counts.rightArm ?? 0,
-                    chestBites: widget.item.raw.counts.chest ?? 0,
-                    leftLegBites: widget.item.raw.counts.leftLeg ?? 0,
-                    rightLegBites: widget.item.raw.counts.rightLeg ?? 0,
+                    headBites: widget.item.counts.head ?? 0,
+                    leftHandBites: widget.item.counts.leftArm ?? 0,
+                    rightHandBites: widget.item.counts.rightArm ?? 0,
+                    chestBites: widget.item.counts.chest ?? 0,
+                    leftLegBites: widget.item.counts.leftLeg ?? 0,
+                    rightLegBites: widget.item.counts.rightLeg ?? 0,
                   )),
             )));
       },

@@ -30,16 +30,18 @@ class _BreedingSiteDetailPageState extends State<BreedingSiteDetailPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logSelectContent(
-      contentType: 'breeding_site_report',
-      itemId: breedingSite.uuid,
-    );
+    if (breedingSite.uuid != null) {
+      await FirebaseAnalytics.instance.logSelectContent(
+        contentType: 'breeding_site_report',
+        itemId: breedingSite.uuid!,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool hasWater = breedingSite.raw.hasWater ?? false;
-    final bool hasLarvae = breedingSite.raw.hasLarvae ?? false;
+    final bool hasWater = breedingSite.hasWater ?? false;
+    final bool hasLarvae = breedingSite.hasLarvae ?? false;
 
     // Build the map only if locationEnvironment is not null
     final extraFields = <ReportDetailField>[
