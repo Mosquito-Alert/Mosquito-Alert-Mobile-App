@@ -13,9 +13,10 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:provider/provider.dart';
 
 class ObservationDetailPage extends ReportDetailPage<ObservationReport> {
-  const ObservationDetailPage(
-      {Key? key, required ObservationReport observation})
-      : super(key: key, item: observation);
+  const ObservationDetailPage({
+    Key? key,
+    required ObservationReport observation,
+  }) : super(key: key, item: observation);
 
   @override
   _ObservationDetailPageState createState() => _ObservationDetailPageState();
@@ -43,8 +44,10 @@ class _ObservationDetailPageState extends State<ObservationDetailPage> {
   }
 
   void _initializeApi() async {
-    MosquitoAlert apiClient =
-        Provider.of<MosquitoAlert>(context, listen: false);
+    MosquitoAlert apiClient = Provider.of<MosquitoAlert>(
+      context,
+      listen: false,
+    );
 
     final observationCountry = observation.location.country;
     final observationDateAllowsCampaign =
@@ -65,15 +68,18 @@ class _ObservationDetailPageState extends State<ObservationDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String? locationEnvironment =
-        observation.getLocalizedEnvironment(context);
+    final String? locationEnvironment = observation.getLocalizedEnvironment(
+      context,
+    );
     // Build the map only if locationEnvironment is not null
     final extraFields = <ReportDetailField>[];
     if (locationEnvironment != null) {
-      extraFields.add(ReportDetailField(
-        icon: Icons.not_listed_location,
-        value: locationEnvironment,
-      ));
+      extraFields.add(
+        ReportDetailField(
+          icon: Icons.not_listed_location,
+          value: locationEnvironment,
+        ),
+      );
     }
 
     Widget? topBarBackground;

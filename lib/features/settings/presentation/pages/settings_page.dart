@@ -44,14 +44,12 @@ class _SettingsPageState extends State<SettingsPage> {
     final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
 
     return ChangeNotifierProvider<FixesProvider>(
-      create: (_) => FixesProvider(
-        apiClient: apiClient,
-      ),
+      create: (_) => FixesProvider(apiClient: apiClient),
       child: Scaffold(
         body: SafeArea(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -66,93 +64,102 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 16),
               SingleChildScrollView(
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      // Language picker
-                      ListTile(
-                        leading: const Icon(
-                          Icons.language_outlined,
-                          color: Colors.black,
-                        ),
-                        title: Text(
-                          MyLocalizations.of(context, 'select_language_txt'),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Text(
-                                _localeToLanguage(
-                                        Provider.of<UserProvider>(context)
-                                            .locale)
-                                    .nativeName,
-                                style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 14,
-                                ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Language picker
+                    ListTile(
+                      leading: const Icon(
+                        Icons.language_outlined,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        MyLocalizations.of(context, 'select_language_txt'),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Text(
+                              _localeToLanguage(
+                                Provider.of<UserProvider>(context).locale,
+                              ).nativeName,
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
                               ),
                             ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                              size: 16,
-                            ),
-                          ],
-                        ),
-                        onTap: _openLanguagePickerDialog,
-                      ),
-                      const Divider(),
-                      // Background tracking toggle
-                      Consumer<FixesProvider>(
-                        builder: (context, fixesProvider, _) => SwitchListTile(
-                          title: Text(
-                            MyLocalizations.of(
-                                context, 'background_tracking_title'),
                           ),
-                          isThreeLine: true,
-                          subtitle: Text(
-                            MyLocalizations.of(
-                                context, 'background_tracking_subtitle'),
-                            style: const TextStyle(fontSize: 11),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 16,
                           ),
-                          value: fixesProvider.isEnabled,
-                          activeColor: Style.colorPrimary,
-                          secondary: isBgTrackingLoading
-                              ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Style.colorPrimary),
-                                )
-                              : const Icon(Icons.share_location_outlined),
-                          onChanged: (bool value) async {
-                            if (value) {
-                              setState(() {
-                                isBgTrackingLoading = true;
-                              });
-                              await PermissionsManager.requestPermissions();
-                              await fixesProvider.enableTracking(
-                                  runImmediately: true);
-                              setState(() {
-                                isBgTrackingLoading = false;
-                              });
-                            } else {
-                              await fixesProvider.disableTracking();
-                            }
-                          },
-                        ),
+                        ],
                       ),
-                      const Divider(),
-                      // Hashtag settings
-                      ExpansionTile(
-                        leading: const Icon(
-                          Icons.sell_outlined,
-                          color: Colors.black,
+                      onTap: _openLanguagePickerDialog,
+                    ),
+                    const Divider(),
+                    // Background tracking toggle
+                    Consumer<FixesProvider>(
+                      builder: (context, fixesProvider, _) => SwitchListTile(
+                        title: Text(
+                          MyLocalizations.of(
+                            context,
+                            'background_tracking_title',
+                          ),
                         ),
-                        initiallyExpanded: settingsProvider.hashtags.length > 0,
-                        title: Row(mainAxisSize: MainAxisSize.min, children: [
+                        isThreeLine: true,
+                        subtitle: Text(
+                          MyLocalizations.of(
+                            context,
+                            'background_tracking_subtitle',
+                          ),
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                        value: fixesProvider.isEnabled,
+                        activeThumbColor: Style.colorPrimary,
+                        secondary: isBgTrackingLoading
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Style.colorPrimary,
+                                ),
+                              )
+                            : const Icon(Icons.share_location_outlined),
+                        onChanged: (bool value) async {
+                          if (value) {
+                            setState(() {
+                              isBgTrackingLoading = true;
+                            });
+                            await PermissionsManager.requestPermissions();
+                            await fixesProvider.enableTracking(
+                              runImmediately: true,
+                            );
+                            setState(() {
+                              isBgTrackingLoading = false;
+                            });
+                          } else {
+                            await fixesProvider.disableTracking();
+                          }
+                        },
+                      ),
+                    ),
+                    const Divider(),
+                    // Hashtag settings
+                    ExpansionTile(
+                      leading: const Icon(
+                        Icons.sell_outlined,
+                        color: Colors.black,
+                      ),
+                      initiallyExpanded: settingsProvider.hashtags.length > 0,
+                      title: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           Text(
                             MyLocalizations.of(
-                                context, 'auto_tagging_settings_title'),
+                              context,
+                              'auto_tagging_settings_title',
+                            ),
                           ),
                           const Spacer(),
                           if (settingsProvider.hashtags.length > 0)
@@ -160,19 +167,25 @@ class _SettingsPageState extends State<SettingsPage> {
                               count: settingsProvider.hashtags.length,
                               backgroundColor: Colors.grey,
                               textColor: Colors.white,
-                            )
-                        ]),
-                        childrenPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        children: [
-                          Column(children: [
+                            ),
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      children: [
+                        Column(
+                          children: [
                             Text(
                               MyLocalizations.of(
-                                  context, 'enable_auto_hashtag_text'),
+                                context,
+                                'enable_auto_hashtag_text',
+                              ),
                               style: TextStyle(
-                                  fontSize: 11, color: Colors.grey[600]),
+                                fontSize: 11,
+                                color: Colors.grey[600],
+                              ),
                             ),
                             const SizedBox(height: 10),
                             TagsTextField(
@@ -181,12 +194,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                 settingsProvider.hashtags = tags;
                               },
                             ),
-                          ]),
-                        ],
-                      ),
-                    ]),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ])),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -198,60 +215,65 @@ class _SettingsPageState extends State<SettingsPage> {
         .length;
 
     return Language(
-        _tempBaseLanguage.isoCode +
-            (locale.countryCode != null && locale.countryCode!.isNotEmpty
-                ? "_" + locale.countryCode!
-                : ""),
-        _tempBaseLanguage.name,
-        _tempBaseLanguage.nativeName.split(',').first +
-            (_numDuplicatedLanguages > 1 && locale.countryCode != null
-                ? (() {
-                    try {
-                      final details = CountryCodes.detailsForLocale(locale);
-                      return details.name != null ? " (${details.name})" : "";
-                    } catch (e) {
-                      return "";
-                    }
-                  })()
-                : "")); // Clean native name
+      _tempBaseLanguage.isoCode +
+          (locale.countryCode != null && locale.countryCode!.isNotEmpty
+              ? "_" + locale.countryCode!
+              : ""),
+      _tempBaseLanguage.name,
+      _tempBaseLanguage.nativeName.split(',').first +
+          (_numDuplicatedLanguages > 1 && locale.countryCode != null
+              ? (() {
+                  try {
+                    final details = CountryCodes.detailsForLocale(locale);
+                    return details.name != null ? " (${details.name})" : "";
+                  } catch (e) {
+                    return "";
+                  }
+                })()
+              : ""),
+    ); // Clean native name
   }
 
   void _openLanguagePickerDialog() => showDialog(
-        context: context,
-        builder: (context) => Theme(
-            data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
-            child: LanguagePickerDialog(
-                languages: availableLanguages
-                  ..sort((a, b) => a.nativeName.compareTo(b.nativeName)),
-                titlePadding: const EdgeInsets.all(8.0),
-                searchCursorColor: Style.colorPrimary,
-                searchInputDecoration: InputDecoration(
-                    hintText: MyLocalizations.of(context, 'search_txt')),
-                isSearchable: true,
-                title: Text(MyLocalizations.of(context, 'select_language_txt')),
-                onValuePicked: (Language language) async {
-                  final isoCodeParts = language.isoCode.split('_');
-                  final languageCode = isoCodeParts[0];
-                  final countryCode =
-                      isoCodeParts.length > 1 ? isoCodeParts[1] : null;
-                  final locale = Locale(languageCode, countryCode);
+    context: context,
+    builder: (context) => Theme(
+      data: Theme.of(context).copyWith(primaryColor: Style.colorPrimary),
+      child: LanguagePickerDialog(
+        languages: availableLanguages
+          ..sort((a, b) => a.nativeName.compareTo(b.nativeName)),
+        titlePadding: const EdgeInsets.all(8.0),
+        searchCursorColor: Style.colorPrimary,
+        searchInputDecoration: InputDecoration(
+          hintText: MyLocalizations.of(context, 'search_txt'),
+        ),
+        isSearchable: true,
+        title: Text(MyLocalizations.of(context, 'select_language_txt')),
+        onValuePicked: (Language language) async {
+          final isoCodeParts = language.isoCode.split('_');
+          final languageCode = isoCodeParts[0];
+          final countryCode = isoCodeParts.length > 1 ? isoCodeParts[1] : null;
+          final locale = Locale(languageCode, countryCode);
 
-                  final userProvider =
-                      Provider.of<UserProvider>(context, listen: false);
-                  try {
-                    await userProvider.setLocale(locale);
-                  } catch (e) {
-                    print('Error setting locale: $e');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Could not update language on server.'),
-                        duration: Duration(seconds: 3),
-                      ),
-                    );
-                  }
-                },
-                itemBuilder: (Language language) {
-                  return Text(language.nativeName);
-                })),
-      );
+          final userProvider = Provider.of<UserProvider>(
+            context,
+            listen: false,
+          );
+          try {
+            await userProvider.setLocale(locale);
+          } catch (e) {
+            print('Error setting locale: $e');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Could not update language on server.'),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        itemBuilder: (Language language) {
+          return Text(language.nativeName);
+        },
+      ),
+    ),
+  );
 }

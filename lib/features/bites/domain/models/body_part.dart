@@ -1,8 +1,1 @@
-enum BodyPartEnum {
-  head,
-  chest,
-  leftHand,
-  rightHand,
-  leftLeg,
-  rightLeg,
-}
+enum BodyPartEnum { head, chest, leftHand, rightHand, leftLeg, rightLeg }

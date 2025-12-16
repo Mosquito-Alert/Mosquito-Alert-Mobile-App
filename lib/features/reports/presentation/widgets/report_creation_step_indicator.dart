@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 
 class ReportCreationStepIndicator extends StatelessWidget {
-  const ReportCreationStepIndicator({
-    super.key,
-    required this.tabController,
-  });
+  const ReportCreationStepIndicator({super.key, required this.tabController});
 
   final TabController tabController;
 

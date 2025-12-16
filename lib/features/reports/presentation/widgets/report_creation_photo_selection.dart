@@ -9,7 +9,7 @@ class ReportCreationPhotoSelection extends StatefulWidget {
   final List<Uint8List> photos;
   final Function(List<Uint8List>) onPhotosChanged;
   final VoidCallback?
-      onPrevious; // Optional for workflows that don't need back button
+  onPrevious; // Optional for workflows that don't need back button
   final int maxPhotos;
   final String? infoBadgeTextKey;
   final String? thumbnailText;

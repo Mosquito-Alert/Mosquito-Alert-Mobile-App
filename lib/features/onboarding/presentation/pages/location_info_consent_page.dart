@@ -29,7 +29,9 @@ class LocationInfoConsentPage extends StatelessWidget {
               Text(
                 MyLocalizations.of(context, 'tracking_perm_view_text'),
                 style: TextStyle(
-                    fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+                  fontSize: 16,
+                  color: theme.textTheme.bodyMedium?.color,
+                ),
               ),
               SizedBox(
                 width: double.infinity,
@@ -38,16 +40,15 @@ class LocationInfoConsentPage extends StatelessWidget {
                     backgroundColor: theme.primaryColorDark,
                     foregroundColor: Colors.white,
                   ),
-                  child: Text(MyLocalizations.of(
-                    context,
-                    'turn_on_location_button',
-                  )),
+                  child: Text(
+                    MyLocalizations.of(context, 'turn_on_location_button'),
+                  ),
                   onPressed: () async {
                     await PermissionsManager.requestPermissions();
                     await onCompleted?.call();
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

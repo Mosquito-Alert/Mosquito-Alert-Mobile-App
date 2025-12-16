@@ -57,8 +57,8 @@ class MyLocalizations {
   static Future<Map<String, dynamic>> _loadJsonAsset(Locale locale) async {
     final fileName =
         (locale.countryCode != null && locale.countryCode!.isNotEmpty)
-            ? '${locale.languageCode}_${locale.countryCode}'
-            : locale.languageCode;
+        ? '${locale.languageCode}_${locale.countryCode}'
+        : locale.languageCode;
 
     final path = 'assets/language/$fileName.json';
     try {
@@ -193,7 +193,9 @@ class MyLocalizations {
   }
 
   static String of(BuildContext context, String? key) {
-    return Localizations.of<MyLocalizations>(context, MyLocalizations)!
-        .translate(key);
+    return Localizations.of<MyLocalizations>(
+      context,
+      MyLocalizations,
+    )!.translate(key);
   }
 }

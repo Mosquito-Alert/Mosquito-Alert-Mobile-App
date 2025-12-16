@@ -89,17 +89,20 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<GuestRegistration> createGuestUser({required String password}) async {
-    final guestRegistrationRequest =
-        GuestRegistrationRequest((b) => b..password = password);
+    final guestRegistrationRequest = GuestRegistrationRequest(
+      (b) => b..password = password,
+    );
     final response = await authApi.signupGuest(
-        guestRegistrationRequest: guestRegistrationRequest);
+      guestRegistrationRequest: guestRegistrationRequest,
+    );
 
     return response.data!;
   }
 
   Future<void> changePassword({required String password}) async {
-    final changePasswordRequest =
-        PasswordChangeRequest((b) => b..password = password);
+    final changePasswordRequest = PasswordChangeRequest(
+      (b) => b..password = password,
+    );
 
     await authApi.changePassword(passwordChangeRequest: changePasswordRequest);
 
@@ -112,17 +115,21 @@ class AuthProvider with ChangeNotifier {
     await prefs.remove('uuid');
   }
 
-  Future<void> login(
-      {required String username,
-      required String password,
-      Device? device}) async {
-    final request = AppUserTokenObtainPairRequest((b) => b
-      ..username = username
-      ..password = password
-      ..deviceId = device?.deviceId ?? _deviceId);
+  Future<void> login({
+    required String username,
+    required String password,
+    Device? device,
+  }) async {
+    final request = AppUserTokenObtainPairRequest(
+      (b) => b
+        ..username = username
+        ..password = password
+        ..deviceId = device?.deviceId ?? _deviceId,
+    );
 
-    final response =
-        await authApi.obtainToken(appUserTokenObtainPairRequest: request);
+    final response = await authApi.obtainToken(
+      appUserTokenObtainPairRequest: request,
+    );
 
     await _setUsername(username: username);
     await _setPassword(password: password);

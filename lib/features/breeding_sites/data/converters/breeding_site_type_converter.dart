@@ -6,8 +6,9 @@ class BreedingSiteTypeConverter
     implements JsonConverter<sdk.BreedingSiteSiteTypeEnum, String> {
   const BreedingSiteTypeConverter();
 
-  static final _serializer = sdk.BreedingSiteSiteTypeEnum.serializer
-      as PrimitiveSerializer<sdk.BreedingSiteSiteTypeEnum>;
+  static final _serializer =
+      sdk.BreedingSiteSiteTypeEnum.serializer
+          as PrimitiveSerializer<sdk.BreedingSiteSiteTypeEnum>;
 
   @override
   sdk.BreedingSiteSiteTypeEnum fromJson(String json) {
@@ -21,9 +22,10 @@ class BreedingSiteTypeConverter
   @override
   String toJson(sdk.BreedingSiteSiteTypeEnum object) {
     return _serializer.serialize(
-      sdk.serializers,
-      object,
-      specifiedType: const FullType(sdk.BreedingSiteSiteTypeEnum),
-    ) as String;
+          sdk.serializers,
+          object,
+          specifiedType: const FullType(sdk.BreedingSiteSiteTypeEnum),
+        )
+        as String;
   }
 }

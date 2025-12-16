@@ -5,7 +5,5 @@ abstract class OfflineModel {
   /// True if synced with the server
   bool get isOffline => localId != null;
 
-  OfflineModel({
-    this.localId,
-  });
+  OfflineModel({this.localId});
 }

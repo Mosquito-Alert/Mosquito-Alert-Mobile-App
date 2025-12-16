@@ -30,8 +30,9 @@ class NotificationProvider
   Future<void> markAsRead({required sdk.Notification notification}) async {
     if (notification.isRead) return;
 
-    final updatedNotification =
-        await repository.markAsRead(notification: notification);
+    final updatedNotification = await repository.markAsRead(
+      notification: notification,
+    );
 
     int index = items.indexWhere((n) => n.id == notification.id);
     if (index != -1) {

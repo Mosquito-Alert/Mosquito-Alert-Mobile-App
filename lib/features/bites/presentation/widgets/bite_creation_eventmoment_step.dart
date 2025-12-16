@@ -18,7 +18,7 @@ class _BiteCreationEventmomentStepState
     extends State<BiteCreationEventmomentStep> {
   MainSelectionType? _mainSelection;
   BiteRequestEventMomentEnum?
-      _timeOfDay; // "morning", "midday", "afternoon", "night"
+  _timeOfDay; // "morning", "midday", "afternoon", "night"
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +27,12 @@ class _BiteCreationEventmomentStepState
       children: [
         Text(
           MyLocalizations.of(context, 'question_5'),
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         Text(
           MyLocalizations.of(context, 'this-information-helps-researchers'),
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
         ),
 
         SizedBox(height: 20),
@@ -47,14 +41,16 @@ class _BiteCreationEventmomentStepState
         Row(
           children: [
             _buildOptionButton(
-                MyLocalizations.of(context, 'question_5_answer_51'),
-                MainSelectionType.justNow,
-                BiteRequestEventMomentEnum.now),
+              MyLocalizations.of(context, 'question_5_answer_51'),
+              MainSelectionType.justNow,
+              BiteRequestEventMomentEnum.now,
+            ),
             const SizedBox(width: 12),
             _buildOptionButton(
-                MyLocalizations.of(context, 'question_5_answer_52'),
-                MainSelectionType.last24h,
-                null),
+              MyLocalizations.of(context, 'question_5_answer_52'),
+              MainSelectionType.last24h,
+              null,
+            ),
           ],
         ),
 
@@ -64,35 +60,39 @@ class _BiteCreationEventmomentStepState
         if (_mainSelection == MainSelectionType.last24h) ...[
           Text(
             MyLocalizations.of(context, 'question_3'),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 12),
           _buildTimeOfDayButton(
-              MyLocalizations.of(context, 'question_3_answer_31'),
-              Icons.wb_sunny_outlined,
-              BiteRequestEventMomentEnum.lastMorning),
+            MyLocalizations.of(context, 'question_3_answer_31'),
+            Icons.wb_sunny_outlined,
+            BiteRequestEventMomentEnum.lastMorning,
+          ),
           _buildTimeOfDayButton(
-              MyLocalizations.of(context, 'question_3_answer_32'),
-              Icons.wb_sunny,
-              BiteRequestEventMomentEnum.lastMidday),
+            MyLocalizations.of(context, 'question_3_answer_32'),
+            Icons.wb_sunny,
+            BiteRequestEventMomentEnum.lastMidday,
+          ),
           _buildTimeOfDayButton(
-              MyLocalizations.of(context, 'question_3_answer_33'),
-              Icons.wb_twilight,
-              BiteRequestEventMomentEnum.lastAfternoon),
+            MyLocalizations.of(context, 'question_3_answer_33'),
+            Icons.wb_twilight,
+            BiteRequestEventMomentEnum.lastAfternoon,
+          ),
           _buildTimeOfDayButton(
-              MyLocalizations.of(context, 'question_3_answer_34'),
-              Icons.nightlight_round,
-              BiteRequestEventMomentEnum.lastNight),
+            MyLocalizations.of(context, 'question_3_answer_34'),
+            Icons.nightlight_round,
+            BiteRequestEventMomentEnum.lastNight,
+          ),
         ],
       ],
     );
   }
 
-  Widget _buildOptionButton(String label, MainSelectionType value,
-      BiteRequestEventMomentEnum? timeOfDayValue) {
+  Widget _buildOptionButton(
+    String label,
+    MainSelectionType value,
+    BiteRequestEventMomentEnum? timeOfDayValue,
+  ) {
     final bool selected = _mainSelection == value;
     return Expanded(
       child: ElevatedButton(
@@ -107,8 +107,9 @@ class _BiteCreationEventmomentStepState
           backgroundColor: selected ? Style.colorPrimary : Colors.grey.shade200,
           foregroundColor: selected ? Colors.white : Colors.black87,
           elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 14),
         ),
         child: Text(label),
@@ -117,7 +118,10 @@ class _BiteCreationEventmomentStepState
   }
 
   Widget _buildTimeOfDayButton(
-      String label, IconData icon, BiteRequestEventMomentEnum value) {
+    String label,
+    IconData icon,
+    BiteRequestEventMomentEnum value,
+  ) {
     final bool selected = _timeOfDay == value;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),

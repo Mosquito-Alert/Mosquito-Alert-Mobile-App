@@ -6,8 +6,9 @@ class ObservationEventEnvironmentConverter
     implements JsonConverter<sdk.ObservationEventEnvironmentEnum, String> {
   const ObservationEventEnvironmentConverter();
 
-  static final _serializer = sdk.ObservationEventEnvironmentEnum.serializer
-      as PrimitiveSerializer<sdk.ObservationEventEnvironmentEnum>;
+  static final _serializer =
+      sdk.ObservationEventEnvironmentEnum.serializer
+          as PrimitiveSerializer<sdk.ObservationEventEnvironmentEnum>;
 
   @override
   sdk.ObservationEventEnvironmentEnum fromJson(String json) {
@@ -21,9 +22,10 @@ class ObservationEventEnvironmentConverter
   @override
   String toJson(sdk.ObservationEventEnvironmentEnum object) {
     return _serializer.serialize(
-      sdk.serializers,
-      object,
-      specifiedType: const FullType(sdk.ObservationEventEnvironmentEnum),
-    ) as String;
+          sdk.serializers,
+          object,
+          specifiedType: const FullType(sdk.ObservationEventEnvironmentEnum),
+        )
+        as String;
   }
 }

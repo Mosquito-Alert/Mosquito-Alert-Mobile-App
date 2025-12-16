@@ -7,8 +7,9 @@ class BreedingSiteProvider
     extends ReportProvider<BreedingSiteReport, BreedingSiteRepository> {
   BreedingSiteProvider({required super.repository});
 
-  Future<BreedingSiteReport> createBreedingSite(
-      {required BreedingSiteCreateRequest request}) async {
+  Future<BreedingSiteReport> createBreedingSite({
+    required BreedingSiteCreateRequest request,
+  }) async {
     final newBreedingSite = await repository.create(request: request);
     addItem(newBreedingSite);
     return newBreedingSite;

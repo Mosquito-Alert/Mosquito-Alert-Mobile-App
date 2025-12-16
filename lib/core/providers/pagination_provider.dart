@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart';
 
-abstract class PaginatedProvider<T,
-        RepositoryType extends PaginationRepository<T, dynamic>>
+abstract class PaginatedProvider<
+  T,
+  RepositoryType extends PaginationRepository<T, dynamic>
+>
     extends ChangeNotifier {
   final RepositoryType repository;
   final List<T> Function(List<T>)? orderFunction;
@@ -53,8 +55,10 @@ abstract class PaginatedProvider<T,
       page = 1;
       hasMore = true;
       loadedInitial = true;
-      final (newItems, newHasMore) =
-          await fetchPage(page: page, pageSize: pageSize);
+      final (newItems, newHasMore) = await fetchPage(
+        page: page,
+        pageSize: pageSize,
+      );
       this._items = newItems;
       hasMore = newHasMore;
     } catch (e) {
@@ -75,8 +79,10 @@ abstract class PaginatedProvider<T,
 
     int nextPage = page + 1;
     try {
-      final (newItems, newHasMore) =
-          await fetchPage(page: nextPage, pageSize: pageSize);
+      final (newItems, newHasMore) = await fetchPage(
+        page: nextPage,
+        pageSize: pageSize,
+      );
       this._items.addAll(newItems);
       hasMore = newHasMore;
     } catch (e) {

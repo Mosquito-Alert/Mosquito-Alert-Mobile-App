@@ -11,9 +11,10 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:provider/provider.dart';
 
 class BreedingSiteDetailPage extends ReportDetailPage<BreedingSiteReport> {
-  const BreedingSiteDetailPage(
-      {Key? key, required BreedingSiteReport breedingSite})
-      : super(key: key, item: breedingSite);
+  const BreedingSiteDetailPage({
+    Key? key,
+    required BreedingSiteReport breedingSite,
+  }) : super(key: key, item: breedingSite);
 
   @override
   _BreedingSiteDetailPageState createState() => _BreedingSiteDetailPageState();
@@ -51,7 +52,7 @@ class _BreedingSiteDetailPageState extends State<BreedingSiteDetailPage> {
           MyLocalizations.of(context, 'question_10'),
           hasWater
               ? MyLocalizations.of(context, 'yes')
-              : MyLocalizations.of(context, 'no')
+              : MyLocalizations.of(context, 'no'),
         ].join(' '),
       ),
       ReportDetailField(
@@ -60,7 +61,7 @@ class _BreedingSiteDetailPageState extends State<BreedingSiteDetailPage> {
           MyLocalizations.of(context, 'question_17'),
           hasLarvae
               ? MyLocalizations.of(context, 'yes')
-              : MyLocalizations.of(context, 'no')
+              : MyLocalizations.of(context, 'no'),
         ].join(' '),
       ),
     ];

@@ -14,8 +14,11 @@ class CustomDrawerItem {
   final String title;
   final Widget destination;
 
-  CustomDrawerItem(
-      {required this.icon, required this.title, required this.destination});
+  CustomDrawerItem({
+    required this.icon,
+    required this.title,
+    required this.destination,
+  });
 }
 
 class CustomDrawer extends StatefulWidget {
@@ -55,120 +58,118 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Widget build(BuildContext context) {
     final User? user = context.watch<UserProvider>().user;
     return Drawer(
-      child: Column(children: [
-        Expanded(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Row(
-                  children: <Widget>[
-                    // User score
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            settings: RouteSettings(name: '/user_score'),
-                            builder: (context) => InfoPageInWebview(
-                                "${MyLocalizations.of(context, 'url_point_1')}/${user?.uuid ?? 'not_found'}"),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Row(
+                    children: <Widget>[
+                      // User score
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              settings: RouteSettings(name: '/user_score'),
+                              builder: (context) => InfoPageInWebview(
+                                "${MyLocalizations.of(context, 'url_point_1')}/${user?.uuid ?? 'not_found'}",
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/img/points_box.webp'),
+                            ),
                           ),
-                        );
-                      },
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/img/points_box.webp'),
-                          ),
-                        ),
-                        child: Center(
-                          child: AutoSizeText(
-                            (user?.score.value ?? 0).toString(),
-                            maxLines: 1,
-                            maxFontSize: 26,
-                            minFontSize: 16,
-                            style: TextStyle(
+                          child: Center(
+                            child: AutoSizeText(
+                              (user?.score.value ?? 0).toString(),
+                              maxLines: 1,
+                              maxFontSize: 26,
+                              minFontSize: 16,
+                              style: TextStyle(
                                 color: Color(0xFF4B3D04),
                                 fontWeight: FontWeight.w500,
-                                fontSize: 24),
+                                fontSize: 24,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(width: 12),
+                      SizedBox(width: 12),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
-                          child: Text(
-                            MyLocalizations.of(context, 'welcome_text'),
-                            style: TextStyle(fontSize: 22),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 50.0, bottom: 10.0),
+                            child: Text(
+                              MyLocalizations.of(context, 'welcome_text'),
+                              style: TextStyle(fontSize: 22),
+                            ),
                           ),
-                        ),
-                        _uuidWithClipboard(user),
-                      ],
-                    ),
-                  ],
+                          _uuidWithClipboard(user),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: widget.items.length,
-                itemBuilder: (_, index) {
-                  final item = widget.items[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == index
-                          ? Colors.orange.shade200
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        item.title,
-                        style: TextStyle(color: Colors.black),
+                ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: widget.items.length,
+                  itemBuilder: (_, index) {
+                    final item = widget.items[index];
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: _selectedIndex == index
+                            ? Colors.orange.shade200
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(50.0),
                       ),
-                      leading: Icon(
-                        item.icon,
-                        color: Colors.black,
+                      child: ListTile(
+                        title: Text(
+                          item.title,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        leading: Icon(item.icon, color: Colors.black),
+                        minLeadingWidth: 0,
+                        selected: _selectedIndex == index,
+                        onTap: () {
+                          // Update the state of the app
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                          widget.onTapChanged(_selectedIndex);
+                          // Then close the drawer
+                          Navigator.pop(context);
+                        },
                       ),
-                      minLeadingWidth: 0,
-                      selected: _selectedIndex == index,
-                      onTap: () {
-                        // Update the state of the app
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                        widget.onTapChanged(_selectedIndex);
-                        // Then close the drawer
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Mosquito Alert ${packageInfo?.version} (build ${packageInfo?.buildNumber})',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 9,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
-        ),
-      ]),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Mosquito Alert ${packageInfo?.version} (build ${packageInfo?.buildNumber})',
+              style: TextStyle(color: Colors.grey, fontSize: 9),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -192,29 +193,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
           child: Text(
             uuid,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 8,
-            ),
+            style: TextStyle(color: Colors.grey, fontSize: 8),
           ),
         ),
         GestureDetector(
-          child: Icon(
-            Icons.copy_rounded,
-            size: 12,
-          ),
+          child: Icon(Icons.copy_rounded, size: 12),
           onTap: () {
-            Clipboard.setData(
-              ClipboardData(text: uuid),
-            );
+            Clipboard.setData(ClipboardData(text: uuid));
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                    MyLocalizations.of(context, 'copied_to_clipboard_success')),
+                  MyLocalizations.of(context, 'copied_to_clipboard_success'),
+                ),
               ),
             );
           },
-        )
+        ),
       ],
     );
   }

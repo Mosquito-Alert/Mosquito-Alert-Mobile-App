@@ -13,9 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({
-    Key? key,
-  }) : super(key: key);
+  const NotificationsPage({Key? key}) : super(key: key);
 
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
@@ -35,25 +33,28 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance
-        .logScreenView(screenName: '/notifications');
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: '/notifications',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<NotificationProvider>();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: FlexibleSpaceBar(
           centerTitle: true,
-          flexibleSpace: FlexibleSpaceBar(
-            centerTitle: true,
-            title: Text(MyLocalizations.of(context, 'notifications_title'),
-                style: TextStyle(color: Colors.black87)),
+          title: Text(
+            MyLocalizations.of(context, 'notifications_title'),
+            style: TextStyle(color: Colors.black87),
           ),
         ),
-        body: SafeArea(
-            child: RefreshIndicator(
+      ),
+      body: SafeArea(
+        child: RefreshIndicator(
           onRefresh: () => provider.refresh(),
           child: Consumer<NotificationProvider>(
             builder: (context, provider, _) {
@@ -67,7 +68,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 ),
                 fetchNextPage: provider.loadMore,
                 separatorBuilder: (context, index) => const Divider(
-                    height: 1, thickness: 0.2, color: Colors.grey),
+                  height: 1,
+                  thickness: 0.2,
+                  color: Colors.grey,
+                ),
                 builderDelegate: PagedChildBuilderDelegate<sdk.Notification>(
                   itemBuilder: (context, notification, index) {
                     return ListTile(
@@ -80,13 +84,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           ),
                         );
                       },
-                      tileColor:
-                          notification.isRead ? Colors.white : Colors.grey[200],
+                      tileColor: notification.isRead
+                          ? Colors.white
+                          : Colors.grey[200],
                       titleTextStyle: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color:
-                            notification.isRead ? Colors.black54 : Colors.black,
+                        color: notification.isRead
+                            ? Colors.black54
+                            : Colors.black,
                       ),
                       isThreeLine: true,
                       trailing: Text(timeago.format(notification.createdAt)),
@@ -100,8 +106,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -119,8 +126,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      subtitle: Text(getHtmlText(notification.message.body),
-                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                      subtitle: Text(
+                        getHtmlText(notification.message.body),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     );
                   },
                   noItemsFoundIndicatorBuilder: (context) => Center(
@@ -129,19 +139,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                   ),
                   firstPageProgressIndicatorBuilder: (context) => Center(
-                      child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Style.colorPrimary),
-                  )),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Style.colorPrimary,
+                      ),
+                    ),
+                  ),
                   newPageProgressIndicatorBuilder: (context) => Center(
-                      child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Style.colorPrimary),
-                  )),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Style.colorPrimary,
+                      ),
+                    ),
+                  ),
                 ),
               );
             },
           ),
-        )));
+        ),
+      ),
+    );
   }
 }

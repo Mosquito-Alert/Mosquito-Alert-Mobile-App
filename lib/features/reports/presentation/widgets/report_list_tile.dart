@@ -24,7 +24,7 @@ class ReportListTile<ReportType extends BaseReportModel>
         final subtitle = snapshot.connectionState == ConnectionState.waiting
             ? MyLocalizations.of(context, 'loading') + '...'
             : (snapshot.data ??
-                MyLocalizations.of(context, 'unknown_location'));
+                  MyLocalizations.of(context, 'unknown_location'));
 
         return ListTile(
           title: Text.rich(
@@ -56,19 +56,16 @@ class ReportListTile<ReportType extends BaseReportModel>
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          subtitle: Text(subtitle,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.black54,
-              )),
+          subtitle: Text(
+            subtitle,
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
           leading: leadingBuilder?.call(report),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () async {
             await Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => reportDetailPage,
-              ),
+              MaterialPageRoute(builder: (context) => reportDetailPage),
             );
           },
         );

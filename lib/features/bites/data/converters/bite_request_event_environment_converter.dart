@@ -6,8 +6,9 @@ class BiteRequestEventEnvironmentConverter
     implements JsonConverter<sdk.BiteRequestEventEnvironmentEnum, String> {
   const BiteRequestEventEnvironmentConverter();
 
-  static final _serializer = sdk.BiteRequestEventEnvironmentEnum.serializer
-      as PrimitiveSerializer<sdk.BiteRequestEventEnvironmentEnum>;
+  static final _serializer =
+      sdk.BiteRequestEventEnvironmentEnum.serializer
+          as PrimitiveSerializer<sdk.BiteRequestEventEnvironmentEnum>;
 
   @override
   sdk.BiteRequestEventEnvironmentEnum fromJson(String json) {
@@ -21,9 +22,10 @@ class BiteRequestEventEnvironmentConverter
   @override
   String toJson(sdk.BiteRequestEventEnvironmentEnum object) {
     return _serializer.serialize(
-      sdk.serializers,
-      object,
-      specifiedType: const FullType(sdk.BiteRequestEventEnvironmentEnum),
-    ) as String;
+          sdk.serializers,
+          object,
+          specifiedType: const FullType(sdk.BiteRequestEventEnvironmentEnum),
+        )
+        as String;
   }
 }

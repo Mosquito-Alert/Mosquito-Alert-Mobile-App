@@ -7,17 +7,21 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 class LocationSelector extends StatefulWidget {
   final double? initialLatitude;
   final double? initialLongitude;
-  final Function(double? latitude, double? longitude,
-      LocationRequestSource_Enum? source) onLocationChanged;
+  final Function(
+    double? latitude,
+    double? longitude,
+    LocationRequestSource_Enum? source,
+  )
+  onLocationChanged;
   final Function(bool isLoading)? onLoadingChanged;
 
-  const LocationSelector(
-      {Key? key,
-      required this.onLocationChanged,
-      this.initialLatitude,
-      this.initialLongitude,
-      this.onLoadingChanged})
-      : super(key: key);
+  const LocationSelector({
+    Key? key,
+    required this.onLocationChanged,
+    this.initialLatitude,
+    this.initialLongitude,
+    this.onLoadingChanged,
+  }) : super(key: key);
 
   @override
   _LocationSelectorState createState() => _LocationSelectorState();
@@ -107,10 +111,7 @@ class _LocationSelectorState extends State<LocationSelector> {
         _ignoreNextCameraEvent = true; // Mark next camera move as programmatic
         await _mapController!.animateCamera(
           CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: position!,
-              zoom: 16.0,
-            ),
+            CameraPosition(target: position!, zoom: 16.0),
           ),
         );
       }
@@ -157,8 +158,11 @@ class _LocationSelectorState extends State<LocationSelector> {
       onMapCreated: (GoogleMapController controller) {
         _mapController = controller;
         if (position == null) {
-          widget.onLocationChanged(defaultPosition.latitude,
-              defaultPosition.longitude, LocationRequestSource_Enum.manual);
+          widget.onLocationChanged(
+            defaultPosition.latitude,
+            defaultPosition.longitude,
+            LocationRequestSource_Enum.manual,
+          );
         }
       },
       initialCameraPosition: CameraPosition(
@@ -252,8 +256,9 @@ class _LocationSelectorState extends State<LocationSelector> {
                   child: _isGettingLocation
                       ? CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.grey[600]!),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.grey[600]!,
+                          ),
                         )
                       : Icon(
                           Icons.my_location,

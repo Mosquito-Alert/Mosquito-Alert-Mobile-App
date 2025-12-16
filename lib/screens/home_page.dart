@@ -31,8 +31,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _logScreenView() async {
     await FirebaseAnalytics.instance.logScreenView(
-        screenName: '/home',
-        parameters: {'action_text_id': _suggestedActionTextId});
+      screenName: '/home',
+      parameters: {'action_text_id': _suggestedActionTextId},
+    );
   }
 
   @override
@@ -72,7 +73,8 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 30),
                         ..._buildCards(),
                         const SizedBox(
-                            height: 150), // Give space for the footer
+                          height: 150,
+                        ), // Give space for the footer
                       ],
                     ),
                   ),
@@ -118,20 +120,22 @@ class _HomePageState extends State<HomePage> {
           (c) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: _buildCard(
-                text: c['text'] as String,
-                imagePath: c['image'] as String,
-                color: c['color'] as String,
-                page: c['page'] as Widget),
+              text: c['text'] as String,
+              imagePath: c['image'] as String,
+              color: c['color'] as String,
+              page: c['page'] as Widget,
+            ),
           ),
         )
         .toList();
   }
 
-  Widget _buildCard(
-      {required String text,
-      required String imagePath,
-      required String color,
-      required Widget page}) {
+  Widget _buildCard({
+    required String text,
+    required String imagePath,
+    required String color,
+    required Widget page,
+  }) {
     return Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(100),
@@ -143,10 +147,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => page),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (_) => page));
           },
           child: Row(
             children: <Widget>[
@@ -154,19 +155,16 @@ class _HomePageState extends State<HomePage> {
                 radius: 35,
                 backgroundColor: Color(int.parse(color, radix: 16)),
                 child: ClipOval(
-                  child: Image.asset(imagePath,
-                      fit: BoxFit.cover, width: 65, height: 65),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 18,
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.cover,
+                    width: 65,
+                    height: 65,
                   ),
                 ),
               ),
+              const SizedBox(width: 15),
+              Expanded(child: Text(text, style: TextStyle(fontSize: 18))),
             ],
           ),
         ),

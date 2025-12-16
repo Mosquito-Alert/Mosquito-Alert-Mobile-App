@@ -12,8 +12,9 @@ class LocationSender {
 
   LocationSender._({required this.repository, required this.uuid});
 
-  static Future<LocationSender> create(
-      {required FixesRepository repository}) async {
+  static Future<LocationSender> create({
+    required FixesRepository repository,
+  }) async {
     final uuid = await _loadCoverageUuid();
     return LocationSender._(repository: repository, uuid: uuid);
   }
@@ -30,15 +31,18 @@ class LocationSender {
 
   Future<void> sendLocation() async {
     Position pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
     int battery = await Battery().batteryLevel;
 
     FixRequest request = FixRequest(
       coverageUuid: uuid,
       createdAt: DateTime.now().toUtc(),
-      point: sdk.FixLocationRequest((p) => p
-        ..latitude = pos.latitude
-        ..longitude = pos.longitude),
+      point: sdk.FixLocationRequest(
+        (p) => p
+          ..latitude = pos.latitude
+          ..longitude = pos.longitude,
+      ),
       power: battery / 100,
     );
 

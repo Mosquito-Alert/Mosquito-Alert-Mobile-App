@@ -18,7 +18,7 @@ class FixesProvider extends ChangeNotifier {
   StreamSubscription<List<DateTime>>? _taskSub;
 
   FixesProvider({required MosquitoAlert apiClient})
-      : repository = FixesRepository(apiClient: apiClient) {
+    : repository = FixesRepository(apiClient: apiClient) {
     _init();
   }
 

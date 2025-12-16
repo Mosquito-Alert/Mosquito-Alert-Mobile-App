@@ -10,7 +10,7 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 class ReportList<ReportType extends BaseReportModel> extends StatefulWidget {
   final ReportProvider<ReportType, dynamic> provider;
   final ReportListTile<ReportType> Function({required dynamic report})
-      tileBuilder;
+  tileBuilder;
 
   const ReportList({
     super.key,
@@ -50,8 +50,11 @@ class _ReportList<ReportType extends BaseReportModel>
     DateTime? lastDate;
     for (var item in objects) {
       final createdAt = item.createdAtLocal;
-      final currentDate =
-          DateTime(createdAt.year, createdAt.month, createdAt.day);
+      final currentDate = DateTime(
+        createdAt.year,
+        createdAt.month,
+        createdAt.day,
+      );
       // NOTE: assuming items are sorted by createdAt descending
       if (lastDate == null || currentDate.isBefore(lastDate)) {
         itemsWithHeaders.add(SectionHeader(currentDate));
@@ -65,48 +68,49 @@ class _ReportList<ReportType extends BaseReportModel>
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-        onRefresh: () => widget.provider.refresh(),
-        child: PagedListView<int, Object>.separated(
-          state: PagingState(
-            pages: [_addHeaders(widget.provider.items)],
-            keys: [1],
-            hasNextPage: widget.provider.hasMore,
-            isLoading: widget.provider.isLoading,
-            error: widget.provider.error,
-          ),
-          fetchNextPage: widget.provider.loadMore,
-          builderDelegate: PagedChildBuilderDelegate<Object>(
-              noItemsFoundIndicatorBuilder: (context) =>
-                  FirstPageExceptionIndicator(
-                    title: MyLocalizations.of(context, 'no_reports_yet_txt'),
+      onRefresh: () => widget.provider.refresh(),
+      child: PagedListView<int, Object>.separated(
+        state: PagingState(
+          pages: [_addHeaders(widget.provider.items)],
+          keys: [1],
+          hasNextPage: widget.provider.hasMore,
+          isLoading: widget.provider.isLoading,
+          error: widget.provider.error,
+        ),
+        fetchNextPage: widget.provider.loadMore,
+        builderDelegate: PagedChildBuilderDelegate<Object>(
+          noItemsFoundIndicatorBuilder: (context) =>
+              FirstPageExceptionIndicator(
+                title: MyLocalizations.of(context, 'no_reports_yet_txt'),
+              ),
+          itemBuilder: (context, item, index) {
+            if (item is SectionHeader) {
+              return Container(
+                color: Colors.grey[200],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 8,
                   ),
-              itemBuilder: (context, item, index) {
-                if (item is SectionHeader) {
-                  return Container(
-                    color: Colors.grey[200],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 8),
-                      child: Text(
-                        item.formattedDate,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                  child: Text(
+                    item.formattedDate,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
-                  );
-                } else if (item is ReportType) {
-                  return widget.tileBuilder(report: item);
-                } else {
-                  return const SizedBox.shrink(); // Fallback for unknown types
-                }
-              }),
-          separatorBuilder: (context, index) => const Divider(
-            thickness: 0.2,
-            height: 1,
-            color: Colors.grey,
-          ),
-        ));
+                  ),
+                ),
+              );
+            } else if (item is ReportType) {
+              return widget.tileBuilder(report: item);
+            } else {
+              return const SizedBox.shrink(); // Fallback for unknown types
+            }
+          },
+        ),
+        separatorBuilder: (context, index) =>
+            const Divider(thickness: 0.2, height: 1, color: Colors.grey),
+      ),
+    );
   }
 }

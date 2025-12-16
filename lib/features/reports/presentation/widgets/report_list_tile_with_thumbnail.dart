@@ -11,10 +11,11 @@ class ReportListTileWithThumbnail<ReportType extends BaseReportModel>
     required ReportType report,
     required ReportDetailPage<ReportType> reportDetailPage,
   }) : super(
-          key: key,
-          report: report,
-          reportDetailPage: reportDetailPage,
-          leadingBuilder: (report) => buildThumbnailImage(
-              photo: (report as BaseReportWithPhotos).thumbnail),
-        );
+         key: key,
+         report: report,
+         reportDetailPage: reportDetailPage,
+         leadingBuilder: (report) => buildThumbnailImage(
+           photo: (report as BaseReportWithPhotos).thumbnail,
+         ),
+       );
 }

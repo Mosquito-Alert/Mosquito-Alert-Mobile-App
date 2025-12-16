@@ -21,18 +21,16 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   static FirebaseAnalyticsObserver analyticsObserver =
       FirebaseAnalyticsObserver(
-    analytics: FirebaseAnalytics.instance,
-    routeFilter: (route) {
-      return route is PageRoute && route.settings.name != '/';
-    },
-  );
+        analytics: FirebaseAnalytics.instance,
+        routeFilter: (route) {
+          return route is PageRoute && route.settings.name != '/';
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<OnboardingProvider>(
-      create: (_) => OnboardingProvider(
-        repository: OnboardingRepository(),
-      ),
+      create: (_) => OnboardingProvider(repository: OnboardingRepository()),
       child: OverlaySupport.global(
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -47,8 +45,9 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
             // Explicitly set component themes to use your primary color
             checkboxTheme: CheckboxThemeData(
-              fillColor: WidgetStateProperty.resolveWith<Color>(
-                  (Set<WidgetState> states) {
+              fillColor: WidgetStateProperty.resolveWith<Color>((
+                Set<WidgetState> states,
+              ) {
                 if (states.contains(WidgetState.selected)) {
                   return Style.colorPrimary;
                 }
@@ -69,9 +68,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Style.colorPrimary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Style.colorPrimary),
             ),
             // Configure text themes to use your primary color
             textTheme: TextTheme(
@@ -108,7 +105,7 @@ class MyApp extends StatelessWidget {
           navigatorKey: navigatorKey,
           navigatorObservers: <NavigatorObserver>[
             analyticsObserver,
-            ObserverUtils.routeObserver
+            ObserverUtils.routeObserver,
           ],
           home: Consumer<OnboardingProvider>(
             builder: (context, onboardingProvider, child) {
@@ -118,7 +115,8 @@ class MyApp extends StatelessWidget {
                       onCompleted: () async {
                         final authProvider = context.read<AuthProvider>();
                         await authProvider.createGuestUser(
-                            password: getRandomPassword(10));
+                          password: getRandomPassword(10),
+                        );
                       },
                     );
             },

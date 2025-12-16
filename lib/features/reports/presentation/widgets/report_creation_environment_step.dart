@@ -71,18 +71,12 @@ class _ReportCreationEnvironmentStepState
       children: [
         Text(
           widget.title,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         Text(
           MyLocalizations.of(context, 'this-information-helps-researchers'),
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
         ),
 
         SizedBox(height: 20),
@@ -110,13 +104,15 @@ class _ReportCreationEnvironmentStepState
                     ? Style.colorPrimary.withValues(alpha: 0.05)
                     : Colors.white,
                 leading: CircleAvatar(
-                    backgroundColor:
-                        isSelected ? Style.colorPrimary : Colors.grey[300],
-                    child: Icon(
-                      option['icon'],
-                      color: isSelected ? Colors.white : Colors.grey[600],
-                      size: 24,
-                    )),
+                  backgroundColor: isSelected
+                      ? Style.colorPrimary
+                      : Colors.grey[300],
+                  child: Icon(
+                    option['icon'],
+                    color: isSelected ? Colors.white : Colors.grey[600],
+                    size: 24,
+                  ),
+                ),
                 title: Text(
                   MyLocalizations.of(context, option['titleKey']),
                   style: TextStyle(
@@ -128,10 +124,7 @@ class _ReportCreationEnvironmentStepState
                 subtitle: option['description'] != null
                     ? Text(
                         option['description'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       )
                     : null,
                 onTap: () {

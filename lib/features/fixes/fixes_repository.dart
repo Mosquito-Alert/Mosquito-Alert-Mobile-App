@@ -10,12 +10,14 @@ class FixesRepository {
   }
 
   Future<void> create({required FixRequest request}) async {
-    final fixRequest = sdk.FixRequest((f) => f
-      ..coverageUuid = request.coverageUuid
-      ..createdAt = request.createdAt.toUtc()
-      ..sentAt = DateTime.now().toUtc()
-      ..point = request.point.toBuilder()
-      ..power = request.power);
+    final fixRequest = sdk.FixRequest(
+      (f) => f
+        ..coverageUuid = request.coverageUuid
+        ..createdAt = request.createdAt.toUtc()
+        ..sentAt = DateTime.now().toUtc()
+        ..point = request.point.toBuilder()
+        ..power = request.power,
+    );
 
     await itemApi.create(fixRequest: fixRequest);
   }

@@ -35,8 +35,9 @@ class TaskQueue {
   }
 
   static Future<void> _saveQueue() async {
-    final encoded =
-        _tasks.map((d) => d.millisecondsSinceEpoch.toString()).toList();
+    final encoded = _tasks
+        .map((d) => d.millisecondsSinceEpoch.toString())
+        .toList();
     await _prefs.setStringList(_key, encoded);
 
     if (_initialized) {
@@ -102,8 +103,10 @@ class TaskScheduler {
     // Only schedule the fraction of tasks for the remaining day length.
     final numToSchedule = max(1, (tasksRemaining * fractionRemaining).ceil());
 
-    final randomTimes =
-        _getRandomTimes(numToSchedule, minTime: TimeOfDay.now());
+    final randomTimes = _getRandomTimes(
+      numToSchedule,
+      minTime: TimeOfDay.now(),
+    );
 
     for (var t in randomTimes) {
       final scheduled = DateTime(
@@ -141,8 +144,11 @@ class TaskScheduler {
     await TaskQueue.clear();
   }
 
-  static List<TimeOfDay> _getRandomTimes(int count,
-      {TimeOfDay? minTime, TimeOfDay? maxTime}) {
+  static List<TimeOfDay> _getRandomTimes(
+    int count, {
+    TimeOfDay? minTime,
+    TimeOfDay? maxTime,
+  }) {
     // Default values if minTime or maxTime are not provided
     minTime ??= TimeOfDay(hour: 0, minute: 0);
     maxTime ??= TimeOfDay(hour: 23, minute: 59);

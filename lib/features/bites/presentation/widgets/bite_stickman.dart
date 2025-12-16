@@ -13,15 +13,16 @@ class BiteStickMan extends StatefulWidget {
   final int rightLegBites;
   final void Function(BodyPartEnum bodyPart, int newCount)? onChanged;
 
-  const BiteStickMan(
-      {super.key,
-      this.headBites = 0,
-      this.chestBites = 0,
-      this.leftHandBites = 0,
-      this.rightHandBites = 0,
-      this.leftLegBites = 0,
-      this.rightLegBites = 0,
-      this.onChanged});
+  const BiteStickMan({
+    super.key,
+    this.headBites = 0,
+    this.chestBites = 0,
+    this.leftHandBites = 0,
+    this.rightHandBites = 0,
+    this.leftLegBites = 0,
+    this.rightLegBites = 0,
+    this.onChanged,
+  });
 
   @override
   _BiteStickManState createState() => _BiteStickManState();
@@ -113,8 +114,10 @@ class _BiteStickManState extends State<BiteStickMan> {
                           setState(() {
                             leftHandBites = newCount;
                           });
-                          widget.onChanged
-                              ?.call(BodyPartEnum.leftHand, newCount);
+                          widget.onChanged?.call(
+                            BodyPartEnum.leftHand,
+                            newCount,
+                          );
                         },
                       );
                     }
@@ -132,8 +135,10 @@ class _BiteStickManState extends State<BiteStickMan> {
                           setState(() {
                             rightHandBites = newCount;
                           });
-                          widget.onChanged
-                              ?.call(BodyPartEnum.rightHand, newCount);
+                          widget.onChanged?.call(
+                            BodyPartEnum.rightHand,
+                            newCount,
+                          );
                         },
                       );
                     }
@@ -151,8 +156,10 @@ class _BiteStickManState extends State<BiteStickMan> {
                           setState(() {
                             leftLegBites = newCount;
                           });
-                          widget.onChanged
-                              ?.call(BodyPartEnum.leftLeg, newCount);
+                          widget.onChanged?.call(
+                            BodyPartEnum.leftLeg,
+                            newCount,
+                          );
                         },
                       );
                     }
@@ -170,8 +177,10 @@ class _BiteStickManState extends State<BiteStickMan> {
                           setState(() {
                             rightLegBites = newCount;
                           });
-                          widget.onChanged
-                              ?.call(BodyPartEnum.rightLeg, newCount);
+                          widget.onChanged?.call(
+                            BodyPartEnum.rightLeg,
+                            newCount,
+                          );
                         },
                       );
                     }
@@ -202,16 +211,17 @@ class _BiteStickManState extends State<BiteStickMan> {
             color: count > 0
                 ? Style.colorPrimary.withValues(alpha: 0.15)
                 : onTap != null
-                    ? Colors.blue.withValues(alpha: 0.1)
-                    : Colors.grey.withValues(alpha: 0.1),
+                ? Colors.blue.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-                color: count > 0
-                    ? Style.colorPrimary.withValues(alpha: 0.6)
-                    : onTap != null
-                        ? Colors.blue.withValues(alpha: 0.4)
-                        : Colors.grey.withValues(alpha: 0.4),
-                width: 2),
+              color: count > 0
+                  ? Style.colorPrimary.withValues(alpha: 0.6)
+                  : onTap != null
+                  ? Colors.blue.withValues(alpha: 0.4)
+                  : Colors.grey.withValues(alpha: 0.4),
+              width: 2,
+            ),
           ),
           child: Stack(
             children: [
@@ -278,164 +288,165 @@ class _BiteStickManState extends State<BiteStickMan> {
       context: context,
       builder: (BuildContext context) {
         int tempCount = count;
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  _getBodyPartIcon(bodyPart),
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(width: 8),
-                Text(displayName),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  MyLocalizations.of(context, 'indicate_number_mosquito_bites'),
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-
-                // Enhanced counter with better UX
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[300]!),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    _getBodyPartIcon(bodyPart),
+                    color: Theme.of(context).primaryColor,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Decrease button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: tempCount > 0
-                              ? () {
-                                  setState(() {
-                                    tempCount--;
-                                  });
-                                }
-                              : null,
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: tempCount > 0
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.remove,
-                              color: Colors.white,
-                              size: 24,
+                  SizedBox(width: 8),
+                  Text(displayName),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    MyLocalizations.of(
+                      context,
+                      'indicate_number_mosquito_bites',
+                    ),
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Enhanced counter with better UX
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Decrease button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(24),
+                            onTap: tempCount > 0
+                                ? () {
+                                    setState(() {
+                                      tempCount--;
+                                    });
+                                  }
+                                : null,
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: tempCount > 0
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[300],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.remove,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      // Count display
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: tempCount > 0
-                              ? Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1)
-                              : Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
+                        // Count display
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
                             color: tempCount > 0
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey[300]!,
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '$tempCount',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                                ? Theme.of(
+                                    context,
+                                  ).primaryColor.withValues(alpha: 0.1)
+                                : Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
                               color: tempCount > 0
                                   ? Theme.of(context).primaryColor
-                                  : Colors.grey[600],
+                                  : Colors.grey[300]!,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$tempCount',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: tempCount > 0
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[600],
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      // Increase button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: tempCount < BiteStickMan.maxBiteCountPerPart
-                              ? () {
-                                  setState(() {
-                                    tempCount++;
-                                  });
-                                }
-                              : null,
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color:
-                                  tempCount < BiteStickMan.maxBiteCountPerPart
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 24,
+                        // Increase button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(24),
+                            onTap: tempCount < BiteStickMan.maxBiteCountPerPart
+                                ? () {
+                                    setState(() {
+                                      tempCount++;
+                                    });
+                                  }
+                                : null,
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color:
+                                    tempCount < BiteStickMan.maxBiteCountPerPart
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey[300],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                if (tempCount >= BiteStickMan.maxBiteCountPerPart)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      MyLocalizations.of(
-                          context, 'reached_maximum_allowed_mosquito_bites'),
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 12,
-                      ),
+                      ],
                     ),
                   ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(MyLocalizations.of(context, 'cancel')),
+
+                  if (tempCount >= BiteStickMan.maxBiteCountPerPart)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        MyLocalizations.of(
+                          context,
+                          'reached_maximum_allowed_mosquito_bites',
+                        ),
+                        style: TextStyle(color: Colors.orange, fontSize: 12),
+                      ),
+                    ),
+                ],
               ),
-              Style.button(
-                MyLocalizations.of(context, 'save'),
-                () {
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(MyLocalizations.of(context, 'cancel')),
+                ),
+                Style.button(MyLocalizations.of(context, 'save'), () {
                   onSave(tempCount);
                   Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+                }),
+              ],
+            );
+          },
+        );
       },
     );
   }

@@ -9,9 +9,11 @@ class CampaignCard extends StatelessWidget {
   final Campaign campaign;
   final ObservationReport observation;
 
-  const CampaignCard(
-      {Key? key, required this.campaign, required this.observation})
-      : super(key: key);
+  const CampaignCard({
+    Key? key,
+    required this.campaign,
+    required this.observation,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,14 @@ class CampaignCard extends StatelessWidget {
                 Expanded(
                   child: Text.rich(
                     TextSpan(
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                       children: [
                         TextSpan(
-                          text: MyLocalizations.of(
-                                  context, "alert_campaing_found_title") +
+                          text:
+                              MyLocalizations.of(
+                                context,
+                                "alert_campaing_found_title",
+                              ) +
                               " ",
                         ),
                         TextSpan(
@@ -64,7 +66,8 @@ class CampaignCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CampaignTutorialPage()),
+                      builder: (context) => CampaignTutorialPage(),
+                    ),
                   );
                 },
                 style: TextButton.styleFrom(

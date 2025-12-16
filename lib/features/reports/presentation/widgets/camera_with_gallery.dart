@@ -47,11 +47,8 @@ class _CameraController extends ChangeNotifier {
       if (albums.isEmpty) return;
 
       final recentAlbum = albums.first;
-      final List<AssetEntity> recentAssets =
-          await recentAlbum.getAssetListRange(
-        start: 0,
-        end: 10,
-      );
+      final List<AssetEntity> recentAssets = await recentAlbum
+          .getAssetListRange(start: 0, end: 10);
 
       images = recentAssets;
       notifyListeners();
@@ -84,7 +81,8 @@ class _CameraController extends ChangeNotifier {
       } else {
         // Compression returned null, add original file bytes
         print(
-            'Warning: Compression returned null for file ${file.path}. Adding original image.');
+          'Warning: Compression returned null for file ${file.path}. Adding original image.',
+        );
         selectedImages.add(await file.readAsBytes());
       }
     } catch (e) {
@@ -142,8 +140,11 @@ class CameraWithGallery extends StatefulWidget {
   ///
   ///```
   ///
-  const CameraWithGallery(
-      {key, this.multiple = true, this.infoBadgeTextKey = ''});
+  const CameraWithGallery({
+    key,
+    this.multiple = true,
+    this.infoBadgeTextKey = '',
+  });
 
   @override
   State<CameraWithGallery> createState() => _WhatsappCameraState();
@@ -225,12 +226,15 @@ class _WhatsappCameraState extends State<CameraWithGallery>
         enableAudio: false,
       );
 
-      _initializeControllerFuture = _cameraController!
-          .initialize()
-          .timeout(const Duration(seconds: 3), onTimeout: () {
-        print("Error: _initializeCamera timed out before it could initialize.");
-        Navigator.pop(context);
-      });
+      _initializeControllerFuture = _cameraController!.initialize().timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          print(
+            "Error: _initializeCamera timed out before it could initialize.",
+          );
+          Navigator.pop(context);
+        },
+      );
       setState(() {});
     } catch (e) {
       print('Camera error: $e');
@@ -342,23 +346,26 @@ class _WhatsappCameraState extends State<CameraWithGallery>
   }
 
   Widget cameraAndGalleryButtons(
-      BuildContext context, _CameraController controller) {
+    BuildContext context,
+    _CameraController controller,
+  ) {
     return Positioned(
-        bottom: 32 + MediaQuery.of(context).padding.bottom,
-        left: 0,
-        right: 0,
-        child: Row(
-          children: [
-            Expanded(child: SizedBox()), // empty on the left
-            captureImageButton(),
-            Expanded(
-              child: Align(
-                alignment: Alignment.center,
-                child: galleryButton(context, controller),
-              ),
+      bottom: 32 + MediaQuery.of(context).padding.bottom,
+      left: 0,
+      right: 0,
+      child: Row(
+        children: [
+          Expanded(child: SizedBox()), // empty on the left
+          captureImageButton(),
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: galleryButton(context, controller),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget captureImageButton() {
@@ -367,10 +374,7 @@ class _WhatsappCameraState extends State<CameraWithGallery>
       child: Container(
         width: 64,
         height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         child: Icon(Icons.camera_alt, color: Colors.black, size: 28),
       ),
     );
@@ -404,10 +408,7 @@ class _WhatsappCameraState extends State<CameraWithGallery>
             decoration: BoxDecoration(
               color: Colors.orange.shade100,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.orange.shade300,
-                width: 1.0,
-              ),
+              border: Border.all(color: Colors.orange.shade300, width: 1.0),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
@@ -485,10 +486,7 @@ class _WhatsappCameraState extends State<CameraWithGallery>
       child: Container(
         width: 50,
         height: 50,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         child: Icon(Icons.photo_library, color: Colors.black, size: 24),
       ),
     );
@@ -530,8 +528,11 @@ class _WhatsappCameraState extends State<CameraWithGallery>
     );
   }
 
-  Future<Widget> _buildImage(BuildContext context, _CameraController controller,
-      AssetEntity asset) async {
+  Future<Widget> _buildImage(
+    BuildContext context,
+    _CameraController controller,
+    AssetEntity asset,
+  ) async {
     final Uint8List? thumbnailData = await asset.thumbnailDataWithSize(
       ThumbnailSize(200, 200),
       quality: 80,

@@ -8,8 +8,11 @@ class StepPageContainer extends StatelessWidget {
   final String? buttonText;
   final VoidCallback onContinue;
 
-  const StepPageContainer(
-      {required this.child, required this.onContinue, this.buttonText});
+  const StepPageContainer({
+    required this.child,
+    required this.onContinue,
+    this.buttonText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +26,20 @@ class StepPageContainer extends StatelessWidget {
 
     if (!child.fullScreen) {
       return SafeArea(
-          child: Column(
-        children: [
-          Expanded(
+        child: Column(
+          children: [
+            Expanded(
               child: child.allowScroll
                   ? SingleChildScrollView(child: child)
-                  : child),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SizedBox(width: double.infinity, child: continueButton),
-          ),
-        ],
-      ));
+                  : child,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: SizedBox(width: double.infinity, child: continueButton),
+            ),
+          ],
+        ),
+      );
     }
     // If fullscreen → overlay button on top of content
     return SafeArea(
@@ -43,12 +48,7 @@ class StepPageContainer extends StatelessWidget {
           Positioned.fill(child: child),
 
           // Positioned button at bottom
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 16,
-            child: continueButton,
-          ),
+          Positioned(left: 16, right: 16, bottom: 16, child: continueButton),
         ],
       ),
     );

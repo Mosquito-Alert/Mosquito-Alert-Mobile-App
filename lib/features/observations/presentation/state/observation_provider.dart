@@ -7,8 +7,9 @@ class ObservationProvider
     extends ReportProvider<ObservationReport, ObservationRepository> {
   ObservationProvider({required super.repository});
 
-  Future<ObservationReport> createObservation(
-      {required ObservationCreateRequest request}) async {
+  Future<ObservationReport> createObservation({
+    required ObservationCreateRequest request,
+  }) async {
     final newObservation = await repository.create(request: request);
     addItem(newObservation);
     return newObservation;

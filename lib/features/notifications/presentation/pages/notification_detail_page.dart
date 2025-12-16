@@ -12,15 +12,13 @@ import 'package:mosquito_alert_app/core/utils/html_parser.dart';
 class NotificationDetailPage extends StatefulWidget {
   final sdk.Notification notification;
 
-  const NotificationDetailPage({
-    super.key,
-    required this.notification,
-  });
+  const NotificationDetailPage({super.key, required this.notification});
 
-  static Future<NotificationDetailPage> fromId(
-      {required BuildContext context,
-      required int notificationId,
-      bool refresh = false}) async {
+  static Future<NotificationDetailPage> fromId({
+    required BuildContext context,
+    required int notificationId,
+    bool refresh = false,
+  }) async {
     final notificationProvider = context.read<NotificationProvider>();
     if (refresh) {
       // Run refresh in the background without blocking
@@ -33,9 +31,7 @@ class NotificationDetailPage extends StatefulWidget {
 
     final notification = await notificationProvider.getById(id: notificationId);
 
-    return NotificationDetailPage(
-      notification: notification!,
-    );
+    return NotificationDetailPage(notification: notification!);
   }
 
   @override
@@ -48,9 +44,9 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context
-          .read<NotificationProvider>()
-          .markAsRead(notification: widget.notification);
+      await context.read<NotificationProvider>().markAsRead(
+        notification: widget.notification,
+      );
     });
   }
 
@@ -66,34 +62,33 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: false,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60.0),
-            child: Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: Style.colorPrimary,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12.0,
-                      ),
-                    )
-                  ]),
+        backgroundColor: Colors.white,
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60.0),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Style.colorPrimary,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+                ),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),

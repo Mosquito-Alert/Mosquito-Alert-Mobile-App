@@ -13,8 +13,10 @@ class InAppReviewManager {
 
     try {
       // TODO: Get a single api endpoint to retrieve report count?
-      final totalReports =
-          await _getTotalReportCount(context, minimumReportsForReview);
+      final totalReports = await _getTotalReportCount(
+        context,
+        minimumReportsForReview,
+      );
       await _processReviewRequest(totalReports, minimumReportsForReview);
     } catch (e) {
       print('Error in requestInAppReview: $e');
@@ -22,7 +24,9 @@ class InAppReviewManager {
   }
 
   static Future<int> _getTotalReportCount(
-      BuildContext context, int minimumRequired) async {
+    BuildContext context,
+    int minimumRequired,
+  ) async {
     final apiClient = Provider.of<sdk.MosquitoAlert>(context, listen: false);
 
     final observationRepository = ObservationRepository(apiClient: apiClient);
@@ -39,7 +43,9 @@ class InAppReviewManager {
   }
 
   static Future<void> _processReviewRequest(
-      int numReports, int minimumReports) async {
+    int numReports,
+    int minimumReports,
+  ) async {
     if (numReports < minimumReports) {
       return;
     }
@@ -48,7 +54,8 @@ class InAppReviewManager {
     final lastReportCount = await _getLastReportCount();
     final lastReviewRequest = await _getLastReviewRequest();
 
-    final shouldRequestReview = (numReports == minimumReports ||
+    final shouldRequestReview =
+        (numReports == minimumReports ||
         numReports == minimumReports + 1 ||
         numReports >= lastReportCount + minimumReports ||
         (lastReviewRequest == null ||

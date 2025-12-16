@@ -34,7 +34,8 @@ class TrackingService {
     await TaskScheduler.init();
 
     _locationSender = await LocationSender.create(
-        repository: FixesRepository(apiClient: apiClient));
+      repository: FixesRepository(apiClient: apiClient),
+    );
 
     _initialized = true;
   }
@@ -55,7 +56,8 @@ class TrackingService {
     }
 
     await TaskScheduler.scheduleTasksForToday(
-        tasksPerDay: dailyTaskCount - launchedTasks);
+      tasksPerDay: dailyTaskCount - launchedTasks,
+    );
 
     // Start background tracking at next midnight
     DateTime now = DateTime.now();
@@ -64,7 +66,8 @@ class TrackingService {
 
     // Register the periodic task, being schedule every night
     print(
-        "Nightly scheduler for background tracking starting at ${nextMidnight} (in ${timeUntilMidnight})");
+      "Nightly scheduler for background tracking starting at ${nextMidnight} (in ${timeUntilMidnight})",
+    );
     await Workmanager().registerPeriodicTask(
       'scheduleDailyTasks',
       'scheduleDailyTasks', // ignored on iOS where you should use [uniqueName]
@@ -73,8 +76,9 @@ class TrackingService {
     );
   }
 
-  static Future<void> scheduleDailyTasks(
-      {int numTasks = dailyTaskCount}) async {
+  static Future<void> scheduleDailyTasks({
+    int numTasks = dailyTaskCount,
+  }) async {
     if (!isEnabled) return;
     await TaskScheduler.scheduleTasksForToday(tasksPerDay: numTasks);
   }

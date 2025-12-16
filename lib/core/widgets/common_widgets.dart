@@ -17,16 +17,16 @@ CarouselView buildPhotoCarousel({required List<BasePhoto> photos}) {
 
 Widget buildThumbnailImage({required BasePhoto? photo, double size = 40.0}) {
   Widget placeholderIcon(IconData icon) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[400]!, width: 2),
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.grey[50],
-        ),
-        alignment: Alignment.center,
-        child: Icon(icon, size: 20, color: Colors.grey[600]),
-      );
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey[400]!, width: 2),
+      borderRadius: BorderRadius.circular(8),
+      color: Colors.grey[50],
+    ),
+    alignment: Alignment.center,
+    child: Icon(icon, size: 20, color: Colors.grey[600]),
+  );
 
   if (photo == null) {
     // Fallback to default icon

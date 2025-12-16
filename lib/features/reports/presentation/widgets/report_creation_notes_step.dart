@@ -48,10 +48,7 @@ class _ReportCreationNotesStepState extends State<ReportCreationNotesStep> {
               ' (' +
               MyLocalizations.of(context, 'optional') +
               ')',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
 
         SizedBox(height: 12),

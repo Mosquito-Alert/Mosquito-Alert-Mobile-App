@@ -5,7 +5,7 @@ import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart'
 class NotificationRepository
     extends PaginationRepository<sdk.Notification, sdk.NotificationsApi> {
   NotificationRepository({required sdk.MosquitoAlert apiClient})
-      : super(itemApi: apiClient.getNotificationsApi());
+    : super(itemApi: apiClient.getNotificationsApi());
 
   Future<sdk.Notification> fetchById({required int id}) {
     // TODO: Handle errors
@@ -14,14 +14,15 @@ class NotificationRepository
     });
   }
 
-  Future<sdk.Notification> markAsRead(
-      {required sdk.Notification notification}) {
+  Future<sdk.Notification> markAsRead({
+    required sdk.Notification notification,
+  }) {
     final request = sdk.PatchedNotificationRequest((b) => b..isRead = true);
     return itemApi
         .partialUpdate(id: notification.id, patchedNotificationRequest: request)
         .then((response) {
-      return response.data!;
-    });
+          return response.data!;
+        });
   }
 
   Future<int> fetchUnreadCount() {
@@ -38,9 +39,7 @@ class NotificationRepository
     final response = await itemApi.listMine(
       page: page,
       pageSize: pageSize,
-      orderBy: BuiltList<String>([
-        "-created_at",
-      ]),
+      orderBy: BuiltList<String>(["-created_at"]),
     );
 
     return (response.data!.results!.toList(), response.data!.next != null);

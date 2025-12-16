@@ -15,9 +15,7 @@ class OnboardingFlowPage extends StatelessWidget {
     final provider = context.watch<OnboardingProvider>();
 
     if (provider.isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (provider.isCompleted) {

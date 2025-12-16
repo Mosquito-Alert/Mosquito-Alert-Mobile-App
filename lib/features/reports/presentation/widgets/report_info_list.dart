@@ -37,7 +37,8 @@ class ReportInfoList<ReportType extends BaseReportModel>
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text(MyLocalizations.of(context, 'loading') + '...');
             } else {
-              final location = snapshot.data ??
+              final location =
+                  snapshot.data ??
                   MyLocalizations.of(context, 'unknown_location');
               return Text(location);
             }
@@ -63,16 +64,15 @@ class ReportInfoList<ReportType extends BaseReportModel>
             spacing: 8.0, // space between chips
             runSpacing: 4.0, // space between lines
             children: report.tags!.map((tag) {
-              return Chip(
-                label: Text(tag),
-              );
+              return Chip(label: Text(tag));
             }).toList(),
           ),
         ),
       if (report.note != null && report.note!.isNotEmpty)
         ListTile(
-            leading: Icon(Icons.text_snippet, color: Style.colorPrimary),
-            title: Text(report.note!)),
+          leading: Icon(Icons.text_snippet, color: Style.colorPrimary),
+          title: Text(report.note!),
+        ),
     ];
 
     return Column(children: tiles);

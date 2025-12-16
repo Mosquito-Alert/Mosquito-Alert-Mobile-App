@@ -141,12 +141,15 @@ class _LayoutPageState extends State<LayoutPage>
   }
 
   Future<void> _initNotificationsService() async {
-    unawaited(Future(() async {
-      await notificationProvider.refresh();
-    }));
+    unawaited(
+      Future(() async {
+        await notificationProvider.refresh();
+      }),
+    );
     final deviceProvider = context.read<DeviceProvider>();
-    await FirebaseMessagingService(navigatorKey: navigatorKey)
-        .init(deviceProvider: deviceProvider);
+    await FirebaseMessagingService(
+      navigatorKey: navigatorKey,
+    ).init(deviceProvider: deviceProvider);
   }
 
   void _showErrorSnackBar(String message) {
@@ -203,13 +206,11 @@ class _LayoutPageState extends State<LayoutPage>
       top: false,
       child: Scaffold(
         appBar: AppBar(
-            backgroundColor: Colors.white,
-            centerTitle: true,
-            title: Image.asset(
-              'assets/img/ic_logo.webp',
-              height: 40,
-            ),
-            actions: <Widget>[NotificationBadge()]),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Image.asset('assets/img/ic_logo.webp', height: 40),
+          actions: <Widget>[NotificationBadge()],
+        ),
         drawer: CustomDrawer(
           selectedIndex: _selectedDrawerIndex,
           items: drawerItems,
@@ -225,8 +226,8 @@ class _LayoutPageState extends State<LayoutPage>
         body: userProvider.isLoading
             ? Center(child: CircularProgressIndicator())
             : userProvider.user == null
-                ? _retryPage()
-                : drawerItems[_selectedDrawerIndex].destination,
+            ? _retryPage()
+            : drawerItems[_selectedDrawerIndex].destination,
       ),
     );
   }

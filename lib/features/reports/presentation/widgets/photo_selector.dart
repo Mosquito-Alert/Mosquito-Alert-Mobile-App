@@ -159,10 +159,11 @@ class _PhotoSelectorState extends State<PhotoSelector> {
                     index == _previewedPhotoIndex; // selected index
 
                 return _buildThumbnailWidget(
-                    photo: photo,
-                    isSelected: isSelected,
-                    onTap: () => _selectPreviewPhoto(index),
-                    onRemoveTap: () => _removePhoto(index));
+                  photo: photo,
+                  isSelected: isSelected,
+                  onTap: () => _selectPreviewPhoto(index),
+                  onRemoveTap: () => _removePhoto(index),
+                );
               }).toList(),
               if (_canAddMore)
                 // Add photo button
@@ -181,51 +182,52 @@ class _PhotoSelectorState extends State<PhotoSelector> {
     required void Function() onRemoveTap,
   }) {
     return GestureDetector(
-        onTap: onTap,
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            // Thumbnail image
-            Container(
-              width: 80, // set item width
-              height: 80,
-              decoration: BoxDecoration(
-                border: isSelected
-                    ? Border.all(color: Style.colorPrimary, width: 3)
-                    : null,
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  image: MemoryImage(photo),
-                  fit: BoxFit.cover,
-                ),
+      onTap: onTap,
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          // Thumbnail image
+          Container(
+            width: 80, // set item width
+            height: 80,
+            decoration: BoxDecoration(
+              border: isSelected
+                  ? Border.all(color: Style.colorPrimary, width: 3)
+                  : null,
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                image: MemoryImage(photo),
+                fit: BoxFit.cover,
               ),
             ),
-            // Remove button
-            Container(
-              margin: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.9),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: InkWell(
-                onTap: onRemoveTap,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  child: Icon(Icons.close, color: Colors.white, size: 12),
+          ),
+          // Remove button
+          Container(
+            margin: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.red.withValues(alpha: 0.9),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 3,
+                  offset: Offset(0, 1),
                 ),
+              ],
+            ),
+            child: InkWell(
+              onTap: onRemoveTap,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 18,
+                height: 18,
+                child: Icon(Icons.close, color: Colors.white, size: 12),
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildAddPhotoWidget() {

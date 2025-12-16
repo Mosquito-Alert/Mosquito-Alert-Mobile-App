@@ -29,7 +29,9 @@ class UserProvider extends ChangeNotifier {
     final oldCountry = prefs.getString('languageCountry');
     if (oldLang != null) {
       await prefs.setString(
-          'locale', Locale(oldLang, oldCountry).toLanguageTag());
+        'locale',
+        Locale(oldLang, oldCountry).toLanguageTag(),
+      );
       await prefs.remove('language');
       await prefs.remove('languageCountry');
     }
@@ -44,11 +46,13 @@ class UserProvider extends ChangeNotifier {
 
     final parts = storedLocale.split(RegExp('[-_]'));
 
-    await setLocale(Locale.fromSubtags(
-      languageCode: parts.isNotEmpty ? parts[0] : 'en',
-      scriptCode: parts.length == 3 ? parts[1] : null,
-      countryCode: parts.length >= 2 ? parts[parts.length - 1] : null,
-    ));
+    await setLocale(
+      Locale.fromSubtags(
+        languageCode: parts.isNotEmpty ? parts[0] : 'en',
+        scriptCode: parts.length == 3 ? parts[1] : null,
+        countryCode: parts.length >= 2 ? parts[parts.length - 1] : null,
+      ),
+    );
   }
 
   User? _user;

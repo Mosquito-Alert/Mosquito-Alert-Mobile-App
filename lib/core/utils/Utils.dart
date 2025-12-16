@@ -6,14 +6,16 @@ class Utils {
     return _isLoading == true
         ? IgnorePointer(
             child: Container(
-            color: Colors.transparent,
-            child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    indicatorColor ?? Style.colorPrimary),
+              color: Colors.transparent,
+              child: Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    indicatorColor ?? Style.colorPrimary,
+                  ),
+                ),
               ),
             ),
-          ))
+          )
         : Container();
   }
 }
