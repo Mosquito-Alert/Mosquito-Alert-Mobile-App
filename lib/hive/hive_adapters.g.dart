@@ -393,3 +393,52 @@ class OutBoxOperationAdapter extends TypeAdapter<OutBoxOperation> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class FixModelAdapter extends TypeAdapter<FixModel> {
+  @override
+  final typeId = 8;
+
+  @override
+  FixModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return FixModel(
+      coverageUuid: fields[0] as String,
+      createdAt: fields[1] as DateTime,
+      sentAt: fields[2] as DateTime?,
+      point: fields[3] as FixLocation,
+      power: (fields[4] as num?)?.toDouble(),
+      localId: fields[5] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, FixModel obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(0)
+      ..write(obj.coverageUuid)
+      ..writeByte(1)
+      ..write(obj.createdAt)
+      ..writeByte(2)
+      ..write(obj.sentAt)
+      ..writeByte(3)
+      ..write(obj.point)
+      ..writeByte(4)
+      ..write(obj.power)
+      ..writeByte(5)
+      ..write(obj.localId);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FixModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -5,6 +5,7 @@ import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_item.dart';
 import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/domain/models/breeding_site_report.dart';
+import 'package:mosquito_alert_app/features/fixes/domain/models/fix.dart';
 import 'package:mosquito_alert_app/features/observations/domain/models/observation_report.dart';
 import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
@@ -17,8 +18,9 @@ import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
     AdapterSpec<ObservationReport>(),
     AdapterSpec<LocalPhoto>(),
     AdapterSpec<MemoryPhoto>(),
+    AdapterSpec<FixModel>(),
   ],
-  reservedTypeIds: {100, 101, 102, 103, 104, 105, 106},
+  reservedTypeIds: {100, 101, 102, 103, 104, 105, 106, 107},
 )
 part 'hive_adapters.g.dart';
 
@@ -160,5 +162,33 @@ class BreedingSiteSiteTypeEnumAdapter
   @override
   void write(BinaryWriter writer, BreedingSiteSiteTypeEnum obj) {
     writer.writeString(obj.name);
+  }
+}
+
+class FixLocationAdapter extends TypeAdapter<FixLocation> {
+  @override
+  final int typeId = 107;
+
+  static final _serializer =
+      FixLocation.serializer as PrimitiveSerializer<FixLocation>;
+
+  @override
+  FixLocation read(BinaryReader reader) {
+    return _serializer.deserialize(
+      serializers,
+      reader.read(),
+      specifiedType: const FullType(FixLocation),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, FixLocation obj) {
+    writer.write(
+      _serializer.serialize(
+        serializers,
+        obj,
+        specifiedType: const FullType(FixLocation),
+      ),
+    );
   }
 }

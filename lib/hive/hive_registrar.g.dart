@@ -9,6 +9,7 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(BiteReportAdapter());
     registerAdapter(BreedingSiteReportAdapter());
+    registerAdapter(FixModelAdapter());
     registerAdapter(LocalPhotoAdapter());
     registerAdapter(MemoryPhotoAdapter());
     registerAdapter(ObservationReportAdapter());
@@ -21,6 +22,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(BiteReportAdapter());
     registerAdapter(BreedingSiteReportAdapter());
+    registerAdapter(FixModelAdapter());
     registerAdapter(LocalPhotoAdapter());
     registerAdapter(MemoryPhotoAdapter());
     registerAdapter(ObservationReportAdapter());

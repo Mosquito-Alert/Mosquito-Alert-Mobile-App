@@ -1,5 +1,4 @@
-import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/features/fixes/fixes_repository.dart';
+import 'package:mosquito_alert_app/features/fixes/data/fixes_repository.dart';
 import 'package:mosquito_alert_app/features/fixes/services/location_sender.dart';
 import 'package:mosquito_alert_app/features/fixes/services/permissions_manager.dart';
 import 'package:mosquito_alert_app/features/fixes/services/task_scheduler.dart';
@@ -25,7 +24,7 @@ class TrackingService {
 
   static late LocationSender _locationSender;
 
-  static Future<void> configure({required MosquitoAlert apiClient}) async {
+  static Future<void> configure({required FixesRepository repository}) async {
     if (_initialized) return;
 
     _prefs = await SharedPreferences.getInstance();
@@ -33,9 +32,7 @@ class TrackingService {
     await PermissionsManager.init();
     await TaskScheduler.init();
 
-    _locationSender = await LocationSender.create(
-      repository: FixesRepository(apiClient: apiClient),
-    );
+    _locationSender = await LocationSender.create(repository: repository);
 
     _initialized = true;
   }

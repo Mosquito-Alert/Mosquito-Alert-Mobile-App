@@ -2,7 +2,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:language_picker/language_picker.dart';
 import 'package:language_picker/languages.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/features/fixes/presentation/state/fixes_provider.dart';
 import 'package:mosquito_alert_app/features/fixes/services/permissions_manager.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
@@ -41,10 +40,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = context.watch<SettingsProvider>();
-    final apiClient = Provider.of<MosquitoAlert>(context, listen: false);
 
     return ChangeNotifierProvider<FixesProvider>(
-      create: (_) => FixesProvider(apiClient: apiClient),
+      create: (_) => FixesProvider(),
       child: Scaffold(
         body: SafeArea(
           child: Column(

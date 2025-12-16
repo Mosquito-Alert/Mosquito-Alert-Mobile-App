@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/app.dart';
 import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/core/utils/random.dart';
@@ -128,10 +127,6 @@ class _LayoutPageState extends State<LayoutPage>
   }
 
   Future<void> _initTrackingService() async {
-    await TrackingService.configure(
-      apiClient: Provider.of<MosquitoAlert>(context, listen: false),
-    );
-
     final trackingEnabled = await TrackingService.isEnabled;
     if (trackingEnabled) {
       await TrackingService.start();

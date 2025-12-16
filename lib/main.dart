@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/core/outbox/outbox_service.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_sync_manager.dart';
 import 'package:mosquito_alert_app/features/bites/data/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/data/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/fixes/data/fixes_repository.dart';
 import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
 import 'package:mosquito_alert_app/features/observations/data/observation_repository.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
@@ -80,12 +81,16 @@ Future<void> main({String env = 'prod'}) async {
   final observationRepository = ObservationRepository(apiClient: apiClient);
   final biteRepository = BiteRepository(apiClient: apiClient);
   final breedingSiteRepository = BreedingSiteRepository(apiClient: apiClient);
+  final fixesRepository = FixesRepository(apiClient: apiClient);
 
   final syncManager = OutboxSyncManager([
     observationRepository,
     biteRepository,
     breedingSiteRepository,
+    fixesRepository,
   ]);
+
+  await TrackingService.configure(repository: fixesRepository);
 
   // Auto-sync when online
   final apiConnection = InternetConnection.createInstance(
@@ -178,7 +183,9 @@ void callbackDispatcher() {
     // Initialize Outbox
     await OutboxService().init();
 
-    await TrackingService.configure(apiClient: apiClient);
+    final fixesRepository = FixesRepository(apiClient: apiClient);
+
+    await TrackingService.configure(repository: fixesRepository);
     // Support 3 possible outcomes:
     // - Future.value(true): task is successful
     // - Future.value(false): task failed and needs to be retried
@@ -198,6 +205,7 @@ void callbackDispatcher() {
           observationRepository,
           biteRepository,
           breedingSiteRepository,
+          fixesRepository,
         ]);
 
         try {

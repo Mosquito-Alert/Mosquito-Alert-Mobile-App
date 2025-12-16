@@ -4,7 +4,7 @@ import 'package:mosquito_alert_app/features/fixes/data/models/fix_request.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import '../fixes_repository.dart';
+import '../data/fixes_repository.dart';
 
 class LocationSender {
   final FixesRepository repository;
@@ -35,7 +35,8 @@ class LocationSender {
     );
     int battery = await Battery().batteryLevel;
 
-    FixRequest request = FixRequest(
+    FixCreateRequest request = FixCreateRequest(
+      localId: Uuid().v4(),
       coverageUuid: uuid,
       createdAt: DateTime.now().toUtc(),
       point: sdk.FixLocationRequest(

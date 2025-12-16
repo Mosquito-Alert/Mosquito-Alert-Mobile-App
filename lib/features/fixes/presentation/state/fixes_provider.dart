@@ -1,14 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mosquito_alert/mosquito_alert.dart';
-import 'package:mosquito_alert_app/features/fixes/fixes_repository.dart';
 import 'package:mosquito_alert_app/features/fixes/services/task_scheduler.dart';
 import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
 
 class FixesProvider extends ChangeNotifier {
-  final FixesRepository repository;
-
   bool _isEnabled = false;
   List<DateTime> _scheduledTasks = [];
 
@@ -17,8 +13,7 @@ class FixesProvider extends ChangeNotifier {
 
   StreamSubscription<List<DateTime>>? _taskSub;
 
-  FixesProvider({required MosquitoAlert apiClient})
-    : repository = FixesRepository(apiClient: apiClient) {
+  FixesProvider() {
     _init();
   }
 
