@@ -17,9 +17,9 @@ class OutboxItemAdapter extends TypeAdapter<OutboxItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OutboxItem(
-      id: fields[0] as String,
+      id: fields[0] as String?,
       repository: fields[1] as String,
-      operation: fields[2] as String,
+      operation: fields[2] as OutBoxOperation,
       payload: (fields[3] as Map).cast<String, dynamic>(),
     );
   }
@@ -349,6 +349,47 @@ class MemoryPhotoAdapter extends TypeAdapter<MemoryPhoto> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is MemoryPhotoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class OutBoxOperationAdapter extends TypeAdapter<OutBoxOperation> {
+  @override
+  final typeId = 7;
+
+  @override
+  OutBoxOperation read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return OutBoxOperation.create;
+      case 1:
+        return OutBoxOperation.update;
+      case 2:
+        return OutBoxOperation.delete;
+      default:
+        return OutBoxOperation.create;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, OutBoxOperation obj) {
+    switch (obj) {
+      case OutBoxOperation.create:
+        writer.writeByte(0);
+      case OutBoxOperation.update:
+        writer.writeByte(1);
+      case OutBoxOperation.delete:
+        writer.writeByte(2);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OutBoxOperationAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

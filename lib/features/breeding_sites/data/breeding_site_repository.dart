@@ -20,17 +20,33 @@ class BreedingSiteRepository
         apiClient: apiClient,
         itemApi: apiClient.getBreedingSitesApi(),
         itemFactory: (item) => BreedingSiteReport.fromSdkBreedingSite(item),
-        createRequestFactory: (json) =>
-            BreedingSiteCreateRequest.fromJson(json),
-        createRequestFromReport: (site) =>
-            BreedingSiteCreateRequest.fromModel(site),
-        createReportFromRequest: (request) =>
-            BreedingSiteReport.fromCreateRequest(request),
-        box: Hive.box<BreedingSiteReport>('offline_breeding_sites'),
       );
 
   @override
   String get repoName => 'breeding_sites';
+
+  @override
+  Box<BreedingSiteReport> get itemBox =>
+      Hive.box<BreedingSiteReport>('offline_breeding_sites');
+
+  @override
+  BreedingSiteReport buildItemFromCreateRequest(
+    BreedingSiteCreateRequest request,
+  ) {
+    return BreedingSiteReport.fromCreateRequest(request);
+  }
+
+  @override
+  BreedingSiteCreateRequest createRequestFactory(Map<String, dynamic> payload) {
+    return BreedingSiteCreateRequest.fromJson(payload);
+  }
+
+  @override
+  BreedingSiteCreateRequest buildCreateRequestFromItem(
+    BreedingSiteReport item,
+  ) {
+    return BreedingSiteCreateRequest.fromModel(item);
+  }
 
   @override
   Future<BreedingSiteReport> sendCreateToApi({

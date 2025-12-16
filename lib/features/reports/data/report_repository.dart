@@ -1,6 +1,5 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_item.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_mixin.dart';
@@ -15,26 +14,14 @@ abstract class ReportRepository<
   TCreateReportRequest extends BaseCreateReportRequest
 >
     extends PaginationRepository<TReport, TApi>
-    with OutboxMixin {
+    with OutboxMixin<TReport, TCreateReportRequest> {
   final MosquitoAlert apiClient;
   final TReport Function(TSdkModel) itemFactory;
-  final TCreateReportRequest Function(Map<String, dynamic>)
-  createRequestFactory;
-  final TReport Function(TCreateReportRequest) createReportFromRequest;
-  final TCreateReportRequest Function(TReport) createRequestFromReport;
-  // NOTE: Hive box to store offline reports. This is replacing the OutboxItem
-  // when creating new reports in order to avoid desynchronization issues.
-  // Main issue: a report is stored in the box and the corresponding OutboxItem is lost.
-  final Box<TReport> box;
 
   ReportRepository({
     required this.apiClient,
     required this.itemFactory,
-    required this.createRequestFactory,
-    required this.createReportFromRequest,
-    required this.createRequestFromReport,
     required super.itemApi,
-    required this.box,
   });
 
   Future<TReport> sendCreateToApi({required TCreateReportRequest request});
@@ -47,7 +34,7 @@ abstract class ReportRepository<
     List<TReport> items = [];
     if (page == 1) {
       // Load offline items only on first page
-      items = box.values.toList();
+      items = itemBox.values.toList();
       items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     }
     try {
@@ -72,7 +59,7 @@ abstract class ReportRepository<
   }
 
   Future<int> getCount() async {
-    int count = box.length;
+    int count = itemBox.length;
     try {
       final response = await (itemApi as dynamic).listMine(
         page: 1,
@@ -86,96 +73,49 @@ abstract class ReportRepository<
   }
 
   @override
-  Future<void> execute(OutboxItem item) async {
-    switch (item.operation) {
-      case 'create':
-        final request = createRequestFactory(item.payload);
-        try {
-          await _create(request: request);
-        } catch (_) {
-          break;
-        }
-        break;
-      case 'delete':
-        final request = DeleteReportRequest.fromJson(item.payload);
-        try {
-          await (itemApi as dynamic).destroy(uuid: request.uuid);
-        } on DioException catch (e) {
-          if (e.response?.statusCode == 404) {
-            // Already deleted
+  OutboxTask buildOutboxTaskFromItem({required OutboxItem item}) {
+    return OutboxTask(
+      item: item,
+      action: () async {
+        switch (item.operation) {
+          case OutBoxOperation.create:
+            final request = createRequestFactory(item.payload);
+            try {
+              await _create(request: request);
+            } catch (_) {
+              break;
+            }
             break;
-          }
-          rethrow;
+          case OutBoxOperation.delete:
+            final request = DeleteReportRequest.fromJson(item.payload);
+            try {
+              await (itemApi as dynamic).destroy(uuid: request.uuid);
+            } on DioException catch (e) {
+              if (e.response?.statusCode == 404) {
+                // Already deleted
+                break;
+              }
+              rethrow;
+            }
+            break;
+          default:
+            throw Exception("Unknown op: ${item.operation}");
         }
-        break;
-      default:
-        throw Exception("Unknown op: ${item.operation}");
-    }
-    super.execute(item);
-  }
-
-  @override
-  Future<void> syncRepository() async {
-    List<TCreateReportRequest> createRequests = box.values
-        .map((e) => createRequestFromReport(e))
-        .toList();
-
-    for (final request in createRequests) {
-      try {
-        await execute(
-          OutboxItem(
-            id: request.localId,
-            repository: repoName,
-            operation: 'create',
-            payload: request.toJson(),
-          ),
-        );
-      } catch (_) {
-        // Do nothing
-      }
-    }
-
-    await super.syncRepository();
-  }
-
-  @override
-  Future<void> schedule(
-    String operation,
-    Map<String, dynamic> payload, {
-    bool runNow = true,
-  }) async {
-    if (operation == 'create') {
-      final request = createRequestFactory(payload);
-      final newReport = createReportFromRequest(request);
-      await box.put(newReport.localId, newReport);
-      if (!runNow) return;
-      await execute(
-        OutboxItem(
-          id: newReport.localId!,
-          repository: repoName,
-          operation: operation,
-          payload: payload,
-        ),
-      );
-      return;
-    }
-    await super.schedule(operation, payload, runNow: runNow);
-  }
-
-  @override
-  Future<void> unscheduleOutboxTask(OutboxItem item) async {
-    if (item.operation == 'create') {
-      final request = createRequestFactory(item.payload);
-      await box.delete(request.localId);
-      return;
-    }
-    await super.unscheduleOutboxTask(item);
+      },
+    );
   }
 
   Future<TReport> create({required TCreateReportRequest request}) async {
     final newReport = await _create(request: request);
     if (newReport.localId != null) {
-      await schedule('create', request.toJson(), runNow: false);
+      final createItem = OutboxItem(
+        id: request.localId,
+        repository: repoName,
+        operation: OutBoxOperation.create,
+        payload: request.toJson(),
+      );
+      final createTask = buildOutboxTaskFromItem(item: createItem);
+      await schedule(createTask, runNow: false);
     }
     return newReport;
   }
@@ -184,17 +124,24 @@ abstract class ReportRepository<
     TReport newReport;
     try {
       newReport = await sendCreateToApi(request: request);
-      await box.delete(request.localId);
+      await itemBox.delete(request.localId);
     } on DioException catch (e) {
       if (e.response?.statusCode != null && e.response!.statusCode! < 500) {
         rethrow;
       }
-      newReport = createReportFromRequest(request);
+      newReport = buildItemFromCreateRequest(request);
     }
     return newReport;
   }
 
   Future<void> delete({required String uuid}) async {
-    await schedule('delete', DeleteReportRequest(uuid: uuid).toJson());
+    final deleteTask = buildOutboxTaskFromItem(
+      item: OutboxItem(
+        repository: repoName,
+        operation: OutBoxOperation.delete,
+        payload: DeleteReportRequest(uuid: uuid).toJson(),
+      ),
+    );
+    await schedule(deleteTask);
   }
 }

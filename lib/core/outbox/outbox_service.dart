@@ -1,6 +1,5 @@
 import 'package:hive_ce/hive.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_item.dart';
-import 'package:uuid/uuid.dart';
 
 class OutboxService {
   // ---- Singleton boilerplate ----
@@ -19,20 +18,8 @@ class OutboxService {
     _initialized = true;
   }
 
-  Future<OutboxItem> add(
-    String repository,
-    String operation,
-    Map<String, dynamic> payload,
-  ) async {
-    final uuid = Uuid().v4();
-    final item = OutboxItem(
-      id: uuid,
-      repository: repository,
-      operation: operation,
-      payload: payload,
-    );
-    await _box.put(uuid, item);
-    return item;
+  Future<void> add(OutboxItem item) async {
+    await _box.put(item.id, item);
   }
 
   List<OutboxItem> getAll() => _box.values.toList();

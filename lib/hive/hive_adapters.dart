@@ -11,6 +11,7 @@ import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 @GenerateAdapters(
   [
     AdapterSpec<OutboxItem>(),
+    AdapterSpec<OutBoxOperation>(),
     AdapterSpec<BiteReport>(),
     AdapterSpec<BreedingSiteReport>(),
     AdapterSpec<ObservationReport>(),

@@ -19,9 +19,7 @@ class DeleteReportRequest implements DeleteRequest {
   Map<String, dynamic> toJson() => _$DeleteReportRequestToJson(this);
 }
 
-abstract class BaseCreateReportRequest implements CreateRequest {
-  final String localId;
-
+abstract class BaseCreateReportRequest extends CreateRequest {
   final DateTime createdAt;
   final String? note;
   final List<String>? tags;
@@ -30,7 +28,7 @@ abstract class BaseCreateReportRequest implements CreateRequest {
   final sdk.LocationRequest location;
 
   BaseCreateReportRequest({
-    required this.localId,
+    required super.localId,
     required this.location,
     required this.createdAt,
     this.note,

@@ -2,6 +2,10 @@ abstract interface class Request<T> {
   Map<String, dynamic> toJson();
 }
 
-abstract interface class CreateRequest implements Request {}
+abstract class CreateRequest implements Request {
+  String localId;
 
-abstract interface class DeleteRequest implements Request {}
+  CreateRequest({required this.localId});
+}
+
+abstract class DeleteRequest implements Request {}

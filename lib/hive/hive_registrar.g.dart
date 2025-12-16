@@ -12,6 +12,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(LocalPhotoAdapter());
     registerAdapter(MemoryPhotoAdapter());
     registerAdapter(ObservationReportAdapter());
+    registerAdapter(OutBoxOperationAdapter());
     registerAdapter(OutboxItemAdapter());
   }
 }
@@ -23,6 +24,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(LocalPhotoAdapter());
     registerAdapter(MemoryPhotoAdapter());
     registerAdapter(ObservationReportAdapter());
+    registerAdapter(OutBoxOperationAdapter());
     registerAdapter(OutboxItemAdapter());
   }
 }

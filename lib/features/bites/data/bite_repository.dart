@@ -12,15 +12,28 @@ class BiteRepository
         apiClient: apiClient,
         itemApi: apiClient.getBitesApi(),
         itemFactory: (item) => BiteReport.fromSdkBite(item),
-        createReportFromRequest: (request) =>
-            BiteReport.fromCreateRequest(request),
-        createRequestFromReport: (bite) => BiteCreateRequest.fromModel(bite),
-        createRequestFactory: (json) => BiteCreateRequest.fromJson(json),
-        box: Hive.box<BiteReport>('offline_bites'),
       );
 
   @override
   String get repoName => 'bites';
+
+  @override
+  Box<BiteReport> get itemBox => Hive.box<BiteReport>('offline_bites');
+
+  @override
+  BiteReport buildItemFromCreateRequest(BiteCreateRequest request) {
+    return BiteReport.fromCreateRequest(request);
+  }
+
+  @override
+  BiteCreateRequest createRequestFactory(Map<String, dynamic> payload) {
+    return BiteCreateRequest.fromJson(payload);
+  }
+
+  @override
+  BiteCreateRequest buildCreateRequestFromItem(BiteReport item) {
+    return BiteCreateRequest.fromModel(item);
+  }
 
   @override
   Future<BiteReport> sendCreateToApi({

@@ -20,16 +20,31 @@ class ObservationRepository
         apiClient: apiClient,
         itemApi: apiClient.getObservationsApi(),
         itemFactory: (item) => ObservationReport.fromSdkObservation(item),
-        createRequestFactory: (json) => ObservationCreateRequest.fromJson(json),
-        createRequestFromReport: (observation) =>
-            ObservationCreateRequest.fromModel(observation),
-        createReportFromRequest: (request) =>
-            ObservationReport.fromCreateRequest(request),
-        box: Hive.box<ObservationReport>('offline_observations'),
       );
 
   @override
   String get repoName => 'observations';
+
+  @override
+  Box<ObservationReport> get itemBox =>
+      Hive.box<ObservationReport>('offline_observations');
+
+  @override
+  ObservationReport buildItemFromCreateRequest(
+    ObservationCreateRequest request,
+  ) {
+    return ObservationReport.fromCreateRequest(request);
+  }
+
+  @override
+  ObservationCreateRequest createRequestFactory(Map<String, dynamic> payload) {
+    return ObservationCreateRequest.fromJson(payload);
+  }
+
+  @override
+  ObservationCreateRequest buildCreateRequestFromItem(ObservationReport item) {
+    return ObservationCreateRequest.fromModel(item);
+  }
 
   Future<ObservationReport> sendCreateToApi({
     required ObservationCreateRequest request,
