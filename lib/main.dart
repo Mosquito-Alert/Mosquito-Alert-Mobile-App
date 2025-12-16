@@ -137,7 +137,7 @@ Future<void> main({String env = 'prod'}) async {
               BreedingSiteProvider(repository: breedingSiteRepository),
         ),
       ],
-      child: MyApp(),
+      child: MyApp(apiConnection: apiConnection),
     ),
   );
 }
