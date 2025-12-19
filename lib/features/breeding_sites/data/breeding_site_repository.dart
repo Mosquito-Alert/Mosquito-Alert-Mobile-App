@@ -22,12 +22,14 @@ class BreedingSiteRepository
         itemFactory: (item) => BreedingSiteReport.fromSdkBreedingSite(item),
       );
 
+  static const itemBoxName = 'offline_breeding_sites';
+
   @override
   String get repoName => 'breeding_sites';
 
   @override
   Box<BreedingSiteReport> get itemBox =>
-      Hive.box<BreedingSiteReport>('offline_breeding_sites');
+      Hive.box<BreedingSiteReport>(itemBoxName);
 
   @override
   BreedingSiteReport buildItemFromCreateRequest(

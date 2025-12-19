@@ -13,11 +13,13 @@ class FixesRepository with OutboxMixin<FixModel, FixCreateRequest> {
     itemApi = apiClient.getFixesApi();
   }
 
+  static const itemBoxName = 'offline_fixes';
+
   @override
   String get repoName => 'fixes';
 
   @override
-  Box<FixModel> get itemBox => Hive.box<FixModel>('offline_fixes');
+  Box<FixModel> get itemBox => Hive.box<FixModel>(itemBoxName);
 
   @override
   FixModel buildItemFromCreateRequest(FixCreateRequest request) {

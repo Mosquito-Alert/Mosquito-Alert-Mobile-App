@@ -14,11 +14,13 @@ class BiteRepository
         itemFactory: (item) => BiteReport.fromSdkBite(item),
       );
 
+  static const itemBoxName = 'offline_bites';
+
   @override
   String get repoName => 'bites';
 
   @override
-  Box<BiteReport> get itemBox => Hive.box<BiteReport>('offline_bites');
+  Box<BiteReport> get itemBox => Hive.box<BiteReport>(itemBoxName);
 
   @override
   BiteReport buildItemFromCreateRequest(BiteCreateRequest request) {

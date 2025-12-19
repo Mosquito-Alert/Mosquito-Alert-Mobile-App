@@ -22,12 +22,14 @@ class ObservationRepository
         itemFactory: (item) => ObservationReport.fromSdkObservation(item),
       );
 
+  static const itemBoxName = 'offline_observations';
+
   @override
   String get repoName => 'observations';
 
   @override
   Box<ObservationReport> get itemBox =>
-      Hive.box<ObservationReport>('offline_observations');
+      Hive.box<ObservationReport>(itemBoxName);
 
   @override
   ObservationReport buildItemFromCreateRequest(
