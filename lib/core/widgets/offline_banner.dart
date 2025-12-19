@@ -12,7 +12,7 @@ class OfflineBanner extends StatefulWidget {
 }
 
 class _OfflineBannerState extends State<OfflineBanner> {
-  late InternetStatus _status;
+  InternetStatus? _status;
   InternetStatus? _previousStatus;
   Timer? _onlineTimer;
 
@@ -85,7 +85,7 @@ class _OfflineBannerState extends State<OfflineBanner> {
       padding: EdgeInsets.symmetric(horizontal: 16),
       width: double.infinity,
       curve: Curves.easeInOut,
-      child: showBanner
+      child: showBanner && _status != null
           ? SafeArea(
               bottom: false,
               child: Padding(
