@@ -1,6 +1,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:dio/dio.dart';
 import 'package:mosquito_alert/mosquito_alert.dart' as sdk;
+import 'package:mosquito_alert_app/features/bites/domain/models/bite_report.dart';
 
 /// Mock BitesApi implementation that captures API calls
 class MockBitesApi extends sdk.BitesApi {
@@ -14,8 +15,52 @@ class MockBitesApi extends sdk.BitesApi {
 
   MockBitesApi() : super(Dio(), sdk.serializers);
 
-  void setBites(List<sdk.Bite> bites) {
-    _bites = bites;
+  void setBites(List<BiteReport> bites) {
+    final List<sdk.Bite> newBites = [];
+    for (var bite in bites) {
+      final newBite = sdk.Bite(
+        (b) => b
+          ..uuid = bite.uuid
+          ..shortId = bite.shortId
+          ..userUuid = bite.userUuid
+          ..createdAt = bite.createdAt
+          ..createdAtLocal = bite.createdAtLocal
+          ..published = false
+          ..sentAt = bite.sentAt
+          ..receivedAt = bite.receivedAt
+          ..updatedAt = bite.updatedAt
+          ..location = sdk.Location(
+            (l) => l
+              ..point.latitude = bite.location.point.latitude
+              ..point.longitude = bite.location.point.longitude
+              ..source_ = sdk.LocationSource_Enum.valueOf(
+                bite.location.source_.name,
+              ),
+          ).toBuilder()
+          ..note = bite.note
+          ..tags = BuiltList<String>(bite.tags ?? []).toBuilder()
+          ..eventEnvironment = bite.eventEnvironment != null
+              ? sdk.BiteEventEnvironmentEnum.valueOf(
+                  bite.eventEnvironment!.name,
+                )
+              : null
+          ..eventMoment = bite.eventMoment != null
+              ? sdk.BiteEventMomentEnum.valueOf(bite.eventMoment!.name)
+              : null
+          ..counts = sdk.BiteCounts(
+            (c) => c
+              ..head = bite.counts.head
+              ..chest = bite.counts.chest
+              ..leftArm = bite.counts.leftArm
+              ..rightArm = bite.counts.rightArm
+              ..leftLeg = bite.counts.leftLeg
+              ..rightLeg = bite.counts.rightLeg
+              ..total = bite.counts.total,
+          ).toBuilder(),
+      );
+      newBites.add(newBite);
+    }
+    _bites = newBites;
   }
 
   @override
@@ -40,10 +85,12 @@ class MockBitesApi extends sdk.BitesApi {
     return Response<sdk.Bite>(
       statusCode: 201,
       requestOptions: RequestOptions(path: '/bites/'),
-      data: sdk.Bite((b) => b
-        ..uuid = 'test-uuid-123'
-        ..createdAt = DateTime.now()
-        ..updatedAt = DateTime.now()),
+      data: sdk.Bite(
+        (b) => b
+          ..uuid = 'test-uuid-123'
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now(),
+      ),
     );
   }
 
@@ -89,11 +136,13 @@ class MockBitesApi extends sdk.BitesApi {
     return Response<sdk.PaginatedBiteList>(
       statusCode: 200,
       requestOptions: RequestOptions(path: '/bites/'),
-      data: sdk.PaginatedBiteList((b) => b
-        ..count = _bites.length
-        ..next = hasNext ? 'next-page-url' : null
-        ..previous = currentPage > 1 ? 'previous-page-url' : null
-        ..results = BuiltList<sdk.Bite>(paginatedResults).toBuilder()),
+      data: sdk.PaginatedBiteList(
+        (b) => b
+          ..count = _bites.length
+          ..next = hasNext ? 'next-page-url' : null
+          ..previous = currentPage > 1 ? 'previous-page-url' : null
+          ..results = BuiltList<sdk.Bite>(paginatedResults).toBuilder(),
+      ),
     );
   }
 
