@@ -2,23 +2,52 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert/mosquito_alert.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
+import 'package:mosquito_alert_app/features/user/data/user_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
-  final UsersApi usersApi;
+  final UserRepository _repository;
 
-  UserProvider._(this.usersApi);
+  User? _user;
+  User? get user => _user;
 
-  static Future<UserProvider> create({required MosquitoAlert apiClient}) async {
-    final provider = UserProvider._(apiClient.getUsersApi());
-    try {
-      await provider.fetchUser();
-    } catch (_) {
-      // Ignore fetch errors on init
-    }
+  Locale? _locale;
+  Locale get locale => _locale ?? MyLocalizations.defaultFallbackLocale;
+
+  bool isLoading = false;
+
+  UserProvider._({required UserRepository repository})
+    : _repository = repository {
+    _listenToUser();
+  }
+
+  void _listenToUser() {
+    _repository.getUser().listen((newUser) async {
+      await setUser(newUser);
+    });
+  }
+
+  static Future<UserProvider> create({
+    required UserRepository repository,
+  }) async {
+    final provider = UserProvider._(repository: repository);
     await provider._initLanguage();
     return provider;
+  }
+
+  Future<void> fetchUser() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final fetchedUser = await _repository.fetchUser();
+      await setUser(fetchedUser);
+    } catch (e) {
+      debugPrint('Error fetching user: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> _initLanguage() async {
@@ -55,18 +84,11 @@ class UserProvider extends ChangeNotifier {
     );
   }
 
-  User? _user;
-  User? get user => _user;
-  bool isLoading = false;
-
   Future<void> setUser(User? newUser) async {
     _user = newUser;
     await _setFirebaseUserId(newUser);
     notifyListeners();
   }
-
-  Locale? _locale;
-  Locale get locale => _locale ?? MyLocalizations.defaultFallbackLocale;
 
   Future<void> setLocale(Locale locale) async {
     Locale resolvedLocale = MyLocalizations.resolveLocale(locale);
@@ -87,50 +109,12 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> _syncUserLocale(Locale locale) async {
-    final newCode = locale.languageCode.toLowerCase();
-
-    // If already the same, skip API call
-    if (user?.languageIso == newCode) return;
-
-    final localeEnum = PatchedUserRequestLocaleEnum.values.firstWhere(
-      (e) => e.name == newCode,
-      orElse: () => PatchedUserRequestLocaleEnum.en,
-    );
-
-    final req = PatchedUserRequest((b) => b..locale = localeEnum);
-
+    if (_user == null) return;
     try {
-      final response = await usersApi.partialUpdate(
-        uuid: user!.uuid,
-        patchedUserRequest: req,
-      );
-      await setUser(response.data!);
+      final updatedUser = await _repository.updateLocale(locale);
+      await setUser(updatedUser);
     } catch (e) {
       debugPrint('Error updating user locale: $e');
-    }
-  }
-
-  Future<void> fetchUser() async {
-    isLoading = true;
-    notifyListeners();
-
-    try {
-      final response = await usersApi.retrieveMine();
-      await setUser(response.data!);
-    } catch (e) {
-      print('Error getting user: $e');
-      await setUser(null);
-      rethrow;
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-
-    // Ensure backend locale matches selected locale
-    try {
-      await _syncUserLocale(locale);
-    } catch (_) {
-      print('Error changing user locale');
     }
   }
 

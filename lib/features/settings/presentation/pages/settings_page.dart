@@ -41,166 +41,163 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final settingsProvider = context.watch<SettingsProvider>();
 
-    return ChangeNotifierProvider<FixesProvider>(
-      create: (_) => FixesProvider(),
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  MyLocalizations.of(context, 'settings_title'),
-                  style: TextStyle(
-                    color: Style.colorPrimary,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                MyLocalizations.of(context, 'settings_title'),
+                style: TextStyle(
+                  color: Style.colorPrimary,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // Language picker
-                    ListTile(
-                      leading: const Icon(
-                        Icons.language_outlined,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        MyLocalizations.of(context, 'select_language_txt'),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Text(
-                              _localeToLanguage(
-                                Provider.of<UserProvider>(context).locale,
-                              ).nativeName,
-                              style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 14,
-                              ),
+            ),
+            const SizedBox(height: 16),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Language picker
+                  ListTile(
+                    leading: const Icon(
+                      Icons.language_outlined,
+                      color: Colors.black,
+                    ),
+                    title: Text(
+                      MyLocalizations.of(context, 'select_language_txt'),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Text(
+                            _localeToLanguage(
+                              Provider.of<UserProvider>(context).locale,
+                            ).nativeName,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14,
                             ),
                           ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.black,
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                      onTap: _openLanguagePickerDialog,
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 16,
+                        ),
+                      ],
                     ),
-                    const Divider(),
-                    // Background tracking toggle
-                    Consumer<FixesProvider>(
-                      builder: (context, fixesProvider, _) => SwitchListTile(
-                        title: Text(
+                    onTap: _openLanguagePickerDialog,
+                  ),
+                  const Divider(),
+                  // Background tracking toggle
+                  Consumer<FixesProvider>(
+                    builder: (context, fixesProvider, _) => SwitchListTile(
+                      title: Text(
+                        MyLocalizations.of(
+                          context,
+                          'background_tracking_title',
+                        ),
+                      ),
+                      isThreeLine: true,
+                      subtitle: Text(
+                        MyLocalizations.of(
+                          context,
+                          'background_tracking_subtitle',
+                        ),
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      value: fixesProvider.isEnabled,
+                      activeThumbColor: Style.colorPrimary,
+                      secondary: isBgTrackingLoading
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Style.colorPrimary,
+                              ),
+                            )
+                          : const Icon(Icons.share_location_outlined),
+                      onChanged: (bool value) async {
+                        if (value) {
+                          setState(() {
+                            isBgTrackingLoading = true;
+                          });
+                          await PermissionsManager.requestPermissions();
+                          await fixesProvider.enableTracking(
+                            runImmediately: true,
+                          );
+                          setState(() {
+                            isBgTrackingLoading = false;
+                          });
+                        } else {
+                          await fixesProvider.disableTracking();
+                        }
+                      },
+                    ),
+                  ),
+                  const Divider(),
+                  // Hashtag settings
+                  ExpansionTile(
+                    leading: const Icon(
+                      Icons.sell_outlined,
+                      color: Colors.black,
+                    ),
+                    initiallyExpanded: settingsProvider.hashtags.length > 0,
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
                           MyLocalizations.of(
                             context,
-                            'background_tracking_title',
+                            'auto_tagging_settings_title',
                           ),
                         ),
-                        isThreeLine: true,
-                        subtitle: Text(
-                          MyLocalizations.of(
-                            context,
-                            'background_tracking_subtitle',
+                        const Spacer(),
+                        if (settingsProvider.hashtags.length > 0)
+                          Badge.count(
+                            count: settingsProvider.hashtags.length,
+                            backgroundColor: Colors.grey,
+                            textColor: Colors.white,
                           ),
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        value: fixesProvider.isEnabled,
-                        activeThumbColor: Style.colorPrimary,
-                        secondary: isBgTrackingLoading
-                            ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Style.colorPrimary,
-                                ),
-                              )
-                            : const Icon(Icons.share_location_outlined),
-                        onChanged: (bool value) async {
-                          if (value) {
-                            setState(() {
-                              isBgTrackingLoading = true;
-                            });
-                            await PermissionsManager.requestPermissions();
-                            await fixesProvider.enableTracking(
-                              runImmediately: true,
-                            );
-                            setState(() {
-                              isBgTrackingLoading = false;
-                            });
-                          } else {
-                            await fixesProvider.disableTracking();
-                          }
-                        },
-                      ),
+                      ],
                     ),
-                    const Divider(),
-                    // Hashtag settings
-                    ExpansionTile(
-                      leading: const Icon(
-                        Icons.sell_outlined,
-                        color: Colors.black,
-                      ),
-                      initiallyExpanded: settingsProvider.hashtags.length > 0,
-                      title: Row(
-                        mainAxisSize: MainAxisSize.min,
+                    childrenPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    children: [
+                      Column(
                         children: [
                           Text(
                             MyLocalizations.of(
                               context,
-                              'auto_tagging_settings_title',
+                              'enable_auto_hashtag_text',
+                            ),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
                             ),
                           ),
-                          const Spacer(),
-                          if (settingsProvider.hashtags.length > 0)
-                            Badge.count(
-                              count: settingsProvider.hashtags.length,
-                              backgroundColor: Colors.grey,
-                              textColor: Colors.white,
-                            ),
+                          const SizedBox(height: 10),
+                          TagsTextField(
+                            initialTags: settingsProvider.hashtags,
+                            onTagsChanged: (tags) async {
+                              settingsProvider.hashtags = tags;
+                            },
+                          ),
                         ],
                       ),
-                      childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              MyLocalizations.of(
-                                context,
-                                'enable_auto_hashtag_text',
-                              ),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            TagsTextField(
-                              initialTags: settingsProvider.hashtags,
-                              onTagsChanged: (tags) async {
-                                settingsProvider.hashtags = tags;
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

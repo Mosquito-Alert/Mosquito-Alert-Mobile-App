@@ -20,7 +20,7 @@ import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
     AdapterSpec<MemoryPhoto>(),
     AdapterSpec<FixModel>(),
   ],
-  reservedTypeIds: {100, 101, 102, 103, 104, 105, 106, 107},
+  reservedTypeIds: {100, 101, 102, 103, 104, 105, 106, 107, 108},
 )
 part 'hive_adapters.g.dart';
 
@@ -188,6 +188,33 @@ class FixLocationAdapter extends TypeAdapter<FixLocation> {
         serializers,
         obj,
         specifiedType: const FullType(FixLocation),
+      ),
+    );
+  }
+}
+
+class UserAdapter extends TypeAdapter<User> {
+  @override
+  final int typeId = 108;
+
+  static final _serializer = User.serializer as PrimitiveSerializer<User>;
+
+  @override
+  User read(BinaryReader reader) {
+    return _serializer.deserialize(
+      serializers,
+      reader.read(),
+      specifiedType: const FullType(User),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, User obj) {
+    writer.write(
+      _serializer.serialize(
+        serializers,
+        obj,
+        specifiedType: const FullType(User),
       ),
     );
   }

@@ -4,9 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mosquito_alert_app/app.dart';
 import 'package:mosquito_alert_app/app_config.dart';
-import 'package:mosquito_alert_app/core/utils/random.dart';
 import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
-import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
+import 'package:mosquito_alert_app/features/fixes/presentation/state/fixes_provider.dart';
 import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
 import 'package:mosquito_alert_app/features/notifications/data/firebase_messaging_service.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
@@ -64,74 +63,46 @@ class _LayoutPageState extends State<LayoutPage>
 
   void _initialize() async {
     try {
-      bool isSuccess = await _initUser();
-      if (isSuccess) {
-        await _initTrackingService();
-        await _initNotificationsService();
-      }
+      await _initUser();
+      await _initTrackingService();
+      await _initNotificationsService();
     } catch (e) {
       // Handle errors if needed
       debugPrint('Initialization error: $e');
     }
   }
 
-  Future<bool> _initUser() async {
+  Future<void> _initUser() async {
     final appConfig = await AppConfig.loadConfig();
     if (!appConfig.useAuth) {
       // Requesting permissions on automated tests creates many problems
       // and mocking permission acceptance is difficult on Android and iOS
-      return true;
+      return;
     }
 
     final authProvider = context.read<AuthProvider>();
     final userProvider = context.read<UserProvider>();
-    final deviceProvider = context.read<DeviceProvider>();
 
-    if (userProvider.user != null) {
-      return true; // User is already initialized
+    if (!authProvider.isAuthenticated) {
+      await authProvider.restoreSession();
     }
 
     if (userProvider.user == null) {
       try {
         await userProvider.fetchUser();
       } catch (_) {
-        // If fetching fails, try logging in and then fetch
-        try {
-          await authProvider.login(
-            username: authProvider.username!,
-            password: authProvider.password!,
-          );
-          await userProvider.fetchUser();
-        } catch (e) {
-          _showErrorSnackBar(e.toString());
-          return false;
-        }
+        return;
       }
     }
-
-    if (authProvider.needNewPassword) {
-      await authProvider.changePassword(password: getRandomPassword(10));
-    }
-
-    // TODO: auto register device on login.
-    // Register device
-    try {
-      await deviceProvider.registerDevice();
-      if (deviceProvider.device != null) {
-        await authProvider.setDevice(deviceProvider.device!);
-      }
-    } catch (e) {
-      debugPrint('Error registering device: $e');
-    }
-    return true;
   }
 
   Future<void> _initTrackingService() async {
+    final fixesProvider = context.read<FixesProvider>();
     final trackingEnabled = await TrackingService.isEnabled;
     if (trackingEnabled) {
-      await TrackingService.start();
+      await fixesProvider.enableTracking();
     } else {
-      await TrackingService.stop();
+      await fixesProvider.disableTracking();
     }
   }
 
@@ -141,27 +112,13 @@ class _LayoutPageState extends State<LayoutPage>
         await notificationProvider.refresh();
       }),
     );
-    final deviceProvider = context.read<DeviceProvider>();
-    await FirebaseMessagingService(
-      navigatorKey: navigatorKey,
-    ).init(deviceProvider: deviceProvider);
-  }
-
-  void _showErrorSnackBar(String message) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-        ),
-      );
-    }
+    await FirebaseMessagingService(navigatorKey: navigatorKey).init();
   }
 
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
+    AuthProvider authProvider = context.watch<AuthProvider>();
 
     final drawerItems = <CustomDrawerItem>[
       CustomDrawerItem(
@@ -218,7 +175,7 @@ class _LayoutPageState extends State<LayoutPage>
             name: isOpened ? 'drawer_open' : 'drawer_close',
           );
         },
-        body: userProvider.isLoading
+        body: userProvider.isLoading || authProvider.isLoading
             ? Center(child: CircularProgressIndicator())
             : userProvider.user == null
             ? _retryPage()

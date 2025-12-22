@@ -4,8 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mosquito_alert_app/app_config.dart';
+import 'package:mosquito_alert_app/features/device/presentation/state/data/device_repository.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/pages/notification_detail_page.dart';
-import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/widgets/notification_banner.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -14,9 +14,15 @@ import 'package:provider/provider.dart';
 class FirebaseMessagingService {
   final GlobalKey<NavigatorState> navigatorKey;
 
+  static late DeviceRepository deviceRepository;
+
+  static void configure({required DeviceRepository deviceRepository}) {
+    FirebaseMessagingService.deviceRepository = deviceRepository;
+  }
+
   FirebaseMessagingService({required this.navigatorKey});
 
-  Future<void> init({required DeviceProvider deviceProvider}) async {
+  Future<void> init() async {
     final appConfig = await AppConfig.loadConfig();
     if (!appConfig.useAuth) return;
 
@@ -33,7 +39,7 @@ class FirebaseMessagingService {
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-      await deviceProvider.updateFcmToken(fcmToken);
+      await deviceRepository.updateFcmToken(fcmToken);
     });
   }
 

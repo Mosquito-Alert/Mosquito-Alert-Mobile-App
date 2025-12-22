@@ -10,19 +10,23 @@ import 'package:mosquito_alert_app/app_config.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_service.dart';
 import 'package:mosquito_alert_app/core/outbox/outbox_sync_manager.dart';
 import 'package:mosquito_alert_app/core/utils/InAppReviewManager.dart';
+import 'package:mosquito_alert_app/features/auth/data/auth_repository.dart';
 import 'package:mosquito_alert_app/features/bites/data/bite_repository.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/data/breeding_site_repository.dart';
+import 'package:mosquito_alert_app/features/device/presentation/state/data/device_repository.dart';
 import 'package:mosquito_alert_app/features/fixes/data/fixes_repository.dart';
+import 'package:mosquito_alert_app/features/fixes/presentation/state/fixes_provider.dart';
 import 'package:mosquito_alert_app/features/fixes/services/tracking_service.dart';
+import 'package:mosquito_alert_app/features/notifications/data/firebase_messaging_service.dart';
 import 'package:mosquito_alert_app/features/observations/data/observation_repository.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/state/settings_provider.dart';
 import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
-import 'package:mosquito_alert_app/features/device/presentation/state/device_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/presentation/state/notification_provider.dart';
 import 'package:mosquito_alert_app/features/notifications/notification_repository.dart';
 import 'package:mosquito_alert_app/features/observations/presentation/state/observation_provider.dart';
 import 'package:mosquito_alert_app/features/bites/presentation/state/bite_provider.dart';
 import 'package:mosquito_alert_app/features/breeding_sites/presentation/state/breeding_site_provider.dart';
+import 'package:mosquito_alert_app/features/user/data/user_repository.dart';
 import 'package:mosquito_alert_app/hive/hive_service.dart';
 import 'package:mosquito_alert_app/services/api_service.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +46,7 @@ Future<void> main({String env = 'prod'}) async {
   ]);
 
   await AppConfig.setEnvironment(env);
+  final config = await AppConfig.loadConfig();
 
   try {
     await Firebase.initializeApp();
@@ -56,20 +61,26 @@ Future<void> main({String env = 'prod'}) async {
 
   await CountryCodes.init();
 
-  final authProvider = AuthProvider();
-  await authProvider.init();
+  final ApiService apiService = ApiService(baseUrl: config.baseUrl);
+  final apiClient = apiService.client;
 
-  final ApiService apiService = await ApiService.init(
-    authProvider: authProvider,
+  final deviceRepository = await DeviceRepository.create(apiClient: apiClient);
+  final authRepository = AuthRepository(
+    apiClient: apiClient,
+    getCurrentDevice: () async {
+      return deviceRepository.currentDevice ??
+          await deviceRepository.registerCurrentDevice();
+    },
   );
-  final MosquitoAlert apiClient = apiService.client;
+  final authProvider = AuthProvider(repository: authRepository);
+  await authProvider.restoreSession();
 
-  authProvider.setApiClient(apiClient);
-  final userProvider = await UserProvider.create(apiClient: apiClient);
-  final deviceProvider = await DeviceProvider.create(apiClient: apiClient);
+  FirebaseMessagingService.configure(deviceRepository: deviceRepository);
 
-  final appConfig = await AppConfig.loadConfig();
-  if (appConfig.useAuth) {
+  final userRepository = UserRepository(apiClient: apiClient);
+  final userProvider = await UserProvider.create(repository: userRepository);
+
+  if (config.useAuth) {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     await Workmanager().registerPeriodicTask(
       outboxSyncTaskName,
@@ -96,11 +107,20 @@ Future<void> main({String env = 'prod'}) async {
   // Auto-sync when online
   final apiConnection = InternetConnection.createInstance(
     customCheckOptions: [
+      // TODO: use /ping endpoint.
       InternetCheckOption(uri: Uri.parse(apiClient.dio.options.baseUrl)),
     ],
   );
   apiConnection.onStatusChange.listen((status) async {
     if (status == InternetStatus.connected) {
+      if (!authProvider.isAuthenticated) {
+        try {
+          await authProvider.restoreSession();
+        } catch (e) {
+          print('Error auto logging in: $e');
+          return;
+        }
+      }
       await syncManager.syncAll();
     }
   });
@@ -120,7 +140,6 @@ Future<void> main({String env = 'prod'}) async {
         ChangeNotifierProvider<SettingsProvider>(
           create: (_) => SettingsProvider(),
         ),
-        ChangeNotifierProvider<DeviceProvider>.value(value: deviceProvider),
         ChangeNotifierProvider<NotificationProvider>(
           create: (_) => NotificationProvider(
             repository: NotificationRepository(apiClient: apiClient),
@@ -136,6 +155,7 @@ Future<void> main({String env = 'prod'}) async {
           create: (_) =>
               BreedingSiteProvider(repository: breedingSiteRepository),
         ),
+        ChangeNotifierProvider<FixesProvider>(create: (_) => FixesProvider()),
       ],
       child: MyApp(apiConnection: apiConnection),
     ),
@@ -151,44 +171,22 @@ void callbackDispatcher() {
       print('$err');
     }
 
-    final authProvider = AuthProvider();
-    await authProvider.init();
-
-    final ApiService apiService = await ApiService.init(
-      authProvider: authProvider,
-    );
-    final MosquitoAlert apiClient = apiService.client;
-
-    authProvider.setApiClient(apiClient);
-
-    final userProvider = await UserProvider.create(apiClient: apiClient);
-    final deviceProvider = await DeviceProvider.create(apiClient: apiClient);
-    String? username = authProvider.username;
-    String? password = authProvider.password;
-    if (username == null && password == null) {
-      // No user credentials available, cannot proceed
-      return Future.value(false);
-    }
-    try {
-      await authProvider.login(username: username!, password: password!);
-      await userProvider.fetchUser();
-    } catch (e) {
-      print('Error logging in: $e');
-      return Future.value(false); // Login failed, cannot proceed
-    }
-    try {
-      await deviceProvider.registerDevice();
-      if (deviceProvider.device != null) {
-        await authProvider.setDevice(deviceProvider.device!);
-      }
-    } catch (e) {
-      print('Error registering device: $e');
-    }
+    final config = await AppConfig.loadConfig();
 
     // Initialize Hive
     await initHive();
     // Initialize Outbox
     await OutboxService().init();
+
+    final ApiService apiService = ApiService(baseUrl: config.baseUrl);
+    final apiClient = apiService.client;
+
+    final authRepository = AuthRepository(apiClient: apiClient);
+    try {
+      await authRepository.restoreSession();
+    } catch (_) {
+      // Do nothing. There are task that can work offline.
+    }
 
     final fixesRepository = FixesRepository(apiClient: apiClient);
 

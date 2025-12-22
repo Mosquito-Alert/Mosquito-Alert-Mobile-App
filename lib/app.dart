@@ -2,7 +2,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:mosquito_alert_app/core/utils/random.dart';
 import 'package:mosquito_alert_app/core/widgets/offline_banner.dart';
 import 'package:mosquito_alert_app/features/auth/presentation/state/auth_provider.dart';
 import 'package:mosquito_alert_app/features/onboarding/data/onboarding_repository.dart';
@@ -140,9 +139,7 @@ class MyApp extends StatelessWidget {
                   : OnboardingFlowPage(
                       onCompleted: () async {
                         final authProvider = context.read<AuthProvider>();
-                        await authProvider.createGuestUser(
-                          password: getRandomPassword(10),
-                        );
+                        await authProvider.createGuestAccount();
                       },
                     );
             },
