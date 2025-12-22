@@ -33,9 +33,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 
   Future<void> _logScreenView() async {
-    await FirebaseAnalytics.instance.logScreenView(
-      screenName: '/notifications',
-    );
+    try {
+      await FirebaseAnalytics.instance.logScreenView(
+        screenName: '/notifications',
+      );
+    } catch (e) {
+      // Handle error if necessary
+    }
   }
 
   @override

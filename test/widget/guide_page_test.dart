@@ -19,20 +19,17 @@ Future<void> pumpAndSettleIgnoringFirebaseException(WidgetTester tester) async {
 }
 
 /// Creates a test widget wrapping GuidePage with required dependencies
-Widget createTestWidget({
-  Function? goBackToHomepage,
-}) {
+Widget createTestWidget({Function? goBackToHomepage}) {
   return MaterialApp(
     home: GuidePage(
-      goBackToHomepage: goBackToHomepage ??
+      goBackToHomepage:
+          goBackToHomepage ??
           (int index) {
             // Default callback does nothing - tests will provide their own
           },
       analyticsService: MockAnalyticsService(),
     ),
-    localizationsDelegates: const [
-      MockMyLocalizationsDelegate(),
-    ],
+    localizationsDelegates: const [MockMyLocalizationsDelegate()],
     supportedLocales: const [Locale('en')],
   );
 }
@@ -47,8 +44,9 @@ void main() {
     setUp(() {
       // Add any setup needed for each test here if required
     });
-    testWidgets('should render GuidePage with IntroSlider and 9 slides',
-        (WidgetTester tester) async {
+    testWidgets('should render GuidePage with IntroSlider and 9 slides', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await pumpAndSettleIgnoringFirebaseException(tester);
@@ -64,27 +62,33 @@ void main() {
       expect(introSlider.slides?.length, equals(9));
     });
 
-    testWidgets('should display first slide content initially',
-        (WidgetTester tester) async {
+    testWidgets('should display first slide content initially', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Check if first slide content is visible
       // Look for the text content of the first slide
-      expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('should navigate forward through slides using next button',
-        (WidgetTester tester) async {
+    testWidgets('should navigate forward through slides using next button', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Initially on slide 1
-      expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
+        findsOneWidget,
+      );
 
       // When - Tap next button (navigate_next icon)
       final nextButton = find.byIcon(Icons.navigate_next);
@@ -94,14 +98,19 @@ void main() {
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       // Then - Should be on slide 2
-      expect(find.textContaining('Mosquito Identification - Slide 2'),
-          findsOneWidget);
-      expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
-          findsNothing);
+      expect(
+        find.textContaining('Mosquito Identification - Slide 2'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
+        findsNothing,
+      );
     });
 
-    testWidgets('should navigate through multiple slides sequentially',
-        (WidgetTester tester) async {
+    testWidgets('should navigate through multiple slides sequentially', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
@@ -123,8 +132,9 @@ void main() {
       expect(find.textContaining('Slide 3'), findsOneWidget);
     });
 
-    testWidgets('should support navigation gestures within IntroSlider',
-        (WidgetTester tester) async {
+    testWidgets('should support navigation gestures within IntroSlider', (
+      WidgetTester tester,
+    ) async {
       // Given - Navigate to slide 3 first
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
@@ -153,8 +163,9 @@ void main() {
       // The actual navigation outcome depends on IntroSlider's gesture configuration
     });
 
-    testWidgets('should show done button on last slide',
-        (WidgetTester tester) async {
+    testWidgets('should show done button on last slide', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
@@ -172,18 +183,21 @@ void main() {
       expect(find.byIcon(Icons.done), findsOneWidget);
     });
 
-    testWidgets('should call goBackToHomepage when done button is pressed',
-        (WidgetTester tester) async {
+    testWidgets('should call goBackToHomepage when done button is pressed', (
+      WidgetTester tester,
+    ) async {
       // Given
       bool callbackInvoked = false;
       int callbackArgument = -1;
 
-      await tester.pumpWidget(createTestWidget(
-        goBackToHomepage: (int index) {
-          callbackInvoked = true;
-          callbackArgument = index;
-        },
-      ));
+      await tester.pumpWidget(
+        createTestWidget(
+          goBackToHomepage: (int index) {
+            callbackInvoked = true;
+            callbackArgument = index;
+          },
+        ),
+      );
       await pumpAndSettleIgnoringFirebaseException(tester);
 
       final nextButton = find.byIcon(Icons.navigate_next);
@@ -209,20 +223,25 @@ void main() {
       expect(callbackArgument, equals(0));
     });
 
-    testWidgets('should handle navigation limits correctly',
-        (WidgetTester tester) async {
+    testWidgets('should handle navigation limits correctly', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
       // Test backward navigation from first slide (should not crash)
-      await tester.drag(find.byType(IntroSlider),
-          const Offset(300, 0)); // Try to swipe back from slide 1
+      await tester.drag(
+        find.byType(IntroSlider),
+        const Offset(300, 0),
+      ); // Try to swipe back from slide 1
       await tester.pumpAndSettle();
 
       // Should still be on slide 1
-      expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
+        findsOneWidget,
+      );
 
       // Navigate to last slide
       final nextButton = find.byIcon(Icons.navigate_next);
@@ -234,12 +253,15 @@ void main() {
       // Try to navigate forward from last slide (should show done button, not next)
       expect(find.textContaining('Thank You - Slide 9'), findsOneWidget);
       expect(find.byIcon(Icons.done), findsOneWidget);
-      expect(find.byIcon(Icons.navigate_next),
-          findsNothing); // Next button should not be visible on last slide
+      expect(
+        find.byIcon(Icons.navigate_next),
+        findsNothing,
+      ); // Next button should not be visible on last slide
     });
 
-    testWidgets('should display proper slide indicators',
-        (WidgetTester tester) async {
+    testWidgets('should display proper slide indicators', (
+      WidgetTester tester,
+    ) async {
       // Given
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
@@ -257,34 +279,40 @@ void main() {
     });
 
     testWidgets(
-        'should render custom slide content with images and descriptions',
-        (WidgetTester tester) async {
-      // Given
-      await tester.pumpWidget(createTestWidget());
-      await tester.pumpAndSettle();
+      'should render custom slide content with images and descriptions',
+      (WidgetTester tester) async {
+        // Given
+        await tester.pumpWidget(createTestWidget());
+        await tester.pumpAndSettle();
 
-      // Then - Should find Image widgets for slide content
-      // Note: In test environment, Image.asset might not load actual images
-      // but the widget structure should be present
-      expect(find.byType(Image), findsAtLeastNWidgets(1));
+        // Then - Should find Image widgets for slide content
+        // Note: In test environment, Image.asset might not load actual images
+        // but the widget structure should be present
+        expect(find.byType(Image), findsAtLeastNWidgets(1));
 
-      // Should find HTML content containers for descriptions
-      expect(find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
-          findsOneWidget);
-    });
+        // Should find HTML content containers for descriptions
+        expect(
+          find.textContaining('Welcome to the Mosquito Guide - Slide 1'),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('should complete full navigation cycle',
-        (WidgetTester tester) async {
+    testWidgets('should complete full navigation cycle', (
+      WidgetTester tester,
+    ) async {
       // Given
       bool callbackInvoked = false;
       int callbackArgument = -1;
 
-      await tester.pumpWidget(createTestWidget(
-        goBackToHomepage: (int index) {
-          callbackInvoked = true;
-          callbackArgument = index;
-        },
-      ));
+      await tester.pumpWidget(
+        createTestWidget(
+          goBackToHomepage: (int index) {
+            callbackInvoked = true;
+            callbackArgument = index;
+          },
+        ),
+      );
       await tester.pumpAndSettle();
 
       // When - Navigate through entire guide
