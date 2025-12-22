@@ -26,16 +26,27 @@ class OnboardingFlowPage extends StatelessWidget {
     // ====== BEGIN ONBOARDING FLOW ======
 
     return Navigator(
-      onGenerateRoute: (settings) {
+      onGenerateRoute: (_) {
         return MaterialPageRoute(
-          builder: (_) => TermsPage(
+          builder: (navigatorContext) => TermsPage(
             onAccepted: () async {
               Navigator.push(
-                context,
+                navigatorContext,
                 MaterialPageRoute(
-                  builder: (_) => LocationConsentPage(
+                  builder: (navigatorContext) => LocationConsentPage(
                     onCompleted: () async {
-                      await onCompleted?.call();
+                      try {
+                        await onCompleted?.call();
+                      } catch (e) {
+                        ScaffoldMessenger.of(navigatorContext).showSnackBar(
+                          SnackBar(
+                            content: Text(e.toString()),
+                            backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 4),
+                          ),
+                        );
+                        return;
+                      }
                       await provider.completeOnboarding();
                     },
                   ),
