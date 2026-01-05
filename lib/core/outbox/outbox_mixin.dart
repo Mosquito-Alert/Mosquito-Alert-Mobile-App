@@ -72,7 +72,14 @@ mixin OutboxMixin<
         .toList();
 
     items.addAll(
-      outbox.getAll().where((i) => i.repository == repoName).toList(),
+      outbox
+          .getAll()
+          .where(
+            (i) =>
+                i.repository == repoName &&
+                i.operation != OutBoxOperation.create,
+          )
+          .toList(),
     );
 
     for (final item in items) {
