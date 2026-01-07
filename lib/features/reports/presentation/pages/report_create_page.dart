@@ -8,12 +8,11 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/InAppReviewManager.dart';
 
 /// Uses PageView slider architecture for step-by-step progression
-class ReportCreatePage<ReportType extends BaseReportModel>
-    extends StatefulWidget {
+class ReportCreatePage<TReport extends BaseReportModel> extends StatefulWidget {
   final String title;
   final List<StepPage> stepPages;
   final Map<String, Object>? analyticsParameters;
-  final Future<ReportType> Function(BuildContext context) onSubmit;
+  final Future<TReport> Function(BuildContext context) onSubmit;
   final Future<void> Function(BuildContext context, dynamic report)?
   onSubmitSuccess;
 
@@ -29,8 +28,8 @@ class ReportCreatePage<ReportType extends BaseReportModel>
   _ReportCreatePageState createState() => _ReportCreatePageState();
 }
 
-class _ReportCreatePageState<ReportType extends BaseReportModel>
-    extends State<ReportCreatePage<ReportType>>
+class _ReportCreatePageState<TReport extends BaseReportModel>
+    extends State<ReportCreatePage<TReport>>
     with TickerProviderStateMixin {
   late PageController _pageController;
   late TabController _tabController;
@@ -146,7 +145,7 @@ class _ReportCreatePageState<ReportType extends BaseReportModel>
                     if (mounted) {
                       setState(() => isSubmitting = true);
                     }
-                    ReportType? newReport;
+                    TReport? newReport;
                     try {
                       newReport = await widget.onSubmit(context);
                     } catch (e) {

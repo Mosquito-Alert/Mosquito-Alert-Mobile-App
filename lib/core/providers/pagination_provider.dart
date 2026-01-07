@@ -3,10 +3,10 @@ import 'package:mosquito_alert_app/core/repositories/pagination_repository.dart'
 
 abstract class PaginatedProvider<
   T,
-  RepositoryType extends PaginationRepository<T, dynamic>
+  TRepository extends PaginationRepository<T, dynamic>
 >
     extends ChangeNotifier {
-  final RepositoryType repository;
+  final TRepository repository;
   final List<T> Function(List<T>)? orderFunction;
 
   PaginatedProvider({required this.repository, this.orderFunction});

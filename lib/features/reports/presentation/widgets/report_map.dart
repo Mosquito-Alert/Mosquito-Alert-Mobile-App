@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mosquito_alert_app/features/reports/domain/models/base_report.dart';
 
-class ReportMap<ReportType extends BaseReportModel> extends StatelessWidget {
-  final ReportType report;
+class ReportMap<TReport extends BaseReportModel> extends StatelessWidget {
+  final TReport report;
   final LatLng location;
 
   ReportMap({super.key, required this.report})

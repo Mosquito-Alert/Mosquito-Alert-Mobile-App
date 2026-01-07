@@ -1,5 +1,5 @@
-abstract class PaginationRepository<T, ApiType> {
-  final ApiType itemApi;
+abstract class PaginationRepository<T, TApi> {
+  final TApi itemApi;
 
   PaginationRepository({required this.itemApi});
 

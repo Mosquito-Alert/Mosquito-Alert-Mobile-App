@@ -3,11 +3,10 @@ import 'package:mosquito_alert_app/features/reports/domain/models/base_report.da
 import 'package:mosquito_alert_app/features/reports/presentation/pages/report_detail_page.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
-class ReportListTile<ReportType extends BaseReportModel>
-    extends StatelessWidget {
-  final ReportType report;
-  final Widget? Function(ReportType report)? leadingBuilder;
-  final ReportDetailPage<ReportType> reportDetailPage;
+class ReportListTile<TReport extends BaseReportModel> extends StatelessWidget {
+  final TReport report;
+  final Widget? Function(TReport report)? leadingBuilder;
+  final ReportDetailPage<TReport> reportDetailPage;
 
   const ReportListTile({
     Key? key,

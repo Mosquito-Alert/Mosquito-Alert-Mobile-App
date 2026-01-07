@@ -9,12 +9,12 @@ import 'package:mosquito_alert_app/features/reports/data/report_repository.dart'
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 
-class ReportDetailScaffold<ReportType extends BaseReportModel>
+class ReportDetailScaffold<TReport extends BaseReportModel>
     extends StatelessWidget {
-  final ReportType report;
+  final TReport report;
   final ReportProvider<
-    ReportType,
-    ReportRepository<ReportType, dynamic, dynamic, dynamic>
+    TReport,
+    ReportRepository<TReport, dynamic, dynamic, dynamic>
   >
   provider;
   final List<ReportDetailField>? extraFields;
@@ -204,12 +204,12 @@ class ReportDetailScaffold<ReportType extends BaseReportModel>
             ),
             SliverList(
               delegate: SliverChildListDelegate(<Widget>[
-                ReportInfoList<ReportType>(
+                ReportInfoList<TReport>(
                   report: report,
                   extraFields: extraFields,
                 ),
                 const Divider(thickness: 0.1),
-                ReportMap<ReportType>(report: report),
+                ReportMap<TReport>(report: report),
                 const SizedBox(height: 20),
               ]),
             ),

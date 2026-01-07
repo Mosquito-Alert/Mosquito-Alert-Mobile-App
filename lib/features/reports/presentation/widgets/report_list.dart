@@ -7,10 +7,9 @@ import 'package:mosquito_alert_app/features/reports/presentation/widgets/report_
 import 'package:mosquito_alert_app/features/reports/presentation/state/report_provider.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
-class ReportList<ReportType extends BaseReportModel> extends StatefulWidget {
-  final ReportProvider<ReportType, dynamic> provider;
-  final ReportListTile<ReportType> Function({required dynamic report})
-  tileBuilder;
+class ReportList<TReport extends BaseReportModel> extends StatefulWidget {
+  final ReportProvider<TReport, dynamic> provider;
+  final ReportListTile<TReport> Function({required dynamic report}) tileBuilder;
 
   const ReportList({
     super.key,
@@ -30,8 +29,8 @@ class SectionHeader {
   String get formattedDate => DateFormat.yMMMMd().format(date);
 }
 
-class _ReportList<ReportType extends BaseReportModel>
-    extends State<ReportList<ReportType>> {
+class _ReportList<TReport extends BaseReportModel>
+    extends State<ReportList<TReport>> {
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,7 @@ class _ReportList<ReportType extends BaseReportModel>
     });
   }
 
-  List<Object> _addHeaders(List<ReportType> objects) {
+  List<Object> _addHeaders(List<TReport> objects) {
     if (objects.isEmpty) return [];
 
     // Group items by date
@@ -101,7 +100,7 @@ class _ReportList<ReportType extends BaseReportModel>
                   ),
                 ),
               );
-            } else if (item is ReportType) {
+            } else if (item is TReport) {
               return widget.tileBuilder(report: item);
             } else {
               return const SizedBox.shrink(); // Fallback for unknown types

@@ -5,9 +5,8 @@ import 'package:mosquito_alert_app/features/reports/domain/models/report_detail_
 import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 
-class ReportInfoList<ReportType extends BaseReportModel>
-    extends StatelessWidget {
-  final ReportType report;
+class ReportInfoList<TReport extends BaseReportModel> extends StatelessWidget {
+  final TReport report;
   final List<ReportDetailField>? extraFields;
 
   const ReportInfoList({super.key, required this.report, this.extraFields});
