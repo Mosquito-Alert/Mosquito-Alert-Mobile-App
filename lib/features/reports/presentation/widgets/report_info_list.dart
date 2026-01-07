@@ -46,7 +46,9 @@ class ReportInfoList<TReport extends BaseReportModel> extends StatelessWidget {
       ),
       ListTile(
         leading: Icon(Icons.calendar_month, color: Style.colorPrimary),
-        title: Text(DateFormat.yMMMEd().add_Hm().format(report.createdAtLocal)),
+        title: Text(
+          DateFormat.yMMMEd().add_Hm().format(report.createdAtLocal.toLocal()),
+        ),
       ),
       // Add extra tiles
       if (extraFields != null)

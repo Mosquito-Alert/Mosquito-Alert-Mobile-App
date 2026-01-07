@@ -48,7 +48,7 @@ class _ReportList<TReport extends BaseReportModel>
     final List<Object> itemsWithHeaders = [];
     DateTime? lastDate;
     for (var item in objects) {
-      final createdAt = item.createdAtLocal;
+      final createdAt = item.createdAtLocal.toLocal();
       final currentDate = DateTime(
         createdAt.year,
         createdAt.month,
