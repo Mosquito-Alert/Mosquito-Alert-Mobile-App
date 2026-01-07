@@ -154,28 +154,27 @@ class _LayoutPageState extends State<LayoutPage>
       ),
     ];
 
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: Image.asset('assets/img/ic_logo.webp', height: 40),
-          actions: <Widget>[NotificationBadge()],
-        ),
-        drawer: CustomDrawer(
-          selectedIndex: _selectedDrawerIndex,
-          items: drawerItems,
-          onTapChanged: (index) => setState(() {
-            _selectedDrawerIndex = index;
-          }),
-        ),
-        onDrawerChanged: (isOpened) async {
-          await FirebaseAnalytics.instance.logEvent(
-            name: isOpened ? 'drawer_open' : 'drawer_close',
-          );
-        },
-        body: userProvider.isLoading || authProvider.isLoading
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Image.asset('assets/img/ic_logo.webp', height: 40),
+        actions: <Widget>[NotificationBadge()],
+      ),
+      drawer: CustomDrawer(
+        selectedIndex: _selectedDrawerIndex,
+        items: drawerItems,
+        onTapChanged: (index) => setState(() {
+          _selectedDrawerIndex = index;
+        }),
+      ),
+      onDrawerChanged: (isOpened) async {
+        await FirebaseAnalytics.instance.logEvent(
+          name: isOpened ? 'drawer_open' : 'drawer_close',
+        );
+      },
+      body: SafeArea(
+        child: userProvider.isLoading || authProvider.isLoading
             ? Center(child: CircularProgressIndicator())
             : userProvider.user == null
             ? _retryPage()
