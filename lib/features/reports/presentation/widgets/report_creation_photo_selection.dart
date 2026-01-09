@@ -33,14 +33,12 @@ class _ReportCreationPhotoSelectionState
     extends State<ReportCreationPhotoSelection> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: PhotoSelector(
-        selectedPhotos: widget.photos,
-        onPhotosChanged: widget.onPhotosChanged,
-        maxPhotos: widget.maxPhotos,
-        infoBadgeTextKey: widget.infoBadgeTextKey,
-        thumbnailText: widget.thumbnailText,
-      ),
+    return PhotoSelector(
+      selectedPhotos: widget.photos,
+      onPhotosChanged: widget.onPhotosChanged,
+      maxPhotos: widget.maxPhotos,
+      infoBadgeTextKey: widget.infoBadgeTextKey,
+      thumbnailText: widget.thumbnailText,
     );
   }
 }
