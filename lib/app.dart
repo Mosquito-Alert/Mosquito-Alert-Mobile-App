@@ -10,7 +10,6 @@ import 'package:mosquito_alert_app/features/onboarding/presentation/state/onboar
 import 'package:mosquito_alert_app/screens/layout_page.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizationsDelegate.dart';
-import 'package:mosquito_alert_app/core/utils/ObserverUtils.dart';
 import 'package:mosquito_alert_app/core/utils/style.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
@@ -37,14 +36,6 @@ class AppShell extends StatelessWidget {
 }
 
 class MyApp extends StatelessWidget {
-  static FirebaseAnalyticsObserver analyticsObserver =
-      FirebaseAnalyticsObserver(
-        analytics: FirebaseAnalytics.instance,
-        routeFilter: (route) {
-          return route is PageRoute && route.settings.name != '/';
-        },
-      );
-
   const MyApp({super.key, required this.apiConnection});
 
   final InternetConnection apiConnection;
@@ -125,9 +116,13 @@ class MyApp extends StatelessWidget {
             primaryColorLight: Style.colorPrimary,
           ),
           navigatorKey: navigatorKey,
-          navigatorObservers: <NavigatorObserver>[
-            analyticsObserver,
-            ObserverUtils.routeObserver,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(
+              analytics: FirebaseAnalytics.instance,
+              routeFilter: (route) {
+                return route is PageRoute && route.settings.name != '/';
+              },
+            ),
           ],
           builder: (context, child) {
             return AppShell(apiConnection: apiConnection, child: child!);

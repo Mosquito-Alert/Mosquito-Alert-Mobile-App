@@ -13,7 +13,6 @@ import 'package:mosquito_alert_app/features/notifications/presentation/widgets/n
 import 'package:mosquito_alert_app/features/user/presentation/state/user_provider.dart';
 import 'package:mosquito_alert_app/screens/widgets/custom_drawer.dart';
 import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
-import 'package:mosquito_alert_app/core/utils/ObserverUtils.dart';
 import 'package:provider/provider.dart';
 import 'package:mosquito_alert_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:mosquito_alert_app/screens/home_page.dart';
@@ -26,8 +25,7 @@ class LayoutPage extends StatefulWidget {
   _LayoutPageState createState() => _LayoutPageState();
 }
 
-class _LayoutPageState extends State<LayoutPage>
-    with RouteAware, WidgetsBindingObserver {
+class _LayoutPageState extends State<LayoutPage> with WidgetsBindingObserver {
   int _selectedDrawerIndex = 0;
 
   late final NotificationProvider notificationProvider;
@@ -42,15 +40,8 @@ class _LayoutPageState extends State<LayoutPage>
 
   @override
   void dispose() {
-    ObserverUtils.routeObserver.unsubscribe(this);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   // Called when app lifecycle state changes
