@@ -106,10 +106,25 @@ Future<void> main({String env = 'prod'}) async {
 
   // Auto-sync when online
   final apiConnection = InternetConnection.createInstance(
+    useDefaultOptions: false,
+    enableStrictCheck: true,
     customCheckOptions: [
-      // TODO: use /ping endpoint.
+      // NOTE: this is dummy, all the logic is in customConnectivityCheck
       InternetCheckOption(uri: Uri.parse(apiClient.dio.options.baseUrl)),
     ],
+    customConnectivityCheck: (option) async {
+      try {
+        final pingApi = apiClient.getPingApi();
+        final response = await pingApi.retrieve();
+
+        return InternetCheckResult(
+          option: option,
+          isSuccess: response.statusCode == 204,
+        );
+      } catch (_) {
+        return InternetCheckResult(option: option, isSuccess: false);
+      }
+    },
   );
   apiConnection.onStatusChange.listen((status) async {
     if (status == InternetStatus.connected) {
