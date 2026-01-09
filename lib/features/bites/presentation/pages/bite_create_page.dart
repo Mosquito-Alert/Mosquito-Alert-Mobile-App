@@ -23,6 +23,8 @@ class BiteCreatePage extends StatefulWidget {
 }
 
 class _BiteCreatePageState extends State<BiteCreatePage> {
+  String title = '';
+
   final createdAt = DateTime.now().toUtc();
   final localId = Uuid().v4();
 
@@ -82,7 +84,7 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
   @override
   Widget build(BuildContext context) {
     return ReportCreatePage<BiteReport>(
-      title: MyLocalizations.of(context, 'bite_report_title'),
+      title: title,
       analyticsParameters: analyticsParameters,
       stepPages: [
         // Step 1: Bite questions
@@ -90,7 +92,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
           canContinue: ValueNotifier<bool>(
             bites.values.any((count) => count > 0),
           ),
-          onDisplay: () => _logAnalyticsEvent('report_add_bites'),
+          onDisplay: () {
+            _logAnalyticsEvent('report_add_bites');
+            setState(() {
+              title = MyLocalizations.of(context, 'biting_report_txt');
+            });
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -119,7 +126,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
         // Step 2: Environment questions
         StepPage(
           canContinue: ValueNotifier<bool>(eventEnvironment != null),
-          onDisplay: () => _logAnalyticsEvent('report_add_environment'),
+          onDisplay: () {
+            _logAnalyticsEvent('report_add_environment');
+            setState(() {
+              title = MyLocalizations.of(context, 'select_environment');
+            });
+          },
           child: ReportCreationEnvironmentStep(
             initialEnvironmentName: eventEnvironment != null
                 ? eventEnvironment!.name
@@ -138,7 +150,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
         // Step 3: Moment questions
         StepPage(
           canContinue: ValueNotifier<bool>(eventMoment != null),
-          onDisplay: () => _logAnalyticsEvent('report_add_moment'),
+          onDisplay: () {
+            _logAnalyticsEvent('report_add_moment');
+            setState(() {
+              title = MyLocalizations.of(context, 'select_environment');
+            });
+          },
           child: BiteCreationEventmomentStep(
             onChange: (value) {
               setState(() {
@@ -152,7 +169,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
           canContinue: ValueNotifier<bool>(
             !_isLocationLoading && location != null,
           ),
-          onDisplay: () => _logAnalyticsEvent('report_add_location'),
+          onDisplay: () {
+            _logAnalyticsEvent('report_add_location');
+            setState(() {
+              title = MyLocalizations.of(context, 'select-location');
+            });
+          },
           fullScreen: true,
           child: LocationSelector(
             initialLatitude: location?.point.latitude,
@@ -181,7 +203,12 @@ class _BiteCreatePageState extends State<BiteCreatePage> {
         // Step 5: Notes and submit
         StepPage(
           canContinue: ValueNotifier<bool>(true),
-          onDisplay: () => _logAnalyticsEvent('report_add_note'),
+          onDisplay: () {
+            _logAnalyticsEvent('report_add_note');
+            setState(() {
+              title = MyLocalizations.of(context, 'notes');
+            });
+          },
           child: ReportCreationNotesStep(
             initialNotes: notes,
             onChange: (String? newNotes) {
