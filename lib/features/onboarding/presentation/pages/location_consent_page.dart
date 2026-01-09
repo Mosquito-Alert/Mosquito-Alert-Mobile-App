@@ -24,19 +24,21 @@ class LocationConsentPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            spacing: 16,
             children: [
               Expanded(
-                child: Style.outlinedButton(
-                  MyLocalizations.of(context, "no_show_info"),
-                  () async => await onCompleted?.call(),
+                flex: 1,
+                child: OutlinedButton(
+                  child: Text(MyLocalizations.of(context, "no_show_info")),
+                  onPressed: () async => await onCompleted?.call(),
                   key: const Key("rejectBackgroundTrackingBtn"),
                 ),
               ),
-              const SizedBox(width: 16),
               Expanded(
-                child: Style.button(
-                  MyLocalizations.of(context, 'continue_txt'),
-                  () {
+                flex: 2,
+                child: FilledButton(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -45,6 +47,7 @@ class LocationConsentPage extends StatelessWidget {
                       ),
                     );
                   },
+                  child: Text(MyLocalizations.of(context, 'continue_txt')),
                 ),
               ),
             ],

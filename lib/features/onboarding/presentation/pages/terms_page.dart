@@ -17,9 +17,8 @@ class TermsPage extends StatefulWidget {
 }
 
 class _TermsPageState extends State<TermsPage> {
-  bool? acceptConditions = false;
-  bool? acceptPrivacy = false;
-  StreamController<bool> buttonStream = StreamController<bool>.broadcast();
+  bool acceptConditions = false;
+  bool acceptPrivacy = false;
 
   @override
   void initState() {
@@ -34,274 +33,179 @@ class _TermsPageState extends State<TermsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: FilledButton(
+            key: ValueKey("acceptTermsButton"),
+            child: Text(MyLocalizations.of(context, 'continue_txt')),
+            onPressed: acceptPrivacy && acceptConditions
+                ? () async {
+                    await widget.onAccepted?.call();
+                  }
+                : null,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Column(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Style.title(MyLocalizations.of(context, 'consent_welcome_txt')),
+              const SizedBox(height: 8),
+              Style.body(MyLocalizations.of(context, 'consent_txt_01')),
+              const SizedBox(height: 4),
+              Style.body(MyLocalizations.of(context, 'consent_txt_02')),
+              const SizedBox(height: 16),
+
+              Style.titleMedium(MyLocalizations.of(context, 'consent_txt_03')),
+              const SizedBox(height: 8),
+              Style.body(MyLocalizations.of(context, 'consent_txt_04')),
+              const SizedBox(height: 4),
+              Style.body(MyLocalizations.of(context, 'consent_txt_05')),
+              const SizedBox(height: 16),
+
+              Style.titleMedium(MyLocalizations.of(context, 'consent_txt_06')),
+              const SizedBox(height: 8),
+              Style.body(MyLocalizations.of(context, 'consent_txt_07')),
+              Row(
                 children: <Widget>[
-                  Image.asset('assets/img/bg_consent.webp', fit: BoxFit.cover),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        const SizedBox(height: 35),
-                        Style.title(
-                          MyLocalizations.of(context, 'consent_welcome_txt'),
+                  Checkbox(
+                    visualDensity: VisualDensity.compact,
+                    key: ValueKey("acceptConditionsCheckbox"),
+                    value: acceptConditions,
+                    onChanged: (newValue) {
+                      setState(() {
+                        acceptConditions = newValue!;
+                      });
+                    },
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Style.textColor, fontSize: 14),
+                      children: [
+                        TextSpan(
+                          text: MyLocalizations.of(context, 'consent_txt_08'),
                         ),
-                        const SizedBox(height: 20),
-                        Style.body(
-                          MyLocalizations.of(context, 'consent_txt_01'),
-                        ),
-                        SizedBox(height: 5),
-                        Style.body(
-                          MyLocalizations.of(context, 'consent_txt_02'),
-                        ),
-                        SizedBox(height: 20),
-                        Style.titleMedium(
-                          MyLocalizations.of(context, 'consent_txt_03'),
-                        ),
-                        SizedBox(height: 10),
-                        Style.body(
-                          MyLocalizations.of(context, 'consent_txt_04'),
-                        ),
-                        SizedBox(height: 5),
-                        Style.body(
-                          MyLocalizations.of(context, 'consent_txt_05'),
-                        ),
-                        SizedBox(height: 20),
-                        Style.titleMedium(
-                          MyLocalizations.of(context, 'consent_txt_06'),
-                        ),
-                        SizedBox(height: 10),
-                        Style.body(
-                          MyLocalizations.of(context, 'consent_txt_07'),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Checkbox(
-                              key: ValueKey("acceptConditionsCheckbox"),
-                              value: acceptConditions,
-                              onChanged: (newValue) {
-                                buttonStream.add(acceptPrivacy! && newValue!);
-                                setState(() {
-                                  acceptConditions = newValue;
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Style.textColor,
-                                    fontSize: 14,
+                        TextSpan(
+                          text: MyLocalizations.of(context, 'consent_txt_09'),
+                          style: TextStyle(color: Style.colorPrimary),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InfoPageInWebview(
+                                    MyLocalizations.of(context, 'terms_link'),
+                                    localHtml: true,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: MyLocalizations.of(
-                                        context,
-                                        'consent_txt_08',
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: MyLocalizations.of(
-                                        context,
-                                        'consent_txt_09',
-                                      ),
-                                      style: TextStyle(
-                                        color: Style.colorPrimary,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InfoPageInWebview(
-                                                    MyLocalizations.of(
-                                                      context,
-                                                      'terms_link',
-                                                    ),
-                                                    localHtml: true,
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                    ),
-                                  ],
                                 ),
-                              ),
-                            ),
-                          ],
+                              );
+                            },
                         ),
-                        Row(
-                          children: <Widget>[
-                            Checkbox(
-                              key: ValueKey("acceptPrivacyPolicy"),
-                              value: acceptPrivacy,
-                              onChanged: (newValue) {
-                                buttonStream.add(
-                                  acceptConditions! && newValue!,
-                                );
-                                setState(() {
-                                  acceptPrivacy = newValue;
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Style.textColor,
-                                    fontSize: 14,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: MyLocalizations.of(
-                                        context,
-                                        'consent_txt_10',
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: MyLocalizations.of(
-                                        context,
-                                        'consent_txt_11',
-                                      ),
-                                      style: TextStyle(
-                                        color: Style.colorPrimary,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InfoPageInWebview(
-                                                    MyLocalizations.of(
-                                                      context,
-                                                      'privacy_link',
-                                                    ),
-                                                    localHtml: true,
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Style.textColor,
-                              fontSize: 14,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: MyLocalizations.of(
-                                  context,
-                                  'consent_txt_14',
-                                ),
-                              ),
-                              TextSpan(
-                                text: MyLocalizations.of(
-                                  context,
-                                  'consent_txt_15',
-                                ),
-                                style: TextStyle(color: Style.colorPrimary),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => InfoPageInWebview(
-                                          MyLocalizations.of(
-                                            context,
-                                            'url_about_us',
-                                          ),
-                                          localHtml: false,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Style.textColor,
-                              fontSize: 14,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: MyLocalizations.of(
-                                  context,
-                                  'consent_txt_12',
-                                ),
-                              ),
-                              TextSpan(
-                                text: MyLocalizations.of(
-                                  context,
-                                  'consent_txt_13',
-                                ),
-                                style: TextStyle(color: Style.colorPrimary),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => InfoPageInWebview(
-                                          MyLocalizations.of(
-                                            context,
-                                            'lisence_link',
-                                          ),
-                                          localHtml: true,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
                       ],
                     ),
                   ),
-                  Style.bottomOffset,
                 ],
               ),
-            ),
-            StreamBuilder<Object>(
-              stream: buttonStream.stream,
-              initialData: acceptPrivacy! && acceptConditions!,
-              builder: (context, snapshot) {
-                return Container(
-                  margin: EdgeInsets.all(15),
-                  width: double.infinity,
-                  child: Style.button(
-                    key: ValueKey("style.button"),
-                    MyLocalizations.of(context, 'continue_txt'),
-                    snapshot.data as bool
-                        ? () async {
-                            await widget.onAccepted?.call();
-                          }
-                        : null,
+              Row(
+                children: <Widget>[
+                  Checkbox(
+                    key: ValueKey("acceptPrivacyPolicy"),
+                    visualDensity: VisualDensity.compact,
+                    value: acceptPrivacy,
+                    onChanged: (newValue) {
+                      setState(() {
+                        acceptPrivacy = newValue!;
+                      });
+                    },
                   ),
-                );
-              },
-            ),
-          ],
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Style.textColor, fontSize: 14),
+                      children: [
+                        TextSpan(
+                          text: MyLocalizations.of(context, 'consent_txt_10'),
+                        ),
+                        TextSpan(
+                          text: MyLocalizations.of(context, 'consent_txt_11'),
+                          style: TextStyle(color: Style.colorPrimary),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InfoPageInWebview(
+                                    MyLocalizations.of(context, 'privacy_link'),
+                                    localHtml: true,
+                                  ),
+                                ),
+                              );
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Style.textColor, fontSize: 14),
+                  children: [
+                    TextSpan(
+                      text: MyLocalizations.of(context, 'consent_txt_14'),
+                    ),
+                    TextSpan(
+                      text: MyLocalizations.of(context, 'consent_txt_15'),
+                      style: TextStyle(color: Style.colorPrimary),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InfoPageInWebview(
+                                MyLocalizations.of(context, 'url_about_us'),
+                                localHtml: false,
+                              ),
+                            ),
+                          );
+                        },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Style.textColor, fontSize: 14),
+                  children: [
+                    TextSpan(
+                      text: MyLocalizations.of(context, 'consent_txt_12'),
+                    ),
+                    TextSpan(
+                      text: MyLocalizations.of(context, 'consent_txt_13'),
+                      style: TextStyle(color: Style.colorPrimary),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InfoPageInWebview(
+                                MyLocalizations.of(context, 'lisence_link'),
+                                localHtml: true,
+                              ),
+                            ),
+                          );
+                        },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
