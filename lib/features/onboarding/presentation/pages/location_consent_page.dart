@@ -20,78 +20,63 @@ class LocationConsentPage extends StatelessWidget {
           fontSize: 16,
         ),
       ),
-      body: SafeArea(
+      bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Style.outlinedButton(
+                  MyLocalizations.of(context, "no_show_info"),
+                  () async => await onCompleted?.call(),
+                  key: const Key("rejectBackgroundTrackingBtn"),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Style.button(
+                  MyLocalizations.of(context, 'continue_txt'),
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            LocationInfoConsentPage(onCompleted: onCompleted),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top text section
-                      Text(
-                        MyLocalizations.of(context, 'tutorial_title_13'),
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColorDark,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        MyLocalizations.of(context, 'tutorial_info_13'),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: theme.textTheme.bodyMedium?.color,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      Center(
-                        child: Image.asset(
-                          'assets/img/location/grid_aid.png',
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
+              Text(
+                MyLocalizations.of(context, 'tutorial_title_13'),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.primaryColorDark,
                 ),
               ),
-
-              // Fixed bottom buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: Style.outlinedButton(
-                      MyLocalizations.of(context, "no_show_info"),
-                      () async {
-                        await onCompleted?.call();
-                      },
-                      key: Key("rejectBackgroundTrackingBtn"),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Style.button(
-                      MyLocalizations.of(context, 'continue_txt'),
-                      () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LocationInfoConsentPage(
-                              onCompleted: onCompleted,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 16),
+              Text(
+                MyLocalizations.of(context, 'tutorial_info_13'),
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Image.asset(
+                  'assets/img/location/grid_aid.png',
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  fit: BoxFit.contain,
+                ),
               ),
             ],
           ),
