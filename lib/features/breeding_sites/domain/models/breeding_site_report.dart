@@ -6,14 +6,14 @@ import 'package:mosquito_alert_app/core/localizations/MyLocalizations.dart';
 import 'package:mosquito_alert_app/features/reports/domain/models/photo.dart';
 
 class BreedingSiteReport extends BaseReportWithPhotos {
-  final BreedingSiteSiteTypeEnum? siteType;
+  final BreedingSiteSiteTypeEnum siteType;
   final bool? hasWater;
   final bool? inPublicArea;
   final bool? hasNearMosquitoes;
   final bool? hasLarvae;
 
   BreedingSiteReport({
-    this.siteType,
+    required this.siteType,
     this.hasWater,
     this.inPublicArea,
     this.hasNearMosquitoes,

@@ -136,7 +136,7 @@ class BreedingSiteReportAdapter extends TypeAdapter<BreedingSiteReport> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BreedingSiteReport(
-      siteType: fields[0] as BreedingSiteSiteTypeEnum?,
+      siteType: fields[0] as BreedingSiteSiteTypeEnum,
       hasWater: fields[1] as bool?,
       inPublicArea: fields[2] as bool?,
       hasNearMosquitoes: fields[3] as bool?,
