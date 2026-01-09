@@ -439,10 +439,13 @@ class _BiteStickManState extends State<BiteStickMan> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(MyLocalizations.of(context, 'cancel')),
                 ),
-                Style.button(MyLocalizations.of(context, 'save'), () {
-                  onSave(tempCount);
-                  Navigator.of(context).pop();
-                }),
+                FilledButton(
+                  onPressed: () {
+                    onSave(tempCount);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(MyLocalizations.of(context, 'save')),
+                ),
               ],
             );
           },
