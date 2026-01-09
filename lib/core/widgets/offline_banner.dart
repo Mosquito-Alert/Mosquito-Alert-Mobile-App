@@ -73,7 +73,7 @@ class _OfflineBannerState extends State<OfflineBanner> {
         ? 'Offline mode'
         : 'Online';
     final color = _status == InternetStatus.disconnected
-        ? Colors.red
+        ? Colors.blue
         : Colors.green;
     final icon = _status == InternetStatus.disconnected
         ? Icons.wifi_off
