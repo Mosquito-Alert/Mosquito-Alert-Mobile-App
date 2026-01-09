@@ -51,6 +51,17 @@ class _LocationInfoConsentPageState extends State<LocationInfoConsentPage> {
               fontSize: 16,
             ),
           ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: FilledButton(
+                child: Text(
+                  MyLocalizations.of(context, 'turn_on_location_button'),
+                ),
+                onPressed: _isLoading ? null : _handleButtonPressed,
+              ),
+            ),
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -62,19 +73,6 @@ class _LocationInfoConsentPageState extends State<LocationInfoConsentPage> {
                     style: TextStyle(
                       fontSize: 16,
                       color: theme.textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primaryColorDark,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text(
-                        MyLocalizations.of(context, 'turn_on_location_button'),
-                      ),
-                      onPressed: _isLoading ? null : _handleButtonPressed,
                     ),
                   ),
                 ],

@@ -41,7 +41,7 @@ void main() {
         await tester.ensureVisible(acceptPrivacyPolicy);
         await tester.tap(acceptPrivacyPolicy);
 
-        final continueButton = find.byKey(ValueKey("style.button"));
+        final continueButton = find.byKey(ValueKey("acceptTermsButton"));
         await waitForWidget(tester, continueButton);
         await tester.ensureVisible(continueButton);
         await tester.tap(continueButton);
