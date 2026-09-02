@@ -92,7 +92,7 @@ Test Mosquito Alert — Vietnamese beta build
 - iOS: build with the "devtf" scheme; bundle "Test Mosquito Alert"
   (cat.ibeji.tigatrapp.devtf), distributed via TestFlight DevTF group.
 - Android: build with `--flavor dev --target lib/main.dart`; applicationId
-  `ceab.movelab.tigatrapp.dev`, distributed via Google Play Internal Testing.
+  `ceab.movelab.tigatrapp.test`, distributed via Google Play Internal Testing.
 - Both flavors point to the development backend (apidev.mosquitoalert.com),
   so submitted reports do not enter the production dataset.
 ```
