@@ -1,9 +1,13 @@
 # Vietnamese (vi_VN) — Loco / Localise.biz string updates
 
 These changes were applied directly to `assets/language/vi_VN.json` on the
-`feature/vietnamese-beta` branch (commit `17dde8d8`). They **must also be
-entered into Localise.biz**, otherwise the next run of `update_locales.py`
-will overwrite them with the broken originals.
+`feature/vietnamese-beta` branch (commit `17dde8d8`).
+
+> **Status (2026-09-02): all 12 Section-1 fixes are now in Localise.biz**,
+> applied via the API and verified against a fresh export — the overwrite risk
+> below no longer applies to them. Sections 2 and 3 remain as written: not
+> applied, pending native-speaker review. Pre-edit values are archived in
+> `backups/loco/` (see `docs/translations/pending-loco-corrections.md`).
 
 Source data: `assets/language/en_US.json` (reference) and the previous content
 of `assets/language/vi_VN.json` shipped to Loco.
