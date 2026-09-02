@@ -109,3 +109,8 @@ someone does a production release:
 - [ ] Release cadence and who approves a rollout.
 - [ ] Whether the App Store side of a release is documented anywhere.
 - [ ] Where `JRBP_Keystore` and its password are backed up.
+- [ ] Which Google Cloud project owns the production Maps key (the key the
+      shipping APK embeds ends `…muV0`; as of Sep 2026 the console our IT lead
+      uses holds a *different* "production" key, so that console is likely a
+      stale or parallel project — Maps keys only work when their own project
+      has billing + Maps SDK for Android enabled).
