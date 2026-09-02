@@ -23,6 +23,8 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>bg-BG</string>
+		<string>vi-VN</string>
+		<string>ar-MA</string>
 		<string>bn-BD</string>
 		<string>ca-ES</string>
 		<string>de-DE</string>
@@ -30,6 +32,7 @@
 		<string>en-US</string>
 		<string>es-ES</string>
 		<string>es-UY</string>
+		<string>eu-ES</string>
 		<string>fr-FR</string>
 		<string>gl-ES</string>
 		<string>hr-HR</string>

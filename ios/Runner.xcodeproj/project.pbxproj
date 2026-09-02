@@ -80,6 +80,8 @@
 		E7AEDE772D48F5E100FC352B /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E7AEDE782D48F5E100FC352B /* es-UY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-UY"; path = "es-UY.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		E7AEDE792D48F5E100FC352B /* eu-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "eu-ES"; path = "eu-ES.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE7A2D48F5E100FC352B /* vi-VN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "vi-VN"; path = "vi-VN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E7AEDE7B2D48F5E100FC352B /* ar-MA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-MA"; path = "ar-MA.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EA5E315F07FFEEA45453FB8A /* Pods-Runner.profile-devtf.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-devtf.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-devtf.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -264,6 +266,8 @@
 				"es-ES",
 				"es-UY",
 				"eu-ES",
+				"vi-VN",
+				"ar-MA",
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
@@ -454,6 +458,8 @@
 				E7AEDE772D48F5E100FC352B /* es-ES */,
 				E7AEDE782D48F5E100FC352B /* es-UY */,
 				E7AEDE792D48F5E100FC352B /* eu-ES */,
+				E7AEDE7A2D48F5E100FC352B /* vi-VN */,
+				E7AEDE7B2D48F5E100FC352B /* ar-MA */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

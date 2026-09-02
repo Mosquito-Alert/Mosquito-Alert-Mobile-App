@@ -22,6 +22,9 @@ class MyLocalizations {
   // NOTE: When adding new languages, please check that the mosquito alert
   // API supports the new language. If not, please add it to the API first.
   static List<Locale> supportedLocales = <Locale>[
+    // Arabic was translated in Moroccan (ar_MA). Devices set to any other
+    // Arabic region resolve here via resolveLocale's language-code fallback.
+    Locale('ar', 'MA'),
     Locale('bg', 'BG'),
     Locale('bn', 'BD'),
     Locale('ca', 'ES'),
