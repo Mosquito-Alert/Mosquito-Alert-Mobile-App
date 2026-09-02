@@ -183,14 +183,19 @@ class _MyAppState extends State<MyApp> {
           // that they are not in the public app and that any reports they
           // submit go to the development backend.
           if (AppConfig.isProduction) return child;
-          return Directionality(
+          // Only the ribbon is pinned to LTR (via Banner's own textDirection /
+          // layoutDirection), never the subtree. Wrapping `child` in a
+          // Directionality here would sit below the Directionality that
+          // Localizations derives from the locale and override it, forcing
+          // RTL languages such as Arabic to lay out left-to-right -- in
+          // exactly the flavor used to review translations.
+          return Banner(
+            message: 'TEST',
+            location: BannerLocation.topEnd,
+            color: Colors.red.shade700,
             textDirection: TextDirection.ltr,
-            child: Banner(
-              message: 'TEST',
-              location: BannerLocation.topEnd,
-              color: Colors.red.shade700,
-              child: child,
-            ),
+            layoutDirection: TextDirection.ltr,
+            child: child,
           );
         },
         home: authProvider.hasCredentials
